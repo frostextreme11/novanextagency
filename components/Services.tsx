@@ -1,430 +1,629 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useRef, useState, useEffect, useCallback } from "react";
 
-/* ──────────────────────────────────────────────────────────
-   Each service has a mini animated prototype built purely
-   from CSS / HTML elements.  Components appear step-by-step.
-   ────────────────────────────────────────────────────────── */
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-interface PrototypeComponent {
-    type: "nav" | "hero-text" | "button" | "card" | "grid" | "sidebar" | "chart" | "phone" | "receipt" | "calendar" | "qr" | "image" | "search" | "list-item";
-    label?: string;
-    color: string;
-    width?: string;
-    height?: string;
+/* ================================================================
+   SERVICE DATA — 8 categories, each with prototype components
+   and feature list for the spotlight view
+   ================================================================ */
+
+interface Feature {
+    icon: string;
+    label: string;
 }
 
 interface ServiceData {
     title: string;
     subtitle: string;
-    color: string;
+    icon: string;
     accentFrom: string;
     accentTo: string;
-    icon: string;
-    components: PrototypeComponent[];
+    accentColor: string; // single tailwind color token for misc usage
+    features: Feature[];
 }
 
 const services: ServiceData[] = [
     {
         title: "Landing Page Kilat",
         subtitle: "Konversi tinggi dengan desain memukau",
-        color: "blue",
+        icon: "speed",
         accentFrom: "from-blue-500",
         accentTo: "to-cyan-400",
-        icon: "speed",
-        components: [
-            { type: "nav", color: "bg-blue-500/30", width: "100%", height: "h-6" },
-            { type: "hero-text", label: "Brand Kamu", color: "bg-blue-400/40", width: "70%", height: "h-8" },
-            { type: "hero-text", color: "bg-blue-300/20", width: "90%", height: "h-3" },
-            { type: "hero-text", color: "bg-blue-300/15", width: "60%", height: "h-3" },
-            { type: "button", label: "CTA", color: "bg-blue-500", width: "40%", height: "h-7" },
-            { type: "grid", color: "bg-blue-500/10", width: "100%", height: "h-16" },
+        accentColor: "blue",
+        features: [
+            { icon: "bolt", label: "Ultra-Fast Loading" },
+            { icon: "auto_awesome", label: "Animasi Premium" },
+            { icon: "analytics", label: "Conversion Tracking" },
+            { icon: "devices", label: "Fully Responsive" },
+            { icon: "palette", label: "Custom Branding" },
+            { icon: "search", label: "SEO Optimized" },
         ],
     },
     {
         title: "E-Commerce Mewah",
         subtitle: "Toko online premium siap jualan",
-        color: "purple",
+        icon: "storefront",
         accentFrom: "from-purple-500",
         accentTo: "to-fuchsia-400",
-        icon: "storefront",
-        components: [
-            { type: "nav", color: "bg-purple-500/30", width: "100%", height: "h-6" },
-            { type: "search", color: "bg-purple-400/20", width: "80%", height: "h-5" },
-            { type: "card", color: "bg-purple-500/15", width: "48%", height: "h-20" },
-            { type: "card", color: "bg-purple-400/15", width: "48%", height: "h-20" },
-            { type: "card", color: "bg-purple-500/10", width: "48%", height: "h-20" },
-            { type: "card", color: "bg-purple-400/10", width: "48%", height: "h-20" },
+        accentColor: "purple",
+        features: [
+            { icon: "shopping_cart", label: "Smart Cart" },
+            { icon: "payment", label: "Multi Payment Gateway" },
+            { icon: "inventory", label: "Inventory Real-time" },
+            { icon: "local_shipping", label: "Auto Shipping" },
+            { icon: "loyalty", label: "Loyalty Program" },
+            { icon: "bar_chart", label: "Sales Analytics" },
         ],
     },
     {
         title: "Mobile App Commerce",
         subtitle: "Native feel untuk iOS & Android",
-        color: "pink",
+        icon: "install_mobile",
         accentFrom: "from-pink-500",
         accentTo: "to-rose-400",
-        icon: "install_mobile",
-        components: [
-            { type: "phone", color: "bg-pink-500/20", width: "100%", height: "h-6" },
-            { type: "image", color: "bg-pink-400/15", width: "100%", height: "h-16" },
-            { type: "hero-text", color: "bg-pink-300/20", width: "60%", height: "h-4" },
-            { type: "hero-text", color: "bg-pink-300/10", width: "40%", height: "h-3" },
-            { type: "grid", color: "bg-pink-500/10", width: "100%", height: "h-14" },
-            { type: "button", label: "Checkout", color: "bg-pink-500", width: "80%", height: "h-7" },
+        accentColor: "pink",
+        features: [
+            { icon: "notifications_active", label: "Push Notification" },
+            { icon: "fingerprint", label: "Biometric Login" },
+            { icon: "offline_bolt", label: "Offline Mode" },
+            { icon: "speed", label: "Native Performance" },
+            { icon: "cloud_sync", label: "Real-time Sync" },
+            { icon: "security", label: "End-to-End Encryption" },
         ],
     },
     {
         title: "Custom Dashboard",
         subtitle: "Pantau bisnis Anda real-time",
-        color: "indigo",
+        icon: "dashboard",
         accentFrom: "from-indigo-500",
         accentTo: "to-blue-400",
-        icon: "dashboard",
-        components: [
-            { type: "sidebar", color: "bg-indigo-600/30", width: "25%", height: "h-full" },
-            { type: "nav", color: "bg-indigo-500/20", width: "100%", height: "h-6" },
-            { type: "card", color: "bg-indigo-500/15", width: "30%", height: "h-12" },
-            { type: "card", color: "bg-indigo-400/15", width: "30%", height: "h-12" },
-            { type: "card", color: "bg-indigo-500/10", width: "30%", height: "h-12" },
-            { type: "chart", color: "bg-indigo-500/10", width: "100%", height: "h-24" },
+        accentColor: "indigo",
+        features: [
+            { icon: "monitoring", label: "Real-time Monitoring" },
+            { icon: "pivot_table_chart", label: "Data Visualization" },
+            { icon: "manage_accounts", label: "Role Management" },
+            { icon: "download", label: "Export Reports" },
+            { icon: "api", label: "API Integration" },
+            { icon: "dark_mode", label: "Dark / Light Mode" },
         ],
     },
     {
         title: "POS Kasir Modern",
         subtitle: "Kelola transaksi lebih mudah & akurat",
-        color: "orange",
+        icon: "point_of_sale",
         accentFrom: "from-orange-500",
         accentTo: "to-amber-400",
-        icon: "point_of_sale",
-        components: [
-            { type: "nav", color: "bg-orange-500/30", width: "100%", height: "h-6" },
-            { type: "list-item", color: "bg-orange-500/15", width: "100%", height: "h-6" },
-            { type: "list-item", color: "bg-orange-400/10", width: "100%", height: "h-6" },
-            { type: "list-item", color: "bg-orange-500/10", width: "100%", height: "h-6" },
-            { type: "receipt", color: "bg-orange-500/20", width: "60%", height: "h-16" },
-            { type: "button", label: "Bayar", color: "bg-orange-500", width: "50%", height: "h-7" },
+        accentColor: "orange",
+        features: [
+            { icon: "receipt_long", label: "E-Receipt" },
+            { icon: "qr_code_scanner", label: "Barcode Scanner" },
+            { icon: "account_balance_wallet", label: "Multi Payment" },
+            { icon: "assessment", label: "Sales Report" },
+            { icon: "group", label: "Multi Cashier" },
+            { icon: "inventory_2", label: "Stock Alert" },
         ],
     },
     {
         title: "Sistem Rental",
         subtitle: "Booking engine otomatis",
-        color: "teal",
+        icon: "car_rental",
         accentFrom: "from-teal-500",
         accentTo: "to-emerald-400",
-        icon: "car_rental",
-        components: [
-            { type: "nav", color: "bg-teal-500/30", width: "100%", height: "h-6" },
-            { type: "calendar", color: "bg-teal-400/15", width: "100%", height: "h-20" },
-            { type: "card", color: "bg-teal-500/15", width: "48%", height: "h-14" },
-            { type: "card", color: "bg-teal-400/10", width: "48%", height: "h-14" },
-            { type: "search", color: "bg-teal-400/20", width: "70%", height: "h-5" },
-            { type: "button", label: "Book", color: "bg-teal-500", width: "50%", height: "h-7" },
+        accentColor: "teal",
+        features: [
+            { icon: "calendar_month", label: "Smart Calendar" },
+            { icon: "event_available", label: "Auto Booking" },
+            { icon: "directions_car", label: "Fleet Management" },
+            { icon: "credit_card", label: "Online Payment" },
+            { icon: "sms", label: "SMS Reminder" },
+            { icon: "star", label: "Review System" },
         ],
     },
     {
         title: "Kafe Digital",
         subtitle: "QR Menu & loyalty system",
-        color: "amber",
+        icon: "coffee",
         accentFrom: "from-amber-500",
         accentTo: "to-yellow-400",
-        icon: "coffee",
-        components: [
-            { type: "nav", color: "bg-amber-500/30", width: "100%", height: "h-6" },
-            { type: "qr", color: "bg-amber-400/20", width: "40%", height: "h-16" },
-            { type: "list-item", label: "Coffee", color: "bg-amber-500/15", width: "100%", height: "h-6" },
-            { type: "list-item", label: "Food", color: "bg-amber-400/10", width: "100%", height: "h-6" },
-            { type: "list-item", label: "Dessert", color: "bg-amber-500/10", width: "100%", height: "h-6" },
-            { type: "button", label: "Order", color: "bg-amber-500", width: "60%", height: "h-7" },
+        accentColor: "amber",
+        features: [
+            { icon: "qr_code_2", label: "QR Menu Scan" },
+            { icon: "restaurant_menu", label: "Digital Menu" },
+            { icon: "delivery_dining", label: "Order Online" },
+            { icon: "loyalty", label: "Loyalty Points" },
+            { icon: "table_restaurant", label: "Table Booking" },
+            { icon: "kitchen", label: "Kitchen Display" },
+        ],
+    },
+    {
+        title: "Portal Akademis Online",
+        subtitle: "Cocok untuk sekolah, kampus & edukasi",
+        icon: "school",
+        accentFrom: "from-emerald-500",
+        accentTo: "to-green-400",
+        accentColor: "emerald",
+        features: [
+            { icon: "menu_book", label: "E-Learning LMS" },
+            { icon: "assignment", label: "Tugas & Ujian Online" },
+            { icon: "grade", label: "Sistem Nilai" },
+            { icon: "video_camera_front", label: "Video Conference" },
+            { icon: "co_present", label: "Absensi Digital" },
+            { icon: "forum", label: "Forum Diskusi" },
         ],
     },
 ];
 
-function PrototypeCard({ service, index }: { service: ServiceData; index: number }) {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-50px" });
+/* ================================================================
+   PROTOTYPE RENDERER — each service gets a unique animated mockup
+   ================================================================ */
 
-    const isDashboard = service.title === "Custom Dashboard";
+function PrototypeMockup({ service, isActive }: { service: ServiceData; isActive: boolean }) {
+    const key = service.title;
 
-    return (
-        <motion.div
-            ref={ref}
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative"
-        >
-            {/* Glow behind card */}
-            <div className={`absolute -inset-1 bg-gradient-to-r ${service.accentFrom} ${service.accentTo} rounded-3xl blur-lg opacity-0 group-hover:opacity-20 transition-opacity duration-500`} />
+    const stagger = {
+        hidden: { opacity: 0 },
+        show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+    };
+    const fadeUp = {
+        hidden: { opacity: 0, y: 12 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
+    };
+    const scaleIn = {
+        hidden: { opacity: 0, scale: 0.85 },
+        show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: EASE } },
+    };
 
-            <div className="relative glass-panel rounded-3xl p-6 hover:bg-white/[0.03] transition-all duration-500 h-full flex flex-col">
-                {/* Prototype Screen */}
-                <div className="relative bg-black/60 rounded-xl border border-white/5 p-3 mb-5 overflow-hidden min-h-[200px]">
-                    {/* Screen dots */}
-                    <div className="flex gap-1.5 mb-3">
-                        <div className="w-2 h-2 rounded-full bg-red-500/60" />
-                        <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
-                        <div className="w-2 h-2 rounded-full bg-green-500/60" />
+    const barColors: Record<string, string> = {
+        blue: "bg-blue-400/50",
+        purple: "bg-purple-400/50",
+        pink: "bg-pink-400/50",
+        indigo: "bg-indigo-400/50",
+        orange: "bg-orange-400/50",
+        teal: "bg-teal-400/50",
+        amber: "bg-amber-400/50",
+        emerald: "bg-emerald-400/50",
+    };
+    const bar = barColors[service.accentColor] || "bg-white/20";
+
+    const barLightColors: Record<string, string> = {
+        blue: "bg-blue-400/20",
+        purple: "bg-purple-400/20",
+        pink: "bg-pink-400/20",
+        indigo: "bg-indigo-400/20",
+        orange: "bg-orange-400/20",
+        teal: "bg-teal-400/20",
+        amber: "bg-amber-400/20",
+        emerald: "bg-emerald-400/20",
+    };
+    const barLight = barLightColors[service.accentColor] || "bg-white/10";
+
+    /* ---- Landing Page prototype ---- */
+    if (key === "Landing Page Kilat") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
+                <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center px-3 justify-between`}>
+                    <div className="w-10 h-3 bg-white/20 rounded" />
+                    <div className="flex gap-2">{[1, 2, 3].map(i => <div key={i} className="w-6 h-2 bg-white/15 rounded-full" />)}</div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="py-4 text-center">
+                    <div className={`${bar} h-6 rounded mx-auto w-3/4 mb-2`} />
+                    <div className="text-[11px] text-white/50 font-display font-bold tracking-wider">BRAND KAMU</div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="flex gap-2">
+                    <div className={`${barLight} h-3 rounded-full flex-1`} />
+                    <div className={`${barLight} h-3 rounded-full w-2/5`} />
+                </motion.div>
+                <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg w-2/5 mx-auto flex items-center justify-center`}>
+                    <span className="text-[10px] text-white font-bold">Get Started</span>
+                </motion.div>
+                <motion.div variants={fadeUp} className="flex gap-2 pt-2">
+                    {[1, 2, 3].map(i => (
+                        <motion.div key={i} variants={scaleIn} className={`${barLight} rounded-lg flex-1 h-16 p-2 border border-white/5`}>
+                            <div className="w-full h-[55%] bg-white/5 rounded mb-1" />
+                            <div className="w-3/4 h-1.5 bg-white/10 rounded-full" />
+                        </motion.div>
+                    ))}
+                </motion.div>
+            </motion.div>
+        );
+    }
+
+    /* ---- E-Commerce prototype ---- */
+    if (key === "E-Commerce Mewah") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
+                <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center px-3 justify-between`}>
+                    <div className="w-10 h-3 bg-white/20 rounded" />
+                    <div className="flex gap-3 items-center">
+                        <span className="material-icons text-white/30 text-xs">search</span>
+                        <span className="material-icons text-white/30 text-xs">shopping_cart</span>
                     </div>
+                </motion.div>
+                <motion.div variants={fadeUp} className={`${barLight} h-5 rounded-full flex items-center px-3 gap-2 w-4/5`}>
+                    <span className="material-icons text-white/20 text-[10px]">search</span>
+                    <div className="h-1.5 bg-white/10 rounded-full flex-1" />
+                </motion.div>
+                <motion.div variants={fadeUp} className="grid grid-cols-2 gap-2">
+                    {[1, 2, 3, 4].map(i => (
+                        <motion.div key={i} variants={scaleIn} className={`${barLight} rounded-lg h-20 p-2 border border-white/5`}>
+                            <div className="w-full h-[55%] bg-white/5 rounded mb-1" />
+                            <div className="w-3/4 h-1.5 bg-white/10 rounded-full mb-1" />
+                            <div className="w-1/2 h-1.5 bg-white/15 rounded-full" />
+                        </motion.div>
+                    ))}
+                </motion.div>
+                <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg w-3/5 mx-auto flex items-center justify-center gap-1`}>
+                    <span className="material-icons text-white text-xs">shopping_bag</span>
+                    <span className="text-[10px] text-white font-bold">Checkout</span>
+                </motion.div>
+            </motion.div>
+        );
+    }
 
-                    {/* Animated components */}
-                    <div className={`flex flex-col gap-2 ${isDashboard ? "relative" : ""}`}>
-                        {isDashboard && (
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                                className="absolute left-0 top-0 bottom-0 w-[25%] bg-indigo-600/20 rounded-lg border border-indigo-500/10"
-                            >
-                                <div className="flex flex-col gap-2 p-2 mt-2">
-                                    {[...Array(4)].map((_, i) => (
-                                        <div key={i} className="h-2 bg-indigo-400/20 rounded-full" />
-                                    ))}
-                                </div>
+    /* ---- Mobile App prototype ---- */
+    if (key === "Mobile App Commerce") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="flex justify-center">
+                <div className="w-[160px] border-2 border-white/10 rounded-[20px] p-2 bg-black/40">
+                    <motion.div variants={fadeUp} className="h-4 flex items-center justify-center mb-2">
+                        <div className="w-10 h-1.5 bg-white/20 rounded-full" />
+                    </motion.div>
+                    <motion.div variants={fadeUp} className={`${barLight} h-20 rounded-lg mb-2 flex items-center justify-center`}>
+                        <span className="material-icons text-white/20 text-2xl">image</span>
+                    </motion.div>
+                    <motion.div variants={fadeUp} className="space-y-1 mb-2">
+                        <div className={`${bar} h-3 rounded w-3/4`} />
+                        <div className={`${barLight} h-2 rounded w-1/2`} />
+                    </motion.div>
+                    <motion.div variants={fadeUp} className="grid grid-cols-3 gap-1 mb-2">
+                        {[1, 2, 3].map(i => <div key={i} className={`${barLight} h-10 rounded border border-white/5`} />)}
+                    </motion.div>
+                    <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center justify-center`}>
+                        <span className="text-[10px] text-white font-bold">Add to Cart</span>
+                    </motion.div>
+                </div>
+            </motion.div>
+        );
+    }
+
+    /* ---- Dashboard prototype ---- */
+    if (key === "Custom Dashboard") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="flex gap-2">
+                <motion.div variants={fadeUp} className={`${barLight} w-[60px] rounded-lg p-2 space-y-2 border border-white/5`}>
+                    {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-2 bg-white/10 rounded-full" />)}
+                </motion.div>
+                <div className="flex-1 space-y-2">
+                    <motion.div variants={fadeUp} className={`${bar} h-6 rounded-lg flex items-center px-3 justify-between`}>
+                        <div className="w-12 h-2 bg-white/20 rounded" />
+                        <div className="w-5 h-5 bg-white/10 rounded-full" />
+                    </motion.div>
+                    <motion.div variants={fadeUp} className="flex gap-2">
+                        {[1, 2, 3].map(i => (
+                            <motion.div key={i} variants={scaleIn} className={`${barLight} rounded-lg flex-1 h-14 p-2 border border-white/5`}>
+                                <div className="w-1/2 h-1.5 bg-white/10 rounded-full mb-1" />
+                                <div className="w-3/4 h-3 bg-white/15 rounded font-bold" />
                             </motion.div>
-                        )}
-                        <div className={isDashboard ? "ml-[30%]" : ""}>
-                            {service.components
-                                .filter((c) => c.type !== "sidebar")
-                                .map((comp, cIndex) => {
-                                    const isProductGrid = comp.type === "card";
-                                    if (isProductGrid && cIndex > 0 && service.components[cIndex - 1]?.type === "card") {
-                                        return null; // paired with previous
-                                    }
-
-                                    const nextComp = service.components[cIndex + 1];
-                                    const isPair = isProductGrid && nextComp?.type === "card";
-
-                                    return (
-                                        <motion.div
-                                            key={cIndex}
-                                            initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                            animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                                            transition={{
-                                                duration: 0.5,
-                                                delay: 0.4 + cIndex * 0.12 + index * 0.05,
-                                                ease: [0.22, 1, 0.36, 1],
-                                            }}
-                                            className={`mb-2 ${isPair ? "flex gap-2" : ""}`}
-                                        >
-                                            {isPair ? (
-                                                <>
-                                                    <div
-                                                        className={`${comp.color} rounded-lg flex-1 ${comp.height} border border-white/5`}
-                                                        style={{ width: comp.width }}
-                                                    >
-                                                        <div className="p-2">
-                                                            <div className="w-full h-[60%] bg-white/5 rounded mb-1" />
-                                                            <div className="w-3/4 h-1.5 bg-white/10 rounded-full" />
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        className={`${nextComp.color} rounded-lg flex-1 ${nextComp.height} border border-white/5`}
-                                                    >
-                                                        <div className="p-2">
-                                                            <div className="w-full h-[60%] bg-white/5 rounded mb-1" />
-                                                            <div className="w-3/4 h-1.5 bg-white/10 rounded-full" />
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            ) : comp.type === "button" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} flex items-center justify-center mx-auto`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <span className="text-[10px] text-white font-bold tracking-wide">
-                                                        {comp.label}
-                                                    </span>
-                                                </div>
-                                            ) : comp.type === "qr" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} flex items-center justify-center mx-auto border border-white/10`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <span className="material-icons text-white/30 text-2xl">
-                                                        qr_code_2
-                                                    </span>
-                                                </div>
-                                            ) : comp.type === "chart" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} border border-white/5 p-2 flex items-end gap-1`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    {[40, 65, 45, 80, 55, 70, 90, 60, 75, 85].map((h, i) => (
-                                                        <motion.div
-                                                            key={i}
-                                                            initial={{ scaleY: 0 }}
-                                                            animate={isInView ? { scaleY: 1 } : {}}
-                                                            transition={{ duration: 0.4, delay: 0.8 + i * 0.05 }}
-                                                            className="flex-1 bg-indigo-400/30 rounded-t origin-bottom"
-                                                            style={{ height: `${h}%` }}
-                                                        />
-                                                    ))}
-                                                </div>
-                                            ) : comp.type === "calendar" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} border border-white/5 p-2`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <div className="grid grid-cols-7 gap-1">
-                                                        {[...Array(21)].map((_, i) => (
-                                                            <div
-                                                                key={i}
-                                                                className={`h-2 rounded-sm ${i === 8 || i === 15 ? "bg-teal-400/40" : "bg-white/5"}`}
-                                                            />
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : comp.type === "search" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-full ${comp.height} border border-white/10 flex items-center px-3 gap-2 mx-auto`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <span className="material-icons text-white/20 text-xs">search</span>
-                                                    <div className="h-1.5 bg-white/10 rounded-full flex-1" />
-                                                </div>
-                                            ) : comp.type === "list-item" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} border border-white/5 flex items-center px-3 justify-between`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-3 h-3 rounded bg-white/10" />
-                                                        <div className="w-12 h-1.5 bg-white/15 rounded-full" />
-                                                    </div>
-                                                    <div className="w-8 h-1.5 bg-white/10 rounded-full" />
-                                                </div>
-                                            ) : comp.type === "nav" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} flex items-center px-3 justify-between border border-white/5`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <div className="w-6 h-2 bg-white/20 rounded" />
-                                                    <div className="flex gap-2">
-                                                        <div className="w-4 h-1.5 bg-white/10 rounded-full" />
-                                                        <div className="w-4 h-1.5 bg-white/10 rounded-full" />
-                                                        <div className="w-4 h-1.5 bg-white/10 rounded-full" />
-                                                    </div>
-                                                </div>
-                                            ) : comp.type === "hero-text" ? (
-                                                <div
-                                                    className={`${comp.color} rounded ${comp.height}`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    {comp.label && (
-                                                        <span className="text-[10px] text-white/60 font-bold flex items-center h-full px-2">
-                                                            {comp.label}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            ) : comp.type === "phone" ? (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} flex items-center justify-center border border-white/10`}
-                                                    style={{ width: comp.width }}
-                                                >
-                                                    <div className="w-8 h-1 bg-white/20 rounded-full" />
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    className={`${comp.color} rounded-lg ${comp.height} border border-white/5`}
-                                                    style={{ width: comp.width }}
-                                                />
-                                            )}
-                                        </motion.div>
-                                    );
-                                })}
-                        </div>
-                    </div>
+                        ))}
+                    </motion.div>
+                    <motion.div variants={fadeUp} className={`${barLight} rounded-lg h-24 p-2 border border-white/5 flex items-end gap-1`}>
+                        {[35, 55, 40, 70, 50, 65, 80, 45, 60, 75, 55, 68].map((h, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ scaleY: 0 }}
+                                animate={isActive ? { scaleY: 1 } : { scaleY: 0 }}
+                                transition={{ duration: 0.4, delay: 0.5 + i * 0.05 }}
+                                className={`flex-1 ${bar} rounded-t origin-bottom`}
+                                style={{ height: `${h}%` }}
+                            />
+                        ))}
+                    </motion.div>
                 </div>
+            </motion.div>
+        );
+    }
 
-                {/* Category label */}
-                <div className="mt-auto">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${service.accentFrom} ${service.accentTo} flex items-center justify-center shadow-lg`}>
-                            <span className="material-icons text-white text-xl">{service.icon}</span>
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-display font-bold text-white">{service.title}</h3>
-                            <p className="text-xs text-slate-500">{service.subtitle}</p>
-                        </div>
-                    </div>
+    /* ---- POS Kasir prototype ---- */
+    if (key === "POS Kasir Modern") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="flex gap-3">
+                <div className="flex-1 space-y-2">
+                    <motion.div variants={fadeUp} className={`${bar} h-6 rounded-lg flex items-center px-2`}>
+                        <span className="text-[9px] text-white/70 font-bold">KASIR #1</span>
+                    </motion.div>
+                    {["Kopi Latte", "Croissant", "Matcha Ice"].map((item, i) => (
+                        <motion.div key={i} variants={fadeUp} className={`${barLight} h-7 rounded-lg flex items-center px-3 justify-between border border-white/5`}>
+                            <span className="text-[9px] text-white/50">{item}</span>
+                            <span className="text-[9px] text-white/30">x1</span>
+                        </motion.div>
+                    ))}
+                    <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg flex items-center justify-center`}>
+                        <span className="text-[10px] text-white font-bold">Bayar — Rp 85k</span>
+                    </motion.div>
                 </div>
-            </div>
-        </motion.div>
-    );
+                <motion.div variants={scaleIn} className={`${barLight} w-[100px] rounded-lg p-2 border border-white/5 flex flex-col items-center justify-center gap-1`}>
+                    <span className="material-icons text-white/20 text-lg">receipt_long</span>
+                    <div className="w-3/4 h-1 bg-white/10 rounded-full" />
+                    <div className="w-1/2 h-1 bg-white/10 rounded-full" />
+                    <div className="w-2/3 h-1 bg-white/10 rounded-full" />
+                    <div className="w-full h-[1px] border-t border-dashed border-white/10 my-1" />
+                    <div className="w-3/4 h-1.5 bg-white/15 rounded-full" />
+                </motion.div>
+            </motion.div>
+        );
+    }
+
+    /* ---- Rental prototype ---- */
+    if (key === "Sistem Rental") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
+                <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center px-3 justify-between`}>
+                    <span className="text-[9px] text-white/70 font-bold">MyRental</span>
+                    <span className="material-icons text-white/30 text-xs">person</span>
+                </motion.div>
+                <motion.div variants={fadeUp} className={`${barLight} rounded-lg p-2 border border-white/5`}>
+                    <div className="text-[8px] text-white/40 mb-1 font-bold">FEBRUARI 2026</div>
+                    <div className="grid grid-cols-7 gap-1">
+                        {[...Array(28)].map((_, i) => (
+                            <div key={i} className={`h-3 rounded-sm text-center text-[6px] flex items-center justify-center ${i === 12 || i === 13 || i === 14 ? `${bar}` : "bg-white/5"} ${i === 12 ? "text-white/70" : "text-white/20"}`}>
+                                {i + 1}
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="flex gap-2">
+                    {["Avanza", "Innova"].map((car, i) => (
+                        <motion.div key={i} variants={scaleIn} className={`${barLight} rounded-lg flex-1 p-2 border border-white/5`}>
+                            <span className="material-icons text-white/20 text-lg">directions_car</span>
+                            <div className="text-[9px] text-white/50 mt-1">{car}</div>
+                            <div className="text-[8px] text-white/30">Available</div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+                <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg flex items-center justify-center gap-1`}>
+                    <span className="text-[10px] text-white font-bold">Book Now</span>
+                </motion.div>
+            </motion.div>
+        );
+    }
+
+    /* ---- Kafe Digital prototype ---- */
+    if (key === "Kafe Digital") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
+                <motion.div variants={fadeUp} className="flex items-center justify-center py-2">
+                    <div className={`${barLight} w-16 h-16 rounded-xl flex items-center justify-center border border-white/10`}>
+                        <span className="material-icons text-white/30 text-2xl">qr_code_2</span>
+                    </div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="text-center text-[9px] text-white/40 font-bold">SCAN TO ORDER</motion.div>
+                {["Espresso", "Matcha Latte", "Red Velvet"].map((item, i) => (
+                    <motion.div key={i} variants={fadeUp} className={`${barLight} h-8 rounded-lg flex items-center px-3 justify-between border border-white/5`}>
+                        <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 bg-white/10 rounded" />
+                            <span className="text-[9px] text-white/50">{item}</span>
+                        </div>
+                        <span className="text-[9px] text-white/30">+</span>
+                    </motion.div>
+                ))}
+                <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg flex items-center justify-center gap-1`}>
+                    <span className="material-icons text-white text-xs">delivery_dining</span>
+                    <span className="text-[10px] text-white font-bold">Order</span>
+                </motion.div>
+            </motion.div>
+        );
+    }
+
+    /* ---- Portal Akademis prototype ---- */
+    if (key === "Portal Akademis Online") {
+        return (
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
+                <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center px-3 justify-between`}>
+                    <span className="text-[9px] text-white/70 font-bold">EduPortal</span>
+                    <div className="flex gap-1">
+                        <span className="material-icons text-white/30 text-xs">notifications</span>
+                        <span className="material-icons text-white/30 text-xs">person</span>
+                    </div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="flex gap-2">
+                    {[{ icon: "menu_book", label: "Courses", val: "12" }, { icon: "assignment", label: "Tasks", val: "5" }, { icon: "grade", label: "GPA", val: "3.8" }].map((c, i) => (
+                        <motion.div key={i} variants={scaleIn} className={`${barLight} rounded-lg flex-1 p-2 text-center border border-white/5`}>
+                            <span className="material-icons text-white/25 text-sm">{c.icon}</span>
+                            <div className="text-[10px] text-white/60 font-bold">{c.val}</div>
+                            <div className="text-[7px] text-white/30">{c.label}</div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+                {["Matematika Diskrit", "Basis Data", "Pemrograman Web"].map((item, i) => (
+                    <motion.div key={i} variants={fadeUp} className={`${barLight} h-7 rounded-lg flex items-center px-3 justify-between border border-white/5`}>
+                        <span className="text-[9px] text-white/50">{item}</span>
+                        <div className={`w-10 h-3 ${bar} rounded-full`}>
+                            <div className="h-full bg-white/20 rounded-full" style={{ width: `${70 + i * 10}%` }} />
+                        </div>
+                    </motion.div>
+                ))}
+                <motion.div variants={fadeUp} className={`${bar} h-8 rounded-lg flex items-center justify-center gap-1`}>
+                    <span className="material-icons text-white text-xs">video_camera_front</span>
+                    <span className="text-[10px] text-white font-bold">Join Class</span>
+                </motion.div>
+            </motion.div>
+        );
+    }
+
+    /* Fallback */
+    return null;
 }
+
+/* ================================================================
+   MAIN COMPONENT
+   ================================================================ */
 
 export default function Services() {
     const [activeIndex, setActiveIndex] = useState(0);
     const sectionRef = useRef(null);
-    const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+    const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // Auto-cycle for mobile
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % services.length);
-        }, 4000);
-        return () => clearInterval(interval);
+    const CYCLE_MS = 5000;
+
+    const resetInterval = useCallback(() => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(() => {
+            setActiveIndex(prev => (prev + 1) % services.length);
+        }, CYCLE_MS);
     }, []);
 
+    useEffect(() => {
+        resetInterval();
+        return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+    }, [resetInterval]);
+
+    const handleSelect = (i: number) => {
+        setActiveIndex(i);
+        resetInterval();
+    };
+
+    const active = services[activeIndex];
+
     return (
-        <section id="services" className="py-24 relative overflow-hidden" ref={sectionRef}>
+        <section id="services" className="py-20 sm:py-24 relative overflow-hidden" ref={sectionRef}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
+                    className="text-center mb-14"
                 >
                     <span className="text-primary-glow font-bold tracking-widest text-xs uppercase mb-3 block">
                         Prototype Showcase
                     </span>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-6">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4">
                         Layanan Digital Lengkap
                     </h2>
-                    <p className="text-slate-400 max-w-2xl mx-auto">
+                    <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
                         Setiap layanan divisualisasikan sebagai prototype interaktif.
-                        Lihat bagaimana kami membangun solusi digital Anda.
                     </p>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
                 </motion.div>
 
-                {/* Desktop Grid */}
-                <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {services.map((service, index) => (
-                        <PrototypeCard key={index} service={service} index={index} />
-                    ))}
-                </div>
+                {/* ===== SPOTLIGHT AREA ===== */}
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                    {/* Left: highlighted prototype (large) */}
+                    <motion.div
+                        layout
+                        className="lg:w-[55%] xl:w-[58%] flex-shrink-0"
+                    >
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeIndex}
+                                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.96, y: -12 }}
+                                transition={{ duration: 0.5, ease: EASE }}
+                                className="glass-panel rounded-3xl p-5 sm:p-7 border border-white/10 relative overflow-hidden"
+                            >
+                                {/* Glow */}
+                                <div className={`absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br ${active.accentFrom} ${active.accentTo} rounded-full blur-[100px] opacity-20 pointer-events-none`} />
 
-                {/* Mobile Carousel */}
-                <div className="md:hidden">
-                    <div className="relative overflow-hidden">
-                        <motion.div
-                            animate={{ x: `-${activeIndex * 100}%` }}
-                            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                            className="flex"
-                        >
-                            {services.map((service, index) => (
-                                <div key={index} className="w-full flex-shrink-0 px-2">
-                                    <PrototypeCard service={service} index={0} />
+                                {/* Title bar */}
+                                <div className="flex items-center gap-3 mb-5 relative z-10">
+                                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${active.accentFrom} ${active.accentTo} flex items-center justify-center shadow-lg`}>
+                                        <span className="material-icons text-white text-xl">{active.icon}</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg sm:text-xl font-display font-bold text-white">{active.title}</h3>
+                                        <p className="text-xs text-slate-500">{active.subtitle}</p>
+                                    </div>
                                 </div>
-                            ))}
-                        </motion.div>
-                    </div>
-                    {/* Dots indicator */}
-                    <div className="flex justify-center gap-2 mt-6">
-                        {services.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setActiveIndex(index)}
-                                className={`h-2 rounded-full transition-all duration-300 ${activeIndex === index
-                                    ? "w-8 bg-primary"
-                                    : "w-2 bg-white/20 hover:bg-white/40"
-                                    }`}
-                            />
-                        ))}
+
+                                {/* Prototype screen */}
+                                <div className="bg-black/50 rounded-xl border border-white/5 p-4 mb-5 relative z-10 min-h-[220px] sm:min-h-[260px]">
+                                    <div className="flex gap-1.5 mb-3">
+                                        <div className="w-2 h-2 rounded-full bg-red-500/60" />
+                                        <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
+                                        <div className="w-2 h-2 rounded-full bg-green-500/60" />
+                                    </div>
+                                    <PrototypeMockup service={active} isActive={true} />
+                                </div>
+
+                                {/* Features grid */}
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 relative z-10">
+                                    {active.features.map((feat, fi) => (
+                                        <motion.div
+                                            key={`${activeIndex}-${fi}`}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.4 + fi * 0.07, duration: 0.4, ease: EASE }}
+                                            className="flex items-center gap-2 bg-white/[0.03] rounded-lg px-3 py-2 border border-white/5"
+                                        >
+                                            <span className="material-icons text-primary-glow text-sm">{feat.icon}</span>
+                                            <span className="text-[11px] text-slate-300 font-medium">{feat.label}</span>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </motion.div>
+
+                    {/* Right: thumbnail list */}
+                    <div className="lg:flex-1 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3">
+                        {services.map((service, i) => {
+                            const isActive = i === activeIndex;
+                            return (
+                                <motion.button
+                                    key={i}
+                                    onClick={() => handleSelect(i)}
+                                    layout
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className={`relative text-left rounded-2xl p-3 sm:p-4 transition-all duration-300 border ${isActive
+                                        ? `bg-gradient-to-br ${service.accentFrom}/10 ${service.accentTo}/5 border-white/20 shadow-lg`
+                                        : "glass-panel border-white/5 hover:bg-white/[0.04]"
+                                        }`}
+                                >
+                                    {/* Active indicator */}
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activeIndicator"
+                                            className={`absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r ${service.accentFrom} ${service.accentTo} rounded-t-2xl`}
+                                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                        />
+                                    )}
+                                    <div className="flex items-center gap-2.5">
+                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive
+                                            ? `bg-gradient-to-br ${service.accentFrom} ${service.accentTo}`
+                                            : "bg-white/5"
+                                            }`}>
+                                            <span className={`material-icons text-base ${isActive ? "text-white" : "text-white/40"}`}>{service.icon}</span>
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className={`text-xs sm:text-sm font-display font-bold truncate ${isActive ? "text-white" : "text-slate-400"}`}>
+                                                {service.title}
+                                            </div>
+                                            <div className="text-[10px] text-slate-600 truncate hidden sm:block">
+                                                {service.subtitle}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Progress bar for active */}
+                                    {isActive && (
+                                        <div className="mt-2 h-0.5 bg-white/10 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: "0%" }}
+                                                animate={{ width: "100%" }}
+                                                transition={{ duration: CYCLE_MS / 1000, ease: "linear" }}
+                                                className={`h-full bg-gradient-to-r ${service.accentFrom} ${service.accentTo} rounded-full`}
+                                            />
+                                        </div>
+                                    )}
+                                </motion.button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
