@@ -22,7 +22,7 @@ export default function AboutUs() {
                             Tentang <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Kami</span>
                         </h1>
                         <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-                            Lebih dari sekadar kode, kami membangun solusi digital dengan hati.
+                            Bukan sekadar coding, kami berkarya dengan hati.
                         </p>
                     </div>
 
@@ -54,18 +54,18 @@ export default function AboutUs() {
                             <div className="space-y-6 md:pl-4">
                                 <h2 className="text-3xl font-display font-bold text-white leading-tight">
                                     Partner Digital <br />
-                                    <span className="text-primary">Terpercaya Anda</span>
+                                    <span className="text-primary">Andalan Anda</span>
                                 </h2>
 
                                 <div className="space-y-4 text-slate-300 text-lg leading-relaxed font-body">
                                     <p>
-                                        Hai! Kami adalah tim yang siap membantu Anda mewujudkan website atau aplikasi mobile impian Anda dengan sepenuh hati.
+                                        Halo! Kami adalah tim yang siap bantuin Anda mewujudkan website atau aplikasi mobile impian. Kami ngerjainnya nggak setengah-setengah, tapi dengan sepenuh hati.
                                     </p>
                                     <p>
-                                        Di NovaNext, kami tidak hanya bekerja untuk menyelesaikan tugas. Kami bekerja dengan <span className="text-white font-semibold">passion</span> yang mendalam. Bagi kami, kepercayaan Anda adalah amanah yang harus kami jaga dengan standar profesionalitas tertinggi.
+                                        Di NovaNext, kami nggak cuma sekadar "menyelesaikan tugas". Kami bekerja dengan <span className="text-white font-semibold">passion</span>. Kepercayaan Anda itu amanah buat kami, jadi kami pastikan hasilnya tetap profesional tapi prosesnya asik dan santai.
                                     </p>
                                     <p>
-                                        Kami percaya bahwa teknologi terbaik lahir dari kolaborasi yang tulus. Jadi, mari kita bangun sesuatu yang luar biasa bersama!
+                                        Kami percaya, teknologi yang keren itu lahir dari kolaborasi yang tulus. Yuk, kita bikin sesuatu yang luar biasa bareng-bareng!
                                     </p>
                                 </div>
 

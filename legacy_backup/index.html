@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html class="dark scroll-smooth" lang="id">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Jasa Pembuatan Website & Aplikasi Mobile Premium - NovaNext IT Agency</title>
-    <meta name="description" content="Jasa bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, dan sistem kasir POS untuk UMKM dan Corporate. Konsultasi Gratis!"/>
-    <meta name="keywords" content="Bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, bikin website brand sendiri, jasa bikin website, jasa bikin aplikasi mobile, jasa bikin aplikasi android"/>
-    
+    <meta name="description"
+        content="Jasa bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, dan sistem kasir POS untuk UMKM dan Corporate. Konsultasi Gratis!" />
+    <meta name="keywords"
+        content="Bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, bikin website brand sendiri, jasa bikin website, jasa bikin aplikasi mobile, jasa bikin aplikasi android" />
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
@@ -71,10 +78,11 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-        
+
         .hero-glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(40px); /* Frosted effect */
+            backdrop-filter: blur(40px);
+            /* Frosted effect */
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -89,27 +97,40 @@
             transform: translateY(20px);
             transition: all 0.6s ease-out;
         }
-        
+
         .service-card.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
         /* Hide scrollbar for clean UI */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050511; }
-        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 3px; }
-        
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050511;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 3px;
+        }
+
         /* Neon Border Animation */
         .neon-box {
             position: relative;
             overflow: hidden;
             transition: all 0.3s;
         }
+
         .neon-box::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             border-radius: inherit;
             padding: 2px;
             background: linear-gradient(45deg, transparent, #6366f1, #a855f7, transparent);
@@ -119,22 +140,33 @@
             opacity: 0.5;
             transition: opacity 0.3s;
         }
+
         .neon-box:hover::before {
             opacity: 1;
             filter: drop-shadow(0 0 10px #6366f1);
         }
     </style>
 </head>
-<body class="bg-background-dark text-slate-300 font-body antialiased overflow-x-hidden min-h-screen selection:bg-primary selection:text-white">
+
+<body
+    class="bg-background-dark text-slate-300 font-body antialiased overflow-x-hidden min-h-screen selection:bg-primary selection:text-white">
 
     <!-- Fixed Background Noise -->
-    <div class="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none z-0"></div>
-    
+    <div
+        class="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none z-0">
+    </div>
+
     <!-- Abstract Glowing Background -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
-        <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
-        <div class="absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-pink-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
+        <div
+            class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob">
+        </div>
+        <div
+            class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000">
+        </div>
+        <div
+            class="absolute -bottom-32 left-1/3 w-[500px] h-[500px] bg-pink-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000">
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -142,17 +174,24 @@
         <div class="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer group">
                 <div class="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-xl">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary opacity-50 group-hover:opacity-100 transition-opacity">
+                    </div>
                     <span class="relative font-display font-bold text-xl text-white">N</span>
                 </div>
-                <span class="font-display font-bold text-xl tracking-tight text-white">NovaNext<span class="text-primary">.</span></span>
+                <span class="font-display font-bold text-xl tracking-tight text-white">NovaNext<span
+                        class="text-primary">.</span></span>
             </div>
             <div class="hidden md:flex space-x-1 items-center bg-white/5 rounded-full p-1 border border-white/5">
-                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all" href="#services">Layanan</a>
-                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all" href="#pricing">Harga</a>
-                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all" href="#portfolio">Portofolio</a>
+                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                    href="#services">Layanan</a>
+                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                    href="#pricing">Harga</a>
+                <a class="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                    href="#portfolio">Portofolio</a>
             </div>
-            <a href="https://wa.me/6281224621353?text=Halo%20NovaNext,%20saya%20tertarik%20konsultasi." target="_blank" class="hidden md:flex items-center gap-2 bg-white text-black hover:bg-slate-200 px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+            <a href="https://wa.me/6281224621353?text=Halo%20NovaNext,%20saya%20tertarik%20konsultasi." target="_blank"
+                class="hidden md:flex items-center gap-2 bg-white text-black hover:bg-slate-200 px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]">
                 <span>Konsultasi Gratis</span>
                 <span class="material-icons text-sm">arrow_forward</span>
             </a>
@@ -163,43 +202,56 @@
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center pt-32 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-primary/30 mb-8 animate-float">
+
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-primary/30 mb-8 animate-float">
                 <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                 </span>
-                <span class="text-xs font-display font-medium text-white uppercase tracking-[0.2em]">Available for Projects</span>
+                <span class="text-xs font-display font-medium text-white uppercase tracking-[0.2em]">Available for
+                    Projects</span>
             </div>
 
-            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-8 tracking-tight">
+            <h1
+                class="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-8 tracking-tight">
                 <span class="block mb-2 drop-shadow-2xl">Membangun</span>
                 <span class="text-gradient bg-clip-text text-transparent pb-4">Digital Empire</span>
-                <span class="block text-3xl md:text-5xl lg:text-6xl text-slate-400 font-bold mt-4">Untuk Brand Masa Depan</span>
+                <span class="block text-3xl md:text-5xl lg:text-6xl text-slate-400 font-bold mt-4">Untuk Brand Masa
+                    Depan</span>
             </h1>
 
             <p class="text-lg md:text-xl text-slate-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-                Kami mengubah visi Anda menjadi kenyataan digital yang memukau. Website, Aplikasi Mobile, dan Sistem Enterprise dengan standar <span class="text-white font-medium">Silicon Valley</span>.
+                Kami mengubah visi Anda menjadi kenyataan digital yang memukau. Website, Aplikasi Mobile, dan Sistem
+                Enterprise dengan standar <span class="text-white font-medium">Silicon Valley</span>.
             </p>
 
             <div class="flex flex-col sm:flex-row gap-6 justify-center w-full z-20">
                 <a href="#pricing" class="relative group">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-pulse"></div>
-                    <div class="relative px-8 py-4 bg-black rounded-xl leading-none flex items-center gap-3 border border-white/10 group-hover:border-transparent transition-all">
+                    <div
+                        class="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-200 animate-pulse">
+                    </div>
+                    <div
+                        class="relative px-8 py-4 bg-black rounded-xl leading-none flex items-center gap-3 border border-white/10 group-hover:border-transparent transition-all">
                         <span class="font-display font-bold text-white">Mulai Project</span>
                         <span class="material-icons text-white">rocket_launch</span>
                     </div>
                 </a>
-                <a href="#services" class="glass-panel px-8 py-4 rounded-xl text-white font-display font-semibold hover:bg-white/10 transition-all flex items-center gap-2">
+                <a href="#services"
+                    class="glass-panel px-8 py-4 rounded-xl text-white font-display font-semibold hover:bg-white/10 transition-all flex items-center gap-2">
                     <span>Pelajari Layanan</span>
                     <span class="material-icons text-sm">expand_more</span>
                 </a>
             </div>
-            
+
             <!-- Hero Dashboard Mockup -->
             <div class="mt-20 relative w-full max-w-5xl mx-auto perspective-[2000px]">
-                <div class="relative transform rotate-x-12 group-hover:rotate-x-0 transition-transform duration-1000 ease-out hero-glass rounded-2xl p-2 border border-white/10 shadow-[0_0_100px_rgba(99,102,241,0.2)]">
-                     <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGakbB1DanWu3u_xGERHYMZZMYbeuYvEHMWF14HXhTASLsgkmKODFwdrq7lK-fywvnTcfhIonPssiK2n-Ld8MHgzNULwGVRz1vJnY2es47w5-m7gIC-pfSr5bdqOVVdtqTUdL3Ucw4JkSf3_jDYlZA9RqV2C4X_IdCVqTH3QgjLM-geg7-erwhBeJrMJslrDnWf1bOWyxGbNFOXe1jtV6BmQAGuWVJh3Q2Bwo7O6rBmMTzYKk9CVmzW7x0dAtS7y1O7gh2TUeCNC3h" alt="Dashboard Preview" class="rounded-xl w-full h-auto opacity-90 hover:opacity-100 transition-opacity duration-700"/>
+                <div
+                    class="relative transform rotate-x-12 group-hover:rotate-x-0 transition-transform duration-1000 ease-out hero-glass rounded-2xl p-2 border border-white/10 shadow-[0_0_100px_rgba(99,102,241,0.2)]">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGakbB1DanWu3u_xGERHYMZZMYbeuYvEHMWF14HXhTASLsgkmKODFwdrq7lK-fywvnTcfhIonPssiK2n-Ld8MHgzNULwGVRz1vJnY2es47w5-m7gIC-pfSr5bdqOVVdtqTUdL3Ucw4JkSf3_jDYlZA9RqV2C4X_IdCVqTH3QgjLM-geg7-erwhBeJrMJslrDnWf1bOWyxGbNFOXe1jtV6BmQAGuWVJh3Q2Bwo7O6rBmMTzYKk9CVmzW7x0dAtS7y1O7gh2TUeCNC3h"
+                        alt="Dashboard Preview"
+                        class="rounded-xl w-full h-auto opacity-90 hover:opacity-100 transition-opacity duration-700" />
                 </div>
             </div>
         </div>
@@ -209,7 +261,8 @@
     <section id="services" class="py-24 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-20">
-                <span class="text-primary-glow font-bold tracking-widest text-xs uppercase mb-3 block">End-to-End Solutions</span>
+                <span class="text-primary-glow font-bold tracking-widest text-xs uppercase mb-3 block">End-to-End
+                    Solutions</span>
                 <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Layanan Digital Lengkap</h2>
                 <div class="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"></div>
             </div>
@@ -218,69 +271,84 @@
                 <!-- Service Data will be injected via JS for cleaner HTML or listed here directly?
                      Let's list them directly for SEO but animate via JS
                 -->
-                
+
                 <!-- 1 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-blue-500/20">
+                    <div
+                        class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-blue-500/20">
                         <span class="material-icons text-blue-400 text-3xl">speed</span>
                     </div>
                     <h3 class="text-2xl font-display font-bold text-white mb-3">Landing Page Kilat</h3>
-                    <p class="text-slate-400">Pembuatan Landing Page Keren yang cepat. Konversi tinggi dengan desain memukau.</p>
+                    <p class="text-slate-400">Pembuatan Landing Page Keren yang cepat. Konversi tinggi dengan desain
+                        memukau.</p>
                 </div>
 
                 <!-- 2 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-purple-500/20">
+                    <div
+                        class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-purple-500/20">
                         <span class="material-icons text-purple-400 text-3xl">storefront</span>
                     </div>
-                    <h3 class="text-2xl font-display font-bold text-white mb-3">E-Commerce Mewah</h3>
-                    <p class="text-slate-400">Pembuatan Ecommerce mewah yang keren juga cepat. Siap jualan dalam hitungan hari.</p>
+                    <h3 class="text-2xl font-display font-bold text-white mb-3">E-Commerce Keren</h3>
+                    <p class="text-slate-400">Pembuatan Ecommerce yang keren juga cepat. Siap jualan dalam hitungan
+                        hari.</p>
                 </div>
 
                 <!-- 3 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-pink-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-pink-500/20">
+                    <div
+                        class="w-14 h-14 bg-pink-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-pink-500/20">
                         <span class="material-icons text-pink-400 text-3xl">install_mobile</span>
                     </div>
                     <h3 class="text-2xl font-display font-bold text-white mb-3">Mobile App Commerce</h3>
-                    <p class="text-slate-400">Pembuatan Mobile App Ecommerce dengan performa cepat. Native feel untuk iOS dan Android.</p>
+                    <p class="text-slate-400">Pembuatan Mobile App Ecommerce dengan performa cepat. Native feel untuk
+                        iOS dan Android.</p>
                 </div>
 
                 <!-- 4 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-indigo-500/20">
+                    <div
+                        class="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-indigo-500/20">
                         <span class="material-icons text-indigo-400 text-3xl">dashboard</span>
                     </div>
                     <h3 class="text-2xl font-display font-bold text-white mb-3">Custom Dashboard</h3>
-                    <p class="text-slate-400">Pembuatan website dengan dashboard yang lengkap. Pantau bisnis Anda real-time.</p>
+                    <p class="text-slate-400">Pembuatan website dengan dashboard yang lengkap. Pantau bisnis Anda
+                        real-time.</p>
                 </div>
 
                 <!-- 5 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-orange-500/20">
+                    <div
+                        class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-orange-500/20">
                         <span class="material-icons text-orange-400 text-3xl">point_of_sale</span>
                     </div>
                     <h3 class="text-2xl font-display font-bold text-white mb-3">POS Kasir Modern</h3>
-                    <p class="text-slate-400">Pembuatan website POS kasir yang keren. Kelola transaksi lebih mudah dan akurat.</p>
+                    <p class="text-slate-400">Pembuatan website POS kasir yang keren. Kelola transaksi lebih mudah dan
+                        akurat.</p>
                 </div>
 
                 <!-- 6 -->
                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group">
-                    <div class="w-14 h-14 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-teal-500/20">
+                    <div
+                        class="w-14 h-14 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 border border-teal-500/20">
                         <span class="material-icons text-teal-400 text-3xl">car_rental</span>
                     </div>
                     <h3 class="text-2xl font-display font-bold text-white mb-3">Sistem Rental</h3>
-                    <p class="text-slate-400">Pembuatan website rental. Booking engine otomatis untuk bisnis rental Anda.</p>
+                    <p class="text-slate-400">Pembuatan website rental. Booking engine otomatis untuk bisnis rental
+                        Anda.</p>
                 </div>
-                
-                 <!-- 7 -->
-                 <div class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group md:col-span-2 lg:col-span-3 flex flex-col md:flex-row items-center gap-6">
-                    <div class="w-14 h-14 bg-amber-500/10 rounded-2xl flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 border border-amber-500/20">
+
+                <!-- 7 -->
+                <div
+                    class="glass-panel p-8 rounded-3xl service-card hover:bg-white/5 transition-colors group md:col-span-2 lg:col-span-3 flex flex-col md:flex-row items-center gap-6">
+                    <div
+                        class="w-14 h-14 bg-amber-500/10 rounded-2xl flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-500 border border-amber-500/20">
                         <span class="material-icons text-amber-400 text-3xl">coffee</span>
                     </div>
                     <div>
                         <h3 class="text-2xl font-display font-bold text-white mb-2">Kafe Digital</h3>
-                        <p class="text-slate-400">Pembuatan website kafe digital. QR Menu, Order online, dan loyalty system dalam satu platform.</p>
+                        <p class="text-slate-400">Pembuatan website kafe digital. QR Menu, Order online, dan loyalty
+                            system dalam satu platform.</p>
                     </div>
                 </div>
 
@@ -293,42 +361,59 @@
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-background-dark/90 z-0"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
             <div class="text-center mb-20">
-                 <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Investasi Terbaik</h2>
-                 <p class="text-slate-400">Pilih paket yang sesuai dengan skala bisnis Anda.</p>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Investasi Terbaik</h2>
+                <p class="text-slate-400">Pilih paket yang sesuai dengan skala bisnis Anda.</p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Tier 1 -->
-                <div class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box">
-                    <div class="absolute top-0 right-0 p-4 opacity-50"><span class="material-icons text-6xl text-white/5">store</span></div>
+                <div
+                    class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box">
+                    <div class="absolute top-0 right-0 p-4 opacity-50"><span
+                            class="material-icons text-6xl text-white/5">store</span></div>
                     <h3 class="text-2xl font-display font-bold text-white mb-2">Website UMKM</h3>
                     <div class="text-sm text-primary mb-6 uppercase tracking-wider font-bold">Starter Pack</div>
-                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Solusi tepat untuk bisnis yang baru merambah dunia digital. Cepat, Murah, Keren.</p>
-                    <a href="https://wa.me/6281224621353?text=Saya%20mau%20bikin%20website%20untuk%20umkm%20saya" target="_blank" class="w-full block text-center bg-white/5 hover:bg-white/20 border border-white/10 text-white font-bold py-4 rounded-xl transition-all mb-6">
+                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Solusi tepat untuk bisnis
+                        yang baru merambah dunia digital. Cepat, Murah, Keren.</p>
+                    <a href="https://wa.me/6281224621353?text=Saya%20mau%20bikin%20website%20untuk%20umkm%20saya"
+                        target="_blank"
+                        class="w-full block text-center bg-white/5 hover:bg-white/20 border border-white/10 text-white font-bold py-4 rounded-xl transition-all mb-6">
                         Gratis Konsultasi
                     </a>
                 </div>
 
                 <!-- Tier 2 -->
-                <div class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box border-primary/50">
-                    <div class="absolute top-0 right-0 p-4 opacity-50"><span class="material-icons text-6xl text-white/5">business</span></div>
+                <div
+                    class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box border-primary/50">
+                    <div class="absolute top-0 right-0 p-4 opacity-50"><span
+                            class="material-icons text-6xl text-white/5">business</span></div>
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary"></div>
                     <h3 class="text-2xl font-display font-bold text-white mb-2">Website Corporate</h3>
                     <div class="text-sm text-primary-glow mb-6 uppercase tracking-wider font-bold">Business Growth</div>
-                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Upgrade kredibilitas perusahaan dengan website company profile yang profesional dan elegan.</p>
-                    <a href="https://wa.me/6281224621353?text=Saya%20tertarik%20bikin%20website%20corporate" target="_blank" class="w-full block text-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all mb-6 relative overflow-hidden">
+                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Upgrade kredibilitas
+                        perusahaan dengan website company profile yang profesional dan elegan.</p>
+                    <a href="https://wa.me/6281224621353?text=Saya%20tertarik%20bikin%20website%20corporate"
+                        target="_blank"
+                        class="w-full block text-center bg-gradient-to-r from-primary to-secondary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all mb-6 relative overflow-hidden">
                         <span class="relative z-10">Gratis Konsultasi</span>
-                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                        <div
+                            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform">
+                        </div>
                     </a>
                 </div>
 
                 <!-- Tier 3 -->
-                <div class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box">
-                    <div class="absolute top-0 right-0 p-4 opacity-50"><span class="material-icons text-6xl text-white/5">smartphone</span></div>
+                <div
+                    class="glass-panel rounded-3xl p-8 relative overflow-hidden group hover:-translate-y-2 transition-transform duration-500 neon-box">
+                    <div class="absolute top-0 right-0 p-4 opacity-50"><span
+                            class="material-icons text-6xl text-white/5">smartphone</span></div>
                     <h3 class="text-2xl font-display font-bold text-white mb-2">Aplikasi Mobile</h3>
                     <div class="text-sm text-secondary mb-6 uppercase tracking-wider font-bold">Enterprise Scale</div>
-                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Jangkau pelanggan di genggaman mereka dengan aplikasi Android & iOS native.</p>
-                    <a href="https://wa.me/6281224621353?text=Saya%20mau%20bikin%20aplikasi%20mobile%20untuk%20brand%20saya" target="_blank" class="w-full block text-center bg-white/5 hover:bg-white/20 border border-white/10 text-white font-bold py-4 rounded-xl transition-all mb-6">
+                    <p class="text-slate-400 mb-8 border-b border-white/10 pb-8 min-h-[80px]">Jangkau pelanggan di
+                        genggaman mereka dengan aplikasi Android & iOS native.</p>
+                    <a href="https://wa.me/6281224621353?text=Saya%20mau%20bikin%20aplikasi%20mobile%20untuk%20brand%20saya"
+                        target="_blank"
+                        class="w-full block text-center bg-white/5 hover:bg-white/20 border border-white/10 text-white font-bold py-4 rounded-xl transition-all mb-6">
                         Gratis Konsultasi
                     </a>
                 </div>
@@ -339,34 +424,62 @@
     <!-- Partners Section / Marquee -->
     <section class="py-16 border-y border-white/5 bg-black/40 backdrop-blur-sm">
         <div class="mb-8 text-center">
-             <p class="text-sm text-slate-500 uppercase tracking-widest">Dipercaya oleh berbagai industri di Indonesia</p>
+            <p class="text-sm text-slate-500 uppercase tracking-widest">Dipercaya oleh berbagai industri di Indonesia
+            </p>
         </div>
         <div class="relative flex overflow-x-hidden group">
             <div class="animate-scroll whitespace-nowrap flex gap-16 items-center px-16">
                 <!-- Logos Row 1 -->
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">checkroom</span> FashionBrand ID</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">coffee</span> KopiSenja</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">business</span> MegaCorp Indo</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">restaurant</span> RestoNusantara</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">local_shipping</span> LogistikCepat</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">school</span> EduTech Jaya</span>
-                
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">checkroom</span> FashionBrand ID</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">coffee</span> KopiSenja</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">business</span> MegaCorp Indo</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">restaurant</span> RestoNusantara</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">local_shipping</span> LogistikCepat</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">school</span> EduTech Jaya</span>
+
                 <!-- Duplicate for seamless loop -->
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">checkroom</span> FashionBrand ID</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">coffee</span> KopiSenja</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">business</span> MegaCorp Indo</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">restaurant</span> RestoNusantara</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">local_shipping</span> LogistikCepat</span>
-                <span class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span class="material-icons">school</span> EduTech Jaya</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">checkroom</span> FashionBrand ID</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">coffee</span> KopiSenja</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">business</span> MegaCorp Indo</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">restaurant</span> RestoNusantara</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">local_shipping</span> LogistikCepat</span>
+                <span
+                    class="text-2xl font-bold text-white/40 hover:text-white transition-colors flex items-center gap-2"><span
+                        class="material-icons">school</span> EduTech Jaya</span>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="border-t border-white/5 bg-black py-12 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">N</div>
+                <div
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
+                    N</div>
                 <span class="font-display font-bold text-xl text-white">NovaNext IT Agency</span>
             </div>
             <p class="text-slate-600 text-sm">© 2026 NovaNext IT Solutions. All rights reserved.</p>
@@ -397,8 +510,8 @@
             }, observerOptions);
 
             const servicesContainer = document.getElementById('service-container');
-            if(servicesContainer) observer.observe(servicesContainer);
-            
+            if (servicesContainer) observer.observe(servicesContainer);
+
             // Navbar Glass effect on scroll
             const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
@@ -413,4 +526,5 @@
         });
     </script>
 </body>
+
 </html>

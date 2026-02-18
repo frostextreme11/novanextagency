@@ -230,7 +230,14 @@ export default function Showcase() {
                     </Link>
                 </div>
                 <div className="font-display font-bold text-xl tracking-tight text-white flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs">N</span>
+                    <div className="relative w-8 h-8">
+                        <Image
+                            src="/logo/nn_logo.png"
+                            alt="NovaNext"
+                            fill
+                            className="object-contain"
+                        />
+                    </div>
                     <span className="hidden sm:inline">NovaNext</span>
                 </div>
             </nav>

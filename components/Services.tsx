@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -43,7 +44,7 @@ const services: ServiceData[] = [
         ],
     },
     {
-        title: "E-Commerce Mewah",
+        title: "E-Commerce Keren",
         subtitle: "Toko online yang jualan sendiri",
         icon: "storefront",
         accentFrom: "from-purple-500",
@@ -82,7 +83,7 @@ const services: ServiceData[] = [
         accentTo: "to-blue-400",
         accentColor: "indigo",
         features: [
-            { icon: "monitoring", label: "Monitor Real-time" },
+            { icon: "insights", label: "Monitor Real-time" },
             { icon: "pivot_table_chart", label: "Visualisasi Data" },
             { icon: "manage_accounts", label: "Kelola Tim & Role" },
             { icon: "download", label: "Export Laporan" },
@@ -232,7 +233,7 @@ function PrototypeMockup({ service, isActive }: { service: ServiceData; isActive
     }
 
     /* ---- E-Commerce prototype ---- */
-    if (key === "E-Commerce Mewah") {
+    if (key === "E-Commerce Keren") {
         return (
             <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="space-y-3">
                 <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center px-3 justify-between`}>
@@ -730,6 +731,36 @@ export default function Services() {
                         })}
                     </div>
                 </div>
+
+                {/* Showcase Button */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    className="mt-20 flex justify-center pb-8"
+                >
+                    <Link href="/showcase">
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative group cursor-pointer"
+                        >
+                            {/* Glowing Background */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+
+                            {/* Button Content */}
+                            <button className="relative px-8 py-4 bg-black rounded-full leading-none flex items-center gap-4 border border-white/10 group-hover:border-white/30 transition-colors">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-lg text-white">
+                                    <span className="material-icons text-sm">auto_awesome</span>
+                                </span>
+                                <span className="font-display font-bold text-lg text-slate-100 group-hover:text-white transition-colors tracking-wide">
+                                    Lihat Showcase Karya Kami
+                                </span>
+                                <span className="material-icons text-white group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </button>
+                        </motion.div>
+                    </Link>
+                </motion.div>
             </div>
         </section>
     );
