@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pertamina Merchandise Rewards</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f20d46",
+              "background-light": "#f8f5f6",
+              "background-dark": "#221014",
+              "surface-light": "#ffffff",
+              "text-primary": "#1c0d11",
+              "text-secondary": "#9c495e",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem", 
+              "lg": "0.75rem", 
+              "xl": "1rem", 
+              "2xl": "1.5rem",
+              "full": "9999px"
+            },
+            boxShadow: {
+              'soft': '0 4px 20px -2px rgba(242, 13, 70, 0.08)',
+              'card': '0 2px 10px -1px rgba(0, 0, 0, 0.04)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-text-primary overflow-x-hidden min-h-screen flex flex-col relative">
+<!-- Sticky Header Area -->
+<div class="sticky top-0 z-50 bg-background-light/95 backdrop-blur-md border-b border-[#f4e7ea]">
+<!-- Top Nav -->
+<div class="flex items-center justify-between px-4 pt-12 pb-3">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-black/5 transition-colors">
+<span class="material-symbols-outlined text-text-primary" style="font-size: 24px;">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-text-primary">Merchandise Rewards</h1>
+</div>
+<button class="relative p-2 rounded-full hover:bg-black/5 transition-colors">
+<span class="material-symbols-outlined text-text-primary" style="font-size: 24px;">shopping_cart</span>
+<span class="absolute top-1 right-1 h-2.5 w-2.5 bg-primary rounded-full border-2 border-background-light"></span>
+</button>
+</div>
+<!-- Points Summary Card (Compact) -->
+<div class="px-4 pb-4">
+<div class="bg-gradient-to-r from-primary to-[#ff4d7d] rounded-xl p-4 text-white shadow-soft flex items-center justify-between">
+<div>
+<p class="text-xs font-medium text-white/80 mb-0.5">Poin Anda</p>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold">1,250</span>
+<span class="text-sm font-medium opacity-90">pts</span>
+</div>
+</div>
+<div class="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5 cursor-pointer hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">history</span>
+<span class="text-xs font-bold">Riwayat</span>
+</div>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 px-4 pb-3 overflow-x-auto hide-scrollbar">
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-text-primary text-white text-sm font-medium transition-transform active:scale-95 shadow-sm">
+                Semua
+            </button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-white border border-[#f4e7ea] text-text-secondary text-sm font-medium hover:bg-[#fcf8f9] transition-colors whitespace-nowrap">
+                Pakaian
+            </button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-white border border-[#f4e7ea] text-text-secondary text-sm font-medium hover:bg-[#fcf8f9] transition-colors whitespace-nowrap">
+                Koleksi
+            </button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-white border border-[#f4e7ea] text-text-secondary text-sm font-medium hover:bg-[#fcf8f9] transition-colors whitespace-nowrap">
+                Voucher BBM
+            </button>
+<button class="flex-shrink-0 px-4 py-1.5 rounded-full bg-white border border-[#f4e7ea] text-text-secondary text-sm font-medium hover:bg-[#fcf8f9] transition-colors whitespace-nowrap">
+                Aksesoris
+            </button>
+</div>
+</div>
+<!-- Main Content: Scrollable Area -->
+<main class="flex-1 px-4 py-4 pb-24 space-y-6">
+<!-- Featured Reward -->
+<section>
+<div class="flex items-center justify-between mb-3">
+<h2 class="text-base font-bold text-text-primary">Featured Reward</h2>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="relative w-full h-64 rounded-2xl overflow-hidden shadow-card group cursor-pointer">
+<img alt="Detailed red diecast toy tanker truck" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Diecast Mobil Tangki Limited Edition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmkMhA8jJUwmIQOWROjT08mjeM2_PiUvNrWBCvIOo_xMmJ5VjXUi3NdZ_3ahRJeuPgAC8I_S8rVGKZ0E6ncXkIYfq3UvbKr_LrpJ_uG3fOV8YXaoOhJgUQCuS5zoOIS9DfhgHSA3i-IK-xdUgwwEKnNf_JMvoRVjt0SdFI2GlHrnQBZabU6Kse_3HkZIZRmyJEwLl8CQmwnPxwIV5NTUbjsuVtsNAwk4UT8AobRA8cN4U6QGA9PazWJETqJ_UOOv3O3XlboD7LJOwI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-4">
+<span class="inline-block px-2 py-0.5 rounded bg-primary text-white text-[10px] font-bold uppercase tracking-wider w-fit mb-2">Limited Edition</span>
+<h3 class="text-white text-lg font-bold leading-tight mb-1">Diecast Mobil Tangki Pertamina</h3>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-1 text-white">
+<span class="material-symbols-outlined text-yellow-400" style="font-size: 18px; font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">1,200 Poin</span>
+</div>
+<button class="bg-white text-primary px-4 py-1.5 rounded-lg text-sm font-bold shadow-lg hover:bg-gray-100 transition-colors">
+                            Tukarkan
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Grid -->
+<section>
+<h2 class="text-base font-bold text-text-primary mb-3">Rewards Populer</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Card 1: Affordable Item -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-shadow flex flex-col h-full border border-[#f4e7ea]">
+<div class="relative h-40 w-full bg-gray-50">
+<img alt="Red polo shirt with white details" class="w-full h-full object-cover object-center" data-alt="Kaos Eksklusif Pertamina" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLoXkRKrZUkPigHGoj6kcco_JSw_nXES09Pgbi-GXgLOeJjVsOyxfwMFh24nxNsDRIT4ST8GSAVC1ly1f8XVWtdrfaLO1mgB9au5oe7NRTQYrkzdvzygtXRrRBxORvxNCm-xG6bwlcr4kTy8pu4gAEcKNTrZz5blcyVwThnKj80JQvj2J2cvtBlzG56WaG-ihIyAMTeEQUqAn54aNB5CcPnZuERyQo8bh2KbKMAJ7VlNh0_PYQRqPfCrwZZwK4XVkz193LsbJ5mOFi"/>
+<div class="absolute top-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            Pakaian
+                        </div>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-text-primary line-clamp-2 mb-2 leading-tight">Kaos Polo Eksklusif MyPertamina</h3>
+<div class="mt-auto">
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-primary font-bold text-sm">500 Poin</span>
+</div>
+<button class="w-full bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors active:scale-[0.98]">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 2: Cap -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-shadow flex flex-col h-full border border-[#f4e7ea]">
+<div class="relative h-40 w-full bg-gray-50">
+<img alt="Red baseball cap on table" class="w-full h-full object-cover object-center" data-alt="Topi Balap Pertamina" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKdVvuzFxKSE2UZufCTD8QGMsTlADDmmS_4oloWyTe63L2axzzNSRdQG7SI5-gAmuVugnfHtkuhhQg_FoVicqsWq79hJS7cYDXlZs7_Vol2_qx3_yDBdwiOA9R0XbKlAmR60VmtzV3QdEQu3Dztbnjdr8vWiXCZIsJ5Z3SP05wl5qkFzo3Wu7SXrATXwm_AZPvMq2ZS5_vLjzPmIFqZKF5-L2rXXtxZeN1YcntPJ-ubJue12QCMRgQg_tmxdHniC87FxSm_EBUMCly"/>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-text-primary line-clamp-2 mb-2 leading-tight">Topi Balap Enduro Racing Team</h3>
+<div class="mt-auto">
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-primary font-bold text-sm">350 Poin</span>
+</div>
+<button class="w-full bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors active:scale-[0.98]">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Voucher (High Value) -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-shadow flex flex-col h-full border border-[#f4e7ea]">
+<div class="relative h-40 w-full bg-[#fcf8f9] flex items-center justify-center p-4">
+<div class="w-full h-full bg-gradient-to-br from-[#f20d46] to-[#b30933] rounded-lg flex flex-col items-center justify-center text-white p-2 text-center shadow-inner relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full"></div>
+<span class="text-[10px] font-medium opacity-80 uppercase tracking-widest mb-1">VOUCHER</span>
+<span class="text-xl font-extrabold">50K</span>
+<span class="text-[9px] mt-1 opacity-90">Bahan Bakar</span>
+</div>
+<img alt="" class="hidden" data-alt="Voucher BBM Graphic" src=""/>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-text-primary line-clamp-2 mb-2 leading-tight">Voucher BBM Pertamina Rp 50.000</h3>
+<div class="mt-auto">
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-primary font-bold text-sm">800 Poin</span>
+</div>
+<button class="w-full bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors active:scale-[0.98]">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 4: Tumbler (Just Enough Points) -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-shadow flex flex-col h-full border border-[#f4e7ea]">
+<div class="relative h-40 w-full bg-gray-50">
+<img alt="Sleek reusable water bottle" class="w-full h-full object-cover object-center" data-alt="Tumbler Eco-Friendly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCDMkIEkHg9kxi2wDffZktmb48wbYLjUnZC_v2rqL95K4yTxv81LAXBJ5hjy6RSyEMtXe2eUswzikBkxB4rtMYYNYYR3rb6BNx1GMMWBgADwqMlDrS9lo2sjsvTOaqeVvyWk8qq4b-ungW-ERtNIuTB4uujxO1ijoX4EjBLsZQ3MSDBZSH0ZtaCJ9Bwvy-Xo8HookYU_V_5-JE72g4ujDZCtzdtBJZgGe2MRVUrFJJM8lpnnGwKWBd2EvpvagcaFdBqZFebyC0NRNm"/>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-text-primary line-clamp-2 mb-2 leading-tight">Tumbler Stainless Eco-Friendly</h3>
+<div class="mt-auto">
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-primary font-bold text-sm">450 Poin</span>
+</div>
+<button class="w-full bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors active:scale-[0.98]">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 5: Too Expensive (Disabled State) -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card flex flex-col h-full border border-[#f4e7ea] opacity-80">
+<div class="relative h-40 w-full bg-gray-50">
+<img alt="Modern gaming console controller" class="w-full h-full object-cover object-center grayscale-[50%]" data-alt="Gaming Console Reward" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHypN6oKJzaaLCVCvTar4YTHdqWGNg6uy4QJ6Jh-aG4XmHYtnXuAz1_wmwoLniOQv2dAmxHRJApERXdZFckDEp401MZuuIzOeM4Let6eufLq643O_6eg8mR6CtJfQsb-gfaC0fN0-oiUJTkxEOp8sKZS5iFUWZP137A50RpG5spFu0-cg8JJoJFgWqz5mUgeKFZqx7NYEeND00oy1VNjNUzzK_9uEiZL6pvZfil19qOAfnWrZ0r9u4mt1813VK4VGrqFUYMlqKAd6c"/>
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center">
+<span class="bg-black/70 text-white text-[10px] font-bold px-3 py-1 rounded-full backdrop-blur-md">
+<span class="material-symbols-outlined align-middle mr-1 text-xs" style="font-size: 12px;">lock</span>
+                                Belum Cukup
+                            </span>
+</div>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-gray-500 line-clamp-2 mb-2 leading-tight">Gaming Console Bundle</h3>
+<div class="mt-auto">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 16px;">bolt</span>
+<span class="text-gray-500 font-bold text-sm">5,000 Poin</span>
+</div>
+</div>
+<!-- Progress bar for goal -->
+<div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+<div class="bg-primary/50 h-1.5 rounded-full" style="width: 25%"></div>
+</div>
+<p class="text-[10px] text-gray-400 text-center mb-2">Butuh 3,750 poin lagi</p>
+<button class="w-full bg-gray-100 text-gray-400 text-xs font-bold py-2.5 rounded-lg cursor-not-allowed border border-gray-200" disabled="">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+<!-- Card 6: Sticker Pack -->
+<div class="bg-surface-light rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-shadow flex flex-col h-full border border-[#f4e7ea]">
+<div class="relative h-40 w-full bg-gray-50">
+<img alt="Collection of colorful stickers" class="w-full h-full object-cover object-center" data-alt="Sticker Pack Collection" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsxmXUpCgSYCY8Ou7tz5T1puDvGHBE0yq4RMYggkqSsJaoAgwzBw-FAOnqft0x1jRZ96z0lzTCmztxYlihKw-o9_xCnD0rp_4f1cwuZpQCVhy8ycDy_JoXaMV8Ewic-Fx_vj-0-SOr5te6bdCIL7Q_YGERCqWjtsZHn7Macz3EBWqNCuzdisrH2gC69Ot8toNi7h1VbzcBpS2blSdKaKBXtOlLlx6DFJXxoX9goK4RhxdLgCGrTHZ5uHxrIKhtkWKHxljxXdmuDczQ"/>
+</div>
+<div class="p-3 flex flex-col flex-1">
+<h3 class="text-sm font-semibold text-text-primary line-clamp-2 mb-2 leading-tight">Sticker Pack Edisi Spesial</h3>
+<div class="mt-auto">
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px; font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-primary font-bold text-sm">150 Poin</span>
+</div>
+<button class="w-full bg-primary text-white text-xs font-bold py-2.5 rounded-lg hover:bg-primary/90 transition-colors active:scale-[0.98]">
+                                Tukarkan
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-40 bg-white border-t border-[#f4e7ea]">
+<div class="flex justify-around items-end px-2 pt-2 pb-5 md:pb-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#9c495e] group" href="#">
+<span class="material-symbols-outlined text-[#9c495e] group-hover:text-primary transition-colors" style="font-size: 24px;">home</span>
+<p class="text-[#9c495e] text-[10px] font-medium group-hover:text-primary transition-colors">Beranda</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#9c495e] group" href="#">
+<span class="material-symbols-outlined text-[#9c495e] group-hover:text-primary transition-colors" style="font-size: 24px;">qr_code_scanner</span>
+<p class="text-[#9c495e] text-[10px] font-medium group-hover:text-primary transition-colors">Scan</p>
+</a>
+<!-- Active State for Rewards -->
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary relative" href="#">
+<div class="absolute -top-10 bg-primary rounded-full p-3 shadow-lg shadow-primary/30 border-[4px] border-white">
+<span class="material-symbols-outlined text-white" style="font-size: 24px; font-variation-settings: 'FILL' 1;">redeem</span>
+</div>
+<!-- Spacer for the floating button -->
+<div class="h-6"></div>
+<p class="text-primary text-[10px] font-bold">Rewards</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#9c495e] group" href="#">
+<span class="material-symbols-outlined text-[#9c495e] group-hover:text-primary transition-colors" style="font-size: 24px;">receipt_long</span>
+<p class="text-[#9c495e] text-[10px] font-medium group-hover:text-primary transition-colors">Aktivitas</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#9c495e] group" href="#">
+<span class="material-symbols-outlined text-[#9c495e] group-hover:text-primary transition-colors" style="font-size: 24px;">person</span>
+<p class="text-[#9c495e] text-[10px] font-medium group-hover:text-primary transition-colors">Akun</p>
+</a>
+</div>
+</nav>
+</body></html>

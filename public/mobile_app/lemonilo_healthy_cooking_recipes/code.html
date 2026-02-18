@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lemonilo Recipe - Mie Goreng Sayur</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec37", // Lemonilo Green
+                        "primary-dark": "#0db82b",
+                        "background-light": "#f8fcf9",
+                        "background-dark": "#102213",
+                        "text-main": "#0d1b10",
+                        "text-secondary": "#4c9a59",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Leaf pattern background */
+        .leaf-pattern {
+            background-color: #f8fcf9;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2313ec37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased overflow-x-hidden">
+<!-- Main Container -->
+<div class="relative min-h-screen w-full flex flex-col max-w-md mx-auto shadow-2xl bg-white dark:bg-background-dark pb-24">
+<!-- Top Navigation (Overlay) -->
+<div class="fixed top-0 left-0 right-0 max-w-md mx-auto z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/50 to-transparent">
+<button class="bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white/30 transition">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white/30 transition">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white/30 transition">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<!-- Video Section -->
+<div class="relative w-full aspect-[4/3] bg-gray-900 group cursor-pointer overflow-hidden rounded-b-xl" data-alt="Close up of delicious fried noodles with vegetables in a bowl" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVMIQFKNqS9vkLwZCfSD8hYFrie70Bmn5glRXNY0T0JcfR4yF07eLpv4I1mgmDJI4hXZRZB8Q-FED2hGKPk_qiWfqBbmPnGXeabpLsIZfzEz-vPC_8ZymBLuej4ECrTHDRjBNnF2prMhjWkxhn6y6AD25UZNtlLQXaMmw6Mrp1JhPHLfBdwyQkb4KmaQD4KtuToJcGCy5rhZlBi0MYTrzY4sq-M8rDfAw4Il2gTOpQo3H82uqwCKB4d37nDghjV2KWjI2e2SKQDZBH'); background-size: cover; background-position: center;">
+<!-- Video Overlay Gradient -->
+<div class="absolute inset-0 bg-black/30"></div>
+<!-- Play Button -->
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="relative flex items-center justify-center size-16 rounded-full bg-primary/90 text-white shadow-lg backdrop-blur-sm hover:scale-105 transition-transform duration-300">
+<div class="absolute inset-0 rounded-full animate-ping bg-primary opacity-20"></div>
+<span class="material-symbols-outlined text-[32px] ml-1">play_arrow</span>
+</button>
+</div>
+<!-- Duration Badge -->
+<div class="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-white text-xs font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+                02:45
+            </div>
+</div>
+<!-- Content Body -->
+<div class="flex flex-col flex-1 -mt-4 z-10 rounded-t-3xl bg-white dark:bg-background-dark leaf-pattern relative shadow-inner">
+<!-- Handle for dragging (visual cue) -->
+<div class="w-full flex justify-center pt-3 pb-1">
+<div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+</div>
+<!-- Header Info -->
+<div class="px-6 pt-2 pb-6">
+<div class="flex items-start justify-between">
+<div>
+<span class="inline-block px-2 py-1 mb-2 text-xs font-semibold tracking-wider text-primary uppercase bg-primary/10 rounded-md">Healthy Choice</span>
+<h1 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">Mie Goreng Sayur Lemonilo</h1>
+</div>
+<div class="flex flex-col items-center justify-center ml-4 bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded-lg border border-yellow-100 dark:border-yellow-800">
+<span class="text-yellow-500 material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-gray-800 dark:text-gray-200">4.8</span>
+</div>
+</div>
+<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Cara asik masak sehat &amp; praktis tanpa ribet.</p>
+<!-- Metadata Row -->
+<div class="flex items-center gap-4 mt-4 text-sm text-gray-600 dark:text-gray-300">
+<div class="flex items-center gap-1.5">
+<span class="text-primary material-symbols-outlined text-[20px]">schedule</span>
+<span>15 Mins</span>
+</div>
+<div class="w-1 h-1 bg-gray-300 rounded-full"></div>
+<div class="flex items-center gap-1.5">
+<span class="text-orange-500 material-symbols-outlined text-[20px]">restaurant_menu</span>
+<span>Mudah</span>
+</div>
+<div class="w-1 h-1 bg-gray-300 rounded-full"></div>
+<div class="flex items-center gap-1.5">
+<span class="text-green-600 material-symbols-outlined text-[20px]">eco</span>
+<span>Natural</span>
+</div>
+</div>
+</div>
+<!-- Tabs -->
+<div class="px-6 sticky top-0 bg-white/95 dark:bg-background-dark/95 backdrop-blur-sm z-20 border-b border-gray-100 dark:border-gray-800">
+<div class="flex w-full">
+<button class="flex-1 pb-3 text-center text-sm font-semibold text-primary border-b-2 border-primary transition-colors relative">
+                        Bahan
+                        <span class="absolute -top-1 -right-2 flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+</button>
+<button class="flex-1 pb-3 text-center text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        Cara Masak
+                    </button>
+<button class="flex-1 pb-3 text-center text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                        Nutrisi
+                    </button>
+</div>
+</div>
+<!-- Tab Content: Ingredients -->
+<div class="flex-1 px-6 py-6 space-y-6">
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-bold text-lg dark:text-white">5 Bahan Utama</h3>
+<span class="text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded-full">Available in Store</span>
+</div>
+<!-- Ingredient Item 1 (Main Product) -->
+<div class="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:border-primary/50 transition-colors group">
+<div class="relative w-16 h-16 shrink-0 bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-600">
+<div class="w-full h-full bg-cover bg-center" data-alt="Package of dried green spinach noodles" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCAtZzJV-fqVSbG1pCUTP6sAuH3PKKazlWhM2Ihm8tT0KX8eEHNWzByHNDJsu6UTCDAEqkfOWFOFVb0Q1yG_5NLTwwjtBHWgIVLu-_5y2vKa_24S3Jo8H1nRmIuicXii1WAd627U7uvEsqx08ajH0_a_z_3N0kUaNK3L_Pznu00RFL9t3OGFqSDk3lkzrBqTHEmmw6QUu_xkbHlwiBcuhvwXJWw_OAR1a5iz8PaqKtuBklCiwPJGVwiDyBroHP0grtY7iSV4lcDAfNE')"></div>
+<div class="absolute bottom-0 right-0 bg-primary p-0.5 rounded-tl-md">
+<span class="material-symbols-outlined text-white text-[12px] block">check</span>
+</div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">Lemonilo Mie Goreng</h4>
+<p class="text-xs text-gray-500 mt-0.5">85 gr • Rp 7.500</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600">-</button>
+<span class="text-sm font-medium w-3 text-center dark:text-white">2</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-dark shadow-sm shadow-primary/30">+</button>
+</div>
+</div>
+<!-- Ingredient Item 2 -->
+<div class="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:border-primary/50 transition-colors">
+<div class="w-16 h-16 shrink-0 bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-600">
+<div class="w-full h-full bg-cover bg-center" data-alt="Fresh green bok choy vegetables" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMJgYNwt8-tK54JvGqxrglODv0YJvT5EqOC_7shHbntbzdI8dKeh0OJTv3woMyMPQyLaKaZROkgqEeKRsHKhwLBQozZdAB9jmqQMWbYu6vN_rYA-dCFifRvrqkhqj0YNxU8WRZ7ibkOxq93Nj2qyPgpV1OlO730LDtAPP2HLguebESVQu0wi-KCO9B-KZy2KkFtK2tunYBTSNd_B52N6ZZJO1UOL2praiHdLYZCUD8JFrJ1D3dhXDU2dOJueCKUHI9JDs1i9gRGD8Y')"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">Sawi Hijau Segar</h4>
+<p class="text-xs text-gray-500 mt-0.5">250 gr • Rp 5.000</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600">-</button>
+<span class="text-sm font-medium w-3 text-center dark:text-white">1</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-dark shadow-sm shadow-primary/30">+</button>
+</div>
+</div>
+<!-- Ingredient Item 3 -->
+<div class="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:border-primary/50 transition-colors">
+<div class="w-16 h-16 shrink-0 bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-600">
+<div class="w-full h-full bg-cover bg-center" data-alt="Fresh eggs in a carton" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqNIHd7Rx2wadwbNfNZEQdqeAOwTot-RroVqamfZSWhN34NjGkWhkuBllvEADvUYTQ3JqK3PQzDzkpJ_dLmTpk_kKbfUsofHNQ3-3u-SGkgrZQwGOrprJhg8wkZ2dc0f-PNmWsq3ZAOgBoJcpheuyN7syl8_NA4-V0ccbZGy8t-WJ4BeC5wql1M-3m23WVrYUW1hIHuvprIGS-CSLARIle9WxVLl5o8jyKWZC5edsgojBHQAFxvf-Mvy0p8l27J_p3fmvoqcEGJ8Z3')"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-semibold text-gray-900 dark:text-white text-sm">Telur Ayam Kampung</h4>
+<p class="text-xs text-gray-500 mt-0.5">6 pcs • Rp 18.000</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-600">-</button>
+<span class="text-sm font-medium w-3 text-center dark:text-white">0</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-dark shadow-sm shadow-primary/30">+</button>
+</div>
+</div>
+<!-- Non-Store Item (Just text) -->
+<div class="pt-4">
+<h3 class="font-bold text-lg dark:text-white mb-3">Bumbu Dapur (Pantry)</h3>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+<span class="w-5 h-5 flex items-center justify-center rounded-full bg-green-100 text-green-600 material-symbols-outlined text-[14px]">check</span>
+<span>2 siung Bawang Putih</span>
+</li>
+<li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+<span class="w-5 h-5 flex items-center justify-center rounded-full bg-green-100 text-green-600 material-symbols-outlined text-[14px]">check</span>
+<span>1 sdm Minyak Goreng Lemonilo</span>
+</li>
+<li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+<span class="w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 material-symbols-outlined text-[14px]">check</span>
+<span>Secukupnya Garam &amp; Lada</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 p-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Total Estimasi</span>
+<span class="text-lg font-bold text-gray-900 dark:text-white">Rp 20.000</span>
+</div>
+<button class="flex-1 bg-primary hover:bg-primary-dark text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg shadow-primary/40 flex items-center justify-center gap-2 transition-all active:scale-95 group">
+<span>Beli Bahan</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

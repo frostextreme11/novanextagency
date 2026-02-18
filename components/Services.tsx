@@ -28,119 +28,119 @@ interface ServiceData {
 const services: ServiceData[] = [
     {
         title: "Landing Page Kilat",
-        subtitle: "Konversi tinggi dengan desain memukau",
+        subtitle: "Halaman yang bikin pengunjung langsung action",
         icon: "speed",
         accentFrom: "from-blue-500",
         accentTo: "to-cyan-400",
         accentColor: "blue",
         features: [
-            { icon: "bolt", label: "Ultra-Fast Loading" },
+            { icon: "bolt", label: "Loading Super Cepat" },
             { icon: "auto_awesome", label: "Animasi Premium" },
-            { icon: "analytics", label: "Conversion Tracking" },
-            { icon: "devices", label: "Fully Responsive" },
-            { icon: "palette", label: "Custom Branding" },
-            { icon: "search", label: "SEO Optimized" },
+            { icon: "analytics", label: "Tracking Konversi" },
+            { icon: "devices", label: "Responsif Semua Device" },
+            { icon: "palette", label: "Branding Custom" },
+            { icon: "search", label: "SEO Siap Ranking" },
         ],
     },
     {
         title: "E-Commerce Mewah",
-        subtitle: "Toko online premium siap jualan",
+        subtitle: "Toko online yang jualan sendiri",
         icon: "storefront",
         accentFrom: "from-purple-500",
         accentTo: "to-fuchsia-400",
         accentColor: "purple",
         features: [
-            { icon: "shopping_cart", label: "Smart Cart" },
-            { icon: "payment", label: "Multi Payment Gateway" },
-            { icon: "inventory", label: "Inventory Real-time" },
-            { icon: "local_shipping", label: "Auto Shipping" },
-            { icon: "loyalty", label: "Loyalty Program" },
-            { icon: "bar_chart", label: "Sales Analytics" },
+            { icon: "shopping_cart", label: "Keranjang Pintar" },
+            { icon: "payment", label: "Multi Pembayaran" },
+            { icon: "inventory", label: "Stok Real-time" },
+            { icon: "local_shipping", label: "Ongkir Otomatis" },
+            { icon: "loyalty", label: "Program Loyalti" },
+            { icon: "bar_chart", label: "Laporan Penjualan" },
         ],
     },
     {
         title: "Mobile App Commerce",
-        subtitle: "Native feel untuk iOS & Android",
+        subtitle: "Toko di genggaman — iOS & Android",
         icon: "install_mobile",
         accentFrom: "from-pink-500",
         accentTo: "to-rose-400",
         accentColor: "pink",
         features: [
-            { icon: "notifications_active", label: "Push Notification" },
-            { icon: "fingerprint", label: "Biometric Login" },
-            { icon: "offline_bolt", label: "Offline Mode" },
-            { icon: "speed", label: "Native Performance" },
-            { icon: "cloud_sync", label: "Real-time Sync" },
-            { icon: "security", label: "End-to-End Encryption" },
+            { icon: "notifications_active", label: "Notif Pesanan" },
+            { icon: "fingerprint", label: "Login Sidik Jari" },
+            { icon: "offline_bolt", label: "Mode Offline" },
+            { icon: "speed", label: "Performa Native" },
+            { icon: "cloud_sync", label: "Sinkron Real-time" },
+            { icon: "security", label: "Enkripsi Data" },
         ],
     },
     {
         title: "Custom Dashboard",
-        subtitle: "Pantau bisnis Anda real-time",
+        subtitle: "Pantau semua data bisnis dari satu layar",
         icon: "dashboard",
         accentFrom: "from-indigo-500",
         accentTo: "to-blue-400",
         accentColor: "indigo",
         features: [
-            { icon: "monitoring", label: "Real-time Monitoring" },
-            { icon: "pivot_table_chart", label: "Data Visualization" },
-            { icon: "manage_accounts", label: "Role Management" },
-            { icon: "download", label: "Export Reports" },
-            { icon: "api", label: "API Integration" },
+            { icon: "monitoring", label: "Monitor Real-time" },
+            { icon: "pivot_table_chart", label: "Visualisasi Data" },
+            { icon: "manage_accounts", label: "Kelola Tim & Role" },
+            { icon: "download", label: "Export Laporan" },
+            { icon: "api", label: "Integrasi API" },
             { icon: "dark_mode", label: "Dark / Light Mode" },
         ],
     },
     {
         title: "POS Kasir Modern",
-        subtitle: "Kelola transaksi lebih mudah & akurat",
+        subtitle: "Kasir digital anti ribet",
         icon: "point_of_sale",
         accentFrom: "from-orange-500",
         accentTo: "to-amber-400",
         accentColor: "orange",
         features: [
-            { icon: "receipt_long", label: "E-Receipt" },
-            { icon: "qr_code_scanner", label: "Barcode Scanner" },
-            { icon: "account_balance_wallet", label: "Multi Payment" },
-            { icon: "assessment", label: "Sales Report" },
-            { icon: "group", label: "Multi Cashier" },
-            { icon: "inventory_2", label: "Stock Alert" },
+            { icon: "receipt_long", label: "Struk Digital" },
+            { icon: "qr_code_scanner", label: "Scan Barcode" },
+            { icon: "account_balance_wallet", label: "Multi Pembayaran" },
+            { icon: "assessment", label: "Laporan Harian" },
+            { icon: "group", label: "Multi Kasir" },
+            { icon: "inventory_2", label: "Alert Stok Habis" },
         ],
     },
     {
         title: "Sistem Rental",
-        subtitle: "Booking engine otomatis",
+        subtitle: "Booking & manajemen armada otomatis",
         icon: "car_rental",
         accentFrom: "from-teal-500",
         accentTo: "to-emerald-400",
         accentColor: "teal",
         features: [
-            { icon: "calendar_month", label: "Smart Calendar" },
-            { icon: "event_available", label: "Auto Booking" },
-            { icon: "directions_car", label: "Fleet Management" },
-            { icon: "credit_card", label: "Online Payment" },
-            { icon: "sms", label: "SMS Reminder" },
-            { icon: "star", label: "Review System" },
+            { icon: "calendar_month", label: "Kalender Pintar" },
+            { icon: "event_available", label: "Booking Otomatis" },
+            { icon: "directions_car", label: "Kelola Armada" },
+            { icon: "credit_card", label: "Bayar Online" },
+            { icon: "sms", label: "Pengingat Otomatis" },
+            { icon: "star", label: "Rating & Review" },
         ],
     },
     {
         title: "Kafe Digital",
-        subtitle: "QR Menu & loyalty system",
+        subtitle: "Pesan via QR, bayar, selesai",
         icon: "coffee",
         accentFrom: "from-amber-500",
         accentTo: "to-yellow-400",
         accentColor: "amber",
         features: [
-            { icon: "qr_code_2", label: "QR Menu Scan" },
-            { icon: "restaurant_menu", label: "Digital Menu" },
+            { icon: "qr_code_2", label: "Scan QR Menu" },
+            { icon: "restaurant_menu", label: "Menu Digital" },
             { icon: "delivery_dining", label: "Order Online" },
-            { icon: "loyalty", label: "Loyalty Points" },
-            { icon: "table_restaurant", label: "Table Booking" },
-            { icon: "kitchen", label: "Kitchen Display" },
+            { icon: "loyalty", label: "Poin Loyalti" },
+            { icon: "table_restaurant", label: "Booking Meja" },
+            { icon: "kitchen", label: "Layar Dapur" },
         ],
     },
     {
         title: "Portal Akademis Online",
-        subtitle: "Cocok untuk sekolah, kampus & edukasi",
+        subtitle: "Belajar, ujian & absensi — semua online",
         icon: "school",
         accentFrom: "from-emerald-500",
         accentTo: "to-green-400",
@@ -148,9 +148,9 @@ const services: ServiceData[] = [
         features: [
             { icon: "menu_book", label: "E-Learning LMS" },
             { icon: "assignment", label: "Tugas & Ujian Online" },
-            { icon: "grade", label: "Sistem Nilai" },
-            { icon: "video_camera_front", label: "Video Conference" },
-            { icon: "co_present", label: "Absensi Digital" },
+            { icon: "grade", label: "Rapor Digital" },
+            { icon: "video_camera_front", label: "Kelas Video" },
+            { icon: "co_present", label: "Absensi Online" },
             { icon: "forum", label: "Forum Diskusi" },
         ],
     },
@@ -263,28 +263,132 @@ function PrototypeMockup({ service, isActive }: { service: ServiceData; isActive
         );
     }
 
-    /* ---- Mobile App prototype ---- */
+    /* ---- Mobile App prototype — 3 phones: Home, Cart, Checkout ---- */
     if (key === "Mobile App Commerce") {
+        const phoneFrame = "border-2 border-white/10 rounded-[18px] p-1.5 bg-black/40";
+        const notch = (
+            <motion.div variants={fadeUp} className="h-3 flex items-center justify-center mb-1">
+                <div className="w-8 h-1 bg-white/20 rounded-full" />
+            </motion.div>
+        );
         return (
-            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="flex justify-center">
-                <div className="w-[160px] border-2 border-white/10 rounded-[20px] p-2 bg-black/40">
-                    <motion.div variants={fadeUp} className="h-4 flex items-center justify-center mb-2">
-                        <div className="w-10 h-1.5 bg-white/20 rounded-full" />
+            <motion.div key={key} variants={stagger} initial="hidden" animate={isActive ? "show" : "hidden"} className="flex justify-center gap-2 sm:gap-3 items-end">
+                {/* Phone 1: Home E-Commerce */}
+                <motion.div variants={scaleIn} className={`w-[110px] sm:w-[130px] ${phoneFrame}`}>
+                    {notch}
+                    <motion.div variants={fadeUp} className={`${barLight} h-5 rounded-md flex items-center px-2 justify-between mb-1.5`}>
+                        <div className="w-8 h-2 bg-white/15 rounded" />
+                        <div className="flex gap-1">
+                            <span className="material-icons text-white/20" style={{ fontSize: '8px' }}>search</span>
+                            <span className="material-icons text-white/20" style={{ fontSize: '8px' }}>shopping_cart</span>
+                        </div>
                     </motion.div>
-                    <motion.div variants={fadeUp} className={`${barLight} h-20 rounded-lg mb-2 flex items-center justify-center`}>
-                        <span className="material-icons text-white/20 text-2xl">image</span>
+                    {/* Banner */}
+                    <motion.div variants={fadeUp} className={`${bar} h-10 rounded-md mb-1.5 flex items-center justify-center`}>
+                        <span className="text-[7px] text-white/70 font-bold">🔥 SALE 50% OFF</span>
                     </motion.div>
-                    <motion.div variants={fadeUp} className="space-y-1 mb-2">
-                        <div className={`${bar} h-3 rounded w-3/4`} />
-                        <div className={`${barLight} h-2 rounded w-1/2`} />
+                    {/* Product grid */}
+                    <motion.div variants={fadeUp} className="grid grid-cols-2 gap-1 mb-1">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className={`${barLight} rounded-md p-1 border border-white/5`}>
+                                <div className="w-full h-5 bg-white/5 rounded mb-0.5" />
+                                <div className="w-3/4 h-1 bg-white/10 rounded-full mb-0.5" />
+                                <div className="w-1/2 h-1 bg-white/15 rounded-full" />
+                            </div>
+                        ))}
                     </motion.div>
-                    <motion.div variants={fadeUp} className="grid grid-cols-3 gap-1 mb-2">
-                        {[1, 2, 3].map(i => <div key={i} className={`${barLight} h-10 rounded border border-white/5`} />)}
+                    {/* Bottom nav */}
+                    <motion.div variants={fadeUp} className={`${barLight} h-4 rounded-md flex items-center justify-around`}>
+                        {['home', 'search', 'favorite', 'person'].map((ic, i) => (
+                            <span key={i} className={`material-icons ${i === 0 ? 'text-white/50' : 'text-white/15'}`} style={{ fontSize: '7px' }}>{ic}</span>
+                        ))}
                     </motion.div>
-                    <motion.div variants={fadeUp} className={`${bar} h-7 rounded-lg flex items-center justify-center`}>
-                        <span className="text-[10px] text-white font-bold">Add to Cart</span>
+                    <div className="text-center mt-1">
+                        <span className="text-[7px] text-white/30 font-bold">HOME</span>
+                    </div>
+                </motion.div>
+
+                {/* Phone 2: Cart — slightly taller / raised */}
+                <motion.div variants={scaleIn} className={`w-[120px] sm:w-[140px] ${phoneFrame} ring-1 ring-white/5`}>
+                    {notch}
+                    <motion.div variants={fadeUp} className={`${bar} h-5 rounded-md flex items-center px-2 mb-1.5`}>
+                        <span className="text-[8px] text-white/80 font-bold">Keranjang (3)</span>
                     </motion.div>
-                </div>
+                    {/* Cart items */}
+                    {['Sepatu Sport', 'Kaos Premium', 'Topi Snapback'].map((item, i) => (
+                        <motion.div key={i} variants={fadeUp} className={`${barLight} h-7 rounded-md flex items-center px-2 justify-between border border-white/5 mb-1`}>
+                            <div className="flex items-center gap-1">
+                                <div className="w-4 h-4 bg-white/10 rounded" />
+                                <div>
+                                    <div className="text-[7px] text-white/50 leading-tight">{item}</div>
+                                    <div className="text-[6px] text-white/30">Rp 199k</div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-0.5">
+                                <div className="w-3 h-3 bg-white/10 rounded text-[6px] text-white/40 flex items-center justify-center">-</div>
+                                <div className="text-[7px] text-white/50 w-3 text-center">1</div>
+                                <div className="w-3 h-3 bg-white/10 rounded text-[6px] text-white/40 flex items-center justify-center">+</div>
+                            </div>
+                        </motion.div>
+                    ))}
+                    {/* Total */}
+                    <motion.div variants={fadeUp} className={`${barLight} h-5 rounded-md flex items-center px-2 justify-between border border-white/5 mb-1`}>
+                        <span className="text-[7px] text-white/40">Total</span>
+                        <span className="text-[8px] text-white/70 font-bold">Rp 597k</span>
+                    </motion.div>
+                    <motion.div variants={fadeUp} className={`${bar} h-6 rounded-md flex items-center justify-center`}>
+                        <span className="text-[8px] text-white font-bold">Checkout →</span>
+                    </motion.div>
+                    <div className="text-center mt-1">
+                        <span className="text-[7px] text-white/30 font-bold">CART</span>
+                    </div>
+                </motion.div>
+
+                {/* Phone 3: Checkout */}
+                <motion.div variants={scaleIn} className={`w-[110px] sm:w-[130px] ${phoneFrame}`}>
+                    {notch}
+                    <motion.div variants={fadeUp} className={`${bar} h-5 rounded-md flex items-center px-2 mb-1.5`}>
+                        <span className="text-[8px] text-white/80 font-bold">Checkout</span>
+                    </motion.div>
+                    {/* Address */}
+                    <motion.div variants={fadeUp} className={`${barLight} rounded-md p-1.5 border border-white/5 mb-1`}>
+                        <div className="flex items-center gap-1 mb-0.5">
+                            <span className="material-icons text-white/20" style={{ fontSize: '7px' }}>location_on</span>
+                            <span className="text-[7px] text-white/50 font-bold">Alamat</span>
+                        </div>
+                        <div className="w-full h-1 bg-white/10 rounded-full mb-0.5" />
+                        <div className="w-3/4 h-1 bg-white/10 rounded-full" />
+                    </motion.div>
+                    {/* Payment */}
+                    <motion.div variants={fadeUp} className={`${barLight} rounded-md p-1.5 border border-white/5 mb-1`}>
+                        <div className="flex items-center gap-1 mb-0.5">
+                            <span className="material-icons text-white/20" style={{ fontSize: '7px' }}>credit_card</span>
+                            <span className="text-[7px] text-white/50 font-bold">Pembayaran</span>
+                        </div>
+                        <div className="flex gap-1">
+                            {['💳', '🏦', '📱'].map((e, i) => (
+                                <div key={i} className={`flex-1 h-4 ${i === 0 ? bar : barLight} rounded text-[7px] flex items-center justify-center border border-white/5`}>{e}</div>
+                            ))}
+                        </div>
+                    </motion.div>
+                    {/* Summary */}
+                    <motion.div variants={fadeUp} className={`${barLight} rounded-md p-1.5 border border-white/5 mb-1`}>
+                        <div className="text-[7px] text-white/50 font-bold mb-0.5">Ringkasan</div>
+                        {[['Subtotal', 'Rp 597k'], ['Ongkir', 'Rp 15k'], ['Total', 'Rp 612k']].map(([l, v], i) => (
+                            <div key={i} className={`flex justify-between ${i === 2 ? 'border-t border-white/10 pt-0.5 mt-0.5' : ''}`}>
+                                <span className="text-[6px] text-white/30">{l}</span>
+                                <span className={`text-[6px] ${i === 2 ? 'text-white/70 font-bold' : 'text-white/40'}`}>{v}</span>
+                            </div>
+                        ))}
+                    </motion.div>
+                    <motion.div variants={fadeUp} className={`${bar} h-6 rounded-md flex items-center justify-center gap-0.5`}>
+                        <span className="material-icons text-white" style={{ fontSize: '8px' }}>lock</span>
+                        <span className="text-[8px] text-white font-bold">Bayar</span>
+                    </motion.div>
+                    <div className="text-center mt-1">
+                        <span className="text-[7px] text-white/30 font-bold">CHECKOUT</span>
+                    </div>
+                </motion.div>
             </motion.div>
         );
     }
@@ -502,10 +606,10 @@ export default function Services() {
                         Prototype Showcase
                     </span>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4">
-                        Layanan Digital Lengkap
+                        Apa yang Bisa Kami Buatkan?
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                        Setiap layanan divisualisasikan sebagai prototype interaktif.
+                        Klik salah satu layanan — lihat langsung preview prototype-nya.
                     </p>
                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
                 </motion.div>

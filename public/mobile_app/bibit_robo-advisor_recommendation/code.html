@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bibit Robo Recommendation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ec1337",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221013",
+              "chart-blue": "#3b82f6",
+              "chart-orange": "#f97316",
+              "chart-green": "#22c55e",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Donut Chart CSS */
+        .donut-chart {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: conic-gradient(
+                #3b82f6 0% 10%, 
+                #f97316 10% 60%, 
+                #22c55e 60% 100%
+            );
+        }
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            background: #f8f6f6; /* matches background-light */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .dark .donut-center {
+            background: #221013; /* matches background-dark */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#1b0d10] dark:text-gray-100 flex flex-col min-h-screen overflow-x-hidden selection:bg-primary/20">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-gray-800 dark:text-white">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold">Rekomendasi Robo</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-gray-800 dark:text-white">more_vert</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col px-5 pb-24">
+<!-- Intro Text -->
+<div class="mt-4 mb-6 text-center">
+<h2 class="text-2xl font-extrabold mb-2 leading-tight">Rekomendasi Robo Kamu</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 max-w-[280px] mx-auto">
+                Berdasarkan profil resiko kamu, ini alokasi yang paling optimal.
+            </p>
+</div>
+<!-- Risk Profile Badge -->
+<div class="flex justify-center mb-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/5 rounded-full shadow-sm border border-gray-100 dark:border-white/10">
+<span class="material-symbols-outlined text-primary text-[20px]">info</span>
+<span class="text-sm font-semibold text-gray-800 dark:text-gray-200">Profil Resiko: Moderat</span>
+</div>
+</div>
+<!-- Donut Chart Section -->
+<div class="relative mb-10 flex justify-center">
+<div class="donut-chart shadow-xl shadow-primary/5">
+<div class="donut-center flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">8.5%</span>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">Return / thn</span>
+</div>
+</div>
+<!-- Floating labels connected to chart segments could go here, keeping it clean for now -->
+</div>
+<!-- Allocation List -->
+<div class="space-y-4">
+<!-- Pasar Uang -->
+<div class="group flex items-center p-4 bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-chart-blue/10 flex items-center justify-center text-chart-blue mr-4 shrink-0">
+<span class="material-symbols-outlined">savings</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Pasar Uang</h3>
+<span class="font-bold text-chart-blue">10%</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">Stabil, resiko rendah, likuiditas tinggi</p>
+</div>
+</div>
+<!-- Obligasi -->
+<div class="group flex items-center p-4 bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-chart-orange/10 flex items-center justify-center text-chart-orange mr-4 shrink-0">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Obligasi</h3>
+<span class="font-bold text-chart-orange">50%</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">Pendapatan tetap, resiko menengah</p>
+</div>
+</div>
+<!-- Saham -->
+<div class="group flex items-center p-4 bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md transition-all active:scale-[0.98]">
+<div class="w-12 h-12 rounded-full bg-chart-green/10 flex items-center justify-center text-chart-green mr-4 shrink-0">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<h3 class="font-bold text-gray-900 dark:text-white">Saham</h3>
+<span class="font-bold text-chart-green">40%</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">Pertumbuhan tinggi, resiko fluktuatif</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer CTA -->
+<div class="fixed bottom-20 left-0 right-0 p-5 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pointer-events-none">
+<div class="pointer-events-auto">
+<button class="w-full py-4 bg-primary text-white font-bold rounded-full shadow-lg shadow-primary/30 active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span>Investasi Sekarang</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 border-t border-gray-100 dark:border-white/10 bg-background-light dark:bg-background-dark px-4 pb-4 pt-2 z-50">
+<div class="flex justify-between items-end">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<p class="text-[10px] font-medium">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">search</span>
+<p class="text-[10px] font-medium">Search</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 -mt-6" href="#">
+<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/40 ring-4 ring-background-light dark:ring-background-dark">
+<span class="material-symbols-outlined text-[24px]">smart_toy</span>
+</div>
+<p class="text-[10px] font-bold text-primary mt-1">Robo</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">pie_chart</span>
+<p class="text-[10px] font-medium">Portofolio</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<p class="text-[10px] font-medium">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

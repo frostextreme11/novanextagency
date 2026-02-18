@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>M-Tix E-Ticket Detail</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2d00d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#0a0a0a", // Deep cinematic black
+                        "surface-dark": "#1a1a1a",
+                        "surface-lighter": "#262626",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .ticket-notch-l, .ticket-notch-r {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: #0a0a0a; /* Matches background-dark */
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        .ticket-notch-l { left: -12px; }
+        .ticket-notch-r { right: -12px; }
+        
+        .dashed-line {
+            background-image: linear-gradient(to right, #333 50%, rgba(255,255,255,0) 0%);
+            background-position: bottom;
+            background-size: 12px 2px;
+            background-repeat: repeat-x;
+            height: 2px;
+            width: 100%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display min-h-screen flex flex-col items-center justify-center overflow-x-hidden antialiased selection:bg-primary selection:text-black">
+<div class="w-full max-w-md min-h-screen flex flex-col relative pb-8">
+<!-- Header -->
+<header class="flex items-center justify-between p-6 z-20 sticky top-0 bg-background-dark/95 backdrop-blur-sm">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-colors text-white">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-white text-lg font-bold tracking-tight">E-Ticket</h1>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition-colors text-white">
+<span class="material-symbols-outlined text-[24px]">share</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-5 flex flex-col justify-center gap-6">
+<!-- Ticket Card -->
+<div class="relative w-full bg-surface-dark rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5">
+<!-- Gold Accent Header on Card -->
+<div class="h-2 w-full bg-primary/80"></div>
+<!-- Upper Section: Movie & Showtime -->
+<div class="p-6 pb-8 relative">
+<!-- Movie Header -->
+<div class="flex gap-4 mb-6">
+<div class="w-20 h-28 shrink-0 rounded-lg overflow-hidden bg-gray-800 shadow-lg relative">
+<img alt="Gladiator II Movie Poster" class="w-full h-full object-cover" data-alt="Gladiator II movie poster thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR0MgqVuBlNerpdBH2AUy06iOGNmqfl6au7mcYjInToHG2IKjOX9qWQKa0RLCkZt8EtQoDJeLRhnr3OHv7SHQOaT_q7Q1lrGVYCZ5MZ90JnnUD_MMhYz3BJjUbxjYPNKwzU15smo_0Gr6ea2OeGQ6VXbKhj2bkujKJo2hFdE_4xCIpjqJgBSM6ND6hWKtwu4FgZRoqmuAlOMc23EATtdANA3_UQJNdL2ewYqn9aAsyJQA1rRkMMl0vyOPx8RcnVa4zyLBKfUDb3k9p"/>
+</div>
+<div class="flex flex-col justify-between py-1">
+<div>
+<h2 class="text-2xl font-extrabold text-white leading-tight mb-1">Gladiator II</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-white/10 text-gray-300 border border-white/10 w-fit">D17+</span>
+</div>
+<div class="flex items-center gap-1.5 text-primary/90 font-medium">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="text-sm truncate">Plaza Indonesia XXI</span>
+</div>
+</div>
+</div>
+<!-- Info Grid -->
+<div class="grid grid-cols-2 gap-y-6 gap-x-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Date</span>
+<span class="text-white font-semibold">Senin, 25 Nov 2024</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Time</span>
+<span class="text-white font-semibold">18:45</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Studio</span>
+<span class="text-white font-semibold">Studio 1</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Seats</span>
+<span class="text-primary font-bold text-lg">F10, F11</span>
+</div>
+</div>
+</div>
+<!-- Tear-off Divider -->
+<div class="relative h-8 flex items-center justify-center w-full">
+<div class="ticket-notch-l"></div>
+<div class="dashed-line mx-8"></div>
+<div class="ticket-notch-r"></div>
+</div>
+<!-- Lower Section: QR Code -->
+<div class="p-6 pt-2 pb-8 flex flex-col items-center justify-center bg-surface-dark">
+<div class="mb-5 text-center">
+<p class="text-xs text-gray-400 mb-1">Booking Code</p>
+<p class="text-lg font-mono font-bold text-white tracking-wider">MTX-9821-GLAD</p>
+</div>
+<div class="bg-white p-4 rounded-xl shadow-lg w-full aspect-square max-w-[240px] flex items-center justify-center mb-6 relative group cursor-pointer">
+<!-- QR Code Mockup using CSS/HTML shapes for abstraction if no image, but using placeholder here -->
+<img alt="QR Code for Ticket Scanning" class="w-full h-full mix-blend-multiply opacity-90" data-alt="High contrast QR code for ticket scanning" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIGogr3mxrghCeVXpRsm_8P11Kjfi8orWxVSUvtFOCST9UnqoxeEcqH1A0j5wz4iN2hTfAkBy4wgN7kuzeHT3bxmRdNIkJoC962MLd3KnbXMzr-FEtxP7mw3Upq46yiMGXguoKUb1zUpvriFI_EfhfdeF17DH_T5phKQFPYE5XxWqy24gBCP0M5IjwLjWkN-O0wQKgl-hAPFDne4zt7_TGO9Y66MPeN6O_7gqzWJpXyJVdbtylplvbLofCsG3MMSBC51_ldCc_vUpM"/>
+<!-- Scan shine effect -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/10 to-transparent translate-y-[-100%] group-hover:translate-y-[100%] transition-transform duration-1000 ease-in-out pointer-events-none"></div>
+</div>
+<div class="flex items-center gap-2 text-primary/80 text-xs font-medium bg-primary/5 px-4 py-2 rounded-full border border-primary/10">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Show this QR to the cinema staff</span>
+</div>
+</div>
+</div>
+<!-- Footer Logo -->
+<div class="flex flex-col items-center justify-center gap-2 mt-4 opacity-50">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-black font-black text-xs">XXI</div>
+<span class="text-primary font-bold tracking-widest text-sm">CINEMA XXI</span>
+</div>
+<p class="text-[10px] text-gray-500">© 2024 M-Tix All Rights Reserved</p>
+</div>
+</main>
+</div>
+</body></html>

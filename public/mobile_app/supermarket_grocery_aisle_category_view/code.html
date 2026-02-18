@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HappyFresh Aisle View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df20d",
+                        "background-light": "#f8fcf8",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "sans": ["Plus Jakarta Sans", "sans-serif"],
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d1c0d] dark:text-white min-h-screen flex flex-col items-center justify-center">
+<!-- Mobile Container -->
+<div class="relative flex h-full min-h-screen w-full max-w-md flex-col bg-background-light dark:bg-background-dark overflow-hidden shadow-2xl">
+<!-- Status Bar Area (Mock) -->
+<div class="h-10 w-full bg-background-light dark:bg-background-dark sticky top-0 z-20"></div>
+<!-- Top App Bar -->
+<div class="sticky top-10 z-20 flex items-center bg-background-light dark:bg-background-dark px-4 pb-2 pt-1 justify-between">
+<button class="text-[#0d1c0d] dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="text-[#0d1c0d] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Dairy &amp; Eggs</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-full text-[#0d1c0d] dark:text-white active:bg-gray-100 dark:active:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Category Tabs -->
+<div class="sticky top-[88px] z-10 bg-background-light dark:bg-background-dark pb-2">
+<div class="flex gap-3 px-4 py-3 overflow-x-auto hide-scrollbar snap-x">
+<!-- Active Item -->
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#0d1c0d] dark:bg-white pl-3 pr-4 snap-start transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-white dark:text-[#0d1c0d]">local_drink</span>
+<p class="text-white dark:text-[#0d1c0d] text-sm font-semibold leading-normal">Dairy</p>
+</button>
+<!-- Inactive Items -->
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a331a] border border-gray-200 dark:border-[#2a442a] pl-3 pr-4 snap-start transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-[#0d1c0d] dark:text-gray-300">bakery_dining</span>
+<p class="text-[#0d1c0d] dark:text-gray-300 text-sm font-medium leading-normal">Bakery</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a331a] border border-gray-200 dark:border-[#2a442a] pl-3 pr-4 snap-start transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-[#0d1c0d] dark:text-gray-300">kebab_dining</span>
+<p class="text-[#0d1c0d] dark:text-gray-300 text-sm font-medium leading-normal">Meat</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a331a] border border-gray-200 dark:border-[#2a442a] pl-3 pr-4 snap-start transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-[#0d1c0d] dark:text-gray-300">ac_unit</span>
+<p class="text-[#0d1c0d] dark:text-gray-300 text-sm font-medium leading-normal">Frozen</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-[#1a331a] border border-gray-200 dark:border-[#2a442a] pl-3 pr-4 snap-start transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-[#0d1c0d] dark:text-gray-300">nutrition</span>
+<p class="text-[#0d1c0d] dark:text-gray-300 text-sm font-medium leading-normal">Produce</p>
+</button>
+</div>
+<!-- Gradient fade for scroll indication -->
+<div class="absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-background-light dark:from-background-dark to-transparent pointer-events-none"></div>
+</div>
+<!-- Main Content Area -->
+<div class="flex-1 overflow-y-auto px-4 pb-24 pt-2">
+<!-- Filter Row -->
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-[#0d1c0d] dark:text-white text-xl font-bold leading-tight">Fresh Milk</h3>
+<button class="flex items-center gap-1 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Sort by
+                    <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
+</button>
+</div>
+<!-- Product List -->
+<div class="flex flex-col gap-4">
+<!-- Product Item 1 -->
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a331a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-none group">
+<div class="relative shrink-0">
+<div class="bg-gray-50 dark:bg-[#234423] rounded-xl size-20 flex items-center justify-center overflow-hidden">
+<img alt="Bottle of fresh organic milk on a table" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqrKutZjhpO5_GnSpavzqEaq-Lhkm4woP79frc0V2FxMowNTpCR6-mmdfJ1sgJjGBttC6kwEJybDgayAucsGvMpxKo6_Mx4-LU3lA69v5dZ70LxYqRqDMivBq04LYjSh5xoUgI-NPjNXFVw5BQnrcJx6JnaRpjMhVZpW6sROFbrwxtN7bIkP-5l-QYHwmlEWw532WUHCShIWsUMVUZsA6F8aqQq88BMx2_17pTPL1GWFIOGpGOQCbSyGUGuTxl7i3Rnyqe2Q3RlaEY"/>
+</div>
+</div>
+<div class="flex flex-col justify-center flex-1 min-w-0">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-0.5">Farm Fresh</p>
+<p class="text-[#0d1c0d] dark:text-white text-base font-bold leading-tight truncate">Organic Whole Milk</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-1">1L Bottle</p>
+<p class="text-[#0d1c0d] dark:text-white text-lg font-bold mt-1">$4.50</p>
+</div>
+<button class="shrink-0 size-10 rounded-full bg-primary flex items-center justify-center text-[#0d1c0d] hover:bg-[#0be00b] active:scale-95 transition-all shadow-[0_4px_12px_rgba(13,242,13,0.3)]">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+</div>
+<!-- Product Item 2 -->
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a331a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-none group">
+<div class="relative shrink-0">
+<div class="bg-gray-50 dark:bg-[#234423] rounded-xl size-20 flex items-center justify-center overflow-hidden">
+<img alt="Loaf of freshly baked whole wheat bread" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJQGIGdUrlhTRlBmUdkizezu0vuHs7EbkRDRgNQNWMzi5fDufwtd53JKN2mjQxcar4zurHfB48F2uBkjrEf0eLqypL0f4LcTRpJ6Kj4rGyP0FIlAdmFXFuUNUwFoIHKHFw6nGhKLsUnx3scBWiBsNFJ6JKqai6dWd0aOH05FvqcVI2TEO-sRFSX8mJUyrwLJMHVlJ59ActNoMJ3-l-VkJgUEhqBvK6EHoU8YYt32vy2HlfybGNsczKc4MWhJrPj3JXbJfFCXuYa0oX"/>
+</div>
+<div class="absolute -top-2 -left-2 bg-yellow-400 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm text-black">
+                            BEST SELLER
+                        </div>
+</div>
+<div class="flex flex-col justify-center flex-1 min-w-0">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-0.5">Golden Bake</p>
+<p class="text-[#0d1c0d] dark:text-white text-base font-bold leading-tight truncate">Whole Wheat Loaf</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-1">500g Pack</p>
+<div class="flex items-center gap-2 mt-1">
+<p class="text-[#0d1c0d] dark:text-white text-lg font-bold">$3.20</p>
+<p class="text-gray-400 text-xs line-through">$3.80</p>
+</div>
+</div>
+<button class="shrink-0 size-10 rounded-full bg-primary flex items-center justify-center text-[#0d1c0d] hover:bg-[#0be00b] active:scale-95 transition-all shadow-[0_4px_12px_rgba(13,242,13,0.3)]">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+</div>
+<!-- Product Item 3 -->
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a331a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-none group">
+<div class="relative shrink-0">
+<div class="bg-gray-50 dark:bg-[#234423] rounded-xl size-20 flex items-center justify-center overflow-hidden">
+<img alt="Block of yellow cheddar cheese" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbFqD5YJjBM1mh8KXDolbYhUHFXLq3WkHpN8ZqcC6kLRBfTCcDqXzHMNpEibQECCIgTucIwuovO_UgW3I8YKrjMxl_QfJ2Xz8SQMI06MZthXlXWcWXqeyP3zuJawz8XbTaW0b8Guicu-4tifsipENWKgXe6DHFiZN3Gg_NIUAKz1ijh69dAEhbWhb69XHybrZSg099mySxPfzqEemITWLJLMBO5rEjzyae9xbqD8JQjQIZlBtl2_33xQes5Lzdk4qX5ZnaAx0R-syt"/>
+</div>
+</div>
+<div class="flex flex-col justify-center flex-1 min-w-0">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-0.5">Dairy Valley</p>
+<p class="text-[#0d1c0d] dark:text-white text-base font-bold leading-tight truncate">Sharp Cheddar Block</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-1">250g</p>
+<p class="text-[#0d1c0d] dark:text-white text-lg font-bold mt-1">$5.99</p>
+</div>
+<button class="shrink-0 size-10 rounded-full bg-primary flex items-center justify-center text-[#0d1c0d] hover:bg-[#0be00b] active:scale-95 transition-all shadow-[0_4px_12px_rgba(13,242,13,0.3)]">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+</div>
+<!-- Product Item 4 (Sold Out State) -->
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a331a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-none group opacity-60 grayscale">
+<div class="relative shrink-0">
+<div class="bg-gray-50 dark:bg-[#234423] rounded-xl size-20 flex items-center justify-center overflow-hidden">
+<img alt="Carton of fresh organic eggs" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdlNZePyrkAs36yPSy2hxfL_sfj6DJ4VigJQPcDLJvOQlVfNzPAjdnwu2xGsFSjhFe0uIXvR8EJn-RNheho4CdbHjkYpoD0x8eTDeMEjWwNTK53t4emmGE5aJp-cndD9Uai2EQbMpHAgGrxZ27xZFr1x6CrmpYK4cnh01JxXT5fDIcyHTlcsw8l-FOPAI3Paqdz8NKKMcmgnvEzOvUnhhS97ALrVaSKWVmZZnyg1xY1mkTF6fw9Ux-bV27hYE9JoMkTRdns1YEde1W"/>
+</div>
+</div>
+<div class="flex flex-col justify-center flex-1 min-w-0">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-0.5">Happy Hens</p>
+<p class="text-[#0d1c0d] dark:text-white text-base font-bold leading-tight truncate">Free Range Eggs</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-1">12 Pack</p>
+<p class="text-[#0d1c0d] dark:text-white text-lg font-bold mt-1">$6.50</p>
+</div>
+<div class="shrink-0 px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold">
+                        Sold Out
+                    </div>
+</div>
+<!-- Product Item 5 -->
+<div class="flex items-center gap-4 bg-white dark:bg-[#1a331a] p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-none group">
+<div class="relative shrink-0">
+<div class="bg-gray-50 dark:bg-[#234423] rounded-xl size-20 flex items-center justify-center overflow-hidden">
+<img alt="Tub of plain greek yogurt" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZBVn6vvnZ7Yt-l14jORuRdP34fnLedfciITsoKoMnCSWtI4m-GZUMHmZN_w4IlA_rCMrMAzVGRxKgiu-FLRhikO0GPFoTvYUIt1JC9OLS8IYvOpMG_m_I85WAEB2cdu2Cq6Cukkx9-sRvMp_UsIg64NQDqWYtBMplX7cpM-I2JDPVpR80VhGnTI23vPTQHzxcxAkPe2ZPI1Mb5roM-wtLqwRZVer8sG7dhJ43ghLPyvRddDUzGyzEj5x9WfYsn1nFyOs3664yvZNl"/>
+</div>
+</div>
+<div class="flex flex-col justify-center flex-1 min-w-0">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-semibold uppercase tracking-wider mb-0.5">Greek Gods</p>
+<p class="text-[#0d1c0d] dark:text-white text-base font-bold leading-tight truncate">Plain Greek Yogurt</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal mt-1">500g Tub</p>
+<p class="text-[#0d1c0d] dark:text-white text-lg font-bold mt-1">$5.25</p>
+</div>
+<button class="shrink-0 size-10 rounded-full bg-primary flex items-center justify-center text-[#0d1c0d] hover:bg-[#0be00b] active:scale-95 transition-all shadow-[0_4px_12px_rgba(13,242,13,0.3)]">
+<span class="material-symbols-outlined text-[24px]">add</span>
+</button>
+</div>
+<div class="h-10"></div> <!-- Spacer -->
+</div>
+</div>
+<!-- Sticky Floating Cart Summary -->
+<div class="absolute bottom-6 left-4 right-4 z-30">
+<button class="w-full bg-[#0d1c0d] dark:bg-primary dark:text-[#0d1c0d] text-white p-4 rounded-2xl shadow-xl flex items-center justify-between group active:scale-[0.98] transition-all">
+<div class="flex items-center gap-3">
+<div class="bg-primary dark:bg-white text-[#0d1c0d] rounded-lg size-8 flex items-center justify-center font-bold text-sm">
+                        2
+                    </div>
+<div class="flex flex-col items-start">
+<span class="text-sm font-medium text-gray-300 dark:text-[#0d1c0d]/70">Total</span>
+<span class="font-bold text-lg">$7.70</span>
+</div>
+</div>
+<div class="flex items-center gap-2 font-bold">
+                    View Cart
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</button>
+</div>
+</div>
+</body></html>

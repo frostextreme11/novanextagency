@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jobstreet Recommended Feed</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d59f2",
+              "background-light": "#f5f6f8",
+              "background-dark": "#101622",
+              "jobstreet-yellow": "#FFEB3B", // Adding yellow accent for Jobstreet identity
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d121c] dark:text-white font-display antialiased">
+<div class="relative flex h-full min-h-screen w-full flex-col mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+<!-- Header Section -->
+<div class="sticky top-0 z-20 bg-background-light dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
+<!-- Top Bar: Profile & Notifications -->
+<div class="flex items-center justify-between px-4 pt-4 pb-2">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-gray-200 overflow-hidden border border-gray-100 dark:border-gray-700">
+<img alt="User profile picture" class="h-full w-full object-cover" data-alt="Portrait of a smiling young woman with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcKU3gIB9-Dx5wavnlEyAJs_kjWdq333N5ScBQQAaK_hDjhIfpvt9wIjLPND5aqrK1j3HSxqKhT_SXpoSPfal0XZ2J2WvfKFHmcDD1O5SfeD9V7bwjAPwad6quKutLaI6_HecpiRzE2VK0WJk9C2sJiNhvgVSv8O6xyVfv8UEzA9S1tOW7n3aUdH7nx24LQMOUr02EtI4o-9t84t2uLBo7JwHdTinjmxIqCgCRq9eAdCYmFTU7DaNP9ndIjDG-ddqK3dBLv3Ymugjx"/>
+</div>
+<div>
+<p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Selamat Pagi,</p>
+<p class="text-sm font-bold text-[#0d121c] dark:text-white">Sarah W.</p>
+</div>
+</div>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 relative">
+<span class="material-symbols-outlined text-gray-600 dark:text-gray-300 text-[24px]">notifications</span>
+<span class="absolute top-2 right-2.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800"></span>
+</button>
+</div>
+<!-- Search & Filters -->
+<div class="px-4 pb-4 pt-2">
+<div class="flex gap-3">
+<div class="flex-1 relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 material-symbols-outlined">search</span>
+<input class="w-full h-12 rounded-xl bg-white dark:bg-gray-800 border-none pl-11 pr-4 text-sm shadow-sm ring-1 ring-gray-100 dark:ring-gray-700 focus:ring-2 focus:ring-primary placeholder:text-gray-400 text-gray-900 dark:text-white" placeholder="Cari posisi, perusahaan..." type="text"/>
+</div>
+<button class="h-12 w-12 flex items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20 shrink-0">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto hide-scrollbar pb-24">
+<!-- Hero Greeting -->
+<div class="px-4 py-4">
+<h1 class="text-[28px] font-bold leading-tight tracking-tight text-[#0d121c] dark:text-white mb-1">
+                    Pekerjaan impianmu <br/><span class="text-primary">ada di sini!</span>
+</h1>
+<p class="text-sm text-gray-500 dark:text-gray-400">Rekomendasi terbaru berdasarkan profilmu.</p>
+</div>
+<!-- Quick Filters / Tags -->
+<div class="flex gap-2 px-4 pb-6 overflow-x-auto hide-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center px-4 rounded-full bg-[#0d121c] text-white text-xs font-medium whitespace-nowrap">
+                    Untuk Kamu
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center px-4 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium whitespace-nowrap">
+                    Remote
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center px-4 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium whitespace-nowrap">
+                    Gaji &gt; 15jt
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center px-4 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium whitespace-nowrap">
+                    Design
+                </button>
+</div>
+<!-- Job Cards List -->
+<div class="px-4 space-y-4">
+<!-- Card 1 -->
+<div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="h-12 w-12 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+<img alt="Company Logo" class="h-8 w-8 object-contain" data-alt="Gojek green logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjUo4lECWMTUzSO2TafOSGOPez5hav0lF3HsOq0meq5gZ_eYiZwBUMK4xKiTFHcvg9OzvgCU-duwrFD79cqXvT8JkaciQw_U7hV77nfcXtxMs1l7_ZsCdU0bGZdIQ_wHzWIJuMu6sXlG1TSZMHgbNZ8xFxfoSMQRxshlQOk_IKjR5339QI3RJ7ZkOQ0UkgE9PDr-N4pL0yjgJQOH4uxIp4zBy_gIIReDmxDiRlAJr8E-dc3j8mGNeHWgZ4c5_wQ4dT-BExW4SKeqb0"/>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#0d121c] dark:text-white mb-1">Senior UI/UX Designer</h3>
+<div class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 mb-3">
+<span class="font-medium">GoTo Group</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="truncate">Jakarta Selatan</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-300 text-xs font-medium">
+                                Full-time
+                            </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium">
+                                Hybrid
+                            </span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+<span class="text-xs text-gray-400 font-medium">2 jam yang lalu</span>
+<span class="text-sm font-bold text-primary">Rp 25jt - 35jt</span>
+</div>
+<div class="absolute -top-3 -right-2">
+<span class="bg-jobstreet-yellow text-[#0d121c] text-[10px] font-bold px-2 py-1 rounded-full shadow-sm flex items-center gap-1 border border-yellow-200">
+<span class="material-symbols-outlined text-[12px]">bolt</span>
+                                EASY APPLY
+                             </span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="h-12 w-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center overflow-hidden p-2">
+<img alt="Company Logo" class="h-full w-full object-contain" data-alt="BCA blue logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkX98KYDMzIgLh_6XFAJ25rJReS0oeazpNi_duHkQbUE8zY5dDGQKvYN-kSXsTUdJ3aX2FVpSaesoMgBCVd3LyQH-aUtlaOFj2Gk--sZ8IaZiHZ8PJUlPGs5Vq-oatxEnYubyewSgk70Kz3jPjEq10HZz1IsphTlrxzNsrXEACm57O5l_1mLSe26GA-tKY2wAVsjqoySOwFl5dRjpFH65pJUhIvf1wbU1zG2cdS8UdNHB6cTkuUeur9RQtf29kfai08FX5s-GXgtCS"/>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#0d121c] dark:text-white mb-1">Product Manager</h3>
+<div class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 mb-3">
+<span class="font-medium">Bank Central Asia</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="truncate">Tangerang</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-300 text-xs font-medium">
+                                Contract
+                            </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium">
+                                On-site
+                            </span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+<span class="text-xs text-gray-400 font-medium">5 jam yang lalu</span>
+<span class="text-sm font-bold text-primary">Disclosed</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="relative bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="h-12 w-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center p-2">
+<img alt="Company Logo" class="h-full w-full object-contain" data-alt="Traveloka bird logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyq-d7d25bymKoPH0sl_tVJVBJ9o6IYmBGjuzAO8uyEMsekWMIGGSjCZfcYiCyehiBTt7HREld6VLgj6R1N-XMc-PAGjxcxMWb4u7IL_rehhxxmmnVPV3fAq6koXA1vz_L4D7FxXZL7yljh2GpLhrW8elvwdPNjz44yGr8_4TQ8wj2siWFK3AP_Os1fEkDsLkR8bNyvWMNAJbN03a0sNtifOi8Oezo7s2JqyYnlLL5c95KHvSYRb98j-V9ReZ1eQf0WILa1JYFbaPS"/>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#0d121c] dark:text-white mb-1">Marketing Lead</h3>
+<div class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 mb-3">
+<span class="font-medium">Traveloka</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="truncate">BSD City</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-300 text-xs font-medium">
+                                Full-time
+                            </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 text-xs font-medium">
+                                Promoted
+                            </span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+<span class="text-xs text-gray-400 font-medium">1 hari yang lalu</span>
+<span class="text-sm font-bold text-primary">Rp 18jt - 25jt</span>
+</div>
+<div class="absolute -top-3 -right-2">
+<span class="bg-jobstreet-yellow text-[#0d121c] text-[10px] font-bold px-2 py-1 rounded-full shadow-sm flex items-center gap-1 border border-yellow-200">
+<span class="material-symbols-outlined text-[12px]">bolt</span>
+                                EASY APPLY
+                             </span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-3">
+<div class="h-12 w-12 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center p-2">
+<img alt="Company Logo" class="h-full w-full object-contain" data-alt="Shopee shopping bag logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd1CuXCwV5V4wjMglVfjbYiAoCK9QS_xwiC0GLYCt085bwAfpQMIQl6OybmjwsCTRYJBqzVufNfVhTSNNquOJYP-lFmVTia2rS2E_6hokFjWA99OXxuTjUEsINUr8LKXkslNTYpLDg1F8Hg1yeuxui8pY7SPfG9wOIXuoITsFjwgsh6_B82zvWklDkhER48uIFkeDlAgJYIBYNI9wr_qWqL8A3qupvww9zYsIeTs28fEw3P8uYBAgpx8pTYzJ41pcNEdF2RGexpYgW"/>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#0d121c] dark:text-white mb-1">Frontend Developer</h3>
+<div class="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-300 mb-3">
+<span class="font-medium">Shopee</span>
+<span class="h-1 w-1 rounded-full bg-gray-300"></span>
+<span class="truncate">Jakarta Pusat</span>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-300 text-xs font-medium">
+                                Full-time
+                            </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium">
+                                WFO
+                            </span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+<span class="text-xs text-gray-400 font-medium">2 hari yang lalu</span>
+<span class="text-sm font-bold text-primary">Rp 15jt - 20jt</span>
+</div>
+</div>
+</div>
+</div>
+<div class="h-6 w-full"></div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 w-full max-w-md bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 pb-safe pt-2 px-2 z-30">
+<div class="flex justify-around items-end pb-3">
+<a class="flex flex-col items-center gap-1 group w-16" href="#">
+<span class="material-symbols-outlined text-primary text-[28px] group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-bold text-primary">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-16" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[26px] group-hover:text-primary transition-colors group-hover:scale-110 transition-transform">bookmark</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Saved</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-16" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[26px] group-hover:text-primary transition-colors group-hover:scale-110 transition-transform">work</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Applications</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-16" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[26px] group-hover:text-primary transition-colors group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Profile</span>
+</a>
+</div>
+</div>
+</div>
+</body></html>

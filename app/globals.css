@@ -12,7 +12,8 @@
   --animate-pulse-slow: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-blob: blob 7s infinite;
   --animate-float: float 6s ease-in-out infinite;
-  --animate-scroll: scroll 40s linear infinite;
+  --animate-scroll: scroll 20s linear infinite;
+  --animate-scroll-reverse: scrollReverse 20s linear infinite;
   --animate-glow-move: glowMove 8s ease-in-out infinite;
   --animate-glow-move-reverse: glowMoveReverse 10s ease-in-out infinite;
   --animate-glow-pulse: glowPulse 6s ease-in-out infinite;
@@ -54,6 +55,16 @@
 
     100% {
       transform: translateX(-50%);
+    }
+  }
+
+  @keyframes scrollReverse {
+    0% {
+      transform: translateX(-50%);
+    }
+
+    100% {
+      transform: translateX(0);
     }
   }
 
@@ -265,4 +276,17 @@ html {
 /* GPU acceleration hints */
 .will-change-transform {
   will-change: transform;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }

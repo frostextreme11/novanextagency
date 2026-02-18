@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bluebird Trip En Route</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d59f2",
+                        "primary-content": "#ffffff",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e293b",
+                        "text-primary": "#0f172a",
+                        "text-secondary": "#64748b",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px" },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 0 0 1px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
+                        'floating': '0 8px 30px rgba(0,0,0,0.12)'
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-display">
+<!-- Mobile Device Simulator -->
+<div class="relative w-full max-w-[400px] h-[850px] bg-background-light dark:bg-background-dark overflow-hidden shadow-2xl sm:rounded-[3rem] border-[8px] border-gray-900 flex flex-col">
+<!-- Status Bar Area (Mock) -->
+<div class="absolute top-0 left-0 w-full h-12 z-50 flex justify-between items-center px-6 text-black pointer-events-none">
+<span class="font-semibold text-sm">14:23</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-symbols-outlined text-[18px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[18px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_full</span>
+</div>
+</div>
+<!-- Map Background Section -->
+<div class="relative w-full flex-grow flex flex-col">
+<!-- Map Image -->
+<div class="absolute inset-0 bg-cover bg-center z-0" data-alt="Map view of Jakarta streets" data-location="Jakarta, Indonesia" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhvrwUhI2r0f6kDgyNRUjAA7KbPYN69pYQAzgmTF2I2_kjgtM8OlGYPGkSG9t4seGr3mE0hzLmLQ2XOPakW274d7vM1HobrRHJ7-ZBFlMejN7MuGCSCtfkK1FmK-_RaxXPKYfgkZ8iNS-94aG-H2bgYK0AyTXJPZAmXN1b9apV0ZMSm8iudl5oGqRIL3VaoVRm3aSYBFOny9nL9ZaF9_an7gvjrjZKqv67p1czwdDWebJ2N0E-23Yvvx50Bs84YYFDh5qk5thLvJYV');">
+<!-- Map Overlay Gradient for readability at top -->
+<div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/60 to-transparent pointer-events-none"></div>
+</div>
+<!-- Top Floating Controls -->
+<div class="relative z-10 pt-14 px-5 flex justify-between items-start">
+<button class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md text-slate-700 hover:bg-white active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<button class="flex items-center gap-2 bg-blue-50/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-md text-primary font-medium text-sm hover:bg-blue-100 transition-colors">
+<span class="material-symbols-outlined text-[20px] icon-filled">shield</span>
+<span class="pr-1">Safety Center</span>
+</button>
+</div>
+<!-- Route Visualization (Abstract representation on top of map image) -->
+<div class="absolute inset-0 pointer-events-none z-0 opacity-80">
+<!-- Current Location Pin (Car) -->
+<div class="absolute top-[40%] left-[45%] transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-12 h-12 bg-primary rounded-full border-4 border-white shadow-lg flex items-center justify-center relative z-10">
+<span class="material-symbols-outlined text-white text-[24px]">local_taxi</span>
+</div>
+<!-- Pulse Effect -->
+<div class="absolute w-12 h-12 bg-primary/30 rounded-full animate-ping z-0"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Sheet Section -->
+<div class="relative z-20 bg-surface-light dark:bg-surface-dark rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] flex flex-col pb-8 pt-2 transition-all duration-300">
+<!-- Handle Bar -->
+<div class="w-full flex justify-center py-2">
+<div class="w-12 h-1.5 bg-gray-200 rounded-full"></div>
+</div>
+<!-- Trip Progress Status -->
+<div class="px-6 pb-6 pt-2">
+<div class="flex justify-between items-end mb-1">
+<div>
+<h2 class="text-2xl font-bold text-text-primary tracking-tight">Menuju Tujuan</h2>
+<p class="text-text-secondary text-sm font-medium mt-1">Estimasi tiba <span class="text-primary font-bold">14:35</span></p>
+</div>
+<div class="bg-blue-50 text-primary px-3 py-1 rounded-lg text-sm font-bold">
+                        12 min
+                    </div>
+</div>
+<!-- Progress Bar -->
+<div class="relative w-full h-1.5 bg-gray-100 rounded-full mt-4 overflow-hidden">
+<div class="absolute top-0 left-0 h-full w-[65%] bg-primary rounded-full"></div>
+</div>
+<div class="flex justify-between text-xs text-text-secondary mt-2 font-medium">
+<span>Sudirman Tower</span>
+<span>Grand Indonesia</span>
+</div>
+</div>
+<hr class="border-gray-100 mx-6 mb-5"/>
+<!-- Driver Card -->
+<div class="px-6 flex flex-col gap-5">
+<!-- Driver Profile -->
+<div class="flex items-center gap-4">
+<div class="relative shrink-0">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-100 bg-gray-200 shadow-sm" data-alt="Portrait of taxi driver Pak Bambang" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAtdX1Qb_bjywiiBlKtQR7h9Rs0fF6bIsorvsbB9xxDdbLxWRh9ZquaufOXfKdQET2WUd2lvKACjwbYq1urzAfabeJSYykFPWCvRNq7f3rzsHqGHvd6d8PpkJUGz8PzG2L4_h4qB3eDmdU_b2YOtq1WHwzj5Ro9bb7h2MY8ZmNpLdlBEq_IRI3yrSfiAZfIilgESgClZFHeqk7QBng8KX02_IOPheamEq3FVyTQZMmATT45cE_IuQrek9YdwY9nZ4eVLGqrv6oK7HZr'); background-size: cover; background-position: center;"></div>
+<div class="absolute -bottom-1 -right-1 bg-white p-0.5 rounded-full">
+<div class="bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[14px] icon-filled text-white">star</span>
+</div>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold text-text-primary truncate">Pak Bambang</h3>
+<div class="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded text-xs font-semibold text-text-secondary">
+<span class="material-symbols-outlined text-[14px] text-yellow-500 icon-filled">star</span>
+                                4.9
+                            </div>
+</div>
+<p class="text-sm text-text-secondary truncate mt-0.5">Bluebird • Toyota Transmover</p>
+<!-- License Plate Badge -->
+<div class="inline-flex items-center mt-2 bg-yellow-100/50 border border-yellow-200 px-2 py-0.5 rounded text-xs font-bold text-yellow-800 tracking-wider">
+                            B 1234 BB
+                        </div>
+</div>
+</div>
+<!-- Action Buttons Grid -->
+<div class="grid grid-cols-4 gap-3 mt-1">
+<button class="col-span-1 flex flex-col items-center justify-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-blue-50 text-primary flex items-center justify-center transition group-active:scale-95 group-hover:bg-blue-100">
+<span class="material-symbols-outlined icon-filled">chat</span>
+</div>
+<span class="text-[10px] font-medium text-text-secondary">Chat</span>
+</button>
+<button class="col-span-1 flex flex-col items-center justify-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-blue-50 text-primary flex items-center justify-center transition group-active:scale-95 group-hover:bg-blue-100">
+<span class="material-symbols-outlined icon-filled">call</span>
+</div>
+<span class="text-[10px] font-medium text-text-secondary">Telepon</span>
+</button>
+<button class="col-span-1 flex flex-col items-center justify-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center transition group-active:scale-95 group-hover:bg-gray-100">
+<span class="material-symbols-outlined">share</span>
+</div>
+<span class="text-[10px] font-medium text-text-secondary">Bagikan</span>
+</button>
+<button class="col-span-1 flex flex-col items-center justify-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center transition group-active:scale-95 group-hover:bg-red-100">
+<span class="material-symbols-outlined icon-filled">sos</span>
+</div>
+<span class="text-[10px] font-medium text-text-secondary">Darurat</span>
+</button>
+</div>
+<!-- Primary CTA -->
+<button class="w-full mt-2 bg-primary hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+<span>Ubah Tujuan</span>
+</button>
+</div>
+</div>
+<!-- Safe Area Spacer for Home Indicator -->
+<div class="h-6 w-full bg-surface-light dark:bg-surface-dark absolute bottom-0 z-30"></div>
+</div>
+</body></html>

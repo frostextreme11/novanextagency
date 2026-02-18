@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MyPertamina Pay at Pump</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ea2a33",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211111",
+                        "neutral-tint": "#f3e7e8", // Derived from primary hue
+                        "neutral-dark": "#2d1b1b", // Derived from primary hue
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-white dark:bg-[#1a0f0f]">
+<!-- Header -->
+<div class="flex items-center px-4 py-3 justify-between bg-white dark:bg-[#1a0f0f] sticky top-0 z-10">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-neutral-tint dark:hover:bg-primary/20 text-[#1b0e0e] dark:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-[#1b0e0e] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Bayar di Pompa</h2>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-neutral-tint dark:hover:bg-primary/20 text-[#1b0e0e] dark:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">help</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto pb-6">
+<!-- Title Section -->
+<div class="px-4 pt-4 text-center">
+<h2 class="text-[#1b0e0e] dark:text-white text-2xl font-bold leading-tight">Tunjukkan kode QR</h2>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium mt-2">Tunjukkan kode ini ke petugas SPBU untuk dipindai</p>
+</div>
+<!-- QR Code Card -->
+<div class="mx-6 mt-6 p-6 bg-white dark:bg-[#251818] rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-black/40 border border-gray-100 dark:border-primary/10 flex flex-col items-center">
+<!-- QR Image -->
+<div class="w-full max-w-[240px] aspect-square bg-white p-2 rounded-lg">
+<img alt="QR Code for payment" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" data-alt="Black and white QR code pattern on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaXlOpXTjte7HDupAstkdvTJ8hUsh5-AKKA5prhylcTk8LpL7r6xC7b8yHkEXIdR5ZKLN6W5wfi-8ngsL-jarQBMvpH7n9n-mpPMZkS6nDAFNywT-LC-n-oc6qsmeTUHjJdDLrRIhguHF2ASihAzf-JFZHNaleDHXf9HFBIOgfkWLLycJ-H0fIygu9_yhdFNgN9zBKz85H0b32WvNviLbxpNgd4PL1Enf5ZwqdpWIBty3obhzp6Ubkwe6Wrwhp3GfPBxBCo12C26kU"/>
+</div>
+<!-- Refresh Button / Security Warning -->
+<div class="flex items-center gap-2 mt-4 text-primary text-xs font-semibold bg-primary/10 px-3 py-1.5 rounded-full">
+<span class="material-symbols-outlined text-[16px]">security</span>
+<span>Pembayaran Aman</span>
+</div>
+</div>
+<!-- Timer Section -->
+<div class="flex justify-center gap-4 py-6 px-4">
+<div class="flex flex-col items-center gap-1">
+<div class="flex size-14 items-center justify-center rounded-xl bg-neutral-tint dark:bg-primary/20 text-primary">
+<span class="text-2xl font-bold tabular-nums tracking-tight">04</span>
+</div>
+<span class="text-[#1b0e0e] dark:text-gray-400 text-xs font-medium">Menit</span>
+</div>
+<div class="flex flex-col items-center justify-start pt-2">
+<span class="text-primary font-bold text-xl">:</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="flex size-14 items-center justify-center rounded-xl bg-neutral-tint dark:bg-primary/20 text-primary">
+<span class="text-2xl font-bold tabular-nums tracking-tight">59</span>
+</div>
+<span class="text-[#1b0e0e] dark:text-gray-400 text-xs font-medium">Detik</span>
+</div>
+</div>
+<!-- Payment Method Section -->
+<div class="px-4 mt-2">
+<div class="flex items-center justify-between mb-3 px-1">
+<span class="text-[#1b0e0e] dark:text-white text-sm font-bold">Metode Pembayaran</span>
+<button class="text-primary text-sm font-semibold hover:text-red-700 transition-colors">Ubah</button>
+</div>
+<div class="bg-white dark:bg-[#251818] p-4 rounded-xl border border-gray-100 dark:border-primary/10 shadow-sm flex items-center justify-between group cursor-pointer hover:border-primary/30 transition-all">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-[#ED1C24] flex items-center justify-center text-white font-bold text-[10px] tracking-tighter shadow-sm overflow-hidden" data-alt="Red LinkAja logo background">
+<span class="scale-75">LinkAja</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[#1b0e0e] dark:text-white text-sm font-bold leading-tight">LinkAja Balance</span>
+<span class="text-gray-500 dark:text-gray-400 text-xs font-medium mt-0.5">Saldo: Rp 500.000</span>
+</div>
+</div>
+<div class="size-5 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="size-2.5 rounded-full bg-primary"></div>
+</div>
+</div>
+</div>
+<!-- Info Box -->
+<div class="px-4 mt-6">
+<div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-3 flex items-start gap-3">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5" style="font-size: 20px;">loyalty</span>
+<div class="flex flex-col">
+<span class="text-blue-900 dark:text-blue-100 text-xs font-bold">Dapatkan Poin</span>
+<span class="text-blue-700 dark:text-blue-300 text-[11px] leading-snug">Transaksi ini berpotensi mendapatkan +10 Poin MyPertamina.</span>
+</div>
+</div>
+</div>
+<!-- Refresh Action (Explicit) -->
+<div class="px-4 mt-8 flex justify-center">
+<button class="flex items-center gap-2 text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Generate Kode Baru
+                </button>
+</div>
+</div>
+<!-- Bottom Warning Toast (Simulated) -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-auto max-w-[90%] bg-[#323232]/90 dark:bg-white/90 backdrop-blur-sm text-white dark:text-black px-4 py-2 rounded-full shadow-lg flex items-center gap-2 z-50 pointer-events-none opacity-0 animate-[fadeIn_0.5s_ease-out_2s_forwards]">
+<span class="material-symbols-outlined text-[18px]">screenshot</span>
+<span class="text-xs font-medium whitespace-nowrap">Tangkapan layar tidak berlaku</span>
+</div>
+</div>
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, 10px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+    </style>
+</body></html>

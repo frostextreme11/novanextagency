@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SOCO Profile Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f20d46",
+                        "primary-soft": "#fdeef2",
+                        "rose-gold": "#d48c96",
+                        "background-light": "#fcf8f9",
+                        "background-dark": "#221014",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    boxShadow: {
+                        "soft-pink": "0 10px 40px -10px rgba(242, 13, 70, 0.08)",
+                        "card-pink": "0 4px 20px -5px rgba(242, 13, 70, 0.05)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light text-slate-900 overflow-x-hidden min-h-screen pb-24">
+<!-- Top Navigation / Header -->
+<div class="sticky top-0 z-50 bg-background-light/95 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+<h1 class="text-lg font-bold text-slate-900 tracking-tight">My Profile</h1>
+<button class="p-2 rounded-full hover:bg-primary-soft transition-colors text-slate-800">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<!-- Main Profile Section -->
+<div class="px-5 pt-4 pb-8 flex flex-col items-center">
+<!-- Avatar Wrapper -->
+<div class="relative mb-4 group cursor-pointer">
+<div class="w-28 h-28 rounded-full p-[3px] bg-gradient-to-tr from-rose-gold to-primary">
+<div class="w-full h-full rounded-full border-2 border-white overflow-hidden bg-slate-100">
+<img alt="Young asian woman portrait smiling" class="w-full h-full object-cover" data-alt="Young asian woman portrait smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDus8cQK7hfa9h-dkstiKavkY-QS4TvenBCvXEEG4XU58FwxFotKm9LFJVMwjUI4Y-aosPP1SmJ1gDT72Wgx2uuQrW-mn1h25jHqHDacQyHO64ZR1K-o1T3ceHC5rN8JGl0sddvE4hFZaYxktoxGAqi8iIuqCEeuhSaxY-Oo_uCcITW-pyuMIwgLyqO5jS3pDMhniUICFEbeZeTOM-ECHIgUPcXjeBxWjbxm1Gdfb68lwbPfXzRAB2B2Nq9iQk6pDqatFstTvvBP8ms"/>
+</div>
+</div>
+<!-- Glow Badge -->
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-[#ff4d7d] text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border border-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">diamond</span>
+                GLOW Member
+            </div>
+</div>
+<!-- Name & Details -->
+<div class="text-center mt-2">
+<h2 class="text-2xl font-bold text-slate-900">Amanda Manopo</h2>
+<p class="text-slate-500 text-sm mt-1">Member since 2020</p>
+</div>
+<!-- SOCO Points -->
+<div class="mt-6 flex flex-col items-center">
+<div class="text-rose-gold text-xs font-semibold uppercase tracking-wider mb-1">SOCO Points</div>
+<div class="flex items-center gap-2">
+<span class="text-3xl font-extrabold text-primary">2,450</span>
+<button class="bg-primary-soft text-primary text-xs font-bold px-3 py-1.5 rounded-full hover:bg-rose-100 transition-colors">
+                    Redeem
+                </button>
+</div>
+</div>
+</div>
+<!-- Beauty Profile Summary -->
+<div class="px-5 mb-8">
+<div class="bg-white rounded-2xl p-5 shadow-soft-pink border border-rose-50">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-gold">face_3</span>
+                    Beauty Profile
+                </h3>
+<button class="text-xs font-semibold text-rose-gold hover:text-primary transition-colors">Edit</button>
+</div>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pb-1">
+<!-- Skin Type -->
+<div class="flex-shrink-0 flex flex-col items-center bg-background-light border border-slate-100 rounded-xl p-3 min-w-[90px]">
+<div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+</div>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wide">Skin Type</span>
+<span class="text-sm font-semibold text-slate-700">Oily</span>
+</div>
+<!-- Skin Tone -->
+<div class="flex-shrink-0 flex flex-col items-center bg-background-light border border-slate-100 rounded-xl p-3 min-w-[90px]">
+<div class="w-8 h-8 rounded-full bg-[#E5B898] border-2 border-white shadow-sm mb-2"></div>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wide">Skin Tone</span>
+<span class="text-sm font-semibold text-slate-700">Medium</span>
+</div>
+<!-- Concern -->
+<div class="flex-shrink-0 flex flex-col items-center bg-background-light border border-slate-100 rounded-xl p-3 min-w-[90px]">
+<div class="w-8 h-8 rounded-full bg-red-50 text-red-400 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px] filled">healing</span>
+</div>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wide">Concern</span>
+<span class="text-sm font-semibold text-slate-700">Acne</span>
+</div>
+<!-- Hair -->
+<div class="flex-shrink-0 flex flex-col items-center bg-background-light border border-slate-100 rounded-xl p-3 min-w-[90px]">
+<div class="w-8 h-8 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[18px]">content_cut</span>
+</div>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wide">Hair</span>
+<span class="text-sm font-semibold text-slate-700">Wavy</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions (Vouchers & Orders) -->
+<div class="px-5 mb-6">
+<div class="grid grid-cols-2 gap-4">
+<!-- Vouchers -->
+<button class="bg-white p-4 rounded-2xl shadow-card-pink border border-rose-50 flex flex-col items-start hover:shadow-soft-pink transition-all active:scale-95">
+<div class="w-10 h-10 rounded-full bg-primary-soft text-primary flex items-center justify-center mb-3">
+<span class="material-symbols-outlined">local_activity</span>
+</div>
+<div class="text-left">
+<span class="block text-2xl font-bold text-slate-900">3</span>
+<span class="text-sm font-medium text-slate-500">Voucher Saya</span>
+</div>
+</button>
+<!-- Orders -->
+<button class="bg-white p-4 rounded-2xl shadow-card-pink border border-rose-50 flex flex-col items-start hover:shadow-soft-pink transition-all active:scale-95 relative overflow-hidden">
+<div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-3">
+<span class="material-symbols-outlined">package_2</span>
+</div>
+<div class="text-left w-full">
+<span class="block text-2xl font-bold text-slate-900">1</span>
+<span class="text-sm font-medium text-slate-500">To Ship</span>
+</div>
+<!-- Mini status indicator -->
+<div class="absolute top-4 right-4 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+</button>
+</div>
+</div>
+<!-- Menu List -->
+<div class="bg-white rounded-t-[2.5rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.05)] pt-8 pb-10 px-6 mt-4 min-h-[300px]">
+<h3 class="text-lg font-bold text-slate-900 mb-4 px-2">Account Activities</h3>
+<div class="flex flex-col gap-1">
+<!-- Menu Item: Order History -->
+<a class="flex items-center p-3 rounded-xl hover:bg-background-light transition-colors group" href="#">
+<div class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-primary-soft group-hover:text-primary flex items-center justify-center mr-4 transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-800 text-sm">Riwayat Pesanan</h4>
+<p class="text-xs text-slate-400">Check your order status</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 text-sm">arrow_forward_ios</span>
+</a>
+<!-- Menu Item: My Reviews -->
+<a class="flex items-center p-3 rounded-xl hover:bg-background-light transition-colors group" href="#">
+<div class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-primary-soft group-hover:text-primary flex items-center justify-center mr-4 transition-colors">
+<span class="material-symbols-outlined">rate_review</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-800 text-sm">Ulasan Saya</h4>
+<p class="text-xs text-slate-400">Reviews &amp; ratings you made</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 text-sm">arrow_forward_ios</span>
+</a>
+<!-- Menu Item: Wishlist -->
+<a class="flex items-center p-3 rounded-xl hover:bg-background-light transition-colors group" href="#">
+<div class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-primary-soft group-hover:text-primary flex items-center justify-center mr-4 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-800 text-sm">Wishlist</h4>
+<p class="text-xs text-slate-400">Your favorite products</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 text-sm">arrow_forward_ios</span>
+</a>
+<!-- Menu Item: Help -->
+<a class="flex items-center p-3 rounded-xl hover:bg-background-light transition-colors group" href="#">
+<div class="w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-primary-soft group-hover:text-primary flex items-center justify-center mr-4 transition-colors">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-800 text-sm">Bantuan</h4>
+<p class="text-xs text-slate-400">Help center &amp; support</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 text-sm">arrow_forward_ios</span>
+</a>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 border-t border-slate-100 bg-white px-6 pb-6 pt-3 shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.03)] flex justify-between items-end z-50">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[26px]">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[26px]">grid_view</span>
+<span class="text-[10px] font-medium">Feed</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 -mt-6" href="#">
+<div class="bg-primary text-white rounded-full p-3 shadow-lg shadow-primary/40 transform translate-y-[-4px]">
+<span class="material-symbols-outlined text-[28px]">search</span>
+</div>
+<span class="text-[10px] font-medium text-primary">Search</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[26px]">shopping_bag</span>
+<span class="text-[10px] font-medium">Cart</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-[26px] filled">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</body></html>

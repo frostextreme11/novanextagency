@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kopi Soe Checkout Summary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#cf7317", // Warm ochre
+              "primary-dark": "#a65c12",
+              "background-light": "#f8f7f6", // Creamy off-white
+              "background-dark": "#211911", // Dark coffee brown
+              "earthy-brown": "#5D4037",
+              "paper-cream": "#fffdf5",
+              "retro-gray": "#e0ded9",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+            backgroundImage: {
+               'paper-texture': "url('data:image/svg+xml,%3Csvg width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cfilter id=\\'noise\\'%3E%3CfeTurbulence type=\\'fractalNoise\\' baseFrequency=\\'0.8\\' numOctaves=\\'3\\' stitchTiles=\\'stitch\\'/%3E%3C/filter%3E%3Crect width=\\'100\\' height=\\'100\\' filter=\\'url(%23noise)\\' opacity=\\'0.04\\'/%3E%3C/svg%3E')",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100 min-h-screen relative overflow-x-hidden font-display">
+<!-- Texture Overlay -->
+<div class="fixed inset-0 pointer-events-none z-0 bg-paper-texture mix-blend-multiply dark:mix-blend-overlay opacity-60"></div>
+<div class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col pb-32">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-primary/10">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-primary/10 transition-colors text-[#5D4037] dark:text-primary">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-[#5D4037] dark:text-gray-100">Ringkasan Pesanan</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 pt-6 space-y-6">
+<!-- Location Card -->
+<div class="bg-white dark:bg-[#2c241b] p-4 rounded-xl shadow-sm border border-primary/10 flex items-center gap-4 relative overflow-hidden group">
+<div class="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined filled">storefront</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-semibold text-primary uppercase tracking-wider mb-0.5">Lokasi Jemput</p>
+<h2 class="text-base font-bold text-[#5D4037] dark:text-white leading-tight">Kopi Soe - Tebet</h2>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">Jl. Tebet Raya No. 12, Jakarta Selatan</p>
+</div>
+<button class="text-xs font-bold text-primary hover:underline px-2 py-1">
+                    Ganti
+                </button>
+</div>
+<!-- Order Items -->
+<section>
+<div class="flex justify-between items-end mb-3 px-1">
+<h2 class="text-lg font-bold text-[#5D4037] dark:text-white">Pesanan Kamu</h2>
+<button class="text-sm font-medium text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Tambah
+                    </button>
+</div>
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="bg-white dark:bg-[#2c241b] p-3 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex gap-3">
+<div class="w-20 h-20 shrink-0 rounded-lg bg-gray-100 overflow-hidden relative">
+<img alt="Iced coffee with rum regal topping" class="w-full h-full object-cover" data-alt="Iced coffee with rum regal topping" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMFRFRluz90RVJbMZHY7VZlbai3XTD-naJbDL_j65NEzTGBwKMba1u9CF4y4yqL7gmJ9zVHqBTtva3agffwaNSsX-6XDbpZUn1ZxnYJbNcn8w_5irmsXyzFi96dcgs8UhnnDGeNKlfZC3QEN9AdbNkm7iWSOtdQwbtBCDax8nqGEd_FUrI4Ui276YpP8mk9gOZypHcUm_9EcarPrBAhadBv6mcQEi7aluhnp5_GO9oDkKGTIvYOpbd4doIvWcF0H26wd2b6SEAvYZp"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-bold text-[#5D4037] dark:text-white text-base">Es Kopi Roegal</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Normal Ice, Less Sugar</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="font-bold text-primary">Rp 23.000</p>
+<div class="flex items-center gap-3 bg-[#f8f6f2] dark:bg-white/5 rounded-lg px-2 py-1">
+<button class="w-5 h-5 flex items-center justify-center text-[#5D4037] dark:text-gray-300 disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-3 text-center">1</span>
+<button class="w-5 h-5 flex items-center justify-center text-[#5D4037] dark:text-gray-300">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-white dark:bg-[#2c241b] p-3 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex gap-3">
+<div class="w-20 h-20 shrink-0 rounded-lg bg-gray-100 overflow-hidden relative">
+<img alt="Iced chocolate coffee drink" class="w-full h-full object-cover" data-alt="Iced chocolate coffee drink" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi-aYotPMFztMbuPYBJKTfctddVV0PVi7WW2WR8aD9oGgfdzP_jj1n-U8rqNzv6ZDrb3DFzCu3TayoRxs1etGxFNc-qkQAUL-De4359Et_0l1x0dux9_OYQC3yDEfVVHzKbeCFY-haPY0pvuS1F9_mjI6LcLYBPoSjIZXDQRdRK2OBNOxsi6P5Gw0sMIJ76VA_EHhTrFbjlP2m4-etIzSPX7uidRWCOstoXTfLYwc7vGY6ivQTvTyGA9JfVn6k4krJqSP5Fb-Omf22"/>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-bold text-[#5D4037] dark:text-white text-base">Es Rum</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Normal Ice, Normal Sugar</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="font-bold text-primary">Rp 25.000</p>
+<div class="flex items-center gap-3 bg-[#f8f6f2] dark:bg-white/5 rounded-lg px-2 py-1">
+<button class="w-5 h-5 flex items-center justify-center text-[#5D4037] dark:text-gray-300 disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-3 text-center">1</span>
+<button class="w-5 h-5 flex items-center justify-center text-[#5D4037] dark:text-gray-300">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pickup Time -->
+<section>
+<div class="flex items-center gap-2 mb-3 px-1">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+<h2 class="text-lg font-bold text-[#5D4037] dark:text-white">Pilih Waktu Jemput</h2>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<label class="cursor-pointer group">
+<input checked="" class="peer sr-only" name="pickup_time" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-white dark:bg-[#2c241b] border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all shadow-sm">
+<span class="text-sm font-bold text-[#5D4037] dark:text-white peer-checked:text-primary">Sekarang</span>
+<span class="text-[10px] text-gray-500 mt-1">ASAP</span>
+</div>
+</label>
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="pickup_time" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-white dark:bg-[#2c241b] border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all shadow-sm">
+<span class="text-sm font-bold text-[#5D4037] dark:text-white peer-checked:text-primary">15 Menit</span>
+<span class="text-[10px] text-gray-500 mt-1">14:30</span>
+</div>
+</label>
+<label class="cursor-pointer group">
+<input class="peer sr-only" name="pickup_time" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-xl bg-white dark:bg-[#2c241b] border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all shadow-sm">
+<span class="text-sm font-bold text-[#5D4037] dark:text-white peer-checked:text-primary">30 Menit</span>
+<span class="text-[10px] text-gray-500 mt-1">14:45</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Payment Method -->
+<section>
+<div class="flex items-center justify-between mb-3 px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">wallet</span>
+<h2 class="text-lg font-bold text-[#5D4037] dark:text-white">Pembayaran</h2>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Lihat Semua</button>
+</div>
+<div class="space-y-3">
+<!-- Gopay -->
+<label class="flex items-center p-3 bg-white dark:bg-[#2c241b] rounded-xl border border-gray-100 dark:border-white/5 cursor-pointer relative shadow-sm overflow-hidden">
+<input checked="" class="peer sr-only" name="payment" type="radio"/>
+<div class="absolute inset-0 border-2 border-primary opacity-0 peer-checked:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+<div class="absolute right-0 top-0 bg-primary text-white px-2 py-0.5 rounded-bl-lg text-[10px] font-bold opacity-0 peer-checked:opacity-100">Dipilih</div>
+<div class="w-10 h-10 rounded-lg bg-[#00AED6]/10 flex items-center justify-center mr-3 shrink-0">
+<!-- Using a generic wallet icon to represent e-wallet, color coded -->
+<span class="material-symbols-outlined text-[#00AED6]">account_balance_wallet</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="font-bold text-[#5D4037] dark:text-white">Gopay</span>
+<span class="bg-red-100 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded">Promo</span>
+</div>
+<p class="text-xs text-gray-500">Saldo: Rp 150.000</p>
+</div>
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</label>
+<!-- OVO -->
+<label class="flex items-center p-3 bg-white dark:bg-[#2c241b] rounded-xl border border-gray-100 dark:border-white/5 cursor-pointer relative shadow-sm overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+<input class="peer sr-only" name="payment" type="radio"/>
+<div class="absolute inset-0 border-2 border-primary opacity-0 peer-checked:opacity-100 rounded-xl transition-opacity pointer-events-none"></div>
+<div class="w-10 h-10 rounded-lg bg-[#4C3494]/10 flex items-center justify-center mr-3 shrink-0">
+<span class="material-symbols-outlined text-[#4C3494]">payments</span>
+</div>
+<div class="flex-1">
+<span class="font-bold text-[#5D4037] dark:text-white">OVO</span>
+<p class="text-xs text-gray-500">Hubungkan akun</p>
+</div>
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary flex items-center justify-center">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</label>
+</div>
+</section>
+<!-- Breakdown -->
+<section class="bg-white dark:bg-[#2c241b] rounded-xl p-4 shadow-sm border border-gray-100 dark:border-white/5 mb-6">
+<div class="space-y-2 text-sm">
+<div class="flex justify-between text-gray-600 dark:text-gray-400">
+<span>Subtotal</span>
+<span>Rp 48.000</span>
+</div>
+<div class="flex justify-between text-gray-600 dark:text-gray-400">
+<span>Pajak &amp; Layanan (10%)</span>
+<span>Rp 4.800</span>
+</div>
+<div class="flex justify-between text-gray-600 dark:text-gray-400">
+<span>Biaya Penanganan</span>
+<span>Rp 1.000</span>
+</div>
+<div class="flex justify-between text-primary font-medium">
+<span>Diskon (Gopay)</span>
+<span>- Rp 2.000</span>
+</div>
+<div class="h-px bg-dashed border-t border-dashed border-gray-300 my-2"></div>
+<div class="flex justify-between font-bold text-lg text-[#5D4037] dark:text-white">
+<span>Total Pembayaran</span>
+<span>Rp 51.800</span>
+</div>
+</div>
+</section>
+<div class="h-12"></div> <!-- Extra scroll space -->
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#211911]/95 backdrop-blur-md border-t border-gray-100 dark:border-white/5 p-4 z-40 max-w-md mx-auto rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Total Bayar</span>
+<span class="text-xl font-bold text-primary">Rp 51.800</span>
+</div>
+<button class="flex-1 bg-earthy-brown hover:bg-[#4a332c] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-orange-900/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span>Bayar Sekarang</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

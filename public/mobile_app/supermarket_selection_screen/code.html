@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Supermarket Selection - HappyFresh</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df259", // HappyFresh Green
+                        "primary-dark": "#0bb842", // Darker shade for text readability
+                        "accent-orange": "#FF8C00", // Orange for accents
+                        "background-light": "#ffffff",
+                        "background-subtle": "#f4f7f5",
+                        "background-dark": "#102216",
+                        "text-main": "#0d1c12",
+                        "text-secondary": "#6b7280",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(13, 242, 89, 0.1)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto bg-background-subtle dark:bg-zinc-900 shadow-2xl">
+<!-- Top Navigation / Header -->
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-primary/10 px-5 pt-12 pb-4">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<!-- Mascot Placeholder -->
+<div class="relative w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden" data-alt="Happy fresh mascot happy face">
+<img alt="HappyFresh Mascot" class="w-full h-full object-cover" data-alt="Happy shopping bag mascot illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPinLczawB3QjLhG2qI9pHaoXN6Gyf3PQw5lkPl6mC9rIzSBo5dQCVIXCJMOAxBHR8kCjdQRfsFkonusphYOAPBkLxfWjDF29uMZupMiDoWH1eF46ipoXwTufWcNjfN4mBnXpmGgULA1IspUAbGnnhKPuvRk3_Shj_mAG2Hn76cb-Sq9cOyfOx3nbS6Vc5zK1hUjZPngnO3mbr7P0JhPG7Ur8VQyJ94cjNnW4uhhmQhmnj0m1KTpe5VVypILae5jyFeuJv-EfLd-yS"/>
+</div>
+<div>
+<p class="text-xs text-text-secondary font-medium">Lokasi Pengiriman</p>
+<button class="flex items-center gap-1 text-sm font-bold text-text-main dark:text-white group">
+                            Jakarta Selatan
+                            <span class="material-symbols-outlined text-primary group-hover:translate-y-0.5 transition-transform text-[18px]">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors relative">
+<span class="material-symbols-outlined text-text-main dark:text-white">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-accent-orange rounded-full border border-white"></span>
+</button>
+</div>
+<!-- Search Bar -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border-none rounded-xl leading-5 bg-background-subtle dark:bg-zinc-800 text-text-main placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:bg-white transition duration-150 ease-in-out sm:text-sm shadow-inner" placeholder="Cari supermarket atau produk..." type="text"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar pb-24 px-5 pt-2">
+<!-- Greeting -->
+<div class="mt-4 mb-6 relative">
+<div class="absolute -right-4 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+<h1 class="text-2xl font-extrabold text-text-main dark:text-white leading-tight">
+                    Mau belanja di mana <br/>
+<span class="text-primary-dark dark:text-primary">hari ini?</span>
+</h1>
+</div>
+<!-- Categories / Quick Filters (Optional but good for UX) -->
+<div class="flex gap-3 overflow-x-auto hide-scrollbar mb-6 pb-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full text-sm font-bold shadow-soft whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">storefront</span>
+                    Supermarket
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-800 text-text-secondary dark:text-gray-300 border border-gray-100 dark:border-zinc-700 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+                    Fresh
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-800 text-text-secondary dark:text-gray-300 border border-gray-100 dark:border-zinc-700 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">local_pharmacy</span>
+                    Health
+                </button>
+</div>
+<!-- Supermarket List -->
+<div class="space-y-4">
+<!-- Store Card 1: Ranch Market -->
+<div class="group bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-card hover:shadow-soft transition-all duration-300 border border-transparent hover:border-primary/20 cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full -mr-4 -mt-4"></div>
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-xl bg-white border border-gray-100 flex items-center justify-center p-1 shrink-0 shadow-sm relative z-10">
+<!-- Placeholder Logo -->
+<div class="w-full h-full bg-contain bg-center bg-no-repeat rounded-lg" data-alt="Ranch Market logo" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjDN7nZZFEX9gEfb1VPBlY0wkurLBzNS7gN5cYGlFDQ9M0kA4Xw5LzIQrJt1goYLyQfzHMQ4fsVlNPkEu7YaQ6i0gv6H4KzfQGmbdguru-dDjaMBN48Q8oA_iimdoE0t6I3Vo17OG9Ll71uGVJ0HrORvsLx3cCEw9W2XCKsG-zN3DSRAVsW9MwaG-sstWufd6-YJa2R_O47pRF8zFDmPSDu4zb95kVFm7NkGJLdDxq_9x0g_0X6gmbZkYYidp43AH7x3GYWS8Q3hwN');"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-text-main dark:text-white truncate">Ranch Market</h3>
+<div class="flex items-center text-xs font-semibold text-text-secondary bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[14px] mr-1">distance</span>
+                                    1.2 km
+                                </div>
+</div>
+<p class="text-sm text-text-secondary mb-3 truncate">Grand Indonesia, Jakarta Pusat</p>
+<!-- Delivery Slot -->
+<div class="flex items-center gap-2">
+<div class="inline-flex items-center px-2.5 py-1 rounded-md bg-primary/10 text-primary-dark dark:text-primary text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+                                    Slot tersedia jam 14:00
+                                </div>
+<span class="bg-accent-orange/10 text-accent-orange text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Promo</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Store Card 2: Lotte Mart -->
+<div class="group bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-card hover:shadow-soft transition-all duration-300 border border-transparent hover:border-primary/20 cursor-pointer relative overflow-hidden">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-xl bg-white border border-gray-100 flex items-center justify-center p-1 shrink-0 shadow-sm relative z-10">
+<!-- Placeholder Logo -->
+<div class="w-full h-full rounded-lg flex items-center justify-center bg-red-600 text-white font-bold text-xs text-center leading-tight" data-alt="Lotte Mart logo red background">
+                                LOTTE<br/>Mart
+                            </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-text-main dark:text-white truncate">Lotte Mart</h3>
+<div class="flex items-center text-xs font-semibold text-text-secondary bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[14px] mr-1">distance</span>
+                                    3.5 km
+                                </div>
+</div>
+<p class="text-sm text-text-secondary mb-3 truncate">Kuningan City, Jakarta Selatan</p>
+<div class="flex items-center gap-2">
+<div class="inline-flex items-center px-2.5 py-1 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+                                    Slot tersedia jam 15:00
+                                </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Store Card 3: Farmers Market -->
+<div class="group bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-card hover:shadow-soft transition-all duration-300 border border-transparent hover:border-primary/20 cursor-pointer relative overflow-hidden">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-xl bg-white border border-gray-100 flex items-center justify-center p-1 shrink-0 shadow-sm relative z-10">
+<!-- Placeholder Logo -->
+<div class="w-full h-full rounded-lg flex items-center justify-center bg-green-700 text-white font-bold text-xs text-center leading-tight p-1" data-alt="Farmers Market logo green background">
+                                FARMERS<br/>MARKET
+                            </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-bold text-text-main dark:text-white truncate">Farmers Market</h3>
+<div class="flex items-center text-xs font-semibold text-text-secondary bg-gray-100 dark:bg-zinc-700 px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[14px] mr-1">distance</span>
+                                    4.0 km
+                                </div>
+</div>
+<p class="text-sm text-text-secondary mb-3 truncate">Epicentrum Walk</p>
+<div class="flex items-center gap-2">
+<div class="inline-flex items-center px-2.5 py-1 rounded-md bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-xs font-bold">
+<span class="material-symbols-outlined text-[14px] mr-1">history_toggle_off</span>
+                                    Besok, jam 08:00
+                                </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Store Card 4: Hero Supermarket (Skeleton/Loading State Simulation) -->
+<div class="group bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-card border border-transparent cursor-pointer relative overflow-hidden opacity-60">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-zinc-700 shrink-0 animate-pulse"></div>
+<div class="flex-1 min-w-0 space-y-2">
+<div class="flex justify-between items-start">
+<div class="h-5 bg-gray-200 dark:bg-zinc-700 rounded w-1/2 animate-pulse"></div>
+<div class="h-5 bg-gray-200 dark:bg-zinc-700 rounded w-12 animate-pulse"></div>
+</div>
+<div class="h-4 bg-gray-200 dark:bg-zinc-700 rounded w-3/4 animate-pulse"></div>
+<div class="h-6 bg-gray-200 dark:bg-zinc-700 rounded w-1/3 animate-pulse mt-2"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Spacer for Tab Bar -->
+<div class="h-8"></div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 w-full bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-zinc-800 pb-safe pt-2 px-2 shadow-[0_-5px_10px_rgba(0,0,0,0.02)] z-30">
+<div class="flex justify-around items-end pb-2">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center gap-1 w-16 group" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-primary text-[28px] group-hover:-translate-y-1 transition-transform">home</span>
+<span class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"></span>
+</div>
+<span class="text-[10px] font-bold text-text-main dark:text-white">Home</span>
+</a>
+<!-- Deals -->
+<a class="flex flex-col items-center justify-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[28px] group-hover:text-primary transition-colors group-hover:-translate-y-1 transition-transform">local_offer</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Deals</span>
+</a>
+<!-- Orders -->
+<a class="flex flex-col items-center justify-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[28px] group-hover:text-primary transition-colors group-hover:-translate-y-1 transition-transform">shopping_bag</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Orders</span>
+</a>
+<!-- Account -->
+<a class="flex flex-col items-center justify-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-[28px] group-hover:text-primary transition-colors group-hover:-translate-y-1 transition-transform">person</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-primary transition-colors">Account</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

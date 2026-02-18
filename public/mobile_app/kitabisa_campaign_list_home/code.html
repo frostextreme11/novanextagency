@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KitaBisa Campaign List Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "primary-dark": "#0ea5c6",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-white dark:bg-slate-900 shadow-2xl">
+<!-- Header Section -->
+<header class="bg-primary pt-12 pb-6 px-4 rounded-b-[2rem] shadow-lg z-10 sticky top-0">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<div class="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-xl">favorite</span>
+</div>
+<span class="text-white text-xl font-bold tracking-tight">KitaBisa</span>
+</div>
+<button class="relative p-2 text-white hover:bg-white/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-red-500 border-2 border-primary"></span>
+</button>
+</div>
+<!-- Search Bar -->
+<label class="flex flex-col w-full h-12">
+<div class="flex w-full flex-1 items-center rounded-full bg-white shadow-sm overflow-hidden px-4">
+<span class="material-symbols-outlined text-gray-400">search</span>
+<input class="w-full flex-1 border-none bg-transparent px-3 text-slate-700 placeholder:text-gray-400 focus:outline-none focus:ring-0 text-sm font-medium" placeholder="Cari donasi atau penggalang dana..." value=""/>
+</div>
+</label>
+</header>
+<!-- Main Content -->
+<main class="flex-1 pb-24 overflow-y-auto no-scrollbar">
+<!-- Category Chips -->
+<div class="flex gap-3 overflow-x-auto px-4 py-6 no-scrollbar snap-x">
+<button class="snap-start shrink-0 flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full text-sm font-bold shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+                    Semua
+                </button>
+<button class="snap-start shrink-0 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-red-500">medical_services</span>
+                    Medis
+                </button>
+<button class="snap-start shrink-0 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-orange-500">flood</span>
+                    Bencana Alam
+                </button>
+<button class="snap-start shrink-0 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-blue-500">school</span>
+                    Pendidikan
+                </button>
+<button class="snap-start shrink-0 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-green-500">child_care</span>
+                    Panti Asuhan
+                </button>
+</div>
+<!-- Urgent Needs Carousel -->
+<section class="mb-8">
+<div class="flex justify-between items-center px-4 mb-4">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Kebutuhan Mendesak</h2>
+<a class="text-primary text-sm font-semibold hover:text-primary-dark transition-colors" href="#">Lihat Semua</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 no-scrollbar snap-x">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[280px] bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden group hover:shadow-md transition-all duration-300">
+<div class="relative h-40 w-full overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Sick child in hospital bed receiving treatment" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sick child in hospital bed receiving treatment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5BkZdYVpUqGy0oMVbWF45zTOnTbL0srXOiI2UPmcWsuAvPLoPm9N3v2zkLQDgrD1lcRn3PnVG3JuuEuZYBNONr4MB7x6VDJHKUOJQGPyOx1xZVdtmrDjQurUPFtHC8zHopIB8oLLgwjvZLtf1gfCXNrvL4sLRBLCKXxozqWzjVoc40FuPvj-3yfcNve4I1yfKAKJnjKp-cQL0IZixVLdfSBtAwa_w_8bI6trfMt0pYyGhLaCmmwIi8foO3kQ8sqNkmU2wVpbaP1F6"/>
+<div class="absolute bottom-3 left-3 z-20 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span>
+                                3 hari lagi
+                            </div>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-slate-900 dark:text-white text-base leading-tight mb-3 line-clamp-2">Bantu Adik Rizky Sembuh dari Kanker Tulang</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-blue-500 text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Yayasan Kanker Indonesia</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mb-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 70%"></div>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-0.5">Terkumpul</p>
+<p class="text-primary font-bold text-sm">Rp 70jt <span class="text-slate-400 font-normal text-xs">dari Rp 100jt</span></p>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">70%</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[280px] bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden group hover:shadow-md transition-all duration-300">
+<div class="relative h-40 w-full overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img alt="Flood victims in a shelter camp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Flood victims in a shelter camp" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Ef3XJxZYJg92c0YwNmsUCNStPpTw0NCxfNy8xdBUPr2_Trxn0e_BXOTRo3V2NP8ELOLuGFHKv1CGW8KrCrzh6ZaQ2fxfrpZb9KfqlLrbYUvlbIg6WMxCpfx7qLYJECGfyc6iGCluDykZUK2knx3dRrRhbXEpDJG8baoVR5w8jDBKudiFKvQXUAbalBnnCOEzewty--girvtZypfeNXmFn0EsNqYZtnY0H7eiIejbYp-eKhhM6nZevdsdTXKpAisVwFSKWMiFZUGi"/>
+<div class="absolute bottom-3 left-3 z-20 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">timer</span>
+                                5 hari lagi
+                            </div>
+</div>
+<div class="p-4">
+<h3 class="font-bold text-slate-900 dark:text-white text-base leading-tight mb-3 line-clamp-2">Darurat Banjir Bandang NTT: Ribuan Mengungsi</h3>
+<div class="flex items-center gap-1 mb-3">
+<span class="material-symbols-outlined text-blue-500 text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">ACT Foundation</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mb-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-0.5">Terkumpul</p>
+<p class="text-primary font-bold text-sm">Rp 225jt <span class="text-slate-400 font-normal text-xs">dari Rp 500jt</span></p>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">45%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pilihan Untukmu List -->
+<section class="px-4">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold mb-4">Pilihan Untukmu</h2>
+<div class="flex flex-col gap-3">
+<!-- List Item 1 -->
+<div class="flex gap-4 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden relative">
+<img alt="Happy children in an orphanage classroom" class="w-full h-full object-cover" data-alt="Happy children in an orphanage classroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTPDT_IGhPRs5D9cTGPH6f2FMFt0CucyvVSEfzxr0N16Ujm9GW3NO5RXAXVP_B4MEOVCFY98IVFl5QRPDiu98iBye4rWBcXtoLxdZFtnYgN5tC649rFvSqoHUtyJc-Vpmc8qdtN1hEL-zo6z0b5opQ62xjubXQKoLBM_-23cDCh-nPsbgPKxTTx2xOcc7FFDrQ5FC3gjDh2dzw8Vt3Q1ZEJSZ5U6YmgykBXBLxgjxDEMgDaM76O9M4rMoXqjAEFT1WXaoPFbiV_kLs"/>
+</div>
+<div class="flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1">Sedekah Makan Santri Penghafal Quran</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="text-xs text-slate-500 dark:text-slate-400">Yayasan Rumah Yatim</span>
+<span class="material-symbols-outlined text-blue-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mb-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 88%"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 dark:text-slate-400">Terkumpul</span>
+<span class="text-xs font-bold text-primary">Rp 45jt</span>
+</div>
+</div>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="flex gap-4 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden relative">
+<img alt="Medical staff helping an elderly patient" class="w-full h-full object-cover" data-alt="Medical staff helping an elderly patient" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDURt5ksctXnILJM8WGt7bDEVCqkknMFBliPxrmGmmjU98_CiYd8mkZVepjl636AUsVqpHFpcd0IxTRH2SNtEDd7dAj1XSBbA_TpXKm5jScnT28vaZY_9vv8zeA_BniModZeQj1XZIMLnRkK-ywdZ_WXxazS8il-23YklW6lUzN8POnwmRqDfbGkmmk4_vZfHezl0NUjAj8A6WIbM9VOcBAoD0gkM0bstmXMUauOSEvBFPgaIcHgFBiBO9597937HuQ0lgEPB0Rc98d"/>
+</div>
+<div class="flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1">Bantu Kakek Supri Berobat Jantung</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="text-xs text-slate-500 dark:text-slate-400">Komunitas Peduli Lansia</span>
+<span class="material-symbols-outlined text-blue-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mb-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 32%"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 dark:text-slate-400">Terkumpul</span>
+<span class="text-xs font-bold text-primary">Rp 12jt</span>
+</div>
+</div>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="flex gap-4 bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden relative">
+<img alt="Construction of a mosque in a village" class="w-full h-full object-cover" data-alt="Construction of a mosque in a village" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgrNSlTvIWGQi4--sEkGikOHiWiNRnTh3-aZFrQKo1uoSIChItB4a3zo-qT0Fi9kQkN8H-RrSEw6wnJj-ipY3bvHNyxpqCX-ITERUzefiQXOGBBsPhClyOYy8zObk4pG0QJOu3fPo1WVO_hCeOSogF7Mb3pYKS-lnX9EMVTnueEKVSWGcRXq9ZlhRm9YnegIVyTuT3g1RKgVpHKZgOitybRy5bYTu2BHBfxUTF1eAm8EbN87gznGY-r5aiPQYbn-TbHMv-k6gb7lSo"/>
+</div>
+<div class="flex flex-col flex-1 justify-between">
+<div>
+<h3 class="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-1">Bangun Masjid di Pelosok Desa</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="text-xs text-slate-500 dark:text-slate-400">Masjid Nusantara</span>
+<span class="material-symbols-outlined text-blue-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mb-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-slate-500 dark:text-slate-400">Terkumpul</span>
+<span class="text-xs font-bold text-primary">Rp 150jt</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full max-w-md bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 pb-safe pt-2 px-6 flex justify-between items-center z-50 rounded-t-2xl shadow-[0_-5px_20px_rgba(0,0,0,0.03)]">
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<span class="text-[10px] font-bold text-primary">Donasi</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-[28px]">newspaper</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Update</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-[28px]">mail</span>
+</div>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Inbox</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-[28px]">person</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">Akun</span>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>E-book Reader Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5", // Soft off-white
+                        "background-dark": "#221e10",
+                        "sepia-light": "#fcfbf8", // Very light cream
+                        "sepia-paper": "#f5f1e6", // Deeper paper tone
+                        "text-ink": "#2d2926", // Soft black for text
+                        "text-ink-light": "#59544d", // Secondary text
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "sans": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    backgroundImage: {
+                        'paper-texture': "url('https://www.transparenttextures.com/patterns/cream-paper.png')",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner reading */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Subtle paper grain overlay */
+        .paper-grain::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: multiply;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-ink dark:text-[#e0ded7] antialiased overflow-hidden selection:bg-primary/30">
+<!-- Main Reader Container -->
+<div class="relative w-full h-screen max-w-md mx-auto bg-sepia-paper dark:bg-[#1a1814] flex flex-col shadow-2xl overflow-hidden group/reader">
+<!-- Background Texture Overlay -->
+<div class="absolute inset-0 paper-grain pointer-events-none z-0"></div>
+<!-- Top App Bar (Overlay) -->
+<!-- Ideally this would fade in/out on tap, simulated here as visible -->
+<header class="absolute top-0 left-0 w-full z-20 bg-sepia-paper/95 dark:bg-[#1a1814]/95 backdrop-blur-sm border-b border-stone-200 dark:border-stone-800 transition-all duration-300 transform translate-y-0 shadow-sm">
+<div class="flex items-center justify-between px-4 pt-12 pb-3"> <!-- Added pt-12 for status bar area -->
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-700/50 transition-colors text-text-ink dark:text-gray-200">
+<span class="material-symbols-outlined !text-[28px]">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-700/50 transition-colors text-text-ink dark:text-gray-200">
+<span class="material-symbols-outlined !text-[24px]">toc</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary dark:text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined !text-[24px]">text_fields</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-700/50 transition-colors text-text-ink dark:text-gray-200">
+<span class="material-symbols-outlined !text-[24px] fill-1">bookmark</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Scrollable Text) -->
+<main class="relative z-10 flex-1 overflow-y-auto no-scrollbar px-6 pt-28 pb-32">
+<!-- Chapter Title -->
+<div class="mb-8 text-center">
+<span class="block text-xs font-sans font-bold tracking-widest text-primary uppercase mb-2">Chapter 4</span>
+<h1 class="text-2xl font-bold text-text-ink dark:text-gray-100 leading-tight">The Silent Morning</h1>
+</div>
+<!-- Text Content -->
+<article class="prose prose-lg prose-stone dark:prose-invert leading-relaxed text-lg text-justify text-text-ink dark:text-[#dcdad4]">
+<p class="mb-6 indent-8">
+                    It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife. However little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered the rightful property of some one or other of their daughters.
+                </p>
+<p class="mb-6 indent-8">
+                    "My dear Mr. Bennet," said his lady to him one day, "have you heard that Netherfield Park is let at last?" Mr. Bennet replied that he had not.
+                </p>
+<p class="mb-6 indent-8">
+                    "But it is," returned she; "for Mrs. Long has just been here, and she told me all about it." Mr. Bennet made no answer. "Do you not want to know who has taken it?" cried his wife impatiently. "You want to tell me, and I have no objection to hearing it."
+                </p>
+<p class="mb-6 indent-8">
+                    This was invitation enough. "Why, my dear, you must know, Mrs. Long says that Netherfield is taken by a young man of large fortune from the north of England; that he came down on Monday in a chaise and four to see the place, and was so much delighted with it, that he agreed with Mr. Morris immediately; that he is to take possession before Michaelmas, and some of his servants are to be in the house by the end of next week."
+                </p>
+<p class="mb-6 indent-8">
+                    "What is his name?"<br/>
+                    "Bingley."<br/>
+                    "Is he married or single?"<br/>
+                    "Oh! Single, my dear, to be sure! A single man of large fortune; four or five thousand a year. What a fine thing for our girls!"
+                </p>
+<p class="mb-6 indent-8">
+                    "How so? How can it affect them?"<br/>
+                    "My dear Mr. Bennet," replied his wife, "how can you be so tiresome! You must know that I am thinking of his marrying one of them."
+                </p>
+</article>
+<div class="flex justify-center mt-12 mb-8 opacity-50">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</div>
+</main>
+<!-- Tap Zones (Invisible) for Page Turning UX suggestion -->
+<div class="absolute inset-y-0 left-0 w-1/6 z-10 cursor-pointer" title="Previous Page"></div>
+<div class="absolute inset-y-0 right-0 w-1/6 z-10 cursor-pointer" title="Next Page"></div>
+<!-- Typography Settings Drawer (Simulated Open State) -->
+<div class="absolute bottom-24 left-4 right-4 z-30 bg-white dark:bg-[#2a2620] rounded-2xl shadow-xl border border-stone-100 dark:border-stone-700 p-4 transform transition-transform translate-y-0">
+<!-- Theme Toggles -->
+<div class="flex bg-stone-100 dark:bg-[#1e1b16] p-1 rounded-xl mb-4">
+<button class="flex-1 py-2 rounded-lg text-sm font-sans font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200">Light</button>
+<button class="flex-1 py-2 rounded-lg bg-white dark:bg-[#3a352c] shadow-sm text-sm font-sans font-bold text-primary ring-1 ring-black/5 dark:ring-white/10">Sepia</button>
+<button class="flex-1 py-2 rounded-lg text-sm font-sans font-medium text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200">Dark</button>
+</div>
+<!-- Font Controls -->
+<div class="flex items-center justify-between mb-4 px-2">
+<button class="w-10 h-10 rounded-full border border-stone-200 dark:border-stone-600 flex items-center justify-center text-text-ink dark:text-gray-300 hover:bg-stone-50 dark:hover:bg-stone-700">
+<span class="text-sm font-bold">A</span>
+</button>
+<div class="flex-1 px-4">
+<div class="h-1 w-full bg-stone-200 dark:bg-stone-700 rounded-full relative">
+<div class="absolute left-0 top-0 h-full w-1/2 bg-primary rounded-full"></div>
+<div class="absolute top-1/2 left-1/2 w-4 h-4 bg-white dark:bg-stone-300 rounded-full shadow-md transform -translate-y-1/2 -translate-x-1/2 border border-stone-200 cursor-pointer hover:scale-110 transition-transform"></div>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border border-stone-200 dark:border-stone-600 flex items-center justify-center text-text-ink dark:text-gray-300 hover:bg-stone-50 dark:hover:bg-stone-700">
+<span class="text-xl font-bold">A</span>
+</button>
+</div>
+<!-- Font Family -->
+<div class="flex items-center justify-between gap-2 px-1">
+<button class="flex-1 py-2 px-3 rounded-lg border-2 border-primary/50 bg-primary/5 text-primary text-sm font-serif font-bold">Serif</button>
+<button class="flex-1 py-2 px-3 rounded-lg border border-stone-200 dark:border-stone-600 text-text-ink-light dark:text-stone-400 text-sm font-sans hover:bg-stone-50 dark:hover:bg-stone-700">Sans</button>
+</div>
+<!-- Modal Handle Indicator -->
+<div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+<div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white dark:border-b-[#2a2620]"></div>
+</div>
+</div>
+<!-- Bottom Toolbar (Overlay) -->
+<footer class="absolute bottom-0 left-0 w-full z-20 bg-sepia-paper/95 dark:bg-[#1a1814]/95 backdrop-blur-sm border-t border-stone-200 dark:border-stone-800 pb-6 pt-4 px-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col gap-3">
+<!-- Info Row -->
+<div class="flex justify-between text-xs font-sans font-medium text-text-ink-light dark:text-stone-500 tracking-wide">
+<span>12 mins left</span>
+<span>Page 45 of 320</span>
+</div>
+<!-- Progress Slider -->
+<div class="relative w-full h-8 flex items-center group/slider">
+<!-- Track -->
+<div class="w-full h-1 bg-stone-300 dark:bg-stone-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%] rounded-full"></div>
+</div>
+<!-- Handle (Thumb) -->
+<div class="absolute left-[45%] top-1/2 w-5 h-5 bg-white dark:bg-stone-200 rounded-full shadow-md border-2 border-primary transform -translate-y-1/2 -translate-x-1/2 cursor-pointer transition-transform group-hover/slider:scale-110"></div>
+</div>
+<!-- Secondary Actions -->
+<div class="flex justify-between items-center px-2 mt-1">
+<button class="text-stone-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">skip_previous</span>
+</button>
+<span class="text-xs font-sans text-stone-400 dark:text-stone-600 uppercase tracking-widest font-bold">Chapter 4</span>
+<button class="text-stone-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl">skip_next</span>
+</button>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

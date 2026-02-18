@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flip Bank Selection Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f27f0d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-800 dark:text-slate-100 h-full">
+<div class="relative flex h-screen w-full flex-col overflow-hidden mx-auto max-w-md bg-white dark:bg-background-dark shadow-2xl">
+<!-- Orange Header Section -->
+<div class="bg-primary pt-12 pb-8 px-6 flex flex-col gap-6 shrink-0 relative z-10">
+<!-- Back Button and Title -->
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-white text-lg font-bold tracking-tight">Kirim Uang</h1>
+</div>
+<!-- Greeting -->
+<div>
+<h2 class="text-white text-3xl font-extrabold leading-tight tracking-tight">Mau transfer ke mana hari ini?</h2>
+</div>
+<!-- Search Bar (Floating effect overlap) -->
+<div class="absolute -bottom-6 left-6 right-6 shadow-lg shadow-primary/20 rounded-xl">
+<label class="flex items-center w-full h-14 bg-white dark:bg-slate-800 rounded-xl px-4 border border-slate-100 dark:border-slate-700 transition-all focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent">
+<span class="material-symbols-outlined text-slate-400 text-2xl">search</span>
+<input class="w-full ml-3 bg-transparent border-none focus:ring-0 text-slate-800 dark:text-white placeholder-slate-400 text-base font-medium" placeholder="Cari bank tujuan..." type="text"/>
+</label>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto pt-10 pb-24 bg-background-light dark:bg-background-dark px-6">
+<!-- Popular Banks Section -->
+<div class="mb-8">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-4">Bank Populer</h3>
+<div class="grid grid-cols-4 gap-4">
+<!-- BCA -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center justify-center p-3 transition-transform group-hover:scale-105 group-active:scale-95">
+<img alt="BCA Logo" class="w-full h-full object-contain" data-alt="Blue BCA bank logo on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM4nrhMuMysiUJAmtSvIeG9sYnB_3r9CDuIt8aj_qKadioL1wjsK2Ajowf355oh71__5IO212xY63GtrbucS8RIoZFNu0-54BG3ltwvEPr-KfeuZa3gU90HGAU1ANU-31uyEXz3XsbJMh5SYNe96juxv786h4FsqM0_ms0-mi7Rjr2A-fXTlkNg0dtW5bUa70rw0w-NZA2q4TyLcQiJuT96gaplu-74PkgbxOESWeMBFrxNQPRCnTNUbGFFtnTir_BbAprJRW1Xa38"/>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">BCA</span>
+</button>
+<!-- Mandiri -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center justify-center p-3 transition-transform group-hover:scale-105 group-active:scale-95">
+<img alt="Mandiri Logo" class="w-full h-full object-contain" data-alt="Blue and yellow Mandiri bank logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHVVdY24w5kbbXJr0Jkn9f2yvaV50SOnsRDWvHGSwVA7b7XtAqNxU2FnJl7QICVGU9khUUlmyWSlnhk6rnhMPmCvvZSFdZESFC6WHBZ8oe9-bEkfzvvvIREIh7oeZ2Q2mBXWBOTYjEM9-1BaZqo1kC6_B_Y8MHapFa4pYAR5uSB7WHAZtNBfwB4ws9TXov50b1lbc3DUM08FOocUt3O3ZtSPWD_Fwr3OsNIAYScsgMNDy7x6dzstzb_vJ1veKLbHw3Ns8tFBWbycMR"/>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">Mandiri</span>
+</button>
+<!-- BRI -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center justify-center p-3 transition-transform group-hover:scale-105 group-active:scale-95">
+<img alt="BRI Logo" class="w-full h-full object-contain" data-alt="Blue BRI bank logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN7LdiZOpV3gg1v6GD4mA3vy7p3zSWZbDSjjFFDSzr7GQKe01V4D-5SOCPEt6BbnZGEWLpTJN6LGb-YBG6Dq06Hyc8x0XP1rg4YFIwwbdgPCvkySzeE9L_kXSwgy5YPMRHDs660j9XOhrJ7Qqa62dQXJatht8nM2uYh4eiiSTHbN2ks4YUT4TSrgaaMqtK_vozN8sbtV7iBJhYbFmBPIslZhcEZTe2JfUDNHhDZTTSebHibw0xPUKZEsGRbf6vgHGwFYPHZd5KY9MV"/>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">BRI</span>
+</button>
+<!-- BNI -->
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center justify-center p-3 transition-transform group-hover:scale-105 group-active:scale-95">
+<img alt="BNI Logo" class="w-full h-full object-contain" data-alt="Orange and teal BNI bank logo 46" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADZdA7aYhX4f8fp0H51LCHqDnFcPnSt_LRjVJTY3KvLA-NAbscMNhu9spNcUoMcWpIFI5cliopUKPCbJynq9xgxznl4HIWgr7rjvyTsLN6IAPkeRZBKyA68G5aa6P0EYsW3j8n7QRYWx61QJHXpOoXyZYkmXov4FbPFgk1T7okzgu-FJLWDSLKNENLo0Z9JZWcgxkcumBBGMlRFAy4zK0bY1Tgj725hk76edEQXAXm2BYp0d4H4SbdqC7dIlxX6Ig3GARGurJkSGRs"/>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-300">BNI</span>
+</button>
+</div>
+</div>
+<!-- All Banks List -->
+<div class="mb-4">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold mb-4 sticky top-0 bg-background-light dark:bg-background-dark py-2 z-10">Semua Bank</h3>
+<div class="flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
+<!-- Bank Item A -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                A
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Bank Aceh Syariah</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item A -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                A
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Aladin Syariah</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item B -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                B
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Bank BJB</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item B -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                B
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Bank BTN</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item C -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                C
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">CIMB Niaga</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item C -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                C
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Commonwealth Bank</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item D -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                D
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Danamon</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item J -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                J
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Jenius / BTPN</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+<!-- Bank Item J -->
+<button class="flex items-center justify-between p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border-b border-slate-100 dark:border-slate-700 last:border-0 group text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 font-bold text-sm">
+                                J
+                            </div>
+<span class="text-base font-medium text-slate-800 dark:text-slate-100">Jago</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary text-xl">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Helper text -->
+<div class="text-center pb-8 pt-4">
+<p class="text-sm text-slate-400">Tidak menemukan bank tujuan?</p>
+<button class="text-primary font-bold text-sm mt-1 hover:underline">Hubungi Bantuan</button>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Fixed) -->
+<div class="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark px-4 pb-6 pt-2 shrink-0">
+<div class="flex justify-between items-center">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:animate-bounce">home</span>
+<p class="text-[10px] font-bold tracking-wide">Beranda</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl fill-1">swap_horiz</span>
+<p class="text-[10px] font-bold tracking-wide">Transaksi</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">help</span>
+<p class="text-[10px] font-bold tracking-wide">Bantuan</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-[10px] font-bold tracking-wide">Akun</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

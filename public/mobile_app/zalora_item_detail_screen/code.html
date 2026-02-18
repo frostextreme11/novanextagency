@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zalora Product Detail</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f20d46",
+              "primary-dark": "#d10035",
+              "background-light": "#ffffff",
+              "background-dark": "#121212",
+              "surface-light": "#f8f8f8",
+              "surface-dark": "#1e1e1e",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            boxShadow: {
+                "soft": "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+                "float": "0 -4px 20px -2px rgba(0, 0, 0, 0.05)",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-gray-900 dark:text-white transition-colors duration-200">
+<div class="relative min-h-screen w-full mx-auto max-w-md bg-background-light dark:bg-background-dark flex flex-col shadow-2xl overflow-hidden">
+<!-- Header -->
+<header class="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 pt-12 bg-gradient-to-b from-black/20 to-transparent">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm transition-transform active:scale-95 text-gray-900 dark:text-white">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm transition-transform active:scale-95 text-gray-900 dark:text-white group">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">favorite</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm transition-transform active:scale-95 text-gray-900 dark:text-white">
+<span class="material-symbols-outlined text-[24px]">share</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pb-32 overflow-y-auto hide-scrollbar">
+<!-- Hero Image Section -->
+<div class="relative w-full aspect-[4/5] bg-surface-light dark:bg-surface-dark group">
+<div class="w-full h-full bg-cover bg-center bg-no-repeat transition-all duration-500 ease-in-out" data-alt="Woman wearing elegant floral midi dress" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDW0udOTNbRtchD4hgHCw-GzLblCPdQXEbFYcglHdFYuHAAPtg0ZaZgh3CTtC5dFU4pP5fXW16ZE4rEcjCbGbCqeywi0vJnYkaVo2_usB9lKUyPvNKZf1WWRJXAtudcr-Ko7xnCj6n2GUfMyR2E8F0xQAlVNUdegpY_zSPm3_nDbyu4u_hA1Ja10sCjIlbyHpH0IJ7qfy90HYOMZxu28PhT3C6ymweLjlGlj3t3sTrSb5pWnBK1Z7JBl-5PCRToyHb12K0ivnxC7Vbw');">
+</div>
+<!-- Pagination Dots -->
+<div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+<div class="h-1.5 w-6 rounded-full bg-primary shadow-sm"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/80 backdrop-blur-sm shadow-sm"></div>
+</div>
+<!-- Discount Badge -->
+<div class="absolute bottom-4 left-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                    -20% OFF
+                </div>
+</div>
+<!-- Product Details -->
+<div class="px-5 pt-6 pb-2">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-widest uppercase">Mango</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-current">star</span>
+<span class="text-sm font-medium text-gray-900 dark:text-white">4.8</span>
+<span class="text-xs text-gray-400">(124)</span>
+</div>
+</div>
+<h1 class="text-gray-900 dark:text-white text-2xl font-bold leading-tight tracking-tight mb-4">
+                    Floral Print Ruffled Midi Dress
+                </h1>
+<div class="flex items-baseline gap-3 mb-6">
+<span class="text-xl font-bold text-primary">Rp 699.000</span>
+<span class="text-sm text-gray-400 line-through decoration-gray-400">Rp 875.000</span>
+</div>
+<!-- Divider -->
+<div class="h-px w-full bg-gray-100 dark:bg-gray-800 mb-6"></div>
+<!-- Size Selector -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-4">
+<span class="text-sm font-bold text-gray-900 dark:text-white">Select Size</span>
+<button class="text-sm font-medium text-primary hover:text-primary-dark flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[18px]">straighten</span>
+                            Lihat Size Guide
+                        </button>
+</div>
+<div class="flex gap-3">
+<button class="h-12 w-12 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            XS
+                        </button>
+<button class="h-12 w-12 flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg text-sm font-bold shadow-md transform scale-105 transition-all">
+                            S
+                        </button>
+<button class="h-12 w-12 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white transition-colors">
+                            M
+                        </button>
+<button class="h-12 w-12 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white transition-colors">
+                            L
+                        </button>
+<button class="h-12 w-12 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-900 dark:text-white hover:border-gray-900 dark:hover:border-white transition-colors">
+                            XL
+                        </button>
+</div>
+<p class="text-xs text-primary mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+                        Hurry! Only 3 left in size S
+                    </p>
+</div>
+<!-- Color Selection (Optional Visual Interest) -->
+<div class="mb-6">
+<span class="text-sm font-bold text-gray-900 dark:text-white block mb-3">Color</span>
+<div class="flex gap-3">
+<div class="h-8 w-8 rounded-full bg-[#f20d46] ring-2 ring-offset-2 ring-gray-900 dark:ring-white ring-offset-white dark:ring-offset-black cursor-pointer"></div>
+<div class="h-8 w-8 rounded-full bg-blue-100 border border-gray-200 cursor-pointer hover:scale-110 transition-transform"></div>
+<div class="h-8 w-8 rounded-full bg-black border border-gray-200 cursor-pointer hover:scale-110 transition-transform"></div>
+</div>
+</div>
+<!-- Description Snippet -->
+<div class="mb-8">
+<h4 class="text-sm font-bold text-gray-900 dark:text-white mb-2">Description</h4>
+<p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Flowy fabric with floral print. Ruffled design details with a midi cut. Perfect for casual summer days or elegant evenings. 100% Viscose.
+                    </p>
+<button class="text-sm font-bold text-gray-900 dark:text-white underline mt-2">Read more</button>
+</div>
+</div>
+</main>
+<!-- Sticky Bottom Action Bar -->
+<div class="absolute bottom-0 left-0 right-0 bg-white dark:bg-background-dark p-5 shadow-float border-t border-gray-100 dark:border-gray-800 z-30 pb-8">
+<div class="flex gap-4 items-center">
+<button class="flex flex-col items-center justify-center gap-1 min-w-[60px] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">chat_bubble_outline</span>
+<span class="text-[10px] font-medium">Chat</span>
+</button>
+<button class="flex-grow bg-gray-900 dark:bg-white text-white dark:text-black font-bold text-base h-12 rounded-lg shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-gray-200">
+                    Beli Sekarang
+                </button>
+</div>
+</div>
+</div>
+</body></html>

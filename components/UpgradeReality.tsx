@@ -6,40 +6,40 @@ import { useRef } from "react";
 const oldMethods = [
     {
         icon: "block",
-        title: "Lambat & Berat",
-        desc: "Teknologi legacy yang membebani server dan user experience.",
+        title: "Loading Lama = Customer Kabur",
+        desc: "Website yang lambat bikin pengunjung nggak sabar dan langsung close tab.",
     },
     {
         icon: "running_with_errors",
-        title: "Manual Processing",
-        desc: "Human error tinggi, menghabiskan sumber daya operasional.",
+        title: "Semua Masih Manual",
+        desc: "Ribet ngurusin order, stok, dan laporan satu-satu. Rawan salah, buang waktu.",
     },
     {
         icon: "visibility_off",
-        title: "Invisible",
-        desc: "Sulit ditemukan di search engine, trafik stagnan.",
+        title: "Nggak Ada yang Nemuin",
+        desc: "Bisnis kamu nggak muncul di Google. Calon pelanggan malah pergi ke kompetitor.",
     },
 ];
 
 const newMethods = [
     {
         icon: "check",
-        title: "Hyper Speed",
-        desc: "Optimasi core vitals untuk loading instant di bawah 1 detik.",
+        title: "Website Ngebut, Pelanggan Betah",
+        desc: "Loading di bawah 1 detik. Pengunjung happy, conversion rate naik drastis.",
         gradient: "from-green-400 to-emerald-600",
         shadow: "shadow-green-500/30",
     },
     {
         icon: "check",
-        title: "AI Automation",
-        desc: "Sistem cerdas yang bekerja 24/7 mengelola data Anda.",
+        title: "Serba Otomatis, Kamu Tinggal Pantau",
+        desc: "Order masuk, stok update, laporan jadi — semuanya jalan sendiri 24/7.",
         gradient: "from-blue-400 to-indigo-600",
         shadow: "shadow-blue-500/30",
     },
     {
         icon: "check",
-        title: "Immersive UX",
-        desc: "Desain antarmuka kelas dunia yang memikat user seketika.",
+        title: "Desain yang Bikin Orang Bilang Wow",
+        desc: "Tampilan premium yang bikin brand kamu keliatan mahal dan terpercaya.",
         gradient: "from-purple-400 to-fuchsia-600",
         shadow: "shadow-purple-500/30",
     },
@@ -60,11 +60,11 @@ export default function UpgradeReality() {
                     className="text-center mb-16 sm:mb-20"
                 >
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-6">
-                        Upgrade Your Reality
+                        Kenapa Harus Upgrade?
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto text-base sm:text-lg">
-                        Jangan biarkan teknologi usang menahan potensi bisnis Anda. Beralih ke
-                        dimensi baru.
+                        Kalau masih pakai cara lama, siap-siap ketinggalan dari kompetitor.
+                        Lihat bedanya kalau pakai NovaNext.
                     </p>
                 </motion.div>
 
@@ -92,7 +92,7 @@ export default function UpgradeReality() {
                                     <span className="material-icons text-red-500">close</span>
                                 </div>
                                 <h3 className="text-xl sm:text-2xl font-display font-bold text-slate-200">
-                                    Metode Lama
+                                    Cara Lama
                                 </h3>
                             </div>
                             <ul className="space-y-6">
@@ -143,7 +143,7 @@ export default function UpgradeReality() {
                                     </span>
                                 </div>
                                 <h3 className="text-xl sm:text-2xl font-display font-bold text-white">
-                                    NovaNext Future
+                                    Bareng NovaNext
                                 </h3>
                             </div>
                             <ul className="space-y-6">

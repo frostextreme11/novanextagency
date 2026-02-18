@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personal Shopper Chat Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "primary-dark": "#d9a50b",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#221e10",
+                        "neutral-surface": "#ffffff",
+                        "neutral-surface-dark": "#2d2a20",
+                        "action-green": "#28a745",
+                        "action-orange": "#fd7e14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "card": "0 2px 8px rgba(0, 0, 0, 0.05)",
+                        "float": "0 -4px 20px rgba(0, 0, 0, 0.08)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased overflow-hidden">
+<div class="relative flex h-screen w-full flex-col mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<!-- Header -->
+<header class="flex-none bg-neutral-surface dark:bg-neutral-surface-dark px-4 py-3 shadow-sm z-20 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-3">
+<button class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<div class="relative">
+<div class="size-10 rounded-full bg-gray-200 bg-center bg-cover border-2 border-primary" data-alt="Portrait of Budi the personal shopper smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAHU6loozD1IZFhWgs4-AGmL3K1U4eOrCGd1GWq1v899sfJhrNKzbDEBMuxeMZ098nG6-tICLxo5-i6ibjB0XTuBxFcwaGAyxOsJg0WY_wqb9tRH8m_7jIxmzigrOF42b9tddGzWc7ZgN8Pe59bUoPY5jHD5CylyYtyAco1xVfIE6eBiY4jHdndBXXwxfGtZp3TZRrZ3u7Lj6NgpnG6Sw7RzDYd5FRinsGmLGQWN3w0-F-vVwhCzDK2I19K1EXNCt38_HWuTb5vVbH7');"></div>
+<div class="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full border-2 border-white dark:border-neutral-surface-dark"></div>
+</div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-tight text-gray-900 dark:text-white">Budi <span class="hidden sm:inline">(Personal Shopper)</span></h1>
+<p class="text-xs font-medium text-primary">Sedang memilih barang...</p>
+</div>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary-dark hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[20px] fill-1">call</span>
+</button>
+</header>
+<!-- Chat Area -->
+<main class="flex-1 overflow-y-auto p-4 flex flex-col gap-6 pb-48 scroll-smooth" id="chat-container">
+<!-- Date Divider -->
+<div class="flex justify-center">
+<span class="text-[11px] font-semibold text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full uppercase tracking-wide">Hari ini, 10:45 AM</span>
+</div>
+<!-- Shopper Message Group -->
+<div class="flex items-end gap-3 group">
+<div class="size-8 shrink-0 rounded-full bg-gray-200 bg-center bg-cover mb-1" data-alt="Mini avatar of shopper Budi" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBw9ZbSYxy1pZPzaHJvRQPSdrlFyZrkIoJZSTTRdiDxZQ_vM86gMnGJ_PXdBKca2lMV5u2VA8bwxJT1asLG2LtfKtM7v_tB6nJcne4a34aUuaZgx8_Jh4GEiszzrK0lKA9m4KwDU7okQSII_I3KA7GgfqD0nm4DbL1PJ_1I8VQh_ze5FoGoP5erH2IL_fk-0nZE3nyA_gmgC22wZ29BrwCeOIhKOKhrbaWkpGQOxqwqTuPA1bShIFgeo0nis4xh6yEIf4njeT_3ZxQp');"></div>
+<div class="flex flex-col gap-2 max-w-[85%]">
+<span class="text-xs text-gray-500 ml-1">Budi</span>
+<!-- Text Bubble -->
+<div class="bg-neutral-surface dark:bg-neutral-surface-dark p-4 rounded-2xl rounded-bl-none shadow-sm border border-gray-100 dark:border-gray-700">
+<p class="text-[15px] leading-relaxed text-gray-800 dark:text-gray-200">
+                            Halo Kak! Maaf, susu <b>Greenfields Full Cream 1L</b> yang dipesan sedang kosong. Apakah boleh diganti dengan <b>Diamond Milk Full Cream 1L</b>? Harganya sama ya Kak. 🙏
+                        </p>
+</div>
+<!-- Image Bubble -->
+<div class="relative overflow-hidden rounded-2xl rounded-bl-none shadow-sm border-2 border-white dark:border-gray-700 bg-gray-100 w-64 cursor-pointer group/image transition-transform active:scale-95">
+<div class="aspect-[4/5] bg-cover bg-center" data-alt="Close up photo of milk carton on grocery shelf" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDBzof6qNpapvBtRB7C8KWCIwmx1dOxadjy06eJ-QxKSug0mtufVUxlseN8TTWTs_lNr69nFoD2jDnki5XRX2tgXb4j9a-WiRBi9MTCzz75fwPwJREfPy7nnZ-YBYFHDC3Ih_Z9fftT17CNR9uPW3JHi7tcHRkOf55qDU--XBzEP2HsWiLmrsksCY-TO1P8yl_lIXF_aNenT4HcvThTpwT0Z9x2E1sawaxAd8hcRF8dPx6ON9sQqfWZ1nsTVjfPNWPIn-9d2-E1BIq');"></div>
+<div class="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors"></div>
+<div class="absolute bottom-2 right-2 bg-black/50 backdrop-blur-md px-2 py-1 rounded-lg">
+<span class="text-[10px] font-bold text-white">10:47 AM</span>
+</div>
+</div>
+<!-- Replacement Card Context -->
+<div class="w-full bg-neutral-surface dark:bg-neutral-surface-dark p-3 rounded-2xl rounded-bl-none shadow-card border border-primary/20 mt-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">info</span>
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Saran Pengganti</span>
+</div>
+<div class="flex items-stretch gap-3">
+<!-- Original Item (Unavailable) -->
+<div class="flex-1 flex flex-col items-center gap-2 opacity-50 relative">
+<div class="size-16 rounded-xl bg-gray-50 flex items-center justify-center p-1 relative overflow-hidden border border-gray-200">
+<img alt="Greenfields Milk Carton" class="h-full w-auto object-contain grayscale" data-alt="Greenfields Milk Carton package" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0TCyFJ-KGtzA0KTqP3SmFHvfmUnvBsLiF_MS_QI6d5-uWl0upZCHx6S93pP_CiVk_aTCD7hn1Nz4zSUtjDZHHhnHDoABB9WJjSMtY9CWqdJbMUKspiNnAPvD_RaB-K2cPtWRntK0eNpZlJvRrnEiJ73TS-zxvdw6zVh56uJVLcW8hNF6R8YNPCDygrTnPF2o9g01l5UVSggA3p-tYNxJUUfQbUBornIO9GPiyVt6u_O-YFwNWDg_3Gl3IgEXT1ndSJcPIcUVouwop"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="h-0.5 w-full bg-red-500 rotate-45 transform"></div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-[10px] font-medium line-through text-gray-500">Greenfields Full Cream</p>
+<p class="text-[10px] text-gray-400">1L • Rp 28.000</p>
+</div>
+</div>
+<!-- Arrow -->
+<div class="flex items-center justify-center text-gray-400">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+<!-- Substitute Item -->
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="size-16 rounded-xl bg-green-50 flex items-center justify-center p-1 border-2 border-primary/30 relative overflow-hidden">
+<img alt="Diamond Milk Carton" class="h-full w-auto object-contain" data-alt="Diamond Milk Carton package" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYnip5tlBV5BdHimF3qRVT7AFWKP4gQjKAeGvDo8vnxuc2g3jPcYU-8Hyt_JH4spExnyAJbQbgGtIXTPRD7vSS1km7Cczy9wjq8WRHVNZ43WtMis8PUOgXHEs9WrdZWGMaVBK_3pr1gVz_DUKK6tJroQzbXa66EUCmnRDXHGU1_HVoG9kLQHHprsxbeq2sPskxMCXIn_vOfz0QU9wmAAQ5WgOhAx9NBER1ImKb_3OS8uYCXfV-ZaLc1jJhdEzI2njLq78wl0i8BL8B"/>
+</div>
+<div class="text-center">
+<p class="text-[10px] font-bold text-gray-900 dark:text-gray-100">Diamond Milk Full Cream</p>
+<p class="text-[10px] text-primary-dark font-semibold">1L • Rp 28.000</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- User Reply (Example of previous interaction) -->
+<!-- <div class="flex justify-end items-end gap-3">
+                 <div class="bg-primary text-neutral-900 px-4 py-3 rounded-2xl rounded-br-none max-w-[80%] shadow-sm">
+                    <p class="text-[15px]">Oke mas, tolong carikan yang exp date nya masih lama ya.</p>
+                 </div>
+            </div> -->
+<!-- Spacer for sticky footer -->
+<div class="h-12"></div>
+</main>
+<!-- Sticky Footer Action Area -->
+<div class="absolute bottom-0 w-full bg-neutral-surface/95 dark:bg-neutral-surface-dark/95 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 p-4 pb-6 shadow-float z-30">
+<!-- Quick Actions -->
+<div class="grid grid-cols-2 gap-3 mb-4">
+<button class="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border border-action-orange/30 bg-action-orange/5 text-action-orange font-bold text-sm active:bg-action-orange/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">cached</span>
+                    Ganti yang lain
+                </button>
+<button class="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-action-green text-white font-bold text-sm shadow-lg shadow-green-200 dark:shadow-none hover:bg-green-600 active:bg-green-700 transition-colors">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                    Setuju
+                </button>
+</div>
+<!-- Input Field -->
+<div class="flex items-center gap-3 bg-gray-100 dark:bg-gray-800 p-2 rounded-full border border-transparent focus-within:border-primary/50 focus-within:bg-white dark:focus-within:bg-gray-900 transition-all">
+<button class="flex items-center justify-center size-9 rounded-full text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">add_circle</span>
+</button>
+<input class="flex-1 bg-transparent border-none text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:ring-0 p-0" placeholder="Tulis pesan..." type="text"/>
+<button class="flex items-center justify-center size-9 rounded-full bg-primary text-gray-900 hover:bg-primary-dark transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px] ml-0.5">send</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+        // Simple script to scroll to bottom on load
+        window.onload = function() {
+            var chatContainer = document.getElementById("chat-container");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body></html>

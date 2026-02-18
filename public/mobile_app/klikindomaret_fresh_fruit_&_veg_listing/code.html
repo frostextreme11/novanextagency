@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fresh Fruit &amp; Veg Listing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec25",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102212",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white overflow-x-hidden antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Sticky Header Section -->
+<div class="sticky top-0 z-30 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-primary/10">
+<!-- Top Bar -->
+<div class="flex items-center justify-between p-4 pb-2">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-white" style="font-size: 24px;">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Buah &amp; Sayur Segar</h2>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-2">
+<label class="flex flex-col h-12 w-full">
+<div class="flex w-full flex-1 items-center rounded-full bg-white dark:bg-white/5 border border-primary/20 shadow-sm transition-all focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 overflow-hidden">
+<div class="flex items-center justify-center pl-4 text-primary">
+<span class="material-symbols-outlined" style="font-size: 24px;">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 bg-transparent text-slate-900 dark:text-white focus:outline-0 border-none h-full placeholder:text-slate-400 px-3 text-base font-normal" placeholder="Cari sayur segar..." value=""/>
+<div class="flex items-center justify-center pr-4 text-slate-400">
+<span class="material-symbols-outlined" style="font-size: 24px;">tune</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-3 px-4 py-3 overflow-x-auto scrollbar-hide">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-black px-5 shadow-md shadow-primary/20">
+<span class="text-sm font-bold">Semua</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 px-5 whitespace-nowrap hover:border-primary/50 transition-colors">
+<span class="text-sm font-medium">Organik</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 px-5 whitespace-nowrap hover:border-primary/50 transition-colors">
+<span class="text-sm font-medium">Terlaris</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 px-5 whitespace-nowrap hover:border-primary/50 transition-colors">
+<span class="text-sm font-medium">Diskon</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 px-5 whitespace-nowrap hover:border-primary/50 transition-colors">
+<span class="text-sm font-medium">Lokal</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 pb-24"> <!-- Padding bottom for NavBar -->
+<!-- Promo Banner -->
+<div class="px-4 py-3">
+<div class="relative w-full h-32 rounded-2xl overflow-hidden shadow-lg group">
+<img alt="Flash sale vegetables background" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Fresh vegetables on a wooden table overhead view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-7uF-_jNobLAZl9lC-epRI3dHjEn_oEgpU0jGd-Wp6EvIKtBJc8fTUAk9Kw9d6zGl9GogTBdW9xNX3_lNFNd-qc7Sy4fCis-EKuYBc5bBXydWv9hafesmsmvza9Bz_uDZWir4TiOjTUYHuxcZsZXnRlhA9NA97Q4JNkuY02iawnW9_bhSasmzDKRpHCtMHgH5fzrVJ02pQsDvJwBC-UosiR1WxZe8e8LpBA1c4YiMAg5CogQ96gr0XEZHmPXz5yCUZXHhUK1ez2om"/>
+<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex flex-col justify-center px-6">
+<span class="bg-primary text-black text-xs font-bold px-2 py-1 rounded-md w-fit mb-1">FLASH SALE</span>
+<h3 class="text-white text-xl font-bold">Segar Tiap Hari</h3>
+<p class="text-white/80 text-sm">Diskon hingga 40%</p>
+</div>
+</div>
+</div>
+<!-- Products Grid -->
+<div class="grid grid-cols-2 gap-4 px-4 pb-4">
+<!-- Product Card 1 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full z-10">-10%</div>
+<img alt="Red Apple" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Fresh red apple on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5JM5U9W8Wj6QIYdtYL1YkSPtrBYz3nZRASmY2gO6yVLLpEbf1UO9XbuVYXLMpq3pzWGe36gRoRNGctdbEjeBgm7GdelHyxUkZZshzgdNQQLabEyHXFTJKpY6rXKna2GfUxo8jf84wY7jHYuhxl227YHCgqIaspg5WO-KlqztXAoj-nv9vhf4EI72vjGVaWZWJY3n1xpF5htkvLOJ6aailXAWRVFFS-n2vbM7Tmeav33dALV8ki0KrxOUq7PXiQftPVKuaF5U4TAlu"/>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Apel Fuji Premium</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">1kg (5-6 pcs)</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-slate-400 line-through">Rp 38.000</span>
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 35.000</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-primary rounded-full text-black hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<img alt="Bananas" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Bunch of yellow bananas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJAS5K_LYTRckUtcIG-QYwFWwgo8jct3iqbxkY4SB9uqxU0bPDTEEDJKuSMUJaUt4GeJ_bP_50b0vdazM4_lU0-t0tfuxEvZyUPoIHODM-0eJ_zOofKK_Pp5pyeuzovwKs1aeU2uSgDuxmlrXDkVCUOtImz4-OxdQy-6iMWkt8js01_7OZy5NH-g12N1WRbu9EBBLP_m1_9QluVBs3R_NVBN4N1UzJFG2_WdC6HO6y2sY9_KIlqBOYCOGvYWi-FRvHSP0r7U-Y0nsQ"/>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Pisang Cavendish</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">1 sisir (800g+)</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 22.500</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-primary rounded-full text-black hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-primary text-black text-[10px] font-bold px-2 py-1 rounded-full z-10">BARU</div>
+<img alt="Spinach" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Fresh green spinach leaves bunch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYdsXhgQa5n3V6lftMB2nLhuwbkOnn_DC2-jcFoIYUg3Y9JfFsLHI_tW4cTS7R4ftOPv3cu8ycnp7P7kwZvPRWKRCcxdUC8FOG78GfYNWV6NN15cd0HbYR2tWHqsLCrrSd2xUGp-_tJwRY0NowP7LQH6jFBNsgz4TIRaskDfl2ejjwqrXwFhNK6QvFD7GigW_caOjaL_szg0Xh9DCEAmcvBqbvrXYwoAi8Cce1tFZQhRJ9oN5pfdym26FN9D-uWAVICnouuw0NyE4i"/>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Bayam Hijau Segar</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">250g / ikat</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 5.000</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-primary rounded-full text-black hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<img alt="Broccoli" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Fresh green broccoli head" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD7LIRyTUiWuNjJxR0jio4IlHq81q-lPke4IJKLHbv4SKhMyei82SAOVtez-ZaCuU0rLDvXwkFsN9mYWAGWV3fmINqj3NmpIzugeFuMlS4Wgof_iTJ-Vf8B3Pj5dc1PpWVQcORYMkhbzPV5CX97zlW6l-W2MdhI2UTAz1Zd563HCG_Ce3Ow9muBqzsFE9TkDZwdgMwo7HVj6G1LeQi4SyX1rbXfJ6j2LvNuGaSrsKwWwSyJep0Le4SFXW67ELAZwZ4WJnJ4faIVz9J"/>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Brokoli Organik</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">500g</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 18.000</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-primary rounded-full text-black hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<img alt="Potatoes" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Pile of fresh organic potatoes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKUVzDBzKCfJVudhoslNQ_IfU0tFBTyKuRIm_X7i2Q9JuM2qpF1ZhCBw-4EQ_-9BL4SzfQsjeRQTWwPxGHu-FE9QfT1Y2UUOVHHXhloz5sULsBuCL2N0-9pEf0O1GYdxipKYYX8x2Cc7LqE6FlcGTYKaP9dJJFMJlKksgHo2a4mb00rQIVkH9194dDgFahUZTTQUHKkIzZPi7H0-f82eQch9UeAdY50DEx6zbQf83AZgYBXhMtjAhfWTkLQPQZwsqd9f7SZzxoRMeo"/>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Kentang Dieng</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">1kg</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 16.500</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-primary rounded-full text-black hover:bg-primary/80 transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="flex flex-col bg-white dark:bg-white/5 rounded-[24px] p-3 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-md transition-shadow group">
+<div class="relative aspect-square rounded-[20px] bg-slate-50 dark:bg-white/5 mb-3 overflow-hidden">
+<div class="absolute inset-0 bg-white/60 dark:bg-black/60 z-20 flex items-center justify-center backdrop-blur-[1px]">
+<span class="bg-black/80 text-white text-xs font-bold px-3 py-1 rounded-full">Habis</span>
+</div>
+<img alt="Carrots" class="w-full h-full object-cover grayscale opacity-70" data-alt="Fresh orange carrots with greens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC967AH-l3U9bHABHCL12jQQ2bWXojp2IvY40T9M0fmP-7JBEOCce0XgwPESyQsS4c1BV-NkeAgrq78cyhx5W2mlc3Dm7rVSmYYL3RBkmy2nqJqeaooeQH8an9Zku22p2tURUy55I1hUdVaaCmio6AuAZnqRysfnpSP_8LIpZqqi3yJ8D-MUfhoiktiXIwDdiJDXUAhRBFelJSIURiEkAQ4FK7J018P5h0EoV-5xUSVc6y7QP33CgHxmdURyznUKRsnwlO0e1XIu6DN"/>
+</div>
+<div class="flex flex-col flex-1 opacity-60">
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight mb-1">Wortel Berastagi</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mb-2">500g</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-base font-bold text-slate-900 dark:text-white">Rp 8.000</span>
+</div>
+<button class="flex items-center justify-center size-9 bg-slate-200 dark:bg-white/10 rounded-full text-slate-400 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="flex justify-center pb-6">
+<button class="text-sm font-semibold text-primary hover:underline">Lihat Semua Produk</button>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto">
+<div class="flex items-center justify-around bg-white/90 dark:bg-[#102212]/90 backdrop-blur-md px-2 pb-5 pt-3 border-t border-slate-100 dark:border-white/5 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<div class="group-hover:bg-primary/10 rounded-xl px-4 py-1 transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">home</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Beranda</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="bg-primary/20 rounded-xl px-4 py-1 transition-colors">
+<span class="material-symbols-outlined font-variation-settings-fill" style="font-size: 24px; font-variation-settings: 'FILL' 1;">search</span>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-wide">Cari</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group relative" href="#">
+<div class="absolute top-0 right-7 bg-red-500 text-white text-[9px] font-bold size-4 flex items-center justify-center rounded-full border border-white dark:border-background-dark">2</div>
+<div class="group-hover:bg-primary/10 rounded-xl px-4 py-1 transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">shopping_cart</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Keranjang</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<div class="group-hover:bg-primary/10 rounded-xl px-4 py-1 transition-colors">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 24px;">person</span>
+</div>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Akun</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

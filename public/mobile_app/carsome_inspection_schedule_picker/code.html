@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inspection Schedule Picker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2df0d",
+                        "primary-dark": "#d9c80b", // Slightly darker for hover/active states if needed
+                        "secondary": "#1A2B45", // Dark Blue for typography
+                        "secondary-light": "#475569", // Lighter blue-grey for secondary text
+                        "background-light": "#fcfbf8",
+                        "background-dark": "#222110",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        /* Custom scrollbar hiding for cleaner look on mobile */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen text-secondary flex flex-col items-center justify-start overflow-x-hidden">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-white dark:bg-gray-900 min-h-screen relative flex flex-col shadow-2xl">
+<!-- Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between p-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-secondary dark:text-white">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h1 class="text-lg font-bold text-secondary dark:text-white">Jadwal Inspeksi</h1>
+<div class="w-10"></div> <!-- Spacer for centering title -->
+</header>
+<!-- Main Content Scroll Area -->
+<div class="flex-1 overflow-y-auto pb-24">
+<!-- Calendar Section -->
+<section class="p-4 pb-2">
+<div class="flex items-center justify-between mb-4 px-2">
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-secondary dark:text-white">
+<span class="material-symbols-outlined text-xl">chevron_left</span>
+</button>
+<span class="text-base font-bold text-secondary dark:text-white">Agustus 2023</span>
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-secondary dark:text-white">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</button>
+</div>
+<!-- Days of Week -->
+<div class="grid grid-cols-7 mb-2 text-center">
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">S</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">M</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">T</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">W</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">T</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">F</div>
+<div class="text-xs font-semibold text-secondary-light dark:text-gray-400">S</div>
+</div>
+<!-- Calendar Grid -->
+<div class="grid grid-cols-7 gap-y-2 place-items-center">
+<!-- Empty slots for alignment if needed, example starts on T (Tuesday) -->
+<span></span><span></span><span></span>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">1</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">2</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">3</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">4</button>
+<!-- Selected Date -->
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full bg-primary text-secondary font-bold shadow-sm ring-2 ring-white dark:ring-gray-900 z-10">5</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">6</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">7</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">8</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">9</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">10</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">11</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">12</button>
+<!-- Disabled dates example -->
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-gray-300 dark:text-gray-600 cursor-not-allowed">13</button>
+<button class="h-10 w-10 flex items-center justify-center text-sm rounded-full text-gray-300 dark:text-gray-600 cursor-not-allowed">14</button>
+</div>
+</section>
+<div class="h-px w-full bg-gray-100 dark:bg-gray-800 my-2"></div>
+<!-- Location Section -->
+<section class="p-4">
+<h3 class="text-secondary dark:text-white text-lg font-bold mb-4">Pilih Lokasi Inspeksi</h3>
+<div class="flex flex-col gap-3">
+<!-- Location Card 1 (Selected) -->
+<label class="group relative flex flex-col rounded-xl border-2 border-primary bg-yellow-50/50 dark:bg-yellow-900/10 dark:border-primary p-4 cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary dark:text-white filled text-[20px]">storefront</span>
+<span class="text-secondary dark:text-white text-sm font-bold">Carsome Alam Sutera</span>
+</div>
+<input checked="" class="h-5 w-5 text-primary border-gray-300 focus:ring-primary" name="location" type="radio"/>
+</div>
+<p class="text-secondary-light dark:text-gray-400 text-xs mb-3 pr-8 leading-relaxed">
+                            Jl. Jalur Sutera No. 25, Tangerang Selatan
+                        </p>
+<div class="flex items-center gap-1 text-xs font-semibold text-secondary dark:text-gray-300">
+<span class="material-symbols-outlined text-sm text-primary">near_me</span>
+                             0.8 km dari lokasi anda
+                        </div>
+<!-- Mini Map Image Placeholder -->
+<div class="absolute right-4 bottom-4 w-12 h-12 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100">
+<img alt="Map snippet showing street view" class="w-full h-full object-cover opacity-80" data-location="Alam Sutera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDI5K-wbgnB0EV7AsfSkp_1525o_6NzgXd1Jl2lqXtGSRmNdki4MHsOmZBBxPzWsSYIjihB-sjohUTbIwluCwgG5ErnqNxUc-k2NG36eyUZO9IGpNUBzOty23frSFdf2wOzcInQe0P3nLK9NUM9XEfJvBqR8J2fstmgTflpNHkItImUsH2n3S7MYEFrQ4hfb_TMJw__1xwB3f0T7qIYgUX7ceSeOr1IlaI0pf5qCsE5BRSqcg_iaMFSSHKkbYZAVHkAr2K5coeoDMFT"/>
+</div>
+</label>
+<!-- Location Card 2 -->
+<label class="group relative flex flex-col rounded-xl border border-gray-200 dark:border-gray-700 p-4 cursor-pointer hover:border-gray-300 dark:hover:border-gray-600 transition-all bg-white dark:bg-gray-800">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-light dark:text-gray-400 text-[20px]">storefront</span>
+<span class="text-secondary dark:text-white text-sm font-bold">Carsome Kelapa Gading</span>
+</div>
+<input class="h-5 w-5 text-primary border-gray-300 focus:ring-primary" name="location" type="radio"/>
+</div>
+<p class="text-secondary-light dark:text-gray-400 text-xs mb-3 pr-8 leading-relaxed">
+                            Jl. Raya Boulevard Blok WB2, Kelapa Gading
+                        </p>
+<div class="flex items-center gap-1 text-xs font-medium text-secondary-light dark:text-gray-400">
+<span class="material-symbols-outlined text-sm text-gray-400">near_me</span>
+                             12.5 km
+                        </div>
+</label>
+<!-- Location Card 3 -->
+<label class="group relative flex flex-col rounded-xl border border-gray-200 dark:border-gray-700 p-4 cursor-pointer hover:border-gray-300 dark:hover:border-gray-600 transition-all bg-white dark:bg-gray-800">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-light dark:text-gray-400 text-[20px]">storefront</span>
+<span class="text-secondary dark:text-white text-sm font-bold">Carsome Puri Indah</span>
+</div>
+<input class="h-5 w-5 text-primary border-gray-300 focus:ring-primary" name="location" type="radio"/>
+</div>
+<p class="text-secondary-light dark:text-gray-400 text-xs mb-3 pr-8 leading-relaxed">
+                             Jl. Puri Indah Raya Blok R, Kembangan
+                        </p>
+<div class="flex items-center gap-1 text-xs font-medium text-secondary-light dark:text-gray-400">
+<span class="material-symbols-outlined text-sm text-gray-400">near_me</span>
+                             15.2 km
+                        </div>
+</label>
+</div>
+</section>
+<div class="h-px w-full bg-gray-100 dark:bg-gray-800 my-2"></div>
+<!-- Time Slot Section -->
+<section class="p-4">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-secondary dark:text-white text-lg font-bold">Pilih Jam</h3>
+<span class="text-xs text-secondary-light dark:text-gray-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> Asia/Jakarta
+                     </span>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<!-- Morning Slots -->
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">09:00</button>
+<button class="py-2.5 px-1 rounded-lg bg-primary border border-primary text-sm font-bold text-secondary shadow-sm ring-1 ring-primary/50">10:00</button>
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">11:00</button>
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-400 dark:text-gray-600 cursor-not-allowed line-through decoration-gray-400">12:00</button>
+<!-- Afternoon Slots -->
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">13:00</button>
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">14:00</button>
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">15:00</button>
+<button class="py-2.5 px-1 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-secondary dark:text-white hover:border-primary hover:bg-yellow-50 dark:hover:bg-gray-800 transition-colors">16:00</button>
+</div>
+<p class="text-xs text-secondary-light dark:text-gray-500 mt-4 text-center">
+                    *Slot waktu dapat berubah sewaktu-waktu.
+                </p>
+</section>
+</div>
+<!-- Sticky Footer CTA -->
+<div class="absolute bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<button class="w-full bg-primary hover:bg-primary-dark text-secondary text-base font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-yellow-200/50 dark:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                Konfirmasi Jadwal
+                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Traveloka E-Ticket Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "primary-content": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "neutral-surface": "#ffffff",
+                        "neutral-border": "#e5e7eb", // Derived neutral
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "2xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        "soft": "0 4px 24px -4px rgba(0, 0, 0, 0.08)",
+                        "glow": "0 0 20px -5px rgba(43, 108, 238, 0.4)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Perforation Logic */
+        .perforated-bg {
+            background-image: radial-gradient(circle, transparent 7px, white 7px);
+            background-size: 100% 30px;
+            background-position: -15px 0;
+            background-repeat: repeat-y;
+        }
+        
+        /* Smooth notch effect using mask */
+        .ticket-notch {
+            mask-image: radial-gradient(circle at center, transparent 12px, black 12.5px);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 12px, black 12.5px);
+            mask-position: -12px center;
+            -webkit-mask-position: -12px center;
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-size: 24px 24px;
+            -webkit-mask-size: 24px 24px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-800 dark:text-slate-100 min-h-screen flex flex-col items-center">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen flex flex-col relative overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between px-6 pt-12 pb-4 z-10 sticky top-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-slate-900 dark:text-white">E-Ticket Details</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</header>
+<!-- Main Content (Scrollable) -->
+<main class="flex-1 px-5 pb-24 overflow-y-auto">
+<!-- Booking ID Badge -->
+<div class="flex justify-center mb-6">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span class="text-sm font-semibold text-primary">Booking ID: #78293910</span>
+</div>
+</div>
+<!-- The Ticket Card -->
+<div class="w-full relative filter drop-shadow-xl">
+<!-- Top Part of Ticket -->
+<div class="bg-white dark:bg-slate-800 rounded-t-2xl p-6 relative z-10">
+<!-- Airline Header -->
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+<!-- Airline Logo Placeholder -->
+<img alt="Garuda Indonesia Logo" class="w-full h-full object-cover" data-alt="Garuda Indonesia Airline Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGBxkubjVLjBvWRCm5XbFmJhRdX8kwg7mjjuK202bOxCZFLHs_HYcarqc4QlZzZ4-DTNzoBbc_GWqIO0cZzyggOeXUeD40EkUWAHoOcvseuPajgb-ZkGQwuH93JhRicrscxjIuEloO1TRAUvOqMUSLwJlbOSX_zHI2m2I5e1_qd7HL_HPSS9Wxz2eQbEUnWs8X6VNz-w6gFDgUsZGU7Xn2bVJq0UEURlTC28VufeF7kO1lEH8vZajgzdSNLGjg3fMQk4UJpwjzdiUQ"/>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Garuda Indonesia</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Economy • GA-408</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide">Confirmed</span>
+</div>
+<!-- Route Big Text -->
+<div class="flex items-center justify-between mb-2">
+<div class="text-left">
+<p class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">CGK</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">Jakarta</p>
+</div>
+<div class="flex-1 flex flex-col items-center px-4">
+<div class="w-full h-[1px] bg-slate-200 dark:bg-slate-600 relative top-3"></div>
+<div class="bg-white dark:bg-slate-800 px-2 relative z-10">
+<span class="material-symbols-outlined text-primary text-[24px] rotate-90">flight</span>
+</div>
+<p class="text-xs text-slate-400 font-medium mt-1">1h 50m</p>
+</div>
+<div class="text-right">
+<p class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">DPS</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">Bali</p>
+</div>
+</div>
+<!-- Date & Time -->
+<div class="flex justify-between items-center bg-background-light dark:bg-slate-700/50 rounded-lg p-3 mt-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">calendar_today</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-200">Fri, 24 Oct</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">schedule</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-200">14:00 - 15:50</span>
+</div>
+</div>
+</div>
+<!-- Perforated Divider Section -->
+<div class="relative bg-white dark:bg-slate-800 flex items-center justify-between h-8 overflow-hidden">
+<!-- Left Notch -->
+<div class="w-4 h-8 bg-background-light dark:bg-background-dark rounded-r-full absolute left-0 top-0"></div>
+<!-- Dotted Line -->
+<div class="w-full h-[2px] border-t-2 border-dashed border-slate-200 dark:border-slate-600 mx-4"></div>
+<!-- Right Notch -->
+<div class="w-4 h-8 bg-background-light dark:bg-background-dark rounded-l-full absolute right-0 top-0"></div>
+</div>
+<!-- Bottom Part of Ticket (Details + QR) -->
+<div class="bg-white dark:bg-slate-800 rounded-b-2xl p-6 pt-2 pb-8">
+<!-- Flight Details Grid -->
+<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="flex flex-col gap-1 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-default">
+<p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Gate</p>
+<p class="text-2xl font-bold text-primary">G2</p>
+</div>
+<div class="flex flex-col gap-1 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-default border-l border-slate-100 dark:border-slate-700 pl-4">
+<p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Seat</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">12A</p>
+</div>
+<div class="flex flex-col gap-1 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-default border-l border-slate-100 dark:border-slate-700 pl-4">
+<p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Term</p>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">3</p>
+</div>
+</div>
+<!-- Passenger Info -->
+<div class="flex items-center gap-3 mb-8 p-3 bg-background-light dark:bg-slate-700/30 rounded-xl border border-dashed border-slate-200 dark:border-slate-600">
+<div class="w-10 h-10 rounded-full bg-cover bg-center ring-2 ring-white dark:ring-slate-600 shadow-sm" data-alt="Portrait of passenger Mr. John Doe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2vQb_PGAXqP0cafieP9D4UoB_HySE6CwOXc-2ScFnAPc-BxynRT5TiFSQP3FawVlGXZCKcXk-8Tg7WbKCCD7JETfIwS6Gk_5qoKfAFkyILSzDnehGouWXQtyi3I07GFPv6s5sIA-npACw2jLjoQ1QeytISpptxkfXKzksMpbOYBA23BcHJfKMCMeBFvecZETVznSs8EHgIaj9dLb_kSDM8HhiVcm7TZ8vRfMQYqnVdqhGb8cYBV7AgqBCRJ4U2xMDhIbXzsWIb6x_');"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Mr. John Doe</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Adult Passenger</p>
+</div>
+<span class="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+</div>
+<!-- QR Code Area -->
+<div class="flex flex-col items-center justify-center gap-3">
+<div class="bg-white p-3 rounded-xl border border-slate-100 dark:border-slate-600 shadow-sm">
+<!-- Simulated QR Code -->
+<div class="w-48 h-48 bg-slate-900 flex items-center justify-center relative overflow-hidden rounded-lg">
+<!-- Abstract QR Pattern -->
+<div class="absolute inset-0 bg-white" style="mask-image: url('data:image/svg+xml;utf8,&lt;svg width=\'100%\' height=\'100%\' viewBox=\'0 0 10 10\' xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;rect x=\'1\' y=\'1\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'6\' y=\'1\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'1\' y=\'6\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'5\' y=\'5\' width=\'1\' height=\'1\' fill=\'black\'/&gt;&lt;rect x=\'7\' y=\'7\' width=\'2\' height=\'1\' fill=\'black\'/&gt;&lt;rect x=\'5\' y=\'8\' width=\'1\' height=\'1\' fill=\'black\'/&gt;&lt;/svg&gt;'); mask-size: cover; -webkit-mask-image: url('data:image/svg+xml;utf8,&lt;svg width=\'100%\' height=\'100%\' viewBox=\'0 0 10 10\' xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;rect x=\'1\' y=\'1\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'6\' y=\'1\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'1\' y=\'6\' width=\'3\' height=\'3\' fill=\'black\'/&gt;&lt;rect x=\'5\' y=\'5\' width=\'1\' height=\'1\' fill=\'black\'/&gt;&lt;rect x=\'7\' y=\'7\' width=\'2\' height=\'1\' fill=\'black\'/&gt;&lt;rect x=\'5\' y=\'8\' width=\'1\' height=\'1\' fill=\'black\'/&gt;&lt;/svg&gt;'); -webkit-mask-size: cover; background-color: black;"></div>
+<!-- Logo Overlay -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white p-1 rounded-full">
+<span class="material-symbols-outlined text-slate-900 text-[24px]">flight_takeoff</span>
+</div>
+</div>
+</div>
+</div>
+<p class="text-xs text-slate-400 text-center max-w-[200px] leading-relaxed">Scan this code at the kiosk or gate counter</p>
+</div>
+</div>
+</div>
+<!-- Footer Spacing -->
+<div class="h-8"></div>
+</main>
+<!-- Floating Action Button Area -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-background-dark dark:via-background-dark pt-12 pb-8 px-6 z-20 pointer-events-none flex justify-center">
+<button class="pointer-events-auto w-full max-w-sm bg-primary hover:bg-blue-600 text-white font-bold text-lg h-14 rounded-full shadow-glow flex items-center justify-center gap-2 transform active:scale-95 transition-all">
+<span class="material-symbols-outlined">check_circle</span>
+                Check-in Online
+            </button>
+</div>
+</div>
+</body></html>

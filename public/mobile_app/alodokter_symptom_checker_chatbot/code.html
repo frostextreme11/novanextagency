@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Symptom Checker Chatbot - Alodokter</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b8cee",
+                        "primary-dark": "#1a6cb8",
+                        "primary-light": "#e0f0ff",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2936",
+                        "text-main": "#0d141b",
+                        "text-secondary": "#4c739a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 2px 8px rgba(43, 140, 238, 0.05)',
+                        'float': '0 4px 12px rgba(0, 0, 0, 0.08)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-gray-100 min-h-screen flex flex-col overflow-hidden">
+<!-- Header -->
+<header class="bg-surface-light dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800 px-4 py-3 sticky top-0 z-20 flex items-center shadow-soft">
+<button class="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex-1 flex flex-col items-center">
+<h1 class="text-base font-bold text-text-main dark:text-white leading-tight">Symptom Checker</h1>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-xs text-text-secondary dark:text-gray-400 font-medium">Alo-Bot Online</span>
+</div>
+</div>
+<button class="p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Chat Area -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6 bg-gradient-to-b from-primary-light/30 to-background-light dark:from-background-dark dark:to-background-dark pb-32">
+<!-- Timestamp -->
+<div class="flex justify-center">
+<span class="bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] font-medium px-3 py-1 rounded-full">Hari ini, 09:41</span>
+</div>
+<!-- Bot Message 1 -->
+<div class="flex items-end gap-3 group">
+<div class="w-8 h-8 rounded-full bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-600 shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+<img alt="Alo-Bot Avatar" class="w-full h-full object-cover" data-alt="Medical bot avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV83Oe4NL3q_6BuMqwHNMpHng09phpXnmZSe7TccpByrZnW3K9na76i9UUQZnJSW4XN2oVzj3YWOYLZuQaNPjNo62PQUMba7Bxm_M-vhqmHFpZui0x2KVtmEyZANTytIMbboKop0juRP1mcZb3pgJwJEHsQrGnwQn8NtA0Cjbz2CeW6PC5tqrXZgPpiYWzPD05763AF4jqz6F25yK__h66FoEgA0dYGre64INQsj-Ggj4MQt4jlxQtG2biePZ2Yg3T4-S7oRfGncTA"/>
+</div>
+<div class="flex flex-col gap-1 max-w-[80%]">
+<span class="text-xs text-text-secondary dark:text-gray-400 ml-1">Alo-Bot</span>
+<div class="bg-white dark:bg-surface-dark p-4 rounded-2xl rounded-bl-none shadow-sm border border-gray-100 dark:border-gray-700 text-sm leading-relaxed text-text-main dark:text-gray-100">
+<p>Halo! 👋 Saya Alo-Bot.</p>
+</div>
+</div>
+</div>
+<!-- Bot Message 2 -->
+<div class="flex items-end gap-3 group animate-fade-in-up" style="animation-delay: 0.2s;">
+<div class="w-8 h-8 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+<!-- Spacer for avatar alignment if needed, or repeat avatar -->
+</div>
+<div class="flex flex-col gap-1 max-w-[80%]">
+<div class="bg-white dark:bg-surface-dark p-4 rounded-2xl rounded-bl-none shadow-sm border border-gray-100 dark:border-gray-700 text-sm leading-relaxed text-text-main dark:text-gray-100">
+<p>Saya siap membantu mendiagnosa awal gejala kamu. Apa yang sedang kamu rasakan saat ini?</p>
+</div>
+<span class="text-[10px] text-gray-400 ml-1">09:42</span>
+</div>
+</div>
+<!-- User Message Example (Hidden initially or previous history) -->
+<!-- 
+         <div class="flex items-end justify-end gap-3">
+            <div class="flex flex-col gap-1 max-w-[80%] items-end">
+                <div class="bg-primary text-white p-4 rounded-2xl rounded-br-none shadow-md text-sm leading-relaxed">
+                    <p>Saya merasa sedikit pusing sejak pagi.</p>
+                </div>
+                <span class="text-[10px] text-gray-400 mr-1">09:43</span>
+            </div>
+         </div>
+         -->
+<!-- Typing Indicator -->
+<div class="flex items-end gap-3">
+<div class="w-8 h-8 rounded-full bg-white dark:bg-gray-700 border border-gray-100 dark:border-gray-600 shadow-sm flex items-center justify-center shrink-0 overflow-hidden">
+<img alt="Alo-Bot Avatar" class="w-full h-full object-cover" data-alt="Medical bot avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACUhlijaI7txFmQwpwABs1kbP9Y_lTPMOtuMElW__MasLyfRaVEvT8cRPqfJ66uqrCrcXUHyKUFPAMfyX-esgIMVOB9ym_zIm05J-GXIvptkBitaWQUZzz7mj-kFyQ-yazrpN6OmF2gtUCP40VNzzutxGIWJHuWAxGQ49DBbjlJ9Bd3Dr4XW3539K5ZoyS6Sk2VqqmaRWAUd4CeG_T3qMqthcd0xDe76YQi3CVjepEj6pzOHWEdUz1iZHRMQqsyTQV_Tr5JFwdm1cJ"/>
+</div>
+<div class="bg-white dark:bg-surface-dark px-4 py-3 rounded-2xl rounded-bl-none shadow-sm border border-gray-100 dark:border-gray-700">
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+<div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Input Area -->
+<div class="fixed bottom-0 w-full z-10 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 pb-safe">
+<!-- Quick Actions Chips -->
+<div class="overflow-x-auto whitespace-nowrap px-4 py-3 flex gap-2 no-scrollbar mask-gradient-r">
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-primary/20 hover:border-primary hover:bg-primary/5 dark:hover:bg-gray-700 rounded-full text-sm font-medium text-primary dark:text-primary-light transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg">sentiment_very_dissatisfied</span>
+                Sakit Kepala
+            </button>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-primary/20 hover:border-primary hover:bg-primary/5 dark:hover:bg-gray-700 rounded-full text-sm font-medium text-primary dark:text-primary-light transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg">thermometer</span>
+                Demam
+            </button>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-primary/20 hover:border-primary hover:bg-primary/5 dark:hover:bg-gray-700 rounded-full text-sm font-medium text-primary dark:text-primary-light transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg">sick</span>
+                Batuk &amp; Pilek
+            </button>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-primary/20 hover:border-primary hover:bg-primary/5 dark:hover:bg-gray-700 rounded-full text-sm font-medium text-primary dark:text-primary-light transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg">gastroenterology</span>
+                Sakit Perut
+            </button>
+</div>
+<!-- Input Bar -->
+<div class="px-4 pb-4 pt-1 flex gap-3 items-end">
+<button class="p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-primary transition-colors shrink-0">
+<span class="material-symbols-outlined">add</span>
+</button>
+<div class="flex-1 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center px-4 py-2 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<input class="w-full bg-transparent border-none p-0 text-sm text-text-main dark:text-white placeholder-gray-400 focus:ring-0" placeholder="Ketik gejala lainnya..." type="text"/>
+</div>
+<button class="p-2.5 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30 shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px] -ml-0.5 mt-0.5">send</span>
+</button>
+</div>
+<!-- Bottom Navigation (from component list, adapted for overlay) -->
+<!-- Note: In a chat interface, usually the bottom nav is hidden to make space for keyboard/input. 
+             However, to strictly follow the "use components" request, I will integrate it as a static footer below the input, 
+             or assume this is a tab within the main app. 
+             Given it's a "screen" for chatbot, usually this is a modal or separate view without bottom nav.
+             But I will include a simplified version if the user wants to navigate away.
+             Let's put it at the very bottom, effectively making the input bar float above it. 
+        -->
+<div class="border-t border-[#e7edf3] dark:border-gray-800 bg-slate-50 dark:bg-background-dark px-4 pb-3 pt-2 flex gap-2 justify-between items-center">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#4c739a] dark:text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Beranda</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary dark:text-primary-light font-semibold" href="#">
+<span class="material-symbols-outlined text-2xl fill-current">chat_bubble</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Konsultasi</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#4c739a] dark:text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">article</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Artikel</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#4c739a] dark:text-gray-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profil</p>
+</a>
+</div>
+</div>
+<!-- Padding for bottom fixed area -->
+<div class="h-[180px]"></div>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.4s ease-out forwards;
+        }
+    </style>
+</body></html>

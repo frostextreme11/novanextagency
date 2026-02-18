@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teleconsultation Doctor Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                    "primary": "#137fec",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#101922",
+                    "surface-light": "#ffffff",
+                    "surface-dark": "#1e2936",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+            },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for chat area */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen flex flex-col antialiased overflow-hidden">
+<!-- Header -->
+<header class="flex-none bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 px-4 py-3 shadow-sm z-10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors -ml-2">
+<span class="material-symbols-outlined block">arrow_back_ios_new</span>
+</button>
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-gray-200 bg-cover bg-center" data-alt="Doctor profile portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGZtAH5awA9fKiri-YbCbfFP-y044x3IERyD27TKgm5JXc-ClPkOgWSlZOfrct2psMv0gDULX2szBldJJnNAG2LI9ey1kcM7TtSU4w1UZbCrw6Ed6DieXb8_J7o3yWv0ZumxOGP2r9het8NvNKmZKRLBJOaUX5k-n25-v3XgCbg4NZmmdvG0DZZLc1Gx7e4Agmz3-Nrzd_fUmSpdXK6Dil70zIKjpC3YWOvpDoa5a70HqYJMYj4On5rYFYo8Jc_3ncYwVOo4QjMUrv');"></div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-surface-dark rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold text-gray-900 dark:text-white leading-tight">dr. Sarah Ananda</h1>
+<span class="text-xs text-primary dark:text-blue-400 font-medium">General Practitioner • Online</span>
+</div>
+</div>
+<button class="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors">
+                End Chat
+            </button>
+</div>
+</header>
+<!-- Chat Area -->
+<main class="flex-1 overflow-y-auto no-scrollbar p-4 flex flex-col gap-4">
+<!-- Timestamp -->
+<div class="flex justify-center py-2">
+<span class="bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs px-3 py-1 rounded-full">Today 10:30 AM</span>
+</div>
+<!-- System Message -->
+<div class="flex justify-center mb-2">
+<p class="text-gray-400 dark:text-gray-500 text-xs text-center max-w-xs">
+                Consultation started. Your health data is secure and encrypted.
+            </p>
+</div>
+<!-- Patient Message (Text) -->
+<div class="flex items-end justify-end gap-2 group">
+<div class="flex flex-col items-end max-w-[80%]">
+<div class="bg-primary text-white rounded-2xl rounded-tr-sm px-4 py-3 shadow-sm">
+<p class="text-sm leading-relaxed">Halo Dok, saya mengalami ruam merah di tangan.</p>
+</div>
+<span class="text-[10px] text-gray-400 mt-1 mr-1">10:31 AM</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bg-cover bg-center shrink-0 order-2" data-alt="Patient profile portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCb9-3M0Go0TLq_s-s46Uk9P3oe74Jipgnj9UWZmQN4usXbM1dpwev4wY-rTpT-lBmsfaYpb9TNzmLf7ctvKkOeDaf5qySDPi3IoM-VwbWVP6wdc72W7IzyJHDIG9MxlsrOWEr4D-j8OM6oPtIk5NQ6ud87X0uUZtgXzzzPenJIAzqmgSKfJ8O1GWhOqz4AD_cfBmrEEZdIrzD5OEStLU6_mhJ5SgwZ4sAm3EABv1490UJlUoxd0Ihzfu_Kgk16zl2FKWQ2YfDBLyyg');"></div>
+</div>
+<!-- Patient Message (Image) -->
+<div class="flex items-end justify-end gap-2 group">
+<div class="flex flex-col items-end max-w-[80%]">
+<div class="bg-primary p-1 rounded-2xl rounded-tr-sm shadow-sm overflow-hidden">
+<div class="relative w-48 aspect-[4/5] bg-gray-300 rounded-xl overflow-hidden cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center hover:scale-105 transition-transform duration-500" data-alt="Close up photo of red rash on skin" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlaygpmaDVlFbpOOBLI7r5HmhF274xUYSveJgp2Tw7Ltk53iE9lJDblJvckNIBgVk9U8yWPDbwy8K_oYlZD85TDvmolC3jS5_EUOMYiRQwzKIk2H6HEhoUmb0kIb1EnEXWze2ScJ5FOEl6CT8QexL2tECKh96LhagfdW3kXqKUqt728EldC-QoMs-YMqx-uCR4ttUeiOA10RnLgRas42thB8c7j-EGKw0D30KzqwOVzM4QCq0TaBKM8Tivymm1qSXi7S-Pw9T3Z8sL');"></div>
+<!-- Overlay for "image" feel -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+</div>
+</div>
+<span class="text-[10px] text-gray-400 mt-1 mr-1">10:32 AM</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-gray-200 bg-cover bg-center shrink-0 order-2" data-alt="Patient profile portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApPtdH7aoiNWdZ_O0RbUe6yry5BCYl1nIYOdb8gViqPbWpQH1m6wnaLw2uNMUdo0CIaAV71HL95YgHjGD4Vwo3B3SpX4e9J3jek-FClW0J-0yt5oobSyMP4rrbBRtPu5r-g53_bbGjBTzkzLicG67qjWkaKhkM5NKEH2DZ9hwKuNIcPv43eu48c56_h5UhorDChO8p8XrvGArz35Ix8WkUrNKbBahHSkZHcZYoYlTmULDn9SqK085FeQfpnrXINFRt4d4urFr_Oml-');"></div>
+</div>
+<!-- Doctor Message (Text) -->
+<div class="flex items-end justify-start gap-2 group">
+<div class="w-8 h-8 rounded-full bg-gray-200 bg-cover bg-center shrink-0" data-alt="Doctor profile portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzu_udiuhJ67wGKmZpN2jOO1tgoN_-qz-59jlvDsWyTWGAeqc8XSXLSV4mXDqnwYLTF5o7I4JJl5vrv52GGBku6FnV3iO5g7JOeIid7oBNZHkbiLesA6vqh0qQcWQXPgEcg0UHU1YJa5A1ahEMYZNDPHt4xTq_9KMMfNaIiPbLGUpa0YVQu_NXKAJQPgkKlxX8ZH6BNTgzafN-sc3aOnDxpV1ZYp8WIresPDenhLr0T2l1uWP1t-KCM-11-LPJUHj1jaKBxGfT-Kk1');"></div>
+<div class="flex flex-col items-start max-w-[80%]">
+<div class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+<p class="text-sm leading-relaxed">Halo, saya dr. Sarah. Baik, sudah berapa lama ruamnya muncul? Apakah terasa gatal atau panas?</p>
+</div>
+<span class="text-[10px] text-gray-400 mt-1 ml-1">10:33 AM</span>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-end justify-start gap-2 mt-1">
+<div class="w-8 h-8 rounded-full bg-transparent shrink-0"></div> <!-- Spacer for alignment -->
+<div class="flex flex-col gap-1">
+<div class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-700 px-4 py-3 rounded-2xl rounded-tl-sm w-fit flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+<span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+<span class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+</div>
+<span class="text-xs text-gray-400 ml-1">Dokter sedang mengetik...</span>
+</div>
+</div>
+<!-- Spacer for bottom input -->
+<div class="h-2"></div>
+</main>
+<!-- Input Area -->
+<footer class="flex-none bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 p-4 pb-6 safe-area-bottom">
+<div class="flex items-end gap-3 max-w-4xl mx-auto">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-primary dark:text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors shrink-0">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 border-0 rounded-3xl py-3 px-5 focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-gray-900 transition-all text-sm shadow-inner" placeholder="Tulis pesan..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+<span class="material-symbols-outlined text-xl">sentiment_satisfied</span>
+</button>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-primary hover:bg-blue-600 text-white shadow-md shadow-blue-200 dark:shadow-none transition-all transform active:scale-95 shrink-0">
+<span class="material-symbols-outlined text-xl -ml-0.5 mt-0.5">send</span>
+</button>
+</div>
+</footer>
+</body></html>

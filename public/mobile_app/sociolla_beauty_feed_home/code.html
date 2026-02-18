@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sociolla Beauty Feed Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4256a",
+                        "background-light": "#fcf8f9", 
+                        "background-dark": "#221016",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2d1b22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background-color: #fcf8f9;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-gray-100 antialiased selection:bg-primary selection:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden border-x border-gray-100 dark:border-gray-800">
+<!-- Header -->
+<header class="sticky top-0 z-30 flex items-center justify-between px-5 py-3 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center gap-2">
+<div class="text-primary flex items-center justify-center p-1.5 bg-primary/10 rounded-full">
+<span class="material-symbols-outlined text-[20px]">spa</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Sociolla Feed</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-background-light dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary/5 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[22px]">search</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-background-light dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary/5 hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<span class="absolute top-2 right-2.5 w-2 h-2 bg-primary rounded-full border border-white dark:border-gray-800"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto pb-24 hide-scrollbar">
+<!-- Editor's Choice Section -->
+<section class="pt-6 pb-2">
+<div class="flex items-center justify-between px-5 mb-4">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        Pilihan Editor <span class="text-xl">🎀</span>
+</h2>
+<a class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors" href="#">Lihat Semua</a>
+</div>
+<!-- Carousel -->
+<div class="flex overflow-x-auto px-5 gap-4 hide-scrollbar snap-x snap-mandatory pb-4">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-64 flex flex-col gap-3 p-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-[0_4px_20px_-4px_rgba(244,37,106,0.1)] border border-primary/5">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+<img alt="COSRX Glow Set Skincare bottles on pink background" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" data-alt="COSRX Glow Set Skincare bottles on pink background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPYk1FOUsVspa_RghU9k_cDDPakjIlHML8WMaB9LjOpexmS7DbC-_FP-Zrxo6WmuPXvX54l3ewU4ucPFefiFLdE0KH6VSlE4hDrL7RaRPFr1w9OCMqEDyiNVwzGrVxdENN0WeodCMnIK7Kny1BquFoTGWxtYpMpxlo5Pk0nG9_9aPwMD7vfn3CBTAL3J3IwKN9QYAa26j7VVxOBujCg8Jkh1S6v_TzIYJXhcyzv3AQMQx10V7USHZoRpfYfJkhapp8CZBC9Zh0TOR8"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-primary/90 backdrop-blur-sm rounded-lg text-[10px] font-bold text-white shadow-sm">
+                                BEST SELLER
+                            </div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-gray-900 dark:text-white line-clamp-1">COSRX Glow Set Bundle</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-yellow-400 text-[14px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">4.9 (2.1k)</span>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<span class="font-bold text-primary text-sm">Rp 250.000</span>
+<button class="px-3 py-1.5 bg-primary/10 hover:bg-primary hover:text-white text-primary text-xs font-bold rounded-lg transition-all duration-300">
+                                    Beli
+                                </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-64 flex flex-col gap-3 p-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-[0_4px_20px_-4px_rgba(244,37,106,0.1)] border border-primary/5">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+<img alt="ESQA Goddess Palette makeup eyeshadow palette open" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" data-alt="ESQA Goddess Palette makeup eyeshadow palette open" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcUvqdyswHDOlni7BYmRLxXdswHy9DgwXjiEHiiyPnv-3bCDdGpTGdMcXkGwNAuthdzSnu2_DBbefWYPgSYtVz4syeRGcIR5ys5zi2ITV-fxs02g8zvaB7dvYi7rrfHNca-QicQBJM__S2E9BfO55dxafvjcCjVtsu96V2trIZVV1HgrDZSpRR1vxiY0pGmkpXr2Gd7vghDaeNTGafkubwTO1NZlgL_336JfyKvOv_LMTP_IXaeYvg6WEYmViNVed_P6gpeF1Xwoug"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-black/50 backdrop-blur-sm rounded-lg text-[10px] font-bold text-white">
+                                NEW
+                            </div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-gray-900 dark:text-white line-clamp-1">ESQA Goddess Palette</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-yellow-400 text-[14px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">4.8 (850)</span>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<span class="font-bold text-primary text-sm">Rp 185.000</span>
+<button class="px-3 py-1.5 bg-primary/10 hover:bg-primary hover:text-white text-primary text-xs font-bold rounded-lg transition-all duration-300">
+                                    Beli
+                                </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-64 flex flex-col gap-3 p-3 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-[0_4px_20px_-4px_rgba(244,37,106,0.1)] border border-primary/5">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+<img alt="L'Oreal Hair Spa jar on wooden table" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500" data-alt="L'Oreal Hair Spa jar on wooden table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4ZtLp6ggzTHlzsC2SFduDYRzp2jRU4DISkuKXWzStHNXv_8rgOhsTrpKCzRdwaMxZBGezcG4SYGR3ytU8oHK4A0Q2Zr0f-G3AP0-ow-a-oYBCS50EkjyGO1tQSVvy8xOjkKLUz8OuqeA5rlXrRPifbvk0KdyPpKWqeLjy2Vu8ZgoNOrtR8nxwMbS3v8jwjM9qEOmUvEO9z6iUD_omDVBc21aix3YmuZWts0HuvoBR9684xSqp1B3CZNApK3bUOwrnt49-6R854EBe"/>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-gray-900 dark:text-white line-clamp-1">L'Oreal Hair Spa</h3>
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-yellow-400 text-[14px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-medium text-gray-500 dark:text-gray-400">5.0 (5k+)</span>
+</div>
+<div class="flex items-center justify-between mt-auto">
+<span class="font-bold text-primary text-sm">Rp 95.000</span>
+<button class="px-3 py-1.5 bg-primary/10 hover:bg-primary hover:text-white text-primary text-xs font-bold rounded-lg transition-all duration-300">
+                                    Beli
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="h-2 bg-gray-100 dark:bg-gray-800/50 w-full my-4"></div>
+<!-- Popular Reviews Section -->
+<section class="px-5">
+<div class="flex items-center justify-between mb-6 mt-2">
+<h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        Review Terpopuler <span class="text-xl">✨</span>
+</h2>
+<button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<!-- Review Feed -->
+<div class="flex flex-col gap-6">
+<!-- Review Card 1 -->
+<article class="flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Header User -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
+<img alt="Portrait of woman smiling" class="w-full h-full object-cover" data-alt="Portrait of woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu9RlEt1Zxz7t2qhwyh1dUmi5hO9iVfaOt-ujW0AyPDpZo2AwawB-iUE3RTSiMyBxwtf12Rs6rtf-AeS87UhXX318SHtMHfw-yFmva3_yQlI1x1OhHixLRH0ceSLDsoNEFZToxFlpT7TblmEOyB2W2OHodHeLYQq-DuDoYDTVvB1xUDVsNVz44rJSg2C6vDAbf0KdZbTALnCJEyMi8qmAJC68Jvo7bHrJNXGtJncOruMBER9sC5EvjktXr7Rl0inDsY4zqcKsAQalG"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 border-2 border-white dark:border-surface-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] font-bold">check</span>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h4 class="text-sm font-bold text-gray-900 dark:text-white">Tasya Farasya</h4>
+<span class="text-xs text-gray-400">• 2j</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400">Beauty Influencer</p>
+</div>
+</div>
+<button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Content Image -->
+<div class="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-800 relative">
+<img alt="Woman applying serum to face" class="w-full h-full object-cover" data-alt="Woman applying serum to face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiy-CIPGJbzRfufQOJDLMclMlNI_SgLgWj6KLM9_uFGMunrWRkP-3wRqOrrv4NqBkSLA66Xs7rAj-JMtLqFeHQmhzZRO_Z2nKyJdT3vLoIxFTypWDefbAAdUZhYbLlpwpH0B85mnE2CxGkt8BumrXpkxzrw225LGvQTjtbPR6rCW4F1zJ9MDYdAHtuvFUjBAxgJWq0UnkiNn6NndMwVOW1bDfTQJZ2oSopvqmqJ2N22yqWi3bbK_b447GMgzfECHiqqv6p-yQ2JED_"/>
+<div class="absolute bottom-4 left-4 right-4">
+<div class="bg-white/90 dark:bg-black/80 backdrop-blur-md p-3 rounded-xl border border-white/20 flex items-center gap-3 shadow-lg">
+<div class="w-10 h-10 rounded-lg bg-gray-200 overflow-hidden shrink-0">
+<img alt="Small product thumbnail" class="w-full h-full object-cover" data-alt="Small product thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWLoQN-CaQ0CNNSab_ONG_tfDRWcGeOyFYTv82ol3E4kPsJ3cm6VgzqmIZnEEzyotg_unPVyv5iixHySxSHRYIN_1F-iBGiltlclY2XVPgge0OFj6-qCRosvVuffst0ejFfhp4uanHmhJltJ8stSQqQDDkIGo2HjqldB8PkX-yppx4AcfnCoc1r75rS6hPvRrNaIDfQ96mC3cDGBAstiKkkpu5G-KFzPKvq5QKPpqh0Zr3IuFvqxBL5B17pwv7zFzRQMn4KI_bw34b"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-gray-900 dark:text-white truncate">Laneige Water Bank Blue</p>
+<p class="text-[10px] text-gray-500 dark:text-gray-400 truncate">Hyaluronic Serum</p>
+</div>
+<button class="shrink-0 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+                                         Lihat
+                                     </button>
+</div>
+</div>
+</div>
+<!-- Actions & Text -->
+<div class="p-4 pt-3 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 group">
+<span class="material-symbols-outlined text-[24px] text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">favorite</span>
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-primary">1.2k</span>
+</button>
+<button class="flex items-center gap-1.5 group">
+<span class="material-symbols-outlined text-[24px] text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">chat_bubble</span>
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-primary">45</span>
+</button>
+<button class="flex items-center gap-1.5 group">
+<span class="material-symbols-outlined text-[24px] text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">share</span>
+</button>
+</div>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+<span class="font-bold text-gray-900 dark:text-white">Tasya Farasya</span> 
+                                    Jujur ini serum terbaik buat kulit kering! Teksturnya ringan banget, cepet meresap dan ga lengket sama sekali. Wajib coba sih kalo kalian lagi cari hydration booster! 💧💖
+                                </p>
+<p class="text-xs text-gray-400 mt-2">Lihat semua 45 komentar</p>
+</div>
+</div>
+</article>
+<!-- Review Card 2 -->
+<article class="flex flex-col bg-surface-light dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+<!-- Header User -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-gray-100 dark:border-gray-700">
+<img alt="Portrait of Abel Cantika" class="w-full h-full object-cover" data-alt="Portrait of Abel Cantika" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH9kkAXlpc-gRosVLH9A81u_1cMR7qPMHz02EQOe2wXNgq7Qmjz6No8JOKCN8wfNvNilKFEYZKpI8T4OkpDt06uSvahlVcERQp3xk1X5BcHw6VvR8Xo8UJBFRX9LCM3wtHFBiu7aUVnbLbVwjycMaOG2-IctSYu2pB3mba_WMV6YgAXf_PTlvhDKb2YUZ2bYTY8GCMYYLN3qja7isRpjllTFVw4xdowXSoww6VlYmOdYMtwRlsJ0oo0ydMEI-n-IaBTZ6Q8h_W8PBp"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-blue-500 text-white rounded-full p-0.5 border-2 border-white dark:border-surface-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] font-bold">check</span>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<h4 class="text-sm font-bold text-gray-900 dark:text-white">Abel Cantika</h4>
+<span class="text-xs text-gray-400">• 5j</span>
+</div>
+<p class="text-xs text-gray-500 dark:text-gray-400">Beauty Enthusiast</p>
+</div>
+</div>
+<button class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Content Image -->
+<div class="w-full aspect-square bg-gray-100 dark:bg-gray-800 relative group cursor-pointer">
+<img alt="Close up of eye makeup with palette" class="w-full h-full object-cover" data-alt="Close up of eye makeup with palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB80UASyi3EARLlnQfhh9pJjT7u4k0XGcAk8VjPfUJM7_CW_pepJ0FoiE1fDeig6s7c16w379hlGtFVQPGqasMZq9RInYdEX_Y9bC7YX05sU-OnibqnMZmgY6iNcX7g801tW-Zeov1wI6VgfWuHLuGCQikjBKzEgfWVPPQpMvMqocdKbXrfnhSlfL4KUj7aVXbkpWO8BeJbEAepv5l1WDH8FsegjdwMoPCm4JLx4ydKBfV5Moe0UlwvcsmXg3tvu1GiHUROa7k-t4xs"/>
+<!-- Product Tag Overlay -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shopping_bag</span>
+                                    Tap to view product
+                                </div>
+</div>
+<div class="absolute bottom-4 left-4 right-4">
+<div class="bg-white/90 dark:bg-black/80 backdrop-blur-md p-3 rounded-xl border border-white/20 flex items-center gap-3 shadow-lg">
+<div class="w-10 h-10 rounded-lg bg-gray-200 overflow-hidden shrink-0">
+<img alt="Product thumbnail" class="w-full h-full object-cover" data-alt="Product thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVVvfsw-UtCU-BKDXH24kYZIkiZquFyYd6o4Vgz3Xp6W9aFXb-sXzje4VntbXNDrAw22rH_1evNzxXiae3s6vrGR_vT9Hod7BFLcnCoX-1QBwmiHCzhwMZi08MrSAc0ATjDNTi978JoEc9ayAUYwCLJRn2Lx-xlYFCqgSJTgpiQaVTNTWFr6fVnhZSmkagCRI0Jt8qyAqWtLdVoReKHy8FxygSfI5m7wCOmWfkzxE9bCj1LG7HOXlRVCMX6qR_KZN9asei_Vucp4CX"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-gray-900 dark:text-white truncate">ESQA Goddess Palette</p>
+<p class="text-[10px] text-primary font-bold truncate">Rp 185.000</p>
+</div>
+<button class="shrink-0 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+                                         Beli
+                                     </button>
+</div>
+</div>
+</div>
+<!-- Actions & Text -->
+<div class="p-4 pt-3 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 group text-primary">
+<span class="material-symbols-outlined text-[24px] fill-1" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-sm font-medium">3.4k</span>
+</button>
+<button class="flex items-center gap-1.5 group">
+<span class="material-symbols-outlined text-[24px] text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">chat_bubble</span>
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-primary">128</span>
+</button>
+<button class="flex items-center gap-1.5 group">
+<span class="material-symbols-outlined text-[24px] text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">share</span>
+</button>
+</div>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-[18px] fill-1" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-gray-300 text-[18px]">star</span>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+<span class="font-bold text-gray-900 dark:text-white">Abel Cantika</span> 
+                                    Packaging lucu parah, warnanya pigmented sekali swatch langsung keluar. Cocok banget buat daily look atau party! ✨💋
+                                </p>
+<p class="text-xs text-gray-400 mt-2">Lihat semua 128 komentar</p>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 w-full bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 pb-safe pt-2">
+<div class="flex justify-around items-end px-2 pb-4">
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[24px]">home</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-primary fill-1 text-[24px]" style="font-variation-settings: 'FILL' 1;">feed</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<span class="text-[10px] font-bold text-primary">Feed</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[24px]">shopping_bag</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Shop</span>
+</a>
+<a class="flex flex-col items-center gap-1 w-16 group" href="#">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[24px]">account_circle</span>
+<span class="text-[10px] font-medium text-gray-400 group-hover:text-primary transition-colors">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

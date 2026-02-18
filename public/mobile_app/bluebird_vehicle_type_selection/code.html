@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bluebird Vehicle Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d59f2",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom radio styling to match theme */
+        input[type="radio"]:checked + div {
+            border-color: #0d59f2;
+            background-color: rgba(13, 89, 242, 0.05);
+        }
+        input[type="radio"]:checked + div .radio-indicator {
+            border-color: #0d59f2;
+            background-color: #0d59f2;
+        }
+        input[type="radio"]:checked + div .radio-indicator-inner {
+            opacity: 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white min-h-screen flex justify-center">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-white dark:bg-[#151c2b] shadow-2xl overflow-hidden min-h-screen flex flex-col relative">
+<!-- Header -->
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-[#151c2b]/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 px-4 pt-12 pb-4">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-800 dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex-1">
+<h1 class="text-lg font-bold leading-tight">Pilih Kendaraan</h1>
+<div class="flex items-center text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+<span class="material-symbols-outlined text-[14px] mr-1 text-primary">location_on</span>
+<span class="truncate max-w-[200px]">Grand Indonesia, East Mall</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Map Preview (Small Strip) -->
+<div class="w-full h-32 relative bg-slate-100 dark:bg-slate-800 shrink-0">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Map view of Jakarta showing route" data-location="Jakarta" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhvrwUhI2r0f6kDgyNRUjAA7KbPYN69pYQAzgmTF2I2_kjgtM8OlGYPGkSG9t4seGr3mE0hzLmLQ2XOPakW274d7vM1HobrRHJ7-ZBFlMejN7MuGCSCtfkK1FmK-_RaxXPKYfgkZ8iNS-94aG-H2bgYK0AyTXJPZAmXN1b9apV0ZMSm8iudl5oGqRIL3VaoVRm3aSYBFOny9nL9ZaF9_an7gvjrjZKqv67p1czwdDWebJ2N0E-23Yvvx50Bs84YYFDh5qk5thLvJYV');"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/20 dark:to-[#151c2b]/50"></div>
+<!-- Route Duration Badge -->
+<div class="absolute bottom-3 left-4 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-green-600 text-sm">directions_car</span>
+<span class="text-xs font-bold text-slate-800 dark:text-white">15 min</span>
+<span class="text-xs text-slate-500 border-l border-slate-200 pl-2 ml-1">4.2 km</span>
+</div>
+</div>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 pb-32">
+<!-- Option 1: Bluebird -->
+<label class="block cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="vehicle_type" type="radio"/>
+<div class="relative flex flex-col p-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-200 hover:border-blue-100 dark:hover:border-blue-900/30 shadow-sm">
+<!-- Top Row: Name & Price -->
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Bluebird</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Standard Taxi</p>
+</div>
+<div class="text-right">
+<span class="block font-bold text-slate-900 dark:text-white text-base">Rp 25k - 30k</span>
+<span class="text-xs text-green-600 font-medium bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded">Best Value</span>
+</div>
+</div>
+<!-- Middle: Car Image -->
+<div class="flex justify-center py-2 relative">
+<!-- Abstract Car Illustration using basic shapes/gradients if image fails, but mainly focusing on layout -->
+<div class="w-48 h-24 bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-105" data-alt="Blue sedan taxi side view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgeK6kXBQMAeRoBRnNqANPsK7egz1jc6X3yAhzvXCbOP5hFdH57I0DCi0AmhlzFWhcAjgrhTirCYPGi7rqzgYETsrxIRyYCtJJOqaAHw2z4Oz6IsyKl1r6vRtdlOuFZwu8XjtioAhpkOD7JB-uYsiQk6AhRNr4WxdUiy-oVHoBG8o31eGd5HU7RFX1pQiKnddH-VMfDLgE_yysMZrvJHDZ4MUJdL5bJKVCNzTxuo7byC-Ktyk51-Qcv8a0dyvLdwWwFIe_g7RYx_tp');"></div>
+</div>
+<!-- Bottom: Details -->
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-sm font-medium">4</span>
+</div>
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-sm font-medium">3 min</span>
+</div>
+</div>
+<!-- Custom Radio Indicator -->
+<div class="radio-indicator w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center transition-colors">
+<div class="radio-indicator-inner w-2.5 h-2.5 bg-white rounded-full opacity-0 transition-opacity"></div>
+</div>
+</div>
+</div>
+</label>
+<!-- Option 2: Bluebird Van -->
+<label class="block cursor-pointer group relative">
+<input class="peer sr-only" name="vehicle_type" type="radio"/>
+<div class="relative flex flex-col p-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-200 hover:border-blue-100 dark:hover:border-blue-900/30 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Bluebird Van</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Larger Group</p>
+</div>
+<div class="text-right">
+<span class="block font-bold text-slate-900 dark:text-white text-base">Rp 45k - 50k</span>
+</div>
+</div>
+<div class="flex justify-center py-2 relative">
+<div class="w-48 h-24 bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-105" data-alt="Blue minivan side view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpDwy2EojTmWOAYFVetUl3kdoGlVjuHbTVkT0IN0mxYVNnNEKuBrc1r5wSeWimdYa2bkhAdD34dJ6Flzy6VK9pyDox51feDpEWmzWWvxsuI_WIB0FEyv49Ghft21U-bkHZhDb3_Uif_vcHTDKXhCzGr-6frM_jWQrSfkE0I3t5PKLuy8yZJBJaatB5lLsaAvTZegXFbF9VhhZwdVX6ZQMlhCLFrOOjuzaYdr56TBPicxQLjxNAY-0hGg9jMtCwzK5HPTHEuZRJaI87');"></div>
+</div>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span class="text-sm font-medium">6</span>
+</div>
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-sm font-medium">7 min</span>
+</div>
+</div>
+<div class="radio-indicator w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center transition-colors">
+<div class="radio-indicator-inner w-2.5 h-2.5 bg-white rounded-full opacity-0 transition-opacity"></div>
+</div>
+</div>
+</div>
+</label>
+<!-- Option 3: Silverbird -->
+<label class="block cursor-pointer group relative">
+<input class="peer sr-only" name="vehicle_type" type="radio"/>
+<div class="relative flex flex-col p-4 rounded-xl border-2 border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all duration-200 hover:border-blue-100 dark:hover:border-blue-900/30 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-2">
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Silverbird</h3>
+<span class="bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded font-bold tracking-wide uppercase">Premium</span>
+</div>
+<div class="text-right">
+<span class="block font-bold text-slate-900 dark:text-white text-base">Rp 75k - 90k</span>
+</div>
+</div>
+<div class="flex justify-center py-2 relative">
+<div class="w-48 h-24 bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-105" data-alt="Black luxury sedan side view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA1ZKCuA8Lf2LB15nkorwnHy8dwE19NPVTEPOSQR0O5YzCpSBm4yugRkGML10PpXbWEurAR0jFWNZQEDIGddb_m5eDwM7kJ-sHqIabh_pA79-hm94z12jmHeITrLUT3LBRbZIxNRRzqW17Y33caahWBoSpP9IgEu5KcsM_RJBKfYAmCHt2k9eq9rTmjoS2LC_RPC08L8UZgVxY43f_5QPeVrvGd3MZas4b2QOyk6qDwMOXxAzrmSPm7sZgMFpO39QMa7HG1FafJFmQJ');"></div>
+</div>
+<div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="text-sm font-medium">4</span>
+</div>
+<div class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-sm font-medium">10 min</span>
+</div>
+</div>
+<div class="radio-indicator w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center transition-colors">
+<div class="radio-indicator-inner w-2.5 h-2.5 bg-white rounded-full opacity-0 transition-opacity"></div>
+</div>
+</div>
+</div>
+</label>
+</main>
+<!-- Bottom Action Sheet -->
+<div class="absolute bottom-0 w-full bg-white dark:bg-[#151c2b] border-t border-slate-100 dark:border-slate-800 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgba(0,0,0,0.2)] p-4 pb-8 z-30 rounded-t-2xl">
+<!-- Payment Method Selector -->
+<button class="w-full flex items-center justify-between mb-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<div class="text-left">
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Metode Pembayaran</p>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Tunai (Cash)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<!-- Main CTA -->
+<button class="w-full bg-primary hover:bg-blue-700 text-white font-bold text-base py-3.5 rounded-xl shadow-lg shadow-blue-500/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span>Konfirmasi Pesanan</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

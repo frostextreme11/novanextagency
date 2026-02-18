@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Job Description Detail Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0875e2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1923",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-slate-900 shadow-2xl">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+<button class="flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios_new</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">ios_share</span>
+</button>
+<button class="flex items-center justify-center p-2 -mr-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
+<span class="material-symbols-outlined text-2xl">bookmark_border</span>
+</button>
+</div>
+</header>
+<main class="flex-1 pb-24">
+<!-- Hero Job Card Area -->
+<div class="px-4 py-6 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900">
+<div class="flex flex-col items-center text-center">
+<div class="relative h-20 w-20 mb-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden bg-white">
+<img alt="Company Logo TechNova Solutions" class="h-full w-full object-cover" data-alt="Modern tech company logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuJMkV1wSeuJFJc3sL2JW5h1-6UbpwF_4Isr7Zq_DN4A-yza4SNdoJM8QYXh6UZfgm3Mr1MmB_CsImu9Ol0e7t0hKzGOZFLxzMB8sLF3QAlu8smrhu8-Clq45DyZOybd-OIwNVxK-K1pXqiDBju-VwHXB4Vh0pZcb-r54VpkRi93HrdHv3ROKfJ8Plig6sz0r8M55MTB-bHH5criZvlMxhtisMplwRhoKVfYUeapvO72gmpgiXxY4OHgHa5mkkmfRTB1_nNI1slKnj"/>
+</div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white leading-tight mb-1">Senior UX Designer</h1>
+<div class="flex items-center gap-2 mb-4 text-slate-500 dark:text-slate-400 font-medium">
+<span>TechNova Solutions</span>
+<span class="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+<span class="text-primary dark:text-blue-400">Jakarta Selatan</span>
+</div>
+<div class="w-full bg-primary/5 dark:bg-primary/10 border border-primary/10 rounded-xl p-4 mb-6">
+<div class="flex items-center justify-center gap-2 text-primary dark:text-blue-400 font-bold text-lg mb-2">
+<span class="material-symbols-outlined">payments</span>
+<span>Rp 15.000.000 - Rp 25.000.000</span>
+</div>
+<div class="flex justify-center gap-3">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                Full-time
+                            </span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                On-site
+                            </span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                Senior Level
+                            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tab Navigation (Sticky below header) -->
+<div class="sticky top-[60px] z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur shadow-sm border-b border-slate-100 dark:border-slate-800">
+<div class="flex px-4">
+<a class="flex-1 py-4 text-sm font-bold text-primary border-b-[3px] border-primary text-center" href="#deskripsi">
+                        Deskripsi
+                    </a>
+<a class="flex-1 py-4 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-[3px] border-transparent text-center" href="#persyaratan">
+                        Persyaratan
+                    </a>
+<a class="flex-1 py-4 text-sm font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 border-b-[3px] border-transparent text-center" href="#perusahaan">
+                        Perusahaan
+                    </a>
+</div>
+</div>
+<!-- Content Sections -->
+<div class="px-5 py-6 space-y-8">
+<!-- Deskripsi Section -->
+<section class="scroll-mt-36" id="deskripsi">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="bg-primary/10 text-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</span>
+                        Deskripsi Pekerjaan
+                    </h2>
+<div class="text-slate-600 dark:text-slate-300 leading-relaxed text-[15px] space-y-4">
+<p>
+                            We are looking for a creative Senior UX Designer to join our product team. You will be responsible for defining the user experience for our flagship mobile application used by millions.
+                        </p>
+<p>
+                            You will collaborate closely with product managers and engineers to translate complex requirements into intuitive and beautiful user interfaces.
+                        </p>
+<ul class="space-y-2 pl-1">
+<li class="flex items-start gap-3">
+<span class="block w-1.5 h-1.5 mt-2 rounded-full bg-slate-400 shrink-0"></span>
+<span>Conduct user research and testing to validate design decisions.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="block w-1.5 h-1.5 mt-2 rounded-full bg-slate-400 shrink-0"></span>
+<span>Create wireframes, storyboards, user flows, and site maps.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="block w-1.5 h-1.5 mt-2 rounded-full bg-slate-400 shrink-0"></span>
+<span>Design high-fidelity mockups and interactive prototypes.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="block w-1.5 h-1.5 mt-2 rounded-full bg-slate-400 shrink-0"></span>
+<span>Establish and promote design guidelines, best practices, and standards.</span>
+</li>
+</ul>
+</div>
+</section>
+<hr class="border-slate-100 dark:border-slate-800"/>
+<!-- Persyaratan Section -->
+<section class="scroll-mt-36" id="persyaratan">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="bg-primary/10 text-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</span>
+                        Persyaratan
+                    </h2>
+<div class="space-y-3">
+<div class="flex gap-3 items-start p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400 mt-0.5">verified</span>
+<span class="text-sm text-slate-700 dark:text-slate-200 font-medium">Minimum 4+ years of experience in UX/UI design for mobile apps.</span>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400 mt-0.5">verified</span>
+<span class="text-sm text-slate-700 dark:text-slate-200 font-medium">Proficiency in Figma, Adobe XD, or Sketch.</span>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400 mt-0.5">verified</span>
+<span class="text-sm text-slate-700 dark:text-slate-200 font-medium">Strong portfolio showcasing user-centric design solutions.</span>
+</div>
+<div class="flex gap-3 items-start p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/50">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400 mt-0.5">verified</span>
+<span class="text-sm text-slate-700 dark:text-slate-200 font-medium">Excellent communication skills in English and Bahasa.</span>
+</div>
+</div>
+</section>
+<hr class="border-slate-100 dark:border-slate-800"/>
+<!-- Perusahaan Section -->
+<section class="scroll-mt-36" id="perusahaan">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="bg-primary/10 text-primary p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-[20px]">apartment</span>
+</span>
+                        Tentang Perusahaan
+                    </h2>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+<div class="h-32 w-full bg-cover bg-center relative" data-alt="Modern office interior with glass walls" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBHnQv9BaG14YoptR3HiJ6hc4E6FkAQPXCJd89sCumtyUKcmHvYYy-Vd5CPTBj7vC4i7bjfx-g7O2b1d8E2TPNxISYVg6pCygpQX41YksAHBdU5Y0kBb5p-kF1mLdPrW2Le3_n3Qg2ypkm7zHpm7YQJtZZZmvGLwjNa5a7JZMkhQdVquP0CThByO77clATbg8GvNBARuSpXt-s0APfP_UOBkSq8GJUR9TXtFeUHsap9byIRbNw1JLnCVB0kJ7diIyFexTcZkvtlFup_')">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+<div class="absolute bottom-3 left-4 text-white">
+<p class="font-bold text-lg">TechNova Solutions</p>
+<p class="text-xs text-slate-300">Financial Technology • 50-200 Employees</p>
+</div>
+</div>
+<div class="p-4">
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
+                                TechNova is a leading fintech startup dedicated to simplifying financial management for everyone. We believe in innovation, transparency, and user-first design.
+                            </p>
+<a class="inline-flex items-center text-sm font-bold text-primary hover:text-blue-700" href="#">
+                                Lihat Profil Lengkap
+                                <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+<div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700 flex flex-col gap-2">
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-slate-400">language</span>
+<a class="hover:text-primary transition-colors" href="#">www.technova.com</a>
+</div>
+<div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400" data-location="Jakarta Selatan, Indonesia" style="">
+<span class="material-symbols-outlined text-slate-400">location_on</span>
+<span>SCBD, Jakarta Selatan</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Stats / Benefits Grid -->
+<div class="grid grid-cols-2 gap-3 mt-4">
+<div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg flex flex-col items-center justify-center text-center gap-1 border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-primary mb-1">schedule</span>
+<span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Jam Kerja</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">Flexible</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg flex flex-col items-center justify-center text-center gap-1 border border-slate-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-primary mb-1">medical_services</span>
+<span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Asuransi</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">BPJS + Private</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Sticky Footer -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-5 py-4 pb-8 max-w-md mx-auto shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Gaji per bulan</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">Rp 25 Jt</span>
+</div>
+<button class="flex-1 bg-primary hover:bg-blue-600 text-white font-bold text-base h-12 rounded-full shadow-lg shadow-blue-500/30 active:scale-95 transition-all flex items-center justify-center gap-2">
+                    Lamar Sekarang
+                    <span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</footer>
+</div>
+</body></html>

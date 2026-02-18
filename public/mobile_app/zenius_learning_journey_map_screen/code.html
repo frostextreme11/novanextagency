@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Learning Journey Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecec",
+                        "primary-dark": "#0ebdbd",
+                        "secondary": "#ff9f43", // Orange accent mentioned in plan
+                        "background-light": "#f8fcfc",
+                        "background-dark": "#102222",
+                        "card-light": "#ffffff",
+                        "card-dark": "#1a3333",
+                        "text-main": "#0d1b1b",
+                        "text-muted": "#4c9a9a",
+                        "line-color": "#cfe7e7"
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Lexend', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom Scrollbar hide */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-white transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full max-w-md mx-auto flex-col overflow-hidden bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-line-color dark:border-gray-800 pb-2">
+<!-- Top Bar: Profile & XP -->
+<div class="flex items-center justify-between px-5 pt-4 pb-2">
+<div class="flex items-center gap-3">
+<div class="relative group cursor-pointer">
+<div class="h-10 w-10 rounded-full bg-gray-200 overflow-hidden border-2 border-primary">
+<img alt="Profile" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoDxYE7SYNvvq3zH6NsEHYKol4pnQ8GcbGV1ttVD5moy7yvDMOEWIY76kd03tDUuVzIZI3gpW8TcIOpV8OmTwkKbuOah5pYaE4Q2tCnzLoBJx-hJaaPa9Eu582oY56CqfawFcoYqaRVZ9cW_VbgVAdWb1THvMu2ee1n2kEbonPUoKtqZj5LtrrThl3gc-2fqe2nZVRNiwZjx6lPyn-wr7njD0sTYf0s2pp9JTiCqSc7B0fstN85jt3ymvc85jZwW1IYzuyVeA-f8r8"/>
+</div>
+<div class="absolute -bottom-1 -right-1 bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white dark:border-background-dark">
+                            Lvl 12
+                        </div>
+</div>
+<div class="flex flex-col">
+<h1 class="text-sm font-bold text-text-main dark:text-white leading-tight">Halo, Budi!</h1>
+<span class="text-xs text-text-muted dark:text-gray-400 font-medium">Kelas 12 IPA</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-white dark:bg-card-dark px-3 py-1.5 rounded-full shadow-sm border border-line-color dark:border-gray-700">
+<span class="material-symbols-outlined text-secondary text-[20px] fill-1">bolt</span>
+<span class="text-sm font-bold text-secondary">1250 XP</span>
+</div>
+</div>
+<!-- Stats/Progress Overview -->
+<div class="px-5 mt-2">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-semibold text-text-muted uppercase tracking-wider">Progress Mingguan</span>
+<span class="text-xs font-bold text-primary-dark dark:text-primary">12/20 Level</span>
+</div>
+<div class="h-2 w-full bg-line-color dark:bg-gray-700 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-dark w-[60%] rounded-full shadow-[0_0_10px_rgba(19,236,236,0.5)]"></div>
+</div>
+</div>
+</header>
+<!-- Main Journey Content -->
+<main class="flex-1 relative px-5 py-6 overflow-y-auto no-scrollbar pb-24">
+<!-- Gamification Floating Widget (Top Right) -->
+<div class="absolute top-4 right-4 z-10 animate-bounce delay-1000 duration-[2000ms]">
+<div class="bg-gradient-to-tr from-secondary to-orange-400 text-white p-2 rounded-xl shadow-lg shadow-orange-500/30 flex items-center justify-center transform rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">local_fire_department</span>
+</div>
+</div>
+<!-- Journey Path Visual -->
+<div class="relative flex flex-col gap-0 items-center">
+<!-- SVG Path Line Background -->
+<div class="absolute inset-0 w-full h-full flex justify-center pointer-events-none z-0">
+<div class="w-1 bg-line-color dark:bg-gray-700 h-full rounded-full"></div>
+<!-- Decorative dashed line overlay -->
+<div class="absolute top-0 bottom-0 w-1 border-l-2 border-dashed border-white/40 dark:border-black/20 h-full"></div>
+</div>
+<!-- Level 1: Completed -->
+<div class="relative z-10 w-full flex flex-col items-center mb-8 group">
+<div class="bg-green-100 dark:bg-green-900/30 p-2 rounded-full border-4 border-white dark:border-background-dark mb-2 shadow-sm transition-transform hover:scale-105">
+<div class="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-inner">
+<span class="material-symbols-outlined text-[32px]">check</span>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-md border-b-4 border-gray-100 dark:border-gray-800 w-full max-w-[280px] text-center relative">
+<div class="flex justify-center -mt-2 mb-2">
+<div class="flex gap-1 text-secondary">
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+<span class="material-symbols-outlined text-[16px] fill-1">star</span>
+</div>
+</div>
+<h3 class="font-bold text-text-main dark:text-white text-base">Fisika: Hukum Newton</h3>
+<p class="text-xs text-text-muted mt-1">Selesai • 100 XP Didapat</p>
+</div>
+</div>
+<!-- Level 2: Active (Current) -->
+<div class="relative z-10 w-full flex flex-col items-center mb-8">
+<!-- Pulsing Effect -->
+<div class="absolute top-0 w-24 h-24 bg-primary/20 rounded-full animate-ping"></div>
+<div class="bg-white dark:bg-background-dark p-2 rounded-full border-4 border-primary dark:border-primary/50 mb-3 shadow-lg shadow-primary/20 relative">
+<div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white shadow-inner transform transition hover:rotate-12">
+<span class="material-symbols-outlined text-[36px]">function</span>
+</div>
+<!-- Badge -->
+<div class="absolute -top-1 -right-1 bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white dark:border-background-dark shadow-sm">
+                            HOT
+                        </div>
+</div>
+<div class="bg-white dark:bg-card-dark p-0 rounded-2xl shadow-xl shadow-primary/10 border border-primary/20 w-full text-center overflow-hidden">
+<div class="bg-primary/10 p-4 pb-2">
+<h3 class="font-bold text-lg text-text-main dark:text-white">Matematika: Aljabar</h3>
+<p class="text-sm text-text-muted mb-3">Lanjut Belajar - 60%</p>
+<!-- Mini Progress Bar inside Card -->
+<div class="h-2 w-full bg-white/60 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
+<div class="h-full bg-primary w-[60%] rounded-full"></div>
+</div>
+</div>
+<div class="p-3 bg-white dark:bg-card-dark">
+<button class="w-full bg-primary hover:bg-primary-dark text-text-main font-bold py-3 rounded-xl transition-all shadow-[0_4px_0_rgb(14,189,189)] active:shadow-none active:translate-y-[4px]">
+                                Lanjut
+                             </button>
+</div>
+</div>
+</div>
+<!-- Level 3: Locked -->
+<div class="relative z-10 w-full flex flex-col items-center mb-8 opacity-70">
+<div class="bg-gray-100 dark:bg-gray-800 p-2 rounded-full border-4 border-white dark:border-background-dark mb-2">
+<div class="w-14 h-14 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-500 dark:text-gray-400 shadow-inner">
+<span class="material-symbols-outlined text-[28px]">lock</span>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark p-4 rounded-xl shadow-sm border border-line-color dark:border-gray-700 w-full max-w-[280px] text-center">
+<h3 class="font-bold text-gray-500 dark:text-gray-300 text-base">Biologi: Sel Hewan</h3>
+<p class="text-xs text-text-muted mt-1">Selesaikan Matematika dulu</p>
+</div>
+</div>
+<!-- Level 4: Locked (Future) -->
+<div class="relative z-10 w-full flex flex-col items-center mb-8 opacity-50 grayscale">
+<div class="bg-gray-100 dark:bg-gray-800 p-2 rounded-full border-4 border-white dark:border-background-dark mb-2">
+<div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-400 shadow-inner">
+<span class="material-symbols-outlined text-[24px]">science</span>
+</div>
+</div>
+<div class="bg-white/50 dark:bg-card-dark/50 p-3 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 w-full max-w-[200px] text-center backdrop-blur-sm">
+<h3 class="font-semibold text-gray-400 text-sm">Kimia: Struktur Atom</h3>
+</div>
+</div>
+<!-- Chest / Goal -->
+<div class="relative z-10 mt-2">
+<div class="w-20 h-20 bg-gradient-to-t from-yellow-400 to-yellow-300 rounded-2xl flex items-center justify-center shadow-lg border-b-4 border-yellow-600 rotate-3 transform hover:rotate-0 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[40px] text-yellow-800 drop-shadow-sm">social_leaderboard</span>
+</div>
+<div class="mt-2 bg-text-main text-white text-[10px] font-bold px-2 py-1 rounded-full text-center">
+                        Ujian Akhir
+                    </div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 z-30 w-full max-w-md bg-white dark:bg-card-dark border-t border-line-color dark:border-gray-800 pb-safe pt-2">
+<!-- pb-safe is a placeholder for safe area inset if needed, here just simulated with pb-5 in padding-bottom on flex div -->
+<div class="flex justify-around items-end px-2 pb-4">
+<a class="flex flex-col items-center gap-1 group w-16" href="#">
+<div class="flex items-center justify-center h-8 w-14 rounded-full bg-primary/20 text-text-main group-hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined text-[24px] fill-1">map</span>
+</div>
+<span class="text-[10px] font-bold text-text-main dark:text-white">Peta</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-16 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<div class="flex items-center justify-center h-8 w-14 rounded-full text-text-muted group-hover:bg-gray-50 dark:group-hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">videocam</span>
+</div>
+<span class="text-[10px] font-medium text-text-muted">Live</span>
+</a>
+<!-- Floating FAB for Quick Action -->
+<div class="relative -top-6">
+<button class="h-14 w-14 rounded-full bg-gradient-to-r from-secondary to-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/40 border-4 border-white dark:border-background-dark transform transition active:scale-95">
+<span class="material-symbols-outlined text-[28px]">lightbulb</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 group w-16 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<div class="flex items-center justify-center h-8 w-14 rounded-full text-text-muted group-hover:bg-gray-50 dark:group-hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">chat_bubble</span>
+</div>
+<span class="text-[10px] font-medium text-text-muted">Chat</span>
+</a>
+<a class="flex flex-col items-center gap-1 group w-16 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<div class="flex items-center justify-center h-8 w-14 rounded-full text-text-muted group-hover:bg-gray-50 dark:group-hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<span class="text-[10px] font-medium text-text-muted">Profil</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

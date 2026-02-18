@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BS Lady Membership</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f2b90d",
+              "primary-light": "#fceeb5",
+              "background-light": "#f8f8f5",
+              "background-dark": "#221e10",
+              "card-dark": "#2c2616",
+              "card-dark-lighter": "#3a321d",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            backgroundImage: {
+              'luxury-gradient': 'linear-gradient(135deg, #221e10 0%, #1a160b 100%)',
+              'gold-gradient': 'linear-gradient(135deg, #f2b90d 0%, #d4a00b 100%)',
+              'gold-shimmer': 'linear-gradient(45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 60%)',
+              'card-texture': 'radial-gradient(circle at 50% 0%, #3a321d 0%, #221e10 100%)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .text-gold-gradient {
+            background: linear-gradient(to right, #f2b90d, #ffe680, #f2b90d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+        .glass-card {
+            background: rgba(44, 38, 22, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(242, 185, 13, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex flex-col min-h-screen max-w-md mx-auto bg-background-dark shadow-2xl overflow-hidden">
+<!-- Background Ambient Glow -->
+<div class="absolute top-[-20%] left-[-10%] w-[120%] h-[60%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background-dark/0 to-transparent pointer-events-none"></div>
+<!-- Header -->
+<div class="flex items-center justify-between px-6 pt-12 pb-4 z-10">
+<h1 class="text-xl font-bold tracking-tight text-white/90">Membership</h1>
+<button class="text-white/80 hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<!-- Main Content Scrollable Area -->
+<div class="flex-1 overflow-y-auto pb-24 z-10 scrollbar-hide">
+<!-- Headline -->
+<div class="px-6 mb-6 text-center">
+<p class="text-primary text-sm font-medium tracking-[0.2em] uppercase mb-1">Eksklusif Untukmu</p>
+<h2 class="text-3xl font-bold text-white tracking-tight">BS Lady Black Card</h2>
+</div>
+<!-- The Hero Card -->
+<div class="px-6 mb-8 perspective-1000">
+<div class="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.7)] group">
+<!-- Card Background -->
+<div class="absolute inset-0 bg-[#1a160b] bg-card-texture"></div>
+<!-- Texture Pattern Overlay -->
+<div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'0.0.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23f2b90d\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); background-size: 30px 30px;"></div>
+<!-- Gold Gradient Overlay for Shine -->
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-transparent opacity-50"></div>
+<!-- Card Content -->
+<div class="absolute inset-0 p-6 flex flex-col justify-between">
+<!-- Top Row -->
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary/80 text-3xl">diamond</span>
+</div>
+<span class="text-primary/60 text-xs font-semibold tracking-widest uppercase">Black Tier</span>
+</div>
+<!-- Middle Row (Chip) -->
+<div class="flex items-center gap-4 pl-1">
+<div class="w-12 h-9 rounded bg-gradient-to-br from-[#d4a00b] to-[#8c6a07] opacity-80 flex items-center justify-center border border-[#f2b90d]/30 relative overflow-hidden">
+<div class="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)] -skew-x-12 translate-x-[-150%] animate-[shine_3s_infinite]"></div>
+<div class="w-8 h-[1px] bg-[#f2b90d]/40 mb-1"></div>
+<div class="w-8 h-[1px] bg-[#f2b90d]/40 mt-1"></div>
+</div>
+<span class="text-white/40 text-sm tracking-widest font-mono">8829 1029 3847</span>
+</div>
+<!-- Bottom Row -->
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[10px] text-primary/60 uppercase tracking-widest mb-1">Card Holder</p>
+<p class="text-lg text-primary font-medium tracking-wide font-display text-gold-gradient drop-shadow-md">Sarah Anderson</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-primary/60 uppercase tracking-widest mb-1">Member Since</p>
+<p class="text-sm text-white/90 font-medium">2021</p>
+</div>
+</div>
+</div>
+<!-- Gloss Effect -->
+<div class="absolute inset-0 bg-gold-shimmer opacity-0 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none"></div>
+</div>
+</div>
+<!-- Stats & Progress -->
+<div class="px-6 mb-8">
+<div class="flex flex-col items-center justify-center mb-6">
+<div class="text-4xl font-bold text-white mb-1">2,450</div>
+<div class="text-sm text-primary/80 uppercase tracking-wider font-medium">Current B-Points</div>
+</div>
+<div class="glass-card p-5 rounded-xl mb-4">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs text-white/60 font-medium">Current Status</span>
+<span class="text-xs text-primary font-bold">500 pts to Platinum</span>
+</div>
+<div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[75%] shadow-[0_0_10px_rgba(242,185,13,0.5)]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-white/40 font-medium uppercase tracking-wider">
+<span>Black</span>
+<span>Platinum</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-primary text-background-dark font-bold text-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">redeem</span>
+                        Redeem Points
+                    </button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">history</span>
+                        History
+                    </button>
+</div>
+</div>
+<!-- Benefits Preview -->
+<div class="px-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-white">Your Privileges</h3>
+<a class="text-xs text-primary font-medium hover:text-white transition-colors" href="#">View All</a>
+</div>
+<div class="space-y-3">
+<!-- Benefit Item 1 -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-primary/30 transition-colors group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">stars</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white text-sm font-bold mb-0.5">Priority Access</h4>
+<p class="text-xs text-white/50">Early access to new collections</p>
+</div>
+<span class="material-symbols-outlined text-white/20 text-sm group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+<!-- Benefit Item 2 -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-primary/30 transition-colors group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">cake</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white text-sm font-bold mb-0.5">Birthday Voucher</h4>
+<p class="text-xs text-white/50">IDR 100.000 special gift</p>
+</div>
+<span class="material-symbols-outlined text-white/20 text-sm group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+<!-- Benefit Item 3 -->
+<div class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-primary/30 transition-colors group cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div class="flex-1">
+<h4 class="text-white text-sm font-bold mb-0.5">Free Shipping</h4>
+<p class="text-xs text-white/50">Unlimited for domestic orders</p>
+</div>
+<span class="material-symbols-outlined text-white/20 text-sm group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Spacing for bottom nav -->
+<div class="h-8"></div>
+</div>
+<!-- Bottom Navigation -->
+<div class="absolute bottom-0 w-full border-t border-[#493f22] bg-[#221e10]/95 backdrop-blur-md px-4 pb-6 pt-2 z-50">
+<div class="flex gap-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#cbbc90] hover:text-primary transition-colors group" href="#">
+<div class="text-[#cbbc90] group-hover:text-primary transition-colors flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">storefront</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Shop</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#cbbc90] hover:text-primary transition-colors group" href="#">
+<div class="text-[#cbbc90] group-hover:text-primary transition-colors flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">list</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Categories</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-[#cbbc90] hover:text-primary transition-colors group" href="#">
+<div class="text-[#cbbc90] group-hover:text-primary transition-colors flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px;">shopping_bag</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Bag</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
+<div class="text-primary flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 24px; font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<p class="text-primary text-xs font-medium leading-normal tracking-[0.015em]">Account</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

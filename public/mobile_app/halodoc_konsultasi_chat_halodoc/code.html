@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Konsultasi Chat Halodoc</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b5b",
+                        "primary-dark": "#d91b4a",
+                        "primary-light": "#fff0f4",
+                        "background-light": "#ffffff",
+                        "background-gray": "#f4f5f7",
+                        "text-main": "#2a2a2a",
+                        "text-secondary": "#858585",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 10px rgba(0, 0, 0, 0.03)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light font-display text-text-main antialiased h-screen flex flex-col overflow-hidden">
+<!-- Header -->
+<header class="flex-none bg-white border-b border-gray-100 shadow-sm px-4 py-3 flex items-center justify-between z-10 relative">
+<div class="flex items-center gap-3">
+<button class="text-text-main hover:bg-gray-50 p-1 rounded-full">
+<span class="material-symbols-outlined text-2xl">arrow_back_ios_new</span>
+</button>
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-cover bg-center border border-gray-100 shadow-sm" data-alt="Portrait of a female doctor smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyH8x2MS9NKV160dgGvkQBLrnjnSWaj_NsLp0U19PPGx5N2B1mBxMI2i2wHT9ojxXgK0BPGf3MK9Z1WORhohwobgKPqve8z-DMJxxnU1HyzEVi-prnqdoHePPKaVqfG8B5ZAY-xYUnEJwP7nqcWI6PCemXKUMlr75SlDT7KKUs3USAsWsiPMrWc_TQM7yJ8PxDjrU9T9nHf0v1qxvgTbGCrWFIQQk8iQUALjjKsHovLvCmNcWhm4KAbPFGAeMzCmX19zCiNbjyBNTR');"></div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<h1 class="text-base font-bold text-text-main leading-tight">dr. Sarah</h1>
+<span class="material-symbols-outlined text-blue-500 text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-xs text-text-secondary font-medium">Spesialis Anak</p>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-light rounded-full transition-colors">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">videocam</span>
+</button>
+</div>
+</header>
+<!-- Chat Area -->
+<main class="flex-1 overflow-y-auto scrollbar-hide bg-white p-4 flex flex-col gap-6">
+<!-- Timestamp -->
+<div class="text-center py-2">
+<span class="text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1 rounded-full">Hari ini 14:30</span>
+</div>
+<!-- Chat Item: Patient -->
+<div class="flex items-end justify-end gap-2">
+<div class="flex flex-col items-end max-w-[80%]">
+<div class="bg-primary text-white px-4 py-3 rounded-2xl rounded-tr-sm shadow-sm text-[15px] leading-relaxed">
+                    Dok, anak saya demam sudah 2 hari. Apa obatnya ya?
+                </div>
+<span class="text-[11px] text-gray-400 mt-1 mr-1">14:31</span>
+</div>
+</div>
+<!-- Chat Item: Doctor -->
+<div class="flex items-end justify-start gap-2">
+<div class="w-8 h-8 rounded-full bg-cover bg-center shrink-0 border border-gray-100" data-alt="Small avatar of doctor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB0eM9bNjC7Nqv9NbH4Ceg4AbkMHAcvyTaBUrnE2VXeg7O_wCqNK-oZbrZ38Yfd9U8Vv5uwywXRR7KkjQISuLMOERKE7j4pE30ASo8sTyN_WUdHCfZxAEgFjO53qIG-c-IEuufxFRbjz_XgT0MLurbXjGb0Q8nhZsPW4T9gz-68ae6MonETqzXRZJcFQO6D96Xb0M-g2NIbLuzXLhLbcofcqCLI9wuzwUifc_n0KLlc20fgP82CB-X5qLb6Wb5yxqgFx13EANB53F5f');"></div>
+<div class="flex flex-col items-start max-w-[80%]">
+<div class="bg-gray-100 text-text-main px-4 py-3 rounded-2xl rounded-tl-sm text-[15px] leading-relaxed">
+                    Halo Ibu. Apakah ada gejala lain seperti batuk atau pilek?
+                </div>
+<span class="text-[11px] text-gray-400 mt-1 ml-1">14:32</span>
+</div>
+</div>
+<!-- Chat Item: Patient -->
+<div class="flex items-end justify-end gap-2">
+<div class="flex flex-col items-end max-w-[80%]">
+<div class="bg-primary text-white px-4 py-3 rounded-2xl rounded-tr-sm shadow-sm text-[15px] leading-relaxed">
+                    Hanya pilek sedikit dok.
+                </div>
+<span class="text-[11px] text-gray-400 mt-1 mr-1">14:33</span>
+</div>
+</div>
+<!-- Chat Item: Doctor -->
+<div class="flex items-end justify-start gap-2">
+<div class="w-8 h-8 rounded-full bg-cover bg-center shrink-0 border border-gray-100" data-alt="Small avatar of doctor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCIu1FmPQER0zSasyvQsSgSqCG6jHo3YeIrbM_mOTE6_bN4LGLGaFSWb3dslWWQnc4w_jRfCY8v2VZs7XD4fOYjxhEr7O27v_zwtcYGvz45EeXp30MHLDvIX-ykrYcTkk8vxxvw9K9f0OfLdGGb79tU_hMjYsSCby-SKU5HT7z3kxh0jEH-KkY3SHgZGhIsJXjuAe0hw5qnTlxmlcqa38ama9-KeLeUalSPMBkn01bIk5tQn5szIYyek3XyrkccBjchmckh9d1OXXKL');"></div>
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="bg-gray-100 text-text-main px-4 py-3 rounded-2xl rounded-tl-sm text-[15px] leading-relaxed">
+                    Baik, saya resepkan obat penurun panas dan vitamin ya. Silakan ditebus.
+                </div>
+<span class="text-[11px] text-gray-400 mt-1 ml-1">14:34</span>
+</div>
+</div>
+<!-- Chat Item: Doctor Prescription Card -->
+<div class="flex items-end justify-start gap-2">
+<div class="w-8 h-8 rounded-full bg-cover bg-center shrink-0 border border-gray-100" data-alt="Small avatar of doctor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDCkbTjcDr95jAvgDreHaO1ZNgDMXQ3Hedku_kDAJrPV1vC9MHGhWTU5ivbcPHHTx4-KH2Dui5nnNHM3D24e3BaRgRTDlSp26ZnsyFx3aIWTaFjvONQHPAFr8ZffjhsdhSv_A-W2_yyi0e0xLHIjpP7Qqau4eaN7OSODGEu0nkc-b2wrXZy05VYE0_GzL48rbIQwgJDCPZP3y5NOEfUX0W0MtkU-ov_WtA0ei2HkDvSX9mNSDV95ZlrE-TeId0wEWdpaBSAiqUpYhzv');"></div>
+<div class="flex flex-col items-start w-full max-w-[280px]">
+<!-- Medical Card -->
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-card w-full">
+<!-- Card Header -->
+<div class="bg-primary-light px-4 py-3 flex items-center gap-2 border-b border-pink-100">
+<div class="bg-white p-1.5 rounded-full text-primary shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">prescriptions</span>
+</div>
+<h3 class="text-primary font-bold text-sm">Rekomendasi Obat</h3>
+</div>
+<!-- Card Body -->
+<div class="p-4 flex flex-col gap-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 shrink-0">
+<img alt="Medicine bottle" class="w-8 h-8 object-contain mix-blend-multiply" data-alt="Medicine bottle graphic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBoQbKDGOfNlPOq9muvLw4tWrkfGMLkxJz3NS47U6GzptoCXDTCg2LRIrwTRQIhlV3pkMCGqS-SEKfx9EjOHYTYPmKY42xFNUXmGNl1j0AczDCAiT1gFkRzlI0GnsHoVPvcF7amSJ7tl3FIh0U8mdYo1bSaNAIx-RQIP2cWZAJx5BquC8GjYBPsGolIL6UGaNI7yv-X8T5QfySey41RfcSRfcVcBZULbaTPltNjq5HyVKLf5Z9vaHp8vVVM2auKw_icP2fFmnpQ-Nn"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-text-main truncate">Sanmol Syrup 60ml</p>
+<p class="text-xs text-text-secondary">1 Botol • Obat Demam</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 shrink-0">
+<img alt="Vitamin bottle" class="w-8 h-8 object-contain mix-blend-multiply" data-alt="Vitamin bottle graphic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc787fRAtOPIfhpR2OKyBmikdtOVBff4tSVmukNLA0xt8GNxb-dCrrM3exj-P9XHUeVtSO65GsLIw7dXOfZW3jKzjcLCS0Ui5dGiE7tcwT73r6XGi3b5Nzbha0ZP5kzcZw-lgTd28ux3FzCYX0YUC0rdV2ejE7pT6FtrA5Epv1_tn4iBJz7bcEi003m6QlO7gLpuWJiObwMwdECx-LRNoeYI1GhjJmF3RGEaSXxPVAexp2fYNcMMyEotookDfWQFpRAntKCbrz4tJE"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-bold text-text-main truncate">Imboost Kids Syrup</p>
+<p class="text-xs text-text-secondary">1 Botol • Vitamin</p>
+</div>
+</div>
+<hr class="border-dashed border-gray-200 my-1"/>
+<div class="flex justify-between items-center">
+<span class="text-xs text-text-secondary font-medium">Total Estimasi</span>
+<span class="text-sm font-bold text-text-main">Rp 85.000</span>
+</div>
+<button class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2.5 rounded-lg text-sm transition-colors shadow-sm shadow-pink-200 mt-1">
+                            Beli Sekarang
+                        </button>
+</div>
+</div>
+<!-- End Medical Card -->
+<span class="text-[11px] text-gray-400 mt-1 ml-1">14:35</span>
+</div>
+</div>
+<!-- Spacer for scrolling -->
+<div class="h-2"></div>
+</main>
+<!-- Input Area -->
+<footer class="flex-none bg-white border-t border-gray-100 p-3 pb-6 safe-area-bottom">
+<!-- Quick Suggestions (Optional, can be hidden) -->
+<div class="flex gap-2 overflow-x-auto pb-3 scrollbar-hide">
+<button class="whitespace-nowrap px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-xs font-medium text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors">
+                Terima kasih dok
+            </button>
+<button class="whitespace-nowrap px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-xs font-medium text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors">
+                Baik dok
+            </button>
+<button class="whitespace-nowrap px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-full text-xs font-medium text-text-secondary hover:bg-gray-100 hover:text-primary transition-colors">
+                Aturan pakainya bagaimana?
+            </button>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-gray-400 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-gray-50 text-text-main placeholder-gray-400 text-sm rounded-full py-3 pl-4 pr-10 border-none focus:ring-1 focus:ring-primary focus:bg-white transition-all shadow-sm" placeholder="Ketik pesan..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span>
+</button>
+</div>
+<button class="text-gray-400 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-2xl">photo_camera</span>
+</button>
+<button class="bg-primary/10 text-primary p-2 rounded-full hover:bg-primary hover:text-white transition-colors flex items-center justify-center w-10 h-10">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cinema XXI - Sedang Tayang</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4c025",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#121008", // Even darker for cinematic feel
+                        "surface-dark": "#231e10",
+                    },
+                    fontFamily: {
+                        "display": ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased min-h-screen flex flex-col">
+<!-- Sticky Header Section -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-[#342d18]">
+<!-- Top Bar: Logo & Actions -->
+<div class="flex items-center justify-between px-4 pt-12 pb-2">
+<div class="flex items-center gap-2">
+<!-- Logo Icon -->
+<div class="text-primary material-symbols-outlined text-[28px]">movie</div>
+<h1 class="text-white text-xl font-bold tracking-tight">Cinema XXI</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#342d18] transition-colors text-white relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-background-dark"></span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#342d18] transition-colors text-white">
+<span class="material-symbols-outlined">confirmation_number</span>
+</button>
+</div>
+</div>
+<!-- Location Selector -->
+<div class="px-4 pb-3">
+<button class="flex items-center gap-2 text-white bg-surface-dark border border-[#342d18] px-3 py-2 rounded-lg w-full active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+<div class="flex flex-col items-start flex-1">
+<span class="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Lokasi Saya</span>
+<span class="text-sm font-bold truncate">Plaza Indonesia XXI</span>
+</div>
+<span class="material-symbols-outlined text-gray-400">expand_more</span>
+</button>
+</div>
+<!-- Search Bar -->
+<div class="px-4 pb-3">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-gray-400 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 border-none rounded-lg leading-5 bg-surface-dark text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:bg-[#2a2415] sm:text-sm transition-all" placeholder="Cari judul film, bioskop..." type="text"/>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex border-b border-[#342d18] px-4">
+<button class="flex-1 pb-3 pt-2 text-center relative text-primary font-bold text-sm">
+                Sedang Tayang
+                <div class="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-t-full shadow-[0_-2px_6px_rgba(244,192,37,0.4)]"></div>
+</button>
+<button class="flex-1 pb-3 pt-2 text-center text-gray-400 font-medium text-sm hover:text-white transition-colors">
+                Akan Datang
+            </button>
+</div>
+</header>
+<!-- Main Content: Movie Grid -->
+<main class="flex-1 overflow-y-auto px-4 py-6">
+<div class="grid grid-cols-2 gap-4 pb-24">
+<!-- Movie Card 1 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Gladiator II" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Gladiator II Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDySRApqBanoWlttdhLs2dKudkT1GwMwtZebUoHhAzSoNtMNMKerzw05JfpWIjDQzc6lNdpDvBit5K1_JfVQAWiPw56BX69VnEV_p-XXDuw0OwzR8VhyfEH95qPQ7FMl-FXcpqH9P-HrXHVpa9L0HQuk7D3IBvGrQ-BYnwEPM2j2HHdJCLxg_4nelpVBcM8TwOELdDUfMMI-uVHjtLu_aZBIZml1UFWkeqTIUW1ZpwIqIKSRzphV3wXkJ2Rf47DNMz5GJOEX1uM6PqR"/>
+<!-- Rating Badge -->
+<div class="absolute top-2 left-2 px-2 py-1 bg-red-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-red-500/30">
+                        17+
+                    </div>
+<!-- Format Badge -->
+<div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[10px] font-bold text-white border border-white/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] text-primary">theaters</span> IMAX
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Gladiator II</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Action, Adventure, Drama</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">9.2</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Wicked" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Wicked Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3p5awK46sgqRtrdtbzBgKX2g6LIdUkxeKrxWhM9gvqv1jMKHKsAl--kDm_bThhuaMyoN4gZ6rDeiPRTmpPm9GfUHYKzSXcQMxB_c1LCbvXtNQ_jmKyxhlg-C3SwYvU8pUEavPHZr5SRjEjVeJYFGqm7P6DrWbdSLsf7RPKn0PR5yCd4nPA-FSU2kUw9GarOdeHy4OwxNkQMowFcOjfchAxtYDd-vscidbCYAjFfjBqLrJqQfEiJwqv4XhTqYW1fHf-H1XFJZ86T1q"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-green-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-green-500/30">
+                        SU
+                    </div>
+<div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/60 backdrop-blur-sm rounded text-[10px] font-bold text-white border border-white/20 flex items-center gap-1">
+                        Dolby
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Wicked</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Fantasy, Musical, Romance</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">8.8</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 3 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Moana 2" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Moana 2 Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPLg8OObHPcHpqCXoLr2ARfltcvCem7XI1qXo4uVNsRNUqCNzQATmalBSSLTgJrxDpDULLUNelO9QHU6xtaAWpISKNibWUaMuFbbRk17DesDYH72mnwy100gvktSkU3wdlJAVSjKjNA7b3Rhd9dCn8fuLuId4X6dO8Q_L_hg-A7u0w24zRbDoZyg9COWA1EpljqgsYk3O5pzsMIJth48RwNbIcIAnaazQaVhxqq0VlqcreRFkRe4YQuKcp0-PrUEd1wQnbcnmmUT1a"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-green-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-green-500/30">
+                        SU
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Moana 2</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Animation, Adventure</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">8.5</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 4 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Venom: The Last Dance" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Venom The Last Dance Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdM2K0E8LOrl8_DxylT1W8tCYLGtowT1lwPmsaycBpTthliI2rdEXQGGOkudxpLeD0_7GDiWbpuSl0DTXhoP8s2zYS8TBFEn0QAru7ZSdiA3yQcTNzgymfEnzSyXk1l2Z_3KYTSQNq3psuVo9w5Wl5cplcucuzQqg249nxIBOuwg55RgV51-uXkKvrGLcuZKoYLm_y6V5z9CQ-hjvDrPBQUs40JfisZFCM0cLRQxsorAixhXqpEq1YC0yOdO-FLsI-zH01ZdXz51bs"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-yellow-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-yellow-500/30">
+                        13+
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Venom: The Last Dance</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Action, Sci-Fi</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">7.9</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 5 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Red One" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Red One Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcyDl1xRk3b374iFUuTIN5HU4XUCGJTw3LnKK4eVofUaDWLlmkAUYYXVcyrxzkT1QY7GQRBM1WDLhmFroI-y2LtvHv703WwNFH7vdfK9gjamG0Vmi-rTdU3ks8XMW2RDK6WSXd5pdbx_ZYbYce74QQ8kBjJKYGNa9ste1nEjfyVmmSPPA_w0lD_RKigBDGVWRFyOja3J_xF2_nKWyvAs-ayruyTH8bB9Cq3el6tQhw8KbQG8d5Kg_9ocK8CIDxxAfRWhAKAYSD6u4x"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-yellow-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-yellow-500/30">
+                        13+
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Red One</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Action, Comedy</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">8.1</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 6 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-lg">
+<img alt="Poster for Wonka" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Wonka Movie Poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfYLttX8s9LFsKP58Vms5Fsu9s52_UypY5nqbENyFe0yypzpJaEVaV69rzei5cMlGQ8F31XiysfqdnQRMXf-CIRJMSWBfLVT83WFWBPpA-vkewozBCb0rZkSkQoPVwQt-1vGYYoCksX7KjRXIE3MG5vbaRwW_eAGT-7_16W8LX4vK3H5vqcZuxy-VV5CJr4jbtxcGhPMYFGdkLFKKfBjFWlkoV4PQ10saMbTsoiGtAUdQfJROIR5_iTHOalgxQ-IR1pWFvUcUvxVSB"/>
+<div class="absolute top-2 left-2 px-2 py-1 bg-green-600/90 backdrop-blur-sm rounded text-[10px] font-bold text-white shadow-md border border-green-500/30">
+                        SU
+                    </div>
+</div>
+<div class="flex flex-col">
+<h3 class="text-white font-bold text-base leading-tight truncate">Wonka</h3>
+<p class="text-gray-400 text-xs mt-1 truncate">Adventure, Comedy</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill-current">star</span>
+<span class="text-white text-xs font-bold">7.2</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 w-full z-40 bg-surface-dark border-t border-[#493f22]">
+<div class="flex justify-between items-center px-6 py-2">
+<!-- Tab 1: Beranda (Active) -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="p-1 rounded-full group-hover:bg-[#493f22] transition-colors">
+<span class="material-symbols-outlined text-white text-[24px] filled">home</span>
+</div>
+<span class="text-[10px] font-medium text-white">Beranda</span>
+</a>
+<!-- Tab 2: Bioskop -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="p-1 rounded-full group-hover:bg-[#493f22] transition-colors">
+<span class="material-symbols-outlined text-[#cbbc90] text-[24px]">theater_comedy</span>
+</div>
+<span class="text-[10px] font-medium text-[#cbbc90] group-hover:text-white transition-colors">Bioskop</span>
+</a>
+<!-- Tab 3: Makanan -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="p-1 rounded-full group-hover:bg-[#493f22] transition-colors">
+<span class="material-symbols-outlined text-[#cbbc90] text-[24px]">fastfood</span>
+</div>
+<span class="text-[10px] font-medium text-[#cbbc90] group-hover:text-white transition-colors">Makanan</span>
+</a>
+<!-- Tab 4: Tiket Saya (New addition typical for cinema apps) -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="p-1 rounded-full group-hover:bg-[#493f22] transition-colors">
+<span class="material-symbols-outlined text-[#cbbc90] text-[24px]">confirmation_number</span>
+</div>
+<span class="text-[10px] font-medium text-[#cbbc90] group-hover:text-white transition-colors">Tiket</span>
+</a>
+<!-- Tab 5: Akun -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="p-1 rounded-full group-hover:bg-[#493f22] transition-colors">
+<span class="material-symbols-outlined text-[#cbbc90] text-[24px]">account_circle</span>
+</div>
+<span class="text-[10px] font-medium text-[#cbbc90] group-hover:text-white transition-colors">Akun</span>
+</a>
+</div>
+<!-- Safe Area for iPhone Home Indicator -->
+<div class="h-5 w-full bg-surface-dark"></div>
+</div>
+</body></html>

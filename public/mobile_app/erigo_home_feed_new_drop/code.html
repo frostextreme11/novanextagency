@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Erigo Home Feed New Drop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f27f0d",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto shadow-2xl overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-background-dark/95 backdrop-blur-sm border-b border-white/10">
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">menu</span>
+</button>
+<h1 class="text-2xl font-bold tracking-widest text-white uppercase italic">ERIGO</h1>
+<button class="relative text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">shopping_bag</span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-black">2</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 pb-24">
+<!-- Hero Section -->
+<div class="relative w-full h-[520px] overflow-hidden">
+<div class="absolute inset-0 bg-gray-900">
+<img alt="Male model wearing streetwear fashion bomber jacket in urban setting" class="h-full w-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSHfjwtk5gJ8AEb9094mlewmrqvBOTPODu4xMeQ0HfHhpjy1rcXsIx13neN9ppKSV0a3Zjc4ZpF8rFC4McUGY_mfFjQijg5Hx3LmtV85QV2u1Tfo2llB6g6kk-AnHwha4doL-j2guVnqpG25B8YKptSgg_clAM3iGGuBTpJTTfhLHJ7sUNVgvG4FqH5cdq_hwrbWAtBDxItbdDMRq6tCPwWF4ulmOUsYO3h16zq--RwV0GIerb0IA3ctR0xF_BjB_nYcX3AiQeDi1d"/>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent"></div>
+</div>
+<div class="absolute bottom-0 left-0 w-full p-6 flex flex-col gap-3 items-start">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 border border-primary/50 backdrop-blur-md mb-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse mr-2"></span>
+<span class="text-xs font-bold text-primary uppercase tracking-wider">Limited Release</span>
+</div>
+<h2 class="text-5xl font-black text-white leading-[0.9] tracking-tighter uppercase drop-shadow-lg">
+                        NEW<br/>DROP
+                    </h2>
+<p class="text-gray-300 text-sm max-w-[80%] font-body leading-relaxed mb-4">
+                        Koleksi streetwear terbaru musim ini. Tampil beda dengan gaya urban utility yang fungsional.
+                    </p>
+<button class="group relative flex items-center justify-center gap-2 bg-primary hover:bg-white text-black px-6 py-3.5 rounded-lg w-full font-bold uppercase tracking-wider transition-all duration-300 overflow-hidden">
+<span class="relative z-10">Cek Koleksi Terbaru</span>
+<span class="material-symbols-outlined relative z-10 group-hover:translate-x-1 transition-transform text-lg">arrow_forward</span>
+<div class="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+</button>
+</div>
+</div>
+<!-- Categories Scroll -->
+<div class="mt-6 mb-2">
+<div class="flex items-center justify-between px-4 mb-3">
+<h3 class="text-lg font-bold text-white uppercase tracking-tight">Kategori</h3>
+<a class="text-xs text-primary font-bold hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="flex gap-3 overflow-x-auto px-4 pb-4 no-scrollbar snap-x">
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white text-black rounded-lg font-bold text-sm border border-transparent whitespace-nowrap">
+                        All
+                    </button>
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+                        T-Shirts
+                    </button>
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+                        Hoodies
+                    </button>
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+                        Jackets
+                    </button>
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+                        Accessories
+                    </button>
+<button class="snap-start shrink-0 px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+                        Pants
+                    </button>
+</div>
+</div>
+<!-- Trending Grid -->
+<div class="px-4 mt-4">
+<div class="flex items-end justify-between mb-5">
+<div>
+<h3 class="text-2xl font-black text-white uppercase italic tracking-tighter">SEDANG HYPE</h3>
+<p class="text-xs text-gray-400 font-body">Paling banyak dicari minggu ini</p>
+</div>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-white/5 hover:bg-white/20 text-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-black hover:bg-primary/80 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Product Card 1 -->
+<div class="group relative flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-800">
+<img alt="Man wearing black oversized graphic t-shirt" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5gImBf7tqSD20R0x7ArBiFAglOiRukUGUTe6JlS2VWoVodkB6S6efitIKh-0YzBSmeYGBznc8Bxd1NyH8HuymOtJx4H16vSb-5CzSJkH6eQ_e4BSWw87R7ySGrWvkEEmGjYOnw56pI4vwOPs3U3NzJN2iTRgMBT0yQouHvtPtStDy0OTRRcZ12rdmJLbN4cd4NagexhXDbfppWlmOzksNqzQZFGF-I14VK2K2kPUnXTy7BkBnfCDIUAxom8QVYlH5ND2Mnp8xzpkD"/>
+<div class="absolute top-2 right-2 z-10">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+<span class="inline-block bg-black text-white text-[10px] font-bold px-2 py-1 rounded">BEST SELLER</span>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white uppercase truncate">Oversized Tee Tokyo</h4>
+<p class="text-xs text-gray-400 truncate mb-1">Cotton Combed 24s</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">Rp 125.000</span>
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-800">
+<img alt="Folded olive green bomber jacket on concrete texture" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFDgqcKv2L4wh0LCeUlYIS-0qyw-DfRIYgcCEIXX6PUByBMO4nkPodQmEUXzxEJEN9ZJhxhrrMWWQwT7PKKbw9Q3yCA5RMiOB4qdPFnjOctyktE_JpPkccLU6QNpbdMEnvWRUjD3XZAUgZ9O2OamA5g5HWhVhoOW8tFFb64vzK5bwRgex1wahbcw610Gy4Y8V47a80nPjYGxvju2g8IEqFWbavoaHN0a0GVi6lqL0d6Jm2980JrlfEXfpaL6uCBVNF_f6CDpjc0F1V"/>
+<div class="absolute top-2 right-2 z-10">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white uppercase truncate">Bomber Flight Jacket</h4>
+<p class="text-xs text-gray-400 truncate mb-1">Water Resistant</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">Rp 450.000</span>
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group relative flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-800">
+<img alt="Detail of beige cargo pants with pockets" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAVjsjGipZ3pl-tsR87yNpkXtLfkxAbhejRNjqy1ofJ-vt9CRmPcEiI-IMKoKZm3ytuETb9xHAvBdpRgZW0TjdXZCXQBTsF7DiXmRg79Cv7JKQmibatv2cuHAnwJwYSOibf30_TbTcud46dGCLr2td7l_-yXkmTh760w9SJEux4PUNAI_soGmFHBos_u4H84NAMAdXRJChCyOK-PyWSlMEshwIIo7PCiegTQUKcCjTRI_YKE4jWJNMwMtg_5sX-A95RkFCCJEqxKWg"/>
+<div class="absolute top-2 right-2 z-10">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+<span class="inline-block bg-primary text-black text-[10px] font-bold px-2 py-1 rounded">NEW</span>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white uppercase truncate">Cargo Pants Olive</h4>
+<p class="text-xs text-gray-400 truncate mb-1">Relaxed Fit</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">Rp 300.000</span>
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group relative flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-800">
+<img alt="Black streetwear hoodie with white typographic print" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7WGPh9xst52EnsjMWTH9YwM3GB_9gKHemBIc5wdp03j5f3EP_5wjyFKDdYJjrUmpwejU-Gk3MfYvEBhUrUwsOPDY-YpPA3apa6ag-ZqycrntZsItMvqDjQAngK01E7o1qm-_yVg8UA8V7Sc3UONXCbsCAqMb0RzmVYnrm6QJULI_7ndeX4HIdnULmVp_tX4sV2QtRGJf602k9CbkvDwyG5GcX2LNnbvME9l-TWk8XdIXaomdL1d07z8ov5NROQE-TSpZWWikCchyy"/>
+<div class="absolute top-2 right-2 z-10">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white uppercase truncate">Erigo Hoodie Black</h4>
+<p class="text-xs text-gray-400 truncate mb-1">Fleece Heavyweight</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">Rp 275.000</span>
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Special Offer Banner -->
+<div class="px-4 mt-8 mb-6">
+<div class="relative overflow-hidden rounded-lg bg-[#342618] border border-[#493622]">
+<div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 rounded-full bg-primary/20 blur-xl"></div>
+<div class="relative z-10 p-5 flex items-center justify-between">
+<div>
+<p class="text-primary text-xs font-bold uppercase mb-1">Member Exclusive</p>
+<h4 class="text-xl font-bold text-white uppercase leading-tight">Extra Diskon 20%</h4>
+<p class="text-xs text-gray-400 mt-1">Gunakan kode: ERIGOHYPE</p>
+</div>
+<button class="bg-white text-black text-xs font-bold px-4 py-2 rounded uppercase hover:bg-gray-200 transition-colors">
+                            Claim
+                        </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50 bg-background-dark/95 backdrop-blur-lg border-t border-white/5 pb-5 pt-3 px-6">
+<div class="flex justify-between items-center">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center gap-1 group" href="#">
+<div class="relative p-1.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary text-[24px]">home</span>
+</div>
+<span class="text-[10px] font-bold text-primary">Home</span>
+</a>
+<!-- Shop -->
+<a class="flex flex-col items-center gap-1 group text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<div class="relative p-1.5">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<span class="text-[10px] font-medium">Shop</span>
+</a>
+<!-- Wishlist -->
+<a class="flex flex-col items-center gap-1 group text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<div class="relative p-1.5">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</div>
+<span class="text-[10px] font-medium">Wishlist</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center gap-1 group text-gray-500 hover:text-gray-300 transition-colors" href="#">
+<div class="relative p-1.5">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

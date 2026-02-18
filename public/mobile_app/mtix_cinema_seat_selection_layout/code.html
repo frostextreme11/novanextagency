@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cinema Seat Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df20d",
+                        "background-light": "#f5f8f5",
+                        "background-dark": "#102210",
+                        "seat-occupied": "#2A3C2A", 
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(13, 242, 13, 0.5), 0 0 20px rgba(13, 242, 13, 0.3)',
+                        'screen': '0 20px 60px -10px rgba(255, 255, 255, 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .screen-curve {
+            border-bottom-left-radius: 50% 20px;
+            border-bottom-right-radius: 50% 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            box-shadow: 0 10px 30px -5px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 pt-6 z-20 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm sticky top-0">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="text-center flex-1">
+<h1 class="text-lg font-bold leading-tight tracking-tight">Gladiator II</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400">Studio 1 • 14:30</p>
+</div>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-2xl">more_horiz</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto no-scrollbar relative w-full max-w-lg mx-auto pb-32">
+<!-- Screen Visual -->
+<div class="mt-2 mb-8 px-6">
+<div class="w-full h-12 relative flex justify-center">
+<div class="w-full h-4 bg-gradient-to-b from-white/20 to-transparent absolute top-0 left-0 rounded-t-full opacity-50 blur-sm"></div>
+<div class="w-[90%] h-3 bg-white/10 rounded-[50%] shadow-[0_10px_40px_rgba(255,255,255,0.15)] mx-auto"></div>
+<span class="absolute top-8 text-xs font-medium tracking-widest uppercase text-slate-400 dark:text-slate-500">Layar Bioskop</span>
+</div>
+</div>
+<!-- Seat Map Container -->
+<div class="px-4 w-full flex flex-col items-center gap-2 select-none overflow-x-auto">
+<!-- Seat Rows -->
+<!-- Helper class for seat common styles -->
+<!-- Structure: Row Label | Left Block | Aisle | Right Block | Row Label -->
+<!-- Row A -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">A</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">A</span>
+</div>
+<!-- Row B -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">B</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">B</span>
+</div>
+<!-- Row C (Selected) -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">C</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<!-- Selected Seat C4 -->
+<button class="w-8 h-8 rounded-full bg-primary text-black font-bold text-xs shadow-neon flex items-center justify-center transition-transform transform scale-110">4</button>
+</div>
+<div class="flex gap-2">
+<!-- Selected Seat C5 -->
+<button class="w-8 h-8 rounded-full bg-primary text-black font-bold text-xs shadow-neon flex items-center justify-center transition-transform transform scale-110">5</button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">C</span>
+</div>
+<!-- Row D -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">D</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">D</span>
+</div>
+<!-- Row E -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">E</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">E</span>
+</div>
+<!-- Row F -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">F</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">F</span>
+</div>
+<!-- Row G -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">G</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">G</span>
+</div>
+<!-- Row H -->
+<div class="flex items-center gap-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">H</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full bg-seat-occupied border border-transparent cursor-not-allowed opacity-50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">H</span>
+</div>
+<!-- Row J (Wide) -->
+<div class="flex items-center gap-6 mt-6 mb-1">
+<span class="w-4 text-xs font-bold text-slate-500 text-center">J</span>
+<div class="flex gap-2 w-full justify-center">
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+<button class="w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent hover:border-primary/50"></button>
+</div>
+<span class="w-4 text-xs font-bold text-slate-500 text-center">J</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex justify-center items-center gap-6 mt-8 mb-4">
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-500 bg-transparent"></div>
+<span class="text-xs text-slate-400 font-medium">Available</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-seat-occupied opacity-70"></div>
+<span class="text-xs text-slate-400 font-medium">Occupied</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-4 rounded-full bg-primary shadow-neon"></div>
+<span class="text-xs text-primary font-bold">Selected</span>
+</div>
+</div>
+</main>
+<!-- Bottom Action Sheet -->
+<footer class="fixed bottom-0 w-full z-50">
+<!-- Gradient fade -->
+<div class="w-full h-12 bg-gradient-to-t from-background-light dark:from-background-dark to-transparent pointer-events-none"></div>
+<div class="bg-white dark:bg-[#152a15] rounded-t-3xl p-6 pb-8 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] dark:shadow-[0_-5px_30px_rgba(13,242,13,0.05)] border-t border-slate-200 dark:border-white/5">
+<div class="flex justify-between items-end mb-4 max-w-lg mx-auto">
+<div class="flex flex-col gap-1">
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Seat Selected</p>
+<div class="flex items-center gap-2">
+<span class="text-xl font-bold text-slate-900 dark:text-white">C4, C5</span>
+<span class="text-xs font-bold bg-slate-200 dark:bg-white/10 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">Regular 2D</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Total Price</p>
+<p class="text-2xl font-bold text-primary tracking-tight">Rp 120.000</p>
+</div>
+</div>
+<button class="w-full max-w-lg mx-auto bg-primary hover:bg-green-400 active:scale-[0.99] transition-all text-black font-bold text-lg py-4 rounded-full shadow-lg shadow-green-900/20 flex items-center justify-center gap-2 group">
+<span>Beli Tiket</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Buttonscarves Editorial Homepage</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#b81466",
+                        "background-light": "#f8f6f7",
+                        "background-dark": "#211119",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "sans": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom styles for video background to ensure full coverage */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden h-screen w-full relative">
+<!-- Main Container -->
+<div class="relative h-full w-full flex flex-col justify-between">
+<!-- Video Background -->
+<!-- In a real scenario, this would be a video tag. Using an image placeholder with a play button hint as requested in the prompt style but adapting for full screen BG -->
+<div class="absolute inset-0 z-0 bg-black">
+<!-- Simulating video with a high quality image -->
+<img alt="Model wearing elegant silk scarf blowing in the wind" class="video-background opacity-80" data-alt="Cinematic shot of a model wearing a luxurious silk scarf with a dark moody background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGtnLfMJz1dXBk0oO2cxFNisi5e2nq_yPEOm3PMh3mX9KFo1hqrdKT39149I9fwEDp4RDtY1Dk0_7d6u_ZC2KdpT8BgFsuxOuTP206z7P8tNMvPfUjiN2935d5h7H3U-GQqzbETxIHftS7s6Cyc3IqTQcfcprKnl6nPFNIYjc56dm4T6eYgYoXW1OgpLHvbptmyRhzG8Ci6F8mpAbiWklovFsLGaDlAbo9cgnqUSi2NI8Q72buPL727A4noZAvyHBYBlzUm9PmSGO8"/>
+<!-- Overlay Gradient for Readability -->
+<div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
+</div>
+<!-- Top Navigation Area (SafeArea handled by pt-12) -->
+<header class="relative z-20 flex items-center justify-between px-6 pt-14 pb-4 w-full">
+<!-- Left: Menu Icon -->
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">menu</span>
+</button>
+<!-- Center: Logo -->
+<div class="absolute left-1/2 top-14 -translate-x-1/2 flex flex-col items-center">
+<span class="font-display text-3xl font-bold tracking-widest text-white">BS</span>
+</div>
+<!-- Right: Action Icons -->
+<div class="flex items-center gap-4">
+<button class="text-white hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+<button class="text-white hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<!-- Notification Dot -->
+<span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area (Spacer to push content down) -->
+<div class="flex-1 relative z-20 flex flex-col justify-end pb-8">
+<!-- Editorial Content -->
+<div class="px-6 pb-6 text-center">
+<span class="inline-block py-1 px-3 border border-white/30 rounded-full text-xs uppercase tracking-widest mb-4 bg-black/20 backdrop-blur-sm">New Collection</span>
+<h1 class="font-display text-5xl md:text-6xl font-medium leading-tight mb-2 tracking-tight drop-shadow-lg">
+                    The Lady L <br/> <span class="italic font-light">Series</span>
+</h1>
+<p class="text-gray-200 text-sm md:text-base font-sans font-light mb-8 max-w-xs mx-auto leading-relaxed opacity-90">
+                    Experience the new definition of timeless luxury. Elegance in every fold.
+                </p>
+<!-- Primary CTA Button -->
+<button class="w-full bg-primary text-white font-sans font-medium text-sm tracking-wide py-4 px-8 rounded shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 mb-6">
+                    JELAJAHI SEKARANG
+                </button>
+<!-- Progress Indicators -->
+<div class="flex justify-center gap-2 mb-4">
+<div class="h-1 w-6 bg-white rounded-full"></div>
+<div class="h-1 w-6 bg-white/30 rounded-full"></div>
+<div class="h-1 w-6 bg-white/30 rounded-full"></div>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Floating/Sticky) -->
+<div class="mx-4 mb-2 rounded-2xl overflow-hidden bg-[#22111a]/90 backdrop-blur-md border border-white/10 shadow-2xl">
+<div class="flex justify-between items-center px-2 py-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-white group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors fill-current">home</span>
+<span class="text-[10px] font-sans opacity-80 group-hover:text-primary">Home</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-[#c893ad] group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">category</span>
+<span class="text-[10px] font-sans opacity-60 group-hover:text-primary">Shop</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-[#c893ad] group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">favorite</span>
+<span class="text-[10px] font-sans opacity-60 group-hover:text-primary">Wishlist</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-[#c893ad] group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">person</span>
+<span class="text-[10px] font-sans opacity-60 group-hover:text-primary">Profile</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

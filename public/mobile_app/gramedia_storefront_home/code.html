@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gramedia Digital Storefront</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&amp;family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "surface-light": "#ffffff",
+              "surface-dark": "#1e2936",
+            },
+            fontFamily: {
+              "display": ["Noto Serif", "serif"],
+              "body": ["Noto Sans", "sans-serif"],
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem",
+              "lg": "1rem",
+              "xl": "1.5rem",
+              "full": "9999px",
+            },
+            boxShadow: {
+              "book": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0,0,0,0.05)",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col overflow-x-hidden antialiased selection:bg-primary/20">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 pb-2">
+<div class="px-5 pt-12 pb-2 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs font-body font-medium text-slate-500 dark:text-slate-400">Selamat Pagi, Pembaca</span>
+<h1 class="text-xl font-bold tracking-tight text-primary dark:text-primary">Gramedia Digital</h1>
+</div>
+<button class="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-700 dark:text-slate-300">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></span>
+</button>
+</div>
+<div class="px-5 pb-3">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary/70">search</span>
+</div>
+<input class="block w-full rounded-xl border-none bg-slate-100 dark:bg-slate-800 py-3 pl-10 pr-4 text-sm font-body text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:ring-2 focus:ring-primary/50 transition-all shadow-sm" placeholder="Cari buku, penulis, atau majalah..." type="text"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 pb-24 space-y-8 pt-6">
+<!-- Hero Carousel (Terlaris) -->
+<section class="flex flex-col gap-4">
+<div class="px-5 flex items-end justify-between">
+<h2 class="text-2xl font-bold leading-tight">Terlaris Minggu Ini</h2>
+<a class="text-sm font-body font-semibold text-primary hover:text-primary/80" href="#">Lihat Semua</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-5 pb-6 pt-2 no-scrollbar snap-x snap-mandatory">
+<!-- Book Card 1 -->
+<div class="snap-center shrink-0 w-[160px] flex flex-col gap-3 group">
+<div class="relative w-full aspect-[2/3] rounded-lg shadow-book overflow-hidden bg-slate-200 dark:bg-slate-800 transition-transform duration-300 group-hover:-translate-y-1">
+<img alt="Book cover abstract minimalist blue art" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAglE7w6tOz0beQfKKJlXh-LYgKS2WUlgt9yRyadTxVVyjbV7_QZfxbnYnJ6bDx8aMSndpITEKoyw-Mk0MapPgN7ggHOBE7xu8OHrqYJXCA2Lbqtuo5rH4Xekh6tVX4FWUNkmNFl6tFavj6GBOpxe25Sz4MiOWmyHShKf5nDxvMda8h3NKNdMPVhp-EuGGzRbzrCOQtSRFgJx7a0MKSyTMd77MwaKxtl-710FEnb-jw2T0E4JI6VvP8dnuxs5myantnF0ocdwcvEovv"/>
+<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                            #1
+                        </div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-bold text-base leading-snug line-clamp-2">Laut Bercerita</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400">Leila S. Chudori</p>
+<p class="text-sm font-bold text-primary mt-1">Rp 95.000</p>
+</div>
+</div>
+<!-- Book Card 2 -->
+<div class="snap-center shrink-0 w-[160px] flex flex-col gap-3 group">
+<div class="relative w-full aspect-[2/3] rounded-lg shadow-book overflow-hidden bg-slate-200 dark:bg-slate-800 transition-transform duration-300 group-hover:-translate-y-1">
+<img alt="Book cover philosophical abstract geometry" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWX5iNOVKTRffsZUXSaj-EGP8NHaktonKil6LW2YHEUx0VQKlutMPAyC3dv6tvcQTrhSq-b5TfFUde_HVaPl9tcPhSd2wa0Q6XaNHTOwmOc4apgzlLYWOO36PSaNg_37AfCim0B-WZO9xtXi9TOhPju1S4BECXYliJl0JfzsLFF3Tks4cmIUgb9ZF3y8PNTMzNU6bX8E_owPb4kkR-Rmj20PaW65TF_Y7q1tcCrDyygm4L5S4PutjS2dgJkKrzQaAsm_STcI9-E08s"/>
+<div class="absolute top-2 left-2 bg-slate-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                            #2
+                        </div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-bold text-base leading-snug line-clamp-2">Filosofi Teras</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400">Henry Manampiring</p>
+<p class="text-sm font-bold text-primary mt-1">Rp 88.000</p>
+</div>
+</div>
+<!-- Book Card 3 -->
+<div class="snap-center shrink-0 w-[160px] flex flex-col gap-3 group">
+<div class="relative w-full aspect-[2/3] rounded-lg shadow-book overflow-hidden bg-slate-200 dark:bg-slate-800 transition-transform duration-300 group-hover:-translate-y-1">
+<img alt="Book cover productivity modern clean" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7PB-IgUOI13NPOCX9x9HSVEMhXK4ZsqUPhlvRlhaiFm0kJtkYDqZ7zAdIDBaZ3dtQGoJmOL1qiUA-BwDG4F2A0Mdgw2JHLW0qPMMOCvr_w7yHljWEdWgYs13nEoDVQ6eupaK-CI926pfjY4RcaeHSJIsaB-M2zn7DkD4Ys0QE1YF-3JX2j99XDjDEdHUuXSlYUEmWjna4fK-oOqgR7D3tIiNgsEODYz9qKS0BCEiyEVF8gmIPRWqL1x-Tp1qAYRwhefaAEx2eIKL2"/>
+<div class="absolute top-2 left-2 bg-slate-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                            #3
+                        </div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-bold text-base leading-snug line-clamp-2">Atomic Habits</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400">James Clear</p>
+<p class="text-sm font-bold text-primary mt-1">Rp 108.000</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories / Quick Filters -->
+<section class="px-5">
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-body font-medium whitespace-nowrap shadow-md shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">auto_stories</span>
+                    Semua
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-body font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Fiksi
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-body font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Bisnis &amp; Ekonomi
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-body font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Pengembangan Diri
+                </button>
+</div>
+</section>
+<!-- New Arrivals Grid -->
+<section class="flex flex-col gap-4 px-5">
+<div class="flex items-end justify-between">
+<h2 class="text-xl font-bold leading-tight">Buku Terbaru</h2>
+<a class="text-sm font-body font-semibold text-primary hover:text-primary/80" href="#">Lihat Semua</a>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-8">
+<!-- Item 1 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[2/3] rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden relative shadow-sm">
+<img alt="Book cover artistic novel design" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkddDq7bf3keWkLdqW85it2dNhcSza9EWGuX647QRN58lFo1_OXLdz5nn7-_GV4mNkRwXA5iJv3mRvxBDiJKDImDzrskXF8aVQfhqFVxxj5wqdyfjaVPh6vgthpLbqjLUn8vDBGQ8hqj0-79_TzpZDnbTORvRzDs2NkipgXU8YtWy88TRXrMH2MjM0N0F7EdCQjYtt-gDr-83qY_KPCP1HCd7IdRWYh6eW6DtpwJmCk1XmixE2QOiBogefHBj3LU2BCkHsmVIapLb2"/>
+<button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 dark:bg-black/60 backdrop-blur rounded-full flex items-center justify-center text-slate-900 dark:text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="font-bold text-sm line-clamp-2 mb-0.5">Cantik Itu Luka</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400 truncate">Eka Kurniawan</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[2/3] rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden relative shadow-sm">
+<img alt="Book cover warm tone fiction" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIOK2-rV8Qu_3DiLfiydZjg0O9dvwpjUGcs_WpGwzPtMxxi1HoeU-vKhdZgJUjaNDzAkvwKtRTWG6HWkmDR_XvnQGNVhkcEmP_qzena1QyJe_kxz-9REzVbBAnFHhw7M3_XqFv-MsKolZKck9XlBtyil8jpgfih1KX42uMPPC3xU579Xe2SgXaU_SDk_vM3Kf8NUKC02V_BH7LSvA9o83RK05ZX4S_Ee2Z7mQhWeteCxeQNf4QVDviWrXrUubyABgnrq-nJhF_j8Dd"/>
+<button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 dark:bg-black/60 backdrop-blur rounded-full flex items-center justify-center text-slate-900 dark:text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="font-bold text-sm line-clamp-2 mb-0.5">Sapiens: Riwayat Singkat</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400 truncate">Yuval Noah Harari</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[2/3] rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden relative shadow-sm">
+<img alt="Book cover dark moody mystery" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjUI6OmwUHbUW2IBekJqN1FOdSYZZe2CeOAsHMsNlqYwy2kF3IOCkJdu1sdED-ux3agXIQYDIVCh4GXCu4ULYmnkXC3ResWkLJ-LFD3KUdNepmk_08I2GgQETFc-_Bk24Z-TO3TvGp7zglyAjmPvdS1PE_nOgYGC-MWuBCj2g2_4F9w2nIiZ9qunPUmThv0knVdHaGlD6SoHAQoiCqtrtD0eQUDbJw5HCcG19mlGurrBTVSE8-CXKfQ5fbMPZksXq5ooJKTGPffKjd"/>
+<button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 dark:bg-black/60 backdrop-blur rounded-full flex items-center justify-center text-slate-900 dark:text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="font-bold text-sm line-clamp-2 mb-0.5">Gadis Kretek</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400 truncate">Ratih Kumala</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col gap-2">
+<div class="aspect-[2/3] rounded-lg bg-slate-200 dark:bg-slate-800 overflow-hidden relative shadow-sm">
+<img alt="Book cover classic literature feel" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8HskWD0CRtV1jYwIlTS-TivG9ew6MfGV_gRC1SznZR-VkMbJ-gxvEWLUdvWUH14-GKabf2wo4Kv5g7OI4zdtBauPhCawW4g3KHIDbh97vhcXpbspsVgnCoOiST_gy3r40r6cR0mPX2Go2oFggSOwOubIwMFvCYt0wnRZihX3B15jK8G0VzYRXQl7jcc603Lx5rnYtKt3N_QsULt1pRr8oEMM871Tx13TUIwGg-TJP7CYgm9Z81dICdqcwNr9B4hQKEYA2DGDEhWI6"/>
+<button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 dark:bg-black/60 backdrop-blur rounded-full flex items-center justify-center text-slate-900 dark:text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">bookmark</span>
+</button>
+</div>
+<div>
+<h3 class="font-bold text-sm line-clamp-2 mb-0.5">Bumi Manusia</h3>
+<p class="text-xs font-body text-slate-500 dark:text-slate-400 truncate">Pramoedya Ananta Toer</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Popular Magazines -->
+<section class="flex flex-col gap-4 bg-white dark:bg-surface-dark py-8">
+<div class="px-5 flex items-end justify-between">
+<h2 class="text-xl font-bold leading-tight">Majalah Populer</h2>
+<a class="text-sm font-body font-semibold text-primary hover:text-primary/80" href="#">Lihat Semua</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-5 no-scrollbar snap-x snap-mandatory">
+<!-- Magazine 1 -->
+<div class="snap-center shrink-0 w-[200px] group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden shadow-book mb-3 bg-slate-100 dark:bg-slate-800 relative">
+<img alt="Magazine cover national geographic style" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTC10nmaGk9rZrdfSSdyHDeBRBOOM_OnjYQYW0_6Tq0UlHg1hctdnTG3RtQDgCZmnnk0-tR15TIY4FenCJ7LBUnUURpE8HZREkfJmuktUtyvLnlixdB-TbWcR6L2cr9WX3kwMi3n-cdTu8oiJzCJRZK-VlcbSdTMnHCNugU2zDpwsEFV3NCw2xK3Yjywp3AbNv7qaDoawDB-6p_-6EDC0lR2ooeVI4cg-71lC_ID3pFKt6FvgIreCd5YsK9mv4JKc-juEIdr8nGEdL"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+<span class="absolute bottom-3 left-3 text-white text-xs font-bold bg-primary/90 px-2 py-0.5 rounded">Edisi Baru</span>
+</div>
+<h3 class="font-bold text-base leading-tight">National Geographic ID</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sains &amp; Alam</p>
+</div>
+<!-- Magazine 2 -->
+<div class="snap-center shrink-0 w-[200px] group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden shadow-book mb-3 bg-slate-100 dark:bg-slate-800 relative">
+<img alt="Magazine cover tech and business" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-8TshhqKXGfImyHjSWxURsVbzxf-y0PW9e-FJ6LixZhXpmVRmzuJasutixqXCI55RN9XWEFnGfJ-PXQkG7TpIg5qQVRcudlW8DYwFMNb3rdsPWE8vTcMipW0zwX9la2vRN8M5s5lnt-HitRtji35dq4NBk5GMPCvxTnzYFBF9PzJcaBlCM2wtFpryRMkOXrqpDGvSVh99pDEXaIewmwAF2AmamY5mwxU-gCqJdZGuezoupqHP0ZoHd1VjhL3hqgrhfJCR5qcn1WoE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+</div>
+<h3 class="font-bold text-base leading-tight">Forbes Indonesia</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Bisnis</p>
+</div>
+<!-- Magazine 3 -->
+<div class="snap-center shrink-0 w-[200px] group cursor-pointer">
+<div class="aspect-[3/4] rounded-lg overflow-hidden shadow-book mb-3 bg-slate-100 dark:bg-slate-800 relative">
+<img alt="Magazine cover interior design" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhtSV0Wtym8mrirAnH7w5bGrietOJaMYGHTFEDrdNVTFngVbl9onsk66K1PA7odQlNv3XM1nLyzFoCPEcObnxGxgcIm6l24e45UzVsKMoDM3UVJ4SKg5L9OxYXQWF1bEU3kZ_NhZaBe68f8nVgo_aJVUyfUj_Mz7cYiBsNiCZQbeCTaM_SFuQtH8Y4qR4eIRkqLHvkuPPHMwBbNTuevItf3i20AHbKjYQwKbZjdOkNO9nwiQNIMRpqBKB4kOV4DoJIzWxRCFzS9xLo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+</div>
+<h3 class="font-bold text-base leading-tight">Home Living</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Gaya Hidup</p>
+</div>
+</div>
+</section>
+<!-- Premium Banner -->
+<section class="px-5">
+<div class="relative w-full rounded-2xl overflow-hidden bg-primary shadow-lg p-6 flex flex-col justify-center items-start text-white">
+<div class="absolute right-0 bottom-0 w-32 h-32 bg-white/10 rounded-full translate-y-10 translate-x-10 blur-2xl"></div>
+<div class="absolute left-10 top-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 blur-xl"></div>
+<span class="inline-block px-2 py-1 bg-white/20 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3 backdrop-blur-sm">Premium</span>
+<h2 class="text-2xl font-bold mb-2">Akses Tanpa Batas</h2>
+<p class="text-white/90 text-sm font-body mb-5 max-w-[70%]">Baca ribuan buku, majalah, dan koran digital hanya dengan satu langganan.</p>
+<button class="bg-white text-primary px-5 py-2.5 rounded-lg text-sm font-bold shadow-md hover:bg-slate-50 transition-colors">
+                    Mulai Berlangganan
+                </button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-40 border-t border-slate-200 dark:border-slate-800 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center w-full gap-1 group" href="#">
+<span class="material-symbols-outlined text-primary text-[28px] transition-transform group-hover:scale-110">home</span>
+<span class="text-[10px] font-medium text-primary">Beranda</span>
+</a>
+<!-- Koleksi -->
+<a class="flex flex-col items-center justify-center w-full gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-[28px] group-hover:text-primary transition-colors">menu_book</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">Koleksi</span>
+</a>
+<!-- Store -->
+<a class="flex flex-col items-center justify-center w-full gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-[28px] group-hover:text-primary transition-colors">shopping_bag</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">Store</span>
+</a>
+<!-- Akun -->
+<a class="flex flex-col items-center justify-center w-full gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500 text-[28px] group-hover:text-primary transition-colors">account_circle</span>
+<span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">Akun</span>
+</a>
+</div>
+<!-- iOS Home Indicator Spacing -->
+<div class="h-5 w-full"></div>
+</nav>
+</body></html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detail Unit Apartemen - Travelio</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2460d",
+                        "background-light": "#ffffff", // Changed to pure white per request
+                        "background-dark": "#221410",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#1c110d] antialiased">
+<!-- Mobile Container -->
+<div class="relative mx-auto flex min-h-screen w-full max-w-md flex-col overflow-hidden bg-background-light dark:bg-background-dark shadow-xl pb-24">
+<!-- Top Navigation Overlay -->
+<div class="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 pt-12 bg-gradient-to-b from-black/40 to-transparent">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-2xl">ios_share</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+</button>
+</div>
+</div>
+<!-- Image Gallery Carousel -->
+<div class="relative h-[380px] w-full shrink-0 group">
+<img alt="Bright modern apartment living room with large windows" class="h-full w-full object-cover" data-alt="Modern living room interior with natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5DPsxXslMQ4wgK5gRXHZzf71PA7pAsm2yqkpFAgCCEwYDa6dArZ4IvhoO3nXjIq6Ork5JLmOPGdWUAiFy5V24SXIBud3IzkrtIB-aFvvxYjlqFlZCCLaisw8afltWhFEeunVKtOUOjOp7MY_XO-assl92gjGfmqWcnXrAr0kkhp3sM0XyON6u3JAHkXWR5nvG7UxR0WNV7M3Xp2OP7vqhsff3NYYpVdU2xWdKRvPqtFeTuzSwVzYzkTABcRxzDjg5e71ElFVmRHZf"/>
+<!-- Pagination Indicator -->
+<div class="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                1 / 12
+            </div>
+<!-- Carousel Dots (Visual Only) -->
+<div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
+<div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/50"></div>
+</div>
+</div>
+<!-- Small Image Strip Preview (Simulating user swiping or peeking) -->
+<div class="-mt-6 flex w-full gap-2 overflow-x-auto px-4 pb-2 no-scrollbar z-10 relative">
+<div class="h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 border-white shadow-md">
+<img alt="Living room thumbnail" class="h-full w-full object-cover" data-alt="Modern living room interior thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC1L1GRnlWgMK2C2dsB6Mi8YFjTnrouhxwUtoSvqtDZyTu0yjr2dmgRWizY5SSEg5lqzKLxDawZLHsAeqkpjAtGm0fi-tK-eSbJQM5s15xfVvckSg5cLIDSproBwOORH6_jr6wbMSvK1ol-ZgV0GAXWH1_rh76WpRtSSpD7jAW5TFAwa40PL0BOH4VsRJERlXFpdnY015kiyycMB-udNzTO58AEGGXRLeUrvB1yqv3a4A2K4cpbay30URyHuc3ug3GggXSFHGc93lu"/>
+</div>
+<div class="h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 border-transparent opacity-80">
+<img alt="Kitchen thumbnail" class="h-full w-full object-cover" data-alt="Modern kitchen with white cabinets thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDax1-ARjkPx1XUoqLFJydC5UJ0Lwr70hRMiU1Wc2kUMc3gVv2iluXJkfXSF4tGdbpPhWiB8YfJO0rsk9QpW7MUQusdZU2fHvaGDF9gYhEhl7xqoXpSKKVq2w269KXmYQ0aeYJ9qN_tMtDCv_aNIkkC9h9N-FDCcBAGyPtPZG3oH1vvtrNiDTyO3mOSdrY2Y5w2HNcnOH42NC3gX6BoY8Fs7ysI3NQ-yUUWZmob1_4nQfp1xGYCuOUfSOiQOsQ3B7AFq_IOtPAuFOJL"/>
+</div>
+<div class="h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 border-transparent opacity-80">
+<img alt="Swimming pool thumbnail" class="h-full w-full object-cover" data-alt="Outdoor swimming pool with blue water thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadiPpgj18mcctg8oyJIywfQMgOvvMf58_S9zaYVSsryaDCNtgIoTNMBzhqhsG8LHFbNMeGPdoVwHGeBmV5Ikns_uOmm9Uko8NvbYMI8_3Qpk2a3LDtWZEsaGylJFK2XaldysN7uVxHrA9PXUgO7ythi7VAEYAMDqUmQX_SHARxZXSVJff3ZJKK8R-9cGHL9OvxUdN6cEQqDtzKjZ9bqTNzQiAbBfZTJlMYtXtO8BT8L2wq-pIvXmoCxSjveSZfdP2fbsSjs2-W75A"/>
+</div>
+<div class="h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 border-transparent opacity-80">
+<img alt="Gym thumbnail" class="h-full w-full object-cover" data-alt="Modern gym equipment room thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOwnUAm9QFaajyuMuWOkzzvO0CJfmZ4XOKALHRM8CNsV5Z3wPYZMd7EaZouqoOkGJXDT2yrQv7YZOCkHEXkgNxR9Od5-uuvPCk95QftfCDj02M66t6Te2gbvMFGSEqo0fpEZCJfOp3tjiu_rRXziAfynHx0kWve8hrqddMxrsjuKAVKRagDJTiPRVzvhRs5laXIJ8yXnlVm_xIHEPhkW_aMQPudkxSxhQFi5DPIyW9WkXiYqZFNAY5l6zWhadXJVaoyjvEJUwZA5FW"/>
+</div>
+<div class="h-16 w-20 shrink-0 overflow-hidden rounded-lg border-2 border-transparent opacity-80 relative bg-black">
+<img alt="Bedroom thumbnail" class="h-full w-full object-cover opacity-60" data-alt="Cozy bedroom with city view thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuJa7F8kw57OhImFsf00FZq2dhxi0XHyE50PvEOOEgw6TIzXpWA_tIhX5IGo7x1Lf6_CRftX7aiNWJSODF8EWElyQ_ryHZd1unaE21OX7pinW6Iw3RWmajKzzMkZrWtITOE2Cqld63ijOyLu1B4ORvWER530G_6yuJZadDygdaAiqkYLyy4ndsWxbH3rL9QFZEQK3Q-qcDUQz0LZvl8Mg1MVJy0KWQ3hxhnM91YrJQCQ7Ja6cjSU9rhTJWB2yhOGNdDPx-pBNSrTDN"/>
+<div class="absolute inset-0 flex items-center justify-center text-white text-xs font-bold">+8</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="px-5 pt-4 pb-6">
+<!-- Header Section -->
+<div class="mb-6">
+<div class="flex items-start justify-between">
+<div>
+<div class="mb-2 flex items-center gap-1">
+<span class="rounded bg-primary/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">Premium</span>
+<div class="flex items-center gap-0.5 text-amber-500">
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="text-xs font-bold text-[#1c110d]">4.8</span>
+<span class="text-[10px] text-gray-500 font-normal">(120 ulasan)</span>
+</div>
+</div>
+<h1 class="text-2xl font-bold leading-tight text-[#1c110d] mb-1">Apartemen Menteng Park Exclusive 2BR</h1>
+<p class="text-sm text-gray-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px] text-gray-400">location_on</span>
+                            Cikini, Jakarta Pusat • 500m dari Stasiun
+                        </p>
+</div>
+</div>
+</div>
+<hr class="border-gray-100 mb-6"/>
+<!-- Amenities Section -->
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold text-[#1c110d]">Fasilitas Unit</h2>
+<button class="text-xs font-semibold text-primary">Lihat Semua</button>
+</div>
+<div class="grid grid-cols-4 gap-4">
+<!-- Amenity 1: WiFi -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
+<span class="material-symbols-outlined text-2xl">wifi</span>
+</div>
+<span class="text-[11px] font-medium text-gray-600 text-center leading-tight">WiFi Gratis</span>
+</div>
+<!-- Amenity 2: Kitchen -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
+<span class="material-symbols-outlined text-2xl">kitchen</span>
+</div>
+<span class="text-[11px] font-medium text-gray-600 text-center leading-tight">Dapur</span>
+</div>
+<!-- Amenity 3: Pool -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
+<span class="material-symbols-outlined text-2xl">pool</span>
+</div>
+<span class="text-[11px] font-medium text-gray-600 text-center leading-tight">Kolam Renang</span>
+</div>
+<!-- Amenity 4: Gym -->
+<div class="flex flex-col items-center gap-2">
+<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-50 text-gray-700">
+<span class="material-symbols-outlined text-2xl">fitness_center</span>
+</div>
+<span class="text-[11px] font-medium text-gray-600 text-center leading-tight">Gym &amp; Fitness</span>
+</div>
+</div>
+</div>
+<!-- Description Snippet -->
+<div class="mb-6">
+<h2 class="text-lg font-bold text-[#1c110d] mb-2">Tentang Unit Ini</h2>
+<div class="relative">
+<p class="text-sm text-gray-500 leading-relaxed">
+                        Nikmati hunian eksklusif di pusat Jakarta dengan pemandangan kota yang menakjubkan. Unit ini dilengkapi dengan interior modern, jendela besar yang memberikan pencahayaan alami, serta akses mudah ke...
+                    </p>
+<button class="mt-1 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4">Baca Selengkapnya</button>
+</div>
+</div>
+<!-- Location Map Snippet -->
+<div class="mb-6">
+<h2 class="text-lg font-bold text-[#1c110d] mb-3">Lokasi</h2>
+<div class="relative w-full h-32 rounded-xl overflow-hidden bg-gray-100">
+<img alt="Map location showing Jakarta area" class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-500" data-alt="Abstract map view of Jakarta city streets" data-location="Jakarta" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ18iUbQjBWuFxeAZDYemYu_Cvc3awOk9Wu2eRKBYokcqp6-eXeXSLTlKRDHyNLHy5X4wTCqv2wPjO51GJVqUcXAS1N3rJGDexbTzMXTmchyTr0MNlkqpholfQXidsXGuQ36xBq24gQJWPixWjOR5Tm2gn0nJoqoiTgF0n-uMd2oC0cmCkaKVro25wdXk3YFgx_w08bYzookmlB9jWMqUGncS2qqyBnkXSpibF11UJy-sSxfmwF_4p2imAGZvbh2WxpJtXTO87_np_"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="bg-white px-4 py-2 rounded-lg shadow-md text-xs font-bold text-gray-800 flex items-center gap-1 hover:bg-gray-50">
+<span class="material-symbols-outlined text-sm text-primary">map</span>
+                            Lihat Peta
+                        </button>
+</div>
+</div>
+</div>
+<!-- Reviews Summary Small -->
+<div class="mb-4">
+<h2 class="text-lg font-bold text-[#1c110d] mb-3">Ulasan Tamu</h2>
+<div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+<div class="flex items-center gap-3 mb-2">
+<div class="h-10 w-10 rounded-full bg-gray-200 overflow-hidden">
+<img alt="User avatar" class="h-full w-full object-cover" data-alt="Smiling woman profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKDxccJVoyvyJO5ZDpWlX5bYTi5kzeTQQCm5HoIxvjNcorkJg47oIfNN6bdzcZYbWrH9NF6pLt4lzqVh7fxse9enNlhdUpt73zUL_J7IIvVmcqLdUjBZbb2GyfFPdC7VxbvN_HA3HQkE-pWx5Uf1AuOX7GrkhUwvgWhEE2g6gSSJaZkeCaI5pScHOsTiAgKsQxkPB-6KI4h9i7SSwpcbNNm6tPD92GoTQUqCrc36s1K-uiNdxdXH3tksJAufvmZk7pDR4ay2bnJrVS"/>
+</div>
+<div>
+<p class="text-sm font-bold text-[#1c110d]">Sarah Wijaya</p>
+<p class="text-xs text-gray-500">Oktober 2023</p>
+</div>
+<div class="ml-auto flex text-amber-500">
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+<span class="material-symbols-outlined text-[16px] filled">star</span>
+</div>
+</div>
+<p class="text-xs text-gray-600 italic">"Tempatnya sangat bersih dan nyaman. Lokasinya strategis dekat dengan stasiun cikini. Pasti akan kembali lagi!"</p>
+</div>
+</div>
+<div class="h-10"></div> <!-- Spacer for footer -->
+</div>
+<!-- Sticky Footer -->
+<div class="fixed bottom-0 left-0 right-0 z-30 w-full max-w-md mx-auto border-t border-gray-100 bg-white dark:bg-background-dark p-4 pb-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500">Mulai dari</span>
+<div class="flex items-baseline gap-1">
+<span class="text-lg font-bold text-primary">Rp 750.000</span>
+<span class="text-xs text-gray-400">/ malam</span>
+</div>
+</div>
+<button class="flex-1 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg shadow-primary/30 transition-transform active:scale-95 hover:bg-primary/90">
+                    Sewa Sekarang
+                </button>
+</div>
+</div>
+</div>
+</body></html>

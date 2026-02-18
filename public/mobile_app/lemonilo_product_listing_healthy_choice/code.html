@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lemonilo Product Listing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6dec13",
+                        "primary-dark": "#5bc610",
+                        "accent-yellow": "#f9e013",
+                        "background-light": "#fafcf8",
+                        "background-dark": "#182210",
+                        "text-main": "#131b0d",
+                        "text-secondary": "#6c9a4c",
+                        "card-light": "#ffffff",
+                        "card-dark": "#232e1a",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "2xl": "3rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(108, 154, 76, 0.1)',
+                        'card': '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex justify-center w-full">
+<!-- Mobile Container -->
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark flex flex-col h-screen relative overflow-hidden shadow-2xl mx-auto border-x border-gray-100 dark:border-gray-800">
+<!-- Header & Search -->
+<header class="flex-none px-5 pt-12 pb-4 bg-background-light dark:bg-background-dark sticky top-0 z-20">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">eco</span>
+<h1 class="text-2xl font-extrabold text-text-main dark:text-white tracking-tight">Lemonilo</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main dark:text-white">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-text-main dark:text-white">shopping_bag</span>
+<span class="absolute top-1 right-1 bg-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full text-black">2</span>
+</button>
+</div>
+</div>
+<div class="relative w-full shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary">search</span>
+</div>
+<input class="block w-full pl-11 pr-4 py-3.5 bg-white dark:bg-card-dark border-none rounded-2xl text-text-main dark:text-white placeholder-text-secondary focus:ring-2 focus:ring-primary focus:outline-none text-sm font-medium shadow-soft" placeholder="Cari produk sehat..." type="text"/>
+</div>
+</header>
+<!-- Main Content (Scrollable) -->
+<main class="flex-1 overflow-y-auto pb-24 hide-scrollbar">
+<!-- Hero Slogan -->
+<div class="px-5 mb-6 mt-2">
+<div class="bg-[#ecf3e7] dark:bg-[#2a3820] rounded-2xl p-6 relative overflow-hidden">
+<!-- Decor Circles -->
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
+<div class="absolute -left-6 -bottom-6 w-24 h-24 bg-accent-yellow/30 rounded-full blur-xl"></div>
+<h2 class="text-text-main dark:text-white text-[26px] font-bold leading-[1.15] relative z-10 w-3/4">
+                        Ngemi(l) enak tapi tetep <span class="text-[#568a36] dark:text-primary">sehat!</span>
+</h2>
+<p class="text-text-secondary dark:text-gray-300 text-sm mt-2 relative z-10 font-medium">
+                        Pilihan camilan tanpa rasa bersalah.
+                    </p>
+</div>
+</div>
+<!-- Categories -->
+<div class="mb-6">
+<div class="flex gap-3 px-5 overflow-x-auto hide-scrollbar pb-2">
+<button class="whitespace-nowrap px-6 py-2.5 bg-primary text-black rounded-full text-sm font-bold shadow-lg shadow-primary/20 transition-transform active:scale-95">
+                        Semua
+                    </button>
+<button class="whitespace-nowrap px-6 py-2.5 bg-white dark:bg-card-dark border border-gray-100 dark:border-gray-700 text-text-secondary dark:text-gray-300 rounded-full text-sm font-semibold shadow-sm transition-transform active:scale-95">
+                        Mie Instan
+                    </button>
+<button class="whitespace-nowrap px-6 py-2.5 bg-white dark:bg-card-dark border border-gray-100 dark:border-gray-700 text-text-secondary dark:text-gray-300 rounded-full text-sm font-semibold shadow-sm transition-transform active:scale-95">
+                        Cemilan
+                    </button>
+<button class="whitespace-nowrap px-6 py-2.5 bg-white dark:bg-card-dark border border-gray-100 dark:border-gray-700 text-text-secondary dark:text-gray-300 rounded-full text-sm font-semibold shadow-sm transition-transform active:scale-95">
+                        Bumbu Dapur
+                    </button>
+<button class="whitespace-nowrap px-6 py-2.5 bg-white dark:bg-card-dark border border-gray-100 dark:border-gray-700 text-text-secondary dark:text-gray-300 rounded-full text-sm font-semibold shadow-sm transition-transform active:scale-95">
+                        Minuman
+                    </button>
+</div>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-2 gap-4 px-5 pb-8">
+<!-- Product Card 1 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-green-100 dark:bg-green-900/40 text-[#4c7c2e] dark:text-primary px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">verified_user</span>
+                            Tanpa Pengawet
+                        </div>
+<img alt="Green spinach noodles in a bowl" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrlMze-V0dUjPxNHfctzBR25zjetsNEQP2KfwxDVR2T5DGQOHyP1oE7X6tun3DD1ejXKrLASbL5_11kqyKx3VHy35YYxxf9ihX_exfzLmRU4Tx8wPae4i7v81C11FT7fcIgdMzK7VzbOGoZwzTvcAOR99qZO6Ajn0gM_-6XAN8_hB_HLTrEnlBxhlnoalID_pYyhO54uUUrc-bGdlw8herGVePnrVxvW0_q0derrOq4YYWPMrIiz858grUJecd_26loNgfwfyvwm84"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Mie Lemonilo Goreng Istimewa</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">85 gr</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<span class="text-xs text-gray-400 line-through decoration-red-400 decoration-1">Rp 8.000</span>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 7.000</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">eco</span>
+                            Tinggi Serat
+                        </div>
+<img alt="Cassava chips in packaging" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM2Pb-59QU_7UJ3wpiS5lneai-ND8A9b9IMfycdr14mFvzXlfRlKrJ-uSuqqqk71yvW4H7giJStAXvQikGVtlyVhl3D_TaO-yQ-lJ5DZo2NViF1-mNEPnfRPV-ErwV41FXxr3SgMUeTuly0XteshiC-mefmUY1K1BtMzNzPLJpzpark_CIqXoFNqGdaK8X9A8aDf4Xg4xCDOsopITugcJwl9Y7E-h8gTGv5BkzHfd4xyBfnvw1b0e2fQmkBnR-eMYQSqgwbuTcx3si"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Cassamo Keripik Singkong Rasa Ayam</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">50 gr</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 9.500</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">grain</span>
+                            Gluten Free
+                        </div>
+<img alt="Crispy chocolate brownie pieces" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZK53jrN8B5ukFVXfiDgMWtwsu7Jp3bcyQ5OX4L3sQaC5TfLaWE8VwDmo4FJRwSvH_ZdnCdPz8BubQSOyXxBcFW-UxP17YWssDdO02tbXVqxXEBc3B6dgJHJIv7OC7XBVgaKiih1or8FUPxFXclGA4q_MVuqkn-IjvgBDREJ4OKnx16wTUowm86pogVfkYmMZAp34uOzdcigQMorWjNhmK6YbrjDFa5OLsikEhMXot7tsdFaBo1gXDc0xSzzW66xfpxqYxWrMOChPi"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Brownies Crispy Choco Chips</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">40 gr</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<span class="text-xs text-gray-400 line-through decoration-red-400 decoration-1">Rp 18.000</span>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 15.000</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-green-100 dark:bg-green-900/40 text-[#4c7c2e] dark:text-primary px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">spa</span>
+                            Natural
+                        </div>
+<img alt="Bottle of natural soy sauce" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvsnW9K_7LRl4gXwLbF78Uq6KbolQBPlIA73mBmAyBi7Hu4h6aQJ1BrpR8sTiLVocthEIyOd7KNZG46FldIfUyqTnInKkiOV8wKtIQD7NxWPF4zLftcAlilnszmEv2ovLYxKFw3G06K0KVsAY2Z_U2_EMe49_8VDVWtFDAaOxOuT6q5uBiQ6t8mIUAkJ6V7pSZeuGybVjwFtgRvgHPxTtkzdFm0DSsoUK99GrhJ0G9wtEONu4WbS9aaapkfzQaT0VMxaf6hDzvWKnn"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Kecap Manis Alami</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">135 ml</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 12.000</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-green-100 dark:bg-green-900/40 text-[#4c7c2e] dark:text-primary px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">no_meals</span>
+                           No MSG
+                       </div>
+<img alt="Spicy seasoning powder in small bowl" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh41iu4f6M9HFcYysoNqciYSZVzI1v2r7WJW894CU1J8bO6cAoQCTllZrM8Sq0ZxZrigafvl1o-PTJ81nXD3tnJtdyY7lYZe-aNRXuC-9LB6U99N70ysDK2WbPz9mR-bLnxWDi-Cbipuyink7ISKZHEJUhOjjlJBIbyrdZOv2euYPgW4Id4CrZ0XlS9IBWpEQEw6PKx2v9D7Ob4vfNA0UJI3m4U2VaSrM1nWDAq5MV4UvLWhHaa5qbyy0rcrpp5uRzp-Im4PCemIJb"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Chilita Bubuk Cabe</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">50 gr</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 18.000</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="bg-card-light dark:bg-card-dark rounded-2xl p-3 shadow-card flex flex-col h-full group">
+<div class="relative w-full aspect-square bg-gray-50 dark:bg-[#1f2916] rounded-xl mb-3 overflow-hidden">
+<div class="absolute top-2 left-2 bg-green-100 dark:bg-green-900/40 text-[#4c7c2e] dark:text-primary px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 z-10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-[12px]">verified_user</span>
+                            Tanpa Pengawet
+                        </div>
+<img alt="Yellow curry instant noodles" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS1Udf6Ft1x_GefhV1DU6Y_cDUwKw2cX1lwRlF0z02v4CVeZrwcve3zhwSfrta_auKw7-PGRA8fGQZTvMHMuW_0lvFDZ4I8il-sEMmWmbOC-y1CYjv-2IUF0UC3v1-eF7W2_RxGVRwy32OC8Rw4cRuakFw-xIQo_4li8XQ9ag9pAeH8sqBPbq_-Fg-3yDcIV1WQUh7R9VUGIpFXj6qSW8_UIUKb7PJv5kaBOVeUE7p9h3HDWfUXtAJSoSmyfHGUSvgHhP3Z3gh1eHK"/>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="text-text-main dark:text-white font-bold text-sm leading-tight line-clamp-2 mb-1">Mie Lemonilo Kari Ayam</h3>
+<p class="text-xs text-text-secondary dark:text-gray-400 mb-3">70 gr</p>
+<div class="mt-auto flex items-end justify-between">
+<div>
+<span class="text-xs text-gray-400 line-through decoration-red-400 decoration-1">Rp 8.000</span>
+<p class="text-base font-extrabold text-text-main dark:text-white">Rp 7.000</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-primary text-black flex items-center justify-center shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Spacer for Tab Bar -->
+<div class="h-8"></div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="flex-none border-t border-[#ecf3e7] dark:border-gray-800 bg-white dark:bg-card-dark px-6 pb-6 pt-3 absolute bottom-0 w-full z-30 rounded-t-3xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)]">
+<div class="flex justify-between items-center">
+<a class="flex flex-col items-center justify-center gap-1 text-text-secondary dark:text-gray-400 hover:text-text-main dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="text-[10px] font-medium tracking-wide">Beranda</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-text-main dark:text-primary relative" href="#">
+<div class="absolute -top-3 w-10 h-1 bg-primary rounded-b-full"></div>
+<span class="material-symbols-outlined text-2xl fill-current">storefront</span>
+<span class="text-[10px] font-bold tracking-wide">Belanja</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-text-secondary dark:text-gray-400 hover:text-text-main dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">book</span>
+<span class="text-[10px] font-medium tracking-wide">Resep</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-text-secondary dark:text-gray-400 hover:text-text-main dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="text-[10px] font-medium tracking-wide">Akun</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

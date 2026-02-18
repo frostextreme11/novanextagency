@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kopi Kenangan Home Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec1337",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221013",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2d1a1d",
+                        "text-primary": "#1b0d10",
+                        "text-secondary": "#9a4c59",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 10px 40px -10px rgba(236, 19, 55, 0.1)',
+                        'card': '0 4px 20px -5px rgba(0, 0, 0, 0.05)',
+                        'float': '0 20px 40px -5px rgba(236, 19, 55, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }.scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-primary min-h-screen relative overflow-x-hidden pb-24">
+<header class="sticky top-0 z-30 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md px-6 pt-12 pb-4 flex items-center justify-between transition-all duration-300">
+<div class="flex-1">
+<p class="text-text-secondary dark:text-primary/80 text-sm font-semibold mb-1">Selamat Pagi, Budi! 👋</p>
+<h1 class="text-text-primary dark:text-white text-2xl font-extrabold leading-tight tracking-tight">Mau ngopi apa<br/>hari ini?</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-surface-light dark:bg-surface-dark shadow-card text-text-primary dark:text-white hover:bg-gray-50 transition-colors relative">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full ring-2 ring-white dark:ring-surface-dark"></span>
+</button>
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-white dark:border-surface-dark shadow-md" data-alt="User profile avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAS8GuJfjy5U5bps6mudK1x96tozPIzLdEhvqzS0rEK9pvwhJdz1NmKwPubbfUIVym1ul9sjkXKtNv7Z9Fy_t1Xq2L8LOrgZgNB0Na2y4q_jwK9O4LA0TvgYN_e1dg5fF4Qbt2KYnXK6KrUCxYVIwdtxacdW8Y7ThSSsdLgPVS4v--czY74h_-0jzpSsSQ77oThLyGmSnObAiPynOypz2t9kEfxxKzCmTv4IARXFrm7BKsx6XsnoAU4A6cTqupalIOg26b8JUbKolaa');"></div>
+</div>
+</header>
+<main class="flex flex-col gap-6 px-6">
+<section class="relative mt-2">
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-6 shadow-soft relative overflow-hidden group h-[320px] flex flex-col justify-between">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0"></div>
+<div class="relative z-10 w-2/3">
+<span class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full mb-3">Promo Spesial 🔥</span>
+<h2 class="text-2xl font-extrabold text-text-primary dark:text-white mb-2 leading-tight">Kopi Kenangan Mantan</h2>
+<div class="flex items-baseline gap-2">
+<span class="text-lg font-bold text-primary">Rp 18.000</span>
+<span class="text-sm text-text-secondary line-through">Rp 24.000</span>
+</div>
+<button class="mt-4 bg-primary text-white text-sm font-bold py-2.5 px-6 rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-transform flex items-center gap-2">
+                        Beli Sekarang
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="absolute -right-8 -bottom-8 w-64 h-64 z-10 pointer-events-none">
+<img alt="Iced coffee with condensation" class="w-full h-full object-cover object-center rounded-tl-[4rem] shadow-xl mask-image-gradient" data-alt="Refreshing iced coffee drink in a plastic cup with visible condensation droplets" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3R65PAf5ET1dprxvJLsw86P0_k33D-QJv_5VscST5QJOjpcIcW2Mn7U468HPkrU007T3FxO3BVxhwEO07AQqdY99Hm7JvkdZSlVTwsrDWkkZJ2mhcakLZYeUhY_m85OnTodti9jjtxxcusIz8EE2WoLIg21R2YOOFpYw2Q15N_M0AfY_2iae6NczFDxtOygICLfI5jeKwN3TgRPywDJBjVvvIyG3uR7wfdXYALpr5gnFJp0JCXWe5lQT3aIJOp3atDmxZAkxONd8_"/>
+</div>
+</div>
+</section>
+<section>
+<div class="grid grid-cols-4 gap-4">
+<a class="flex flex-col items-center gap-2 group" href="#">
+<div class="w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark shadow-card flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">coffee</span>
+</div>
+<span class="text-xs font-semibold text-text-primary dark:text-white/80">Kopi</span>
+</a>
+<a class="flex flex-col items-center gap-2 group" href="#">
+<div class="w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark shadow-card flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">local_drink</span>
+</div>
+<span class="text-xs font-semibold text-text-primary dark:text-white/80">Non-Kopi</span>
+</a>
+<a class="flex flex-col items-center gap-2 group" href="#">
+<div class="w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark shadow-card flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">bakery_dining</span>
+</div>
+<span class="text-xs font-semibold text-text-primary dark:text-white/80">Roti</span>
+</a>
+<a class="flex flex-col items-center gap-2 group" href="#">
+<div class="w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark shadow-card flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined text-3xl">storefront</span>
+</div>
+<span class="text-xs font-semibold text-text-primary dark:text-white/80">Merch</span>
+</a>
+</div>
+</section>
+<section class="bg-surface-light dark:bg-surface-dark rounded-2xl p-5 shadow-card border border-gray-100 dark:border-gray-800">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-lg font-bold text-text-primary dark:text-white">Kumpulin Kenangan ❤️</h3>
+<p class="text-xs text-text-secondary mt-1">Status: <span class="font-bold text-primary">Kenangan Manis</span></p>
+</div>
+<div class="bg-primary/10 px-3 py-1 rounded-full">
+<span class="text-primary font-bold text-sm">3/10</span>
+</div>
+</div>
+<div class="relative h-8 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden mb-3 flex items-center px-1">
+<div class="absolute inset-0 flex items-center justify-between px-2 text-gray-300 dark:text-gray-700 pointer-events-none z-0">
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+<span class="material-symbols-outlined text-lg">favorite</span>
+</div>
+<div class="h-6 rounded-full bg-primary relative z-10 transition-all duration-1000 ease-out flex items-center overflow-hidden" style="width: 33%;">
+<div class="w-full flex justify-around px-1">
+<span class="material-symbols-outlined text-white text-sm filled scale-75">favorite</span>
+<span class="material-symbols-outlined text-white text-sm filled scale-75">favorite</span>
+<span class="material-symbols-outlined text-white text-sm filled scale-75">favorite</span>
+</div>
+</div>
+</div>
+<p class="text-xs text-text-secondary dark:text-gray-400 font-medium text-right">7 Hati lagi untuk voucher gratis!</p>
+</section>
+<section>
+<div class="flex justify-between items-center mb-4 px-1">
+<h3 class="text-xl font-bold text-text-primary dark:text-white">Favorit Kamu ❤️</h3>
+<a class="text-primary text-sm font-bold hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6 snap-x">
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3 border border-gray-50 dark:border-gray-800">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Iced latte in a plastic cup" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8LO8NftKXATHRQOUrj85FKlvTmhnq5K_1lZzkv6YoZS85BsKGy35Z7UUSAIoLuETmbpSzSzZUOPooI9oBP09Uu27_swMaT-GKHxTREmIteMIOnUen-9Fl325rv5bk7jgOwBW8Mxv290ZLYeHi1IPCr9Gw-CHDqUDrEuh-u3pPQh5Ki3xww8SYRbw_PAgMwEIVrMNmbCtG5uiskGQiNn00SraqCA4smTBYqV1bbUmh8cti-8C_zOOY_tSKbVVDV-XjL6FXurBcVQIB');">
+<div class="absolute top-2 left-2 bg-primary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                    Terakhir Dipesan
+                </div>
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Kopi Kenangan Mantan</h4>
+<p class="text-[10px] text-text-secondary truncate">Large, Less Sugar</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 24.000</span>
+<button class="text-primary text-xs font-semibold bg-primary/5 px-2 py-1 rounded-md hover:bg-primary/10">Pesan Ulang</button>
+</div>
+</div>
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3 border border-gray-50 dark:border-gray-800">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Chocolate croissant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAjv79ULb4mZeVIzGoMSjrCqRlHJvRQ9PiIZWzyKhERfsyhOOyJbNalkUlXnoXVjHj2SyFZZagZtm4AsY_9cxPmid78yYfkze_iErk0C4yUFgYDckmhtN75pbojBW2Q58YY4uQ5Efr-IAU1b1THIAwFSB57g9ZeqV4H8CL91CnbLugJHIhg8if4lltMz_aV2QMUfWEEGSQDxBb8HJ-fzjE40-nGfRY1nVlyxeBa3xn9llSM-MVY-Qzs1Bb8xY1qD9flOKriWz-4sfY');">
+<div class="absolute top-2 left-2 bg-text-secondary/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                    Sering Dipesan
+                </div>
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Roti Coklat Klasik</h4>
+<p class="text-[10px] text-text-secondary truncate">Hangat</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 12.000</span>
+<button class="text-primary text-xs font-semibold bg-primary/5 px-2 py-1 rounded-md hover:bg-primary/10">Pesan Ulang</button>
+</div>
+</div>
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3 border border-gray-50 dark:border-gray-800">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Matcha latte" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcBa5DB0Gh1H8SyYSMYUAOr7qGCUR9KqY2BpVYMKpg5bgqI0Qvkm47SELY0nhDKsv2a3CKd5Lea0anWtH3x5qm-AVtITHwb-_yGqWXmjR1fQNR4iy2o7ptnGbLfssH_ZUcRlD4iH8O1crPeY0uMVmflP-ad5iq6Wlx2gM_89pJ08Y-v3Ja9FhK-qB9nZu2UF5fhCjQipJnc7oBw_Y3NkxNz8gz3sBngieghD88ZVhr-sBz0u_GR3GgstTK9x1QQQ1Z1EK8UImXO8-d');">
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Matcha Latte</h4>
+<p class="text-[10px] text-text-secondary truncate">Regular, Normal Ice</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 28.000</span>
+<button class="text-primary text-xs font-semibold bg-primary/5 px-2 py-1 rounded-md hover:bg-primary/10">Pesan Ulang</button>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex justify-between items-center mb-4 px-1">
+<h3 class="text-xl font-bold text-text-primary dark:text-white">Rekomendasi Untukmu</h3>
+<a class="text-primary text-sm font-bold hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-6 px-6 snap-x">
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Iced latte in a plastic cup" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8LO8NftKXATHRQOUrj85FKlvTmhnq5K_1lZzkv6YoZS85BsKGy35Z7UUSAIoLuETmbpSzSzZUOPooI9oBP09Uu27_swMaT-GKHxTREmIteMIOnUen-9Fl325rv5bk7jgOwBW8Mxv290ZLYeHi1IPCr9Gw-CHDqUDrEuh-u3pPQh5Ki3xww8SYRbw_PAgMwEIVrMNmbCtG5uiskGQiNn00SraqCA4smTBYqV1bbUmh8cti-8C_zOOY_tSKbVVDV-XjL6FXurBcVQIB');">
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Kopi Kenangan Mantan</h4>
+<p class="text-[10px] text-text-secondary truncate">Large, Less Sugar</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 24.000</span>
+</div>
+</div>
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Chocolate croissant" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBAjv79ULb4mZeVIzGoMSjrCqRlHJvRQ9PiIZWzyKhERfsyhOOyJbNalkUlXnoXVjHj2SyFZZagZtm4AsY_9cxPmid78yYfkze_iErk0C4yUFgYDckmhtN75pbojBW2Q58YY4uQ5Efr-IAU1b1THIAwFSB57g9ZeqV4H8CL91CnbLugJHIhg8if4lltMz_aV2QMUfWEEGSQDxBb8HJ-fzjE40-nGfRY1nVlyxeBa3xn9llSM-MVY-Qzs1Bb8xY1qD9flOKriWz-4sfY');">
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Roti Coklat Klasik</h4>
+<p class="text-[10px] text-text-secondary truncate">Hangat</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 12.000</span>
+</div>
+</div>
+<div class="min-w-[160px] snap-center bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-card flex flex-col gap-3">
+<div class="h-28 w-full rounded-lg bg-gray-100 dark:bg-gray-800 bg-cover bg-center relative group overflow-hidden" data-alt="Matcha latte" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCcBa5DB0Gh1H8SyYSMYUAOr7qGCUR9KqY2BpVYMKpg5bgqI0Qvkm47SELY0nhDKsv2a3CKd5Lea0anWtH3x5qm-AVtITHwb-_yGqWXmjR1fQNR4iy2o7ptnGbLfssH_ZUcRlD4iH8O1crPeY0uMVmflP-ad5iq6Wlx2gM_89pJ08Y-v3Ja9FhK-qB9nZu2UF5fhCjQipJnc7oBw_Y3NkxNz8gz3sBngieghD88ZVhr-sBz0u_GR3GgstTK9x1QQQ1Z1EK8UImXO8-d');">
+<button class="absolute bottom-2 right-2 bg-white dark:bg-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<div>
+<h4 class="font-bold text-text-primary dark:text-white text-sm leading-tight mb-1 truncate">Matcha Latte</h4>
+<p class="text-[10px] text-text-secondary truncate">Regular, Normal Ice</p>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-bold text-primary text-sm">Rp 28.000</span>
+</div>
+</div>
+</div>
+</section>
+<div class="h-24"></div>
+</main>
+<div class="fixed bottom-24 left-0 w-full px-6 z-40 pointer-events-none">
+<button class="pointer-events-auto w-full bg-primary hover:bg-red-600 text-white font-bold text-lg h-14 rounded-full shadow-float flex items-center justify-center gap-3 transition-transform active:scale-95">
+<span class="material-symbols-outlined">shopping_bag</span>
+            Pesan Sekarang
+        </button>
+</div>
+<nav class="fixed bottom-0 w-full z-50 bg-surface-light dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 pb-safe pt-2">
+<div class="flex justify-around items-end pb-3 px-2">
+<a class="flex flex-1 flex-col items-center gap-1 group cursor-pointer text-primary" href="#">
+<div class="flex h-8 items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[28px] fill-current">home</span>
+</div>
+<p class="text-[10px] font-bold tracking-wide">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 group cursor-pointer text-gray-400 dark:text-gray-500 hover:text-text-secondary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">coffee</span>
+</div>
+<p class="text-[10px] font-medium tracking-wide">Menu</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 group cursor-pointer text-gray-400 dark:text-gray-500 hover:text-text-secondary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">loyalty</span>
+</div>
+<p class="text-[10px] font-medium tracking-wide">Rewards</p>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 group cursor-pointer text-gray-400 dark:text-gray-500 hover:text-text-secondary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">person</span>
+</div>
+<p class="text-[10px] font-medium tracking-wide">Profile</p>
+</a>
+</div>
+</nav>
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }.material-symbols-outlined.filled {
+          font-variation-settings:
+          'FILL' 1,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+
+</body></html>

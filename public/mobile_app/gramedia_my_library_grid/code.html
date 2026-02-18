@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gramedia My Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "primary-dark": "#0f4bc4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2233",
+                        "text-main-light": "#0d121b",
+                        "text-main-dark": "#ffffff",
+                        "text-secondary-light": "#4c669a",
+                        "text-secondary-dark": "#94a3b8",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-text-main-dark overflow-x-hidden transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-surface-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between px-5 pt-12 pb-4 bg-surface-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+<h1 class="text-2xl font-bold tracking-tight text-text-main-light dark:text-text-main-dark">Koleksi Saya</h1>
+<div class="flex gap-3">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-background-light dark:bg-surface-dark text-text-main-light dark:text-text-main-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-background-light dark:bg-surface-dark text-text-main-light dark:text-text-main-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pb-24 hide-scrollbar">
+<!-- Hero Section: Lanjut Baca -->
+<section class="p-5">
+<div class="mb-3 flex items-center justify-between">
+<h2 class="text-lg font-bold text-text-main-light dark:text-text-main-dark">Lanjut Baca</h2>
+<a class="text-sm font-semibold text-primary dark:text-blue-400" href="#">Riwayat</a>
+</div>
+<div class="relative overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4">
+<!-- Book Cover -->
+<div class="relative h-32 w-24 shrink-0 overflow-hidden rounded-lg shadow-md">
+<img alt="Book cover of Atomic Habits" class="h-full w-full object-cover" data-alt="Book cover abstract representation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUXfiMYRpS1barrsAqF3Njjxf8_HrZdVWKaDBJLooiX5in1IDjGzSolKWwvML_CS98lJadESh7RYRhdljBEvv3qgMi0wXZ_XzHjRqPE7EfCVeTZMMEvBTfd5Mmboh_wiJR_ZyDR93pEJ1RUKsdaeKL01q-wkWvqN7tpnYDlKJ7AqP-6JYBlpuHrpyyFN1uh97iigdtnP2tv8-c_E45WxLfKS39jy9CXTQr6EXzLzN5G4-E_ARw4_Dut-PLlQ3pY5_nSclzuyyd0CQ-"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+<!-- Details -->
+<div class="flex flex-1 flex-col justify-between py-1">
+<div>
+<h3 class="line-clamp-2 text-lg font-bold leading-tight text-text-main-light dark:text-text-main-dark">Atomic Habits</h3>
+<p class="mt-1 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">James Clear</p>
+</div>
+<div class="flex items-center gap-3 mt-2">
+<button class="flex-1 rounded-lg bg-primary hover:bg-primary-dark transition-colors py-2 px-4 text-xs font-bold text-white shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+                                    BACA
+                                </button>
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-background-light dark:bg-gray-700 text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Progress Bar Section -->
+<div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700/50">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-primary dark:text-blue-400">45% Selesai</span>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Halaman 124 dari 275</span>
+</div>
+<div class="h-2 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-full rounded-full bg-primary" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters -->
+<section class="sticky top-[88px] z-10 bg-surface-light/95 dark:bg-background-dark/95 backdrop-blur-sm py-2 pl-5 overflow-x-auto hide-scrollbar flex gap-3 border-b border-transparent dark:border-gray-800">
+<button class="whitespace-nowrap rounded-full bg-primary px-5 py-2 text-sm font-bold text-white shadow-lg shadow-primary/20">
+                    Semua
+                </button>
+<button class="whitespace-nowrap rounded-full bg-background-light dark:bg-surface-dark border border-transparent dark:border-gray-700 px-5 py-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    E-Books
+                </button>
+<button class="whitespace-nowrap rounded-full bg-background-light dark:bg-surface-dark border border-transparent dark:border-gray-700 px-5 py-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    Majalah
+                </button>
+<button class="whitespace-nowrap rounded-full bg-background-light dark:bg-surface-dark border border-transparent dark:border-gray-700 px-5 py-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    Koran
+                </button>
+<div class="w-2 shrink-0"></div>
+</section>
+<!-- Library Grid -->
+<section class="p-5">
+<div class="grid grid-cols-2 gap-x-4 gap-y-8">
+<!-- Book Item 1 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Filosofi Teras book" class="h-full w-full object-cover" data-alt="Book cover with abstract philosophical art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnCcvovek--Ez3R2jh90QG-3DKWtwZpAp_MupfUXUCSQpoGGAta-GpiefGhjcV8l4KhSglUHVYlcjLfo-47-gTIhxOAqPwiitznr16bPsd6aR7IahiE2sQLAVjtCKuMD1qZFezAc-78i16reZhsPpm9bDgJhmRWj89S5ifWlyKwvOeZjti02mCDHDKb4HotFFg8lvO3fSOfcyoaibqDjTGWrrN-bJNMdAWwkKZwlK6Fdk5whhE2yC0vMHmmtltarL6BX7hT-gvL86J"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">Filosofi Teras</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Henry Manampiring</p>
+</div>
+</div>
+<!-- Book Item 2 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Laut Bercerita book" class="h-full w-full object-cover" data-alt="Book cover with deep blue sea illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP0b8YmMoRWd5uNRGfTrYZMDFBB9jJnCGxMyHLm_rdk3FVRutFARBVgvW_73bOCqICm71N9m5n7w-6cfUPem5RVUFwj9Vhq-U0eDUciMZq3dqPIGl9bGl7fZzbG5EZ7cM_iSKiEtWKgIcnsgC2WqMOL_HEIicE3v2qZGa7fZvnAbYtzsmY2V8qgmIk98xY6elDFqSYzZpG65XogTpskh0JQVuC9CUVOtbz3RHdQTYWAYcq4D7iNBzx_G9yMCWUeLzYqKCIxvJCl1X8"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_download</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">Laut Bercerita</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Leila S. Chudori</p>
+</div>
+</div>
+<!-- Book Item 3 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Sapiens book" class="h-full w-full object-cover" data-alt="Book cover with human evolution illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5GKv7D7MjCmiPjTV3DJkhxOoHwtSl2sceJh7jcOwUHnGGIIbq45cGurgzV3Y9a47nFSZ83slTsz-ivVMGDoVGzsU8xU410JJTjoJZA_oouz2k6YXVezvkjGUxGNCDB95wxKqD1ASo7518_YykqTT4dvhMfUdO138GLAmtJuwdsyP7ptbmAIs-LVbnWlkQ2AlcCWtvS8T_oMa52H1Wkxd2qPrueuQXPSb7qDCxJjHqL8xMNon0DcD2DjJ-l6yeN7sN8ddMhMDZPW2L"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+</div>
+<!-- Progress overlay for grid item -->
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700">
+<div class="h-full bg-primary" style="width: 15%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">Sapiens</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Yuval Noah Harari</p>
+</div>
+</div>
+<!-- Book Item 4 (Magazine) -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Tempo Magazine" class="h-full w-full object-cover" data-alt="Magazine cover with political illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6YSE6ELzIC6CsBwX98ua_TzFx4Z_4-zXmWCFaJwvGIR6vxeVI3_807wXdcIltsNN7_3CpAQWAE-U_cya2JHknRsDvXsdiXa_ICGKu3zf_CC7BLbU2lte1W-mmdg9CM6Y6A9Di_Dh3dYSUqvnYylWmx6vs_XML5vex9VgmhRkoqpJLIy5WVwYdILD-2fls3tHBA8oO9dLtLsAZxQfgjt4Tg6_5MVAL16Hbx9Onv9GYq0P6rMYRZv7uEDxvrIN6m2W0R8UQUBm0I52Y"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_download</span>
+</div>
+<div class="absolute top-2 left-2 flex px-2 py-0.5 rounded bg-primary text-[10px] font-bold text-white uppercase tracking-wide">
+                                Majalah
+                            </div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">Tempo</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Edisi 24 Juli 2024</p>
+</div>
+</div>
+<!-- Book Item 5 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Thinking Fast and Slow" class="h-full w-full object-cover" data-alt="Book cover simple typography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMsO5yktzx7V4d2U07t5_5LgFf_ZoPYm9ugFYSOOn4pEF3JRPIdZLrEj6E4PjgwgpCtMtz9xMSvkcGeLWxvjErm-Z-UqOUl4wIli6A_OVMvpHVSsJizKqx7a3um5bOob-BosULArYLGll1MXFrfATnyw1mhNNjT3Taqa_Pi25bKWPggkYwsHfntVbaM3mt0i0EkXaa2CNqRDy4voofFhg8wAkLk04Hvv0pl3av1iyj-OlojVrrNkk5Zerc0ET9gRLYaTiMbtQqEOzk"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_done</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">Thinking, Fast and Slow</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Daniel Kahneman</p>
+</div>
+</div>
+<!-- Book Item 6 -->
+<div class="group relative flex flex-col gap-2">
+<div class="relative aspect-[2/3] w-full overflow-hidden rounded-xl shadow-sm transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-md bg-gray-100 dark:bg-gray-800">
+<img alt="Cover of Design of Everyday Things" class="h-full w-full object-cover" data-alt="Book cover with teapot illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKNQcKsBSE9anMooGpnVleWdomW6Id1iHW5nKXY7ivOJgTmYIggYlo7SzJBnrQ0A4y8ODcXAqG1CDZhev4QJkZ39lyibHFOpEnjrZPXV17shdogES21_8uLjuWkm7ITKbYdtxE6ktJrEzrbqTWQMTMVcKvVVnUFB49HD7Uz1kME-82N1L0yl9UnPotnMiWdKnNZ2lUWuxxuuWW-DTWzho__9aCzq74fg8NxT74h4aaFddVSeeMb2yDxJh9O2C5FDxQ_12auLrFQtrq"/>
+<div class="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white">
+<span class="material-symbols-outlined text-[16px]">cloud_download</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<h4 class="line-clamp-1 text-sm font-bold text-text-main-light dark:text-text-main-dark">The Design of Everyday Things</h4>
+<p class="line-clamp-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Don Norman</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Nav -->
+<nav class="absolute bottom-0 z-30 w-full border-t border-gray-100 dark:border-gray-800 bg-surface-light dark:bg-surface-dark pb-6 pt-2">
+<div class="flex justify-around items-end px-2">
+<a class="group flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-medium tracking-wide">Beranda</span>
+</a>
+<a class="group flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">search</span>
+<span class="text-[10px] font-medium tracking-wide">Pencarian</span>
+</a>
+<a class="group flex flex-1 flex-col items-center justify-center gap-1 text-primary dark:text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px] fill-current">library_books</span>
+<div class="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500 border border-white dark:border-surface-dark"></div>
+</div>
+<span class="text-[10px] font-bold tracking-wide">Koleksi</span>
+</a>
+<a class="group flex flex-1 flex-col items-center justify-center gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium tracking-wide">Akun</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

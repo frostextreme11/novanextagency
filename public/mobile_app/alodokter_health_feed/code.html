@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alodokter Health Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/20">
+<div class="relative flex h-full min-h-screen w-full flex-col mx-auto max-w-md bg-white dark:bg-background-dark overflow-x-hidden shadow-2xl">
+<!-- Header -->
+<header class="sticky top-0 z-20 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-4 pt-4 pb-2 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<!-- Custom Logo Icon (simulated) -->
+<div class="flex items-center justify-center size-8 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[24px]">medical_services</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Alodokter</h1>
+</div>
+<button class="relative p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white dark:border-background-dark"></span>
+</button>
+</div>
+<div class="mb-2">
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white">Selamat Pagi, Sarah</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400">Semoga harimu sehat selalu.</p>
+</div>
+</header>
+<!-- Search Bar -->
+<div class="px-4 py-3 bg-white dark:bg-background-dark">
+<label class="relative flex items-center w-full">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="material-symbols-outlined text-primary">search</span>
+</div>
+<input class="block w-full p-3 pl-10 text-sm text-slate-900 border border-slate-200 rounded-xl bg-slate-50 focus:ring-primary focus:border-primary dark:bg-slate-800 dark:border-slate-700 dark:placeholder-slate-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary transition-shadow shadow-sm" placeholder="Cari info kesehatan, penyakit, obat..." required="" type="text"/>
+</label>
+</div>
+<!-- Scrollable Content -->
+<main class="flex-1 pb-24">
+<!-- Categories -->
+<div class="flex gap-2 overflow-x-auto px-4 pb-4 hide-scrollbar">
+<button class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold whitespace-nowrap shadow-sm shadow-primary/30">
+<span>Terbaru</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span>Penyakit</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span>Kesehatan Anak</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span>Hidup Sehat</span>
+</button>
+<button class="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium whitespace-nowrap hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span>Kandungan</span>
+</button>
+</div>
+<!-- Featured Carousel -->
+<section class="mb-6">
+<div class="px-4 mb-3 flex justify-between items-end">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Pilihan Editor</h3>
+<a class="text-sm font-medium text-primary hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="flex overflow-x-auto gap-4 px-4 pb-4 hide-scrollbar snap-x snap-mandatory">
+<!-- Featured Card 1 -->
+<div class="relative shrink-0 snap-center w-72 h-44 rounded-2xl overflow-hidden shadow-md group cursor-pointer">
+<img alt="Pregnant woman holding belly outdoors" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyKvySVpohnWcnoIN4yLIqL6v020OwArv0r1n0DduGBoExz7cdZ7txjENSXQOAuNFaE1epHajY0eoQ33JNZ3V7N0vcjTJUXz0vQh16ALtp5cLriavk6tIoQ4fvf9A7eVgjVn3U3VjNufS3DRo8irXZcLZ_KLQZ8U4g80PVr1MTXjXQjw2ccYPusEG2ZF0tbT79R1QhFZ-wapvSgKz0KQbVoDvQZEkytGfa3tF-3PPX1GtKQ-wu2cRWtsz_uzVeJHh4295bsMGF1HJJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 w-full">
+<span class="inline-block px-2 py-0.5 mb-2 text-xs font-bold text-white bg-primary rounded-md">Ibu &amp; Balita</span>
+<h4 class="text-white font-bold text-lg leading-tight line-clamp-2">Tips Nutrisi Penting untuk Ibu Hamil Trimester Pertama</h4>
+</div>
+</div>
+<!-- Featured Card 2 -->
+<div class="relative shrink-0 snap-center w-72 h-44 rounded-2xl overflow-hidden shadow-md group cursor-pointer">
+<img alt="Person working out with dumbbells" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD506QKgQmQ6C6A_BQSOepQz-iuUisgQfocB5JaUwzf7W4_yovhJwPFPNx2Y6ryAErm1nm3d11TtE1f4AY4gF4LhyrB_ZiZ3MJgH_vtSn_4u2WB300DqO-bU3HAFoxXvFjAlriKODosmZG50CG1_M0RpaWLYbNfiKc2mmHHrp5cXpRFcNzNhfl948S4SiWWDpopLq-NW-6-wZ4hxWHy9jT5881u234PkPa6TuFZLb2kSiB1odn6PZccGWAa5KJL8Ckswktk5S6osw8l"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 w-full">
+<span class="inline-block px-2 py-0.5 mb-2 text-xs font-bold text-white bg-green-500 rounded-md">Hidup Sehat</span>
+<h4 class="text-white font-bold text-lg leading-tight line-clamp-2">5 Gerakan Olahraga Ringan untuk Jaga Imunitas</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Article Feed -->
+<section class="px-4 space-y-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Artikel Terbaru</h3>
+<!-- Article Card 1 -->
+<article class="flex bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 active:scale-[0.99] transition-transform">
+<div class="w-24 h-24 sm:w-32 sm:h-auto shrink-0 relative bg-slate-200">
+<img alt="Medical stethoscope on blue background" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd7wJbJE0eSYDN9OCttGgUBz101T6JmdyWFUGRGIfSbJzmNpk4lR1yv6xXQCuPYz6w8jMdX6XW0th9hZZ8DeQCA2BTbjtG-z9t_8Yoom0TmG-ZWOopaQyEudJFLQ2am-cOnBiFonlX5m4bWQsxVoZbZG7d2Gnhn35hMUs8HMxJSWkkQm_o6mmXrueDCaMJegBNc0vjafpci6vGsmqsfSgBzR3SYOF1QBa1PBl_-YxTKs8xxw3W9xhnUpt_wzA7plNiZ4YpcvAmLuon"/>
+</div>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Penyakit</span>
+<span class="text-[10px] text-slate-400">• 5 min baca</span>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1 line-clamp-2">Gejala Demam Berdarah yang Perlu Diwaspadai Sejak Dini</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                Kenali tanda-tanda awal DBD pada anak dan orang dewasa agar penanganan bisa segera dilakukan.
+                            </p>
+</div>
+</div>
+</article>
+<!-- Article Card 2 -->
+<article class="flex bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 active:scale-[0.99] transition-transform">
+<div class="w-24 h-24 sm:w-32 sm:h-auto shrink-0 relative bg-slate-200">
+<img alt="Baby receiving vaccination shot" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyq6XfwY3QR7RyKGAHujdUjITdWG_YTFu70ksIN0Dh76PFm0Yt13rCFdBopl-vscK8hG_tIbukga6QkoxH5XwNgCIpNd0jLVo7lJg6cZU1on1gs3scuDu5Wb1QzGLDO_N55TE3ZPRb-olyNQ1C-7bfYEdvdYeUQq-RACICT5IRawa5pfoDkajmvH3haZmziNlb60Enwq0uWS6Hpyusg8Aax25sniaZ5AoWz_oahwNj-0mLe2G6iessepMxjyu8yfs7NCpheWfcGHvL"/>
+</div>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider">Kesehatan Anak</span>
+<span class="text-[10px] text-slate-400">• 7 min baca</span>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1 line-clamp-2">Jadwal Imunisasi Lengkap untuk Bayi Usia 0-12 Bulan</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                Panduan lengkap imunisasi dasar yang wajib diberikan kepada bayi untuk mencegah penyakit berbahaya.
+                            </p>
+</div>
+</div>
+</article>
+<!-- Article Card 3 -->
+<article class="flex bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 active:scale-[0.99] transition-transform">
+<div class="w-24 h-24 sm:w-32 sm:h-auto shrink-0 relative bg-slate-200">
+<img alt="Fresh vegetables and fruits in bowl" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjjYEQaXD2dmHN5cDVKT6DqeqUO-9lL-p1R8yR3IuQe7N4cPD8b39y_1T6leW7qAoQW8PCtH5G56DQwNPqeDna5aZBi_cE6_WgbwGHfPNJKXo7JCGHt9QHoz4Ph7MQXvEe3_zIu6UblHVR1XffVuBO94oqojxWskdxrOR4fhzBISWulU1BHbZxz0kGCZwMFfLFaa_frYWPmcwzANwMLU26L8LZoPg4XREEUFjEv2pQG6sIZniLuTaV9hjo2uNxq6aj2jHP2ulif9pb"/>
+</div>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-green-600 uppercase tracking-wider">Diet &amp; Nutrisi</span>
+<span class="text-[10px] text-slate-400">• 4 min baca</span>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1 line-clamp-2">Makanan Kaya Zat Besi untuk Mencegah Anemia</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                Daftar makanan sehari-hari yang ampuh meningkatkan kadar hemoglobin dalam darah.
+                            </p>
+</div>
+</div>
+</article>
+<!-- Article Card 4 -->
+<article class="flex bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 active:scale-[0.99] transition-transform">
+<div class="w-24 h-24 sm:w-32 sm:h-auto shrink-0 relative bg-slate-200">
+<img alt="Doctor consulting patient in office" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrmtM0nfPlb8P-Nu78eFwKA_qNK6_DBVoTgPfzPEAK5mjyGzdIlDJGRDxNqExyMlZouVrsi6LKhE2J8pRZnrAY8Vw9xxCH5HO8T6dWB5YgdGVcoC8wtKdTHHM0c8qlVc_kQBSHkOo1qav4iKXhvfyqnKmzzbazM6BCqeLDLMbj3euUVRQ_pZV2zJ6mE8asEpy-FnY1xd-JmuCjXkV1Ir2uVu_T3RiH8rnFp6FM7wkl9IZm1zM6J5KTWww1QG9ZsHYe4FlYIu1ymAOR"/>
+</div>
+<div class="flex-1 p-3 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="text-[10px] font-bold text-orange-500 uppercase tracking-wider">Umum</span>
+<span class="text-[10px] text-slate-400">• 3 min baca</span>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white leading-tight mb-1 line-clamp-2">Kapan Harus ke Dokter Saat Flu?</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                Jangan abaikan flu yang tak kunjung sembuh. Ketahui kapan waktu yang tepat untuk konsultasi.
+                            </p>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Bottom Navbar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-background-dark/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 max-w-md mx-auto">
+<div class="flex justify-around items-center px-2 py-2 pb-5"> <!-- pb-5 for iOS home indicator spacing -->
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-1 text-primary group" href="#">
+<span class="material-symbols-outlined text-[26px] group-hover:scale-110 transition-transform filled">home</span>
+<span class="text-[10px] font-semibold tracking-wide">Home</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-[26px] group-hover:scale-110 transition-transform">medical_services</span>
+<span class="text-[10px] font-medium tracking-wide">Consult</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-[26px] group-hover:scale-110 transition-transform">local_mall</span>
+<span class="text-[10px] font-medium tracking-wide">Shop</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-1 text-slate-400 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-[26px] group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium tracking-wide">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

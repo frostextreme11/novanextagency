@@ -11,10 +11,10 @@ const companies = [
 ];
 
 const stats = [
-    { value: 1000, suffix: "+", label: "Proyek", gradient: "from-primary to-purple-400" },
-    { value: 99, suffix: "%", label: "Kepuasan", gradient: "from-purple-400 to-pink-400" },
-    { value: 24, suffix: "/7", label: "Support", gradient: "from-pink-400 to-orange-400" },
-    { value: 5, suffix: "th", label: "Tahun", gradient: "from-orange-400 to-yellow-400" },
+    { value: 1000, suffix: "+", label: "Proyek Selesai", gradient: "from-primary to-purple-400" },
+    { value: 99, suffix: "%", label: "Klien Puas", gradient: "from-purple-400 to-pink-400" },
+    { value: 24, suffix: "/7", label: "Tim Standby", gradient: "from-pink-400 to-orange-400" },
+    { value: 5, suffix: "th+", label: "Pengalaman", gradient: "from-orange-400 to-yellow-400" },
 ];
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -66,10 +66,10 @@ export default function TrustedBy() {
                 >
                     <div className="w-full md:w-1/3 text-center md:text-left">
                         <h3 className="text-xl sm:text-2xl font-display font-bold text-white mb-2">
-                            Trusted by Visionaries
+                            Dipercaya Para Pebisnis
                         </h3>
                         <p className="text-sm text-slate-500">
-                            Mendukung pertumbuhan bisnis digital 1000+ perusahaan.
+                            Sudah 1000+ bisnis berkembang bareng NovaNext — giliran kamu.
                         </p>
                     </div>
                     <div className="w-full md:w-2/3">

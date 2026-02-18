@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pizza Hut Side Dish Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9182c",
+                        "primary-dark": "#a01323", 
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211113",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2d1b1e",
+                        "text-main-light": "#1b0e10",
+                        "text-main-dark": "#f8f6f6",
+                        "text-sub-light": "#6b4f52",
+                        "text-sub-dark": "#d1b0b4",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main-light dark:text-text-main-dark min-h-screen flex flex-col antialiased">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 flex items-center justify-between border-b border-primary/10 dark:border-primary/20">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-primary/10 transition-colors active:scale-95 text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined !text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-center flex-1 pr-10">Menu Sampingan</h1>
+</header>
+<!-- Categories -->
+<div class="sticky top-[64px] z-40 bg-background-light dark:bg-background-dark pt-2 pb-4">
+<div class="flex gap-3 px-4 overflow-x-auto hide-scrollbar snap-x">
+<button class="snap-start shrink-0 h-9 px-5 rounded-full bg-primary text-white text-sm font-semibold shadow-md shadow-primary/20 transition-transform active:scale-95">
+                Semua
+            </button>
+<button class="snap-start shrink-0 h-9 px-5 rounded-full bg-surface-light dark:bg-surface-dark border border-primary/10 text-text-main-light dark:text-text-main-dark text-sm font-medium hover:bg-primary/5 transition-colors active:scale-95">
+                Pasta
+            </button>
+<button class="snap-start shrink-0 h-9 px-5 rounded-full bg-surface-light dark:bg-surface-dark border border-primary/10 text-text-main-light dark:text-text-main-dark text-sm font-medium hover:bg-primary/5 transition-colors active:scale-95">
+                Wings
+            </button>
+<button class="snap-start shrink-0 h-9 px-5 rounded-full bg-surface-light dark:bg-surface-dark border border-primary/10 text-text-main-light dark:text-text-main-dark text-sm font-medium hover:bg-primary/5 transition-colors active:scale-95">
+                Salad
+            </button>
+<button class="snap-start shrink-0 h-9 px-5 rounded-full bg-surface-light dark:bg-surface-dark border border-primary/10 text-text-main-light dark:text-text-main-dark text-sm font-medium hover:bg-primary/5 transition-colors active:scale-95">
+                Minuman
+            </button>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 px-4 pb-32">
+<div class="grid grid-cols-2 gap-4">
+<!-- Item 1: Beef Lasagna -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Beef Lasagna with melted cheese" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Beef Lasagna with melted cheese" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs5prwsjqqbYRbwQ2KnWXythcBiStFuYWCwe98V3sPOSvzEF43AYOFwWU05sSQirO1aAVqwhCFt8MVZZe79nP9Uud1zafHLzGbR9uxcaGoXwYlbX4w3nt_8axQUBjT8KmqLA6fiMN4zF7OrSUNgRJcD8prdQZs1qp2FtrL9NlDdz8SUKFBhLL3U11QRv2sfqMcDJSWcY3whNUsjIlQJISboajTFeir_MoynSLNeYpaM0GfoCFjT8Mb2YRtW0hNdFQgS8EjXE3xVtcB"/>
+<div class="absolute top-2 right-2 bg-white/90 dark:bg-black/80 backdrop-blur px-2 py-0.5 rounded-md text-xs font-bold text-primary">
+                        Best Seller
+                    </div>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Beef Lasagna</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Lapisan pasta lembut dengan daging sapi cincang premium.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 56.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2: Chicken Wings -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Spicy BBQ Chicken Wings" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Spicy BBQ Chicken Wings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlJPmErom2Y4k-tGEpWdKhTHIOiUurPwOtH9KGz1_hkP_jvlZytIrcSWAek9Go8kHjpiKNRGHh60jdmZheGz4bBQdzk_AvLHUd4_4hbvleCOjiq4n5hcLjyTKMhPsaGpvQnx766vs1xXN7eL-WK4c9k4VO2RhfXrds91kjsv26qA7lJnS9zfn2hHJejdpBCDhiPQeiJya2xVOdforRgv7AK5BLqjcuUgS7dfhSv8EMqeL7tu9hlTifYYOwT39R4szuS9xozN7hk8d6"/>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Chicken Wings</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Sayap ayam panggang dengan bumbu BBQ spesial.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 42.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3: Fresh Salad -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Fresh Garden Salad Bowl" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Fresh Garden Salad Bowl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALJD3_9FBaZaSQ-m8KazpdO0b2MLUgPnmv-d_iHALHY9G2q1VZM4yb8TBxw3424zNr9VXalMh5oDyAmbP2rLEWQ-deKfG480-zN8wco1NT_ImYDf9YkazNQwx93kESOaB1P5_sFwWoe0ALDcsPxsL5UwCuHGqbyMJgmczEDWXv2b1snJmKUZ2LDJR-OpBTFZXiv8W45qeiGPjQcyRnJgJJImCE11bvWaTqD4iuqikSjY6B5TBTB1BRxG_VwbjG_xX8NbuBw2uCBf7M"/>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Fresh Salad</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Sayuran segar pilihan dengan dressing thousand island.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 35.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 4: Garlic Bread -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Toasted Garlic Bread Slices" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Toasted Garlic Bread Slices" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOhT8KwCkmMHFi6_e7F43MEMllkMb5-uEiZFrL-wcLrhMtW07_mJjo2LkujiO0uTlxKiCeCW9gcyqlEhxwgw_MiK7kWOyA71e7zTor6_A7_xK0qT9HFmsqLijZvas1xZiaymZQV6G1_Mn867cPIcQQ7JJoEMQuUWT8jYk2XreukLif2IRjhPYnCGQg6grt_Cbn_G0B0TdJ2m7Tl1eaxK_lfHcpZspHPW5f-qWxRvJR9nZTs_htCbDVD-PlhfE6_SWEvF3nzFjALwQE"/>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Garlic Bread</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Roti panggang renyah dengan olesan mentega bawang.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 25.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 5: Cheese Rolls -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Golden Cheese Rolls" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Golden Cheese Rolls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqIdZRI_vhrT2hXXKUSYWT_RtiYHpYqqIk9LOVmqQMsxK1w6GuRIfccgrGu24gS6ypsg4BvQNTZesMJifgiaOHQ4_P5KM92i-GQva0ks9f_uFglcEzmtxQZy_tjDIHdAcTuDnvrVxOChpXXosnPrars9j8AVVzjgsZxjBwUOzpLpVZNyyH21wOFoch3OstaXofFfQGhL_KXYFTh-74yhqF8pHK9CNVaM-rq8t-qDHsvxghYaoT5F-5OuEcQP5EoBvb8JpkI84HOR2g"/>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Cheese Rolls</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Gulungan keju mozzarella yang lumer di mulut.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 32.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 6: Sausage Pastry -->
+<div class="group relative flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden shadow-sm border border-primary/5 hover:border-primary/20 transition-all">
+<div class="aspect-[4/3] w-full overflow-hidden relative">
+<img alt="Sausage Pastry Rolls" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105" data-alt="Sausage Pastry Rolls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALMzGKiOPACzZ6hTx1FOSveG7Y-vmgyyXuP7jri0jb54QjX-sdvv6t_Xa7Sdd_bCyCw6bzLkogMahWRLzm9Lf5KW8cIw7IhbAy3TQSaTTYFmSv5PTFSxcxjAG0EP8uFQCh7ErPWi8l86OxH1x9sdNl98w5dsHWjqGTO_tB4CnCt5ie-SCfqMwQEb9P4ZbgtPhQFUSD4m6hnGOJac46ssNxaAS5q_ZxKbEsgo5bucSvSM-OqDKZgB-ERUEWEa_lOiydF_WMl1D169eM"/>
+</div>
+<div class="p-3 flex flex-col flex-1 gap-2">
+<h2 class="text-base font-extrabold leading-tight line-clamp-2">Sausage Roll</h2>
+<p class="text-xs text-text-sub-light dark:text-text-sub-dark line-clamp-2 leading-relaxed">Pastry renyah membalut sosis sapi pilihan.</p>
+<div class="mt-auto pt-2 flex items-center justify-between">
+<span class="text-primary font-bold text-sm">Rp 28.000</span>
+<button class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-dark transition-colors active:scale-90">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Sticky Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-transparent pointer-events-none">
+<div class="pointer-events-auto shadow-[0_-8px_30px_rgba(0,0,0,0.12)] bg-surface-light dark:bg-surface-dark border border-primary/10 rounded-2xl p-4 flex items-center justify-between gap-4 max-w-lg mx-auto w-full">
+<div class="flex flex-col">
+<span class="text-xs font-medium text-text-sub-light dark:text-text-sub-dark">Total Tambahan</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined !text-base text-primary">shopping_bag</span>
+<span class="text-base font-bold text-text-main-light dark:text-text-main-dark">2 item</span>
+</div>
+</div>
+<button class="flex-1 bg-primary hover:bg-primary-dark text-white h-11 px-6 rounded-xl font-bold text-sm shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all active:scale-95">
+<span>Lanjut ke Keranjang</span>
+<span class="material-symbols-outlined !text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

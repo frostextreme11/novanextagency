@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Detail Texture Zoom</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f22674",
+                        "background-light": "#f8f5f7",
+                        "background-dark": "#221017",
+                        "gold": {
+                            400: "#FCD34D", // Fallback yellow
+                            500: "#D4AF37", // Classic gold
+                            600: "#B4941F", // Darker gold
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Gold Gradient Text/Icon Utility */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 50%, #B4941F 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: #D4AF37; /* Fallback */
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(34, 16, 23, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hide scrollbar for immersive feel */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased overflow-hidden h-screen w-screen selection:bg-primary selection:text-white">
+<!-- Main Container -->
+<div class="relative w-full h-full flex flex-col justify-between">
+<!-- Immersive Background Image Layer -->
+<!-- Using a placeholder that suggests silk texture -->
+<div class="absolute inset-0 w-full h-full z-0 bg-cover bg-center bg-no-repeat transform scale-100 transition-transform duration-700 ease-out hover:scale-105" data-alt="Extreme close up of luxurious pink silk fabric texture with intricate monogram pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqkRrjcWdQAzCoDtnCStO1hDvwV_uliV7Xv3TBYAqstUJpA96P1igQQMpRUmPRdkTILeOr0o_JsK6_y2Tt0vK1Yl56Rlnqkc38S3NLyMRKjdlsViLe2-7bKsEOuXYl3Bny0pwewRVTghhP84_qPy7X9wcOeEmh0WtgmyO2yYrX8nVI9YRd1FEJMRl1Kt_ntjE60827aAFj5GTDQxoSsQDVBVQgzwgoJMeti3tlV6rUwinQ3BHy2rkyvqnuInsogIIceOfBpdTUZBxO');">
+<!-- Vignette overlay for better text visibility at edges -->
+<div class="absolute inset-0 bg-gradient-to-b from-background-dark/60 via-transparent to-background-dark/60 pointer-events-none"></div>
+</div>
+<!-- Top Navigation Overlay -->
+<header class="relative z-10 w-full p-6 flex items-center justify-between pt-12 md:pt-6">
+<!-- Back Button -->
+<button class="flex items-center justify-center size-10 rounded-full glass-panel hover:bg-white/10 transition-colors group">
+<span class="material-symbols-outlined text-gold-gradient text-[28px] group-hover:scale-110 transition-transform">
+                    chevron_left
+                </span>
+</button>
+<!-- Share Button -->
+<button class="flex items-center justify-center size-10 rounded-full glass-panel hover:bg-white/10 transition-colors group">
+<span class="material-symbols-outlined text-gold-gradient text-[24px] group-hover:scale-110 transition-transform">
+                    ios_share
+                </span>
+</button>
+</header>
+<!-- Center Interaction Area (Invisible, just spacing) -->
+<div class="flex-grow flex items-center justify-center pointer-events-none">
+<!-- Optional: Hint for interaction (fades out after a few seconds in a real app) -->
+<!-- <div class="opacity-0 animate-pulse text-white/50 text-sm font-light tracking-widest">PINCH TO ZOOM</div> -->
+</div>
+<!-- Bottom Controls & Info -->
+<footer class="relative z-10 w-full p-8 pb-12 flex flex-col items-center gap-6">
+<!-- Floating Info Label -->
+<div class="glass-panel px-5 py-2.5 rounded-full flex items-center gap-3 shadow-2xl shadow-black/50">
+<!-- Icon Indicator -->
+<div class="flex items-center justify-center text-gold-gradient">
+<span class="material-symbols-outlined text-[18px]">
+                        stars
+                    </span>
+</div>
+<!-- Text -->
+<div class="flex flex-col">
+<span class="text-white/90 text-xs font-semibold tracking-[0.15em] uppercase leading-none">
+                        Monogram Signature
+                    </span>
+</div>
+<!-- Primary Accent Dot (Subtle branding) -->
+<div class="size-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(242,38,116,0.8)] ml-1"></div>
+</div>
+<!-- Optional: Zoom Indicator / Controls (Visual cue only) -->
+<div class="flex items-center gap-4 opacity-0"> <!-- Hidden for pure minimal requirement, but structure remains for future -->
+<button class="text-white/50 hover:text-white transition-colors">
+<span class="material-symbols-outlined">remove_circle_outline</span>
+</button>
+<div class="w-32 h-1 bg-white/20 rounded-full overflow-hidden">
+<div class="h-full w-1/3 bg-gold-500 rounded-full"></div>
+</div>
+<button class="text-white/50 hover:text-white transition-colors">
+<span class="material-symbols-outlined">add_circle_outline</span>
+</button>
+</div>
+</footer>
+</div>
+<!-- Background texture grain (optional for ultra premium feel) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-50 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
+</body></html>

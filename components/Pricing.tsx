@@ -8,7 +8,7 @@ const tiers = [
         name: "Website UMKM",
         tagline: "Starter Pack",
         icon: "store",
-        desc: "Solusi tepat untuk bisnis yang baru merambah dunia digital. Cepat, Murah, Keren.",
+        desc: "Baru mau go online? Tenang, kita buatin website keren yang langsung bisa jalan. Nggak ribet.",
         cta: "Saya%20mau%20bikin%20website%20untuk%20umkm%20saya",
         featured: false,
         features: [
@@ -26,7 +26,7 @@ const tiers = [
         name: "Website Corporate",
         tagline: "Business Growth",
         icon: "business",
-        desc: "Upgrade kredibilitas perusahaan dengan website company profile yang profesional dan elegan.",
+        desc: "Bikin perusahaan kamu keliatan makin kredibel dan profesional. Client auto yakin.",
         cta: "Saya%20tertarik%20bikin%20website%20corporate",
         featured: true,
         features: [
@@ -46,7 +46,7 @@ const tiers = [
         name: "Aplikasi Mobile",
         tagline: "Enterprise Scale",
         icon: "smartphone",
-        desc: "Jangkau pelanggan di genggaman mereka dengan aplikasi Android & iOS native.",
+        desc: "Pelanggan kamu tinggal buka HP, semua langsung di ujung jari. Smooth & powerful.",
         cta: "Saya%20mau%20bikin%20aplikasi%20mobile%20untuk%20brand%20saya",
         featured: false,
         features: [
@@ -77,11 +77,11 @@ export default function Pricing() {
                     className="text-center mb-16 sm:mb-20"
                 >
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-6">
-                        Investasi Terbaik
+                        Pilih Paket, Langsung Jalan
                     </h2>
                     <p className="text-slate-400 max-w-xl mx-auto">
-                        Pilih paket yang sesuai dengan skala bisnis Anda. Semua paket sudah
-                        termasuk hosting & domain.
+                        Nggak perlu bingung. Tinggal pilih yang cocok — semua paket udah
+                        termasuk hosting, domain, dan SSL gratis.
                     </p>
                 </motion.div>
 
@@ -180,7 +180,7 @@ export default function Pricing() {
                                     : "bg-white/5 hover:bg-white/20 border border-white/10 text-white"
                                     }`}
                             >
-                                <span className="relative z-10">Gratis Konsultasi</span>
+                                <span className="relative z-10">Chat Sekarang — Gratis</span>
                                 {tier.featured && (
                                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                                 )}

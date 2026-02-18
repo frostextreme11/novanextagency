@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flight Search Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25", // Traveloka Orange
+                        "secondary": "#1ba0e2", // Traveloka Blue accent often found
+                        "background-light": "#f2f3f3", // Light gray background for contrast
+                        "background-dark": "#1c1c1e",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2c2c2e",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 8px rgba(0, 0, 0, 0.05)',
+                        'card': '0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-gray-900 dark:text-gray-100 min-h-screen pb-20">
+<!-- Sticky Header Container -->
+<div class="sticky top-0 z-50 bg-primary shadow-md">
+<!-- Top App Bar -->
+<div class="px-4 py-3 flex items-center justify-between text-white">
+<button class="flex items-center justify-center p-1 rounded-full hover:bg-white/10 transition">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="flex flex-col items-center flex-1 mx-2">
+<div class="flex items-center gap-1 text-base font-bold leading-tight">
+<span>Jakarta (JKT)</span>
+<span class="material-symbols-outlined text-[16px]">arrow_right_alt</span>
+<span>Bali (DPS)</span>
+</div>
+<div class="text-xs font-medium text-white/90 mt-0.5">
+                    Sat, 24 Oct • 1 Passenger • Economy
+                </div>
+</div>
+<button class="flex items-center justify-center p-1 rounded-full hover:bg-white/10 transition">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</button>
+</div>
+<!-- Filter Bar -->
+<div class="bg-white dark:bg-surface-dark py-3 px-4 border-b border-gray-100 dark:border-gray-800">
+<div class="flex gap-3 overflow-x-auto hide-scrollbar snap-x">
+<!-- Active Filter -->
+<button class="snap-start shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/10 border border-primary text-primary text-sm font-bold">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                    Filter
+                </button>
+<!-- Sort Options -->
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    Termurah
+                </button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    Waktu
+                </button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    Langsung
+                </button>
+<button class="snap-start shrink-0 px-4 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    Maskapai
+                </button>
+</div>
+</div>
+</div>
+<!-- Main Content: Flight Cards -->
+<main class="p-4 space-y-4 max-w-lg mx-auto">
+<!-- Promo Banner -->
+<div class="rounded-xl overflow-hidden bg-gradient-to-r from-blue-600 to-blue-400 text-white p-4 flex items-center justify-between shadow-soft mb-2">
+<div>
+<p class="text-xs font-semibold opacity-80 uppercase tracking-wider">Special Offer</p>
+<p class="font-bold text-lg leading-tight">Use coupon FLIGHT10</p>
+<p class="text-xs mt-1 opacity-90">Get IDR 100.000 off today!</p>
+</div>
+<div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+<span class="material-symbols-outlined text-[28px]">airplane_ticket</span>
+</div>
+</div>
+<!-- Flight Card 1: Garuda (Premium) -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-soft transition group cursor-pointer border border-transparent hover:border-primary/20">
+<!-- Airline Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center overflow-hidden">
+<!-- Placeholder logo with description -->
+<img alt="Garuda Indonesia tail wing logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTsyczWuJfmi4KZjvIt1FacaipHVo_Ru6On4cAu4UgkfyX4CL0fO80sup_CuG3aRzw8uQPIQTJRANQLK1QgwJxr54eeskPnu5Bv2n5nvJiqhzP8PFtbZ5o72b2FuuYDGCepJUvVJP45bkZfZPwOUMepJM4rIv28yJoDNbziDt5TpVJEqpVyHg1HS9ZKjbIuTu6eNASFtFFShL7wxLj3NPeLTYIAQ9NouqY84JCpeB_usOhP6lS5JGF0XkmQBiBni4QFoRd7b8EHM23"/>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white text-sm">Garuda Indonesia</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">GA-402 • Boeing 737</p>
+</div>
+</div>
+</div>
+<!-- Flight Details -->
+<div class="flex items-center justify-between mb-4">
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">07:00</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">JKT</div>
+</div>
+<div class="flex-1 flex flex-col items-center px-4">
+<p class="text-xs text-gray-500 mb-1">1h 50m</p>
+<div class="w-full flex items-center gap-1">
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+<span class="material-symbols-outlined text-gray-400 text-[16px] rotate-90">flight</span>
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+</div>
+<p class="text-xs text-gray-500 mt-1">Direct</p>
+</div>
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">08:50</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">DPS</div>
+</div>
+</div>
+<!-- Footer: Price & Tags -->
+<div class="flex items-end justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+<div class="flex gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                        Refundable
+                    </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                        Reschedule
+                    </span>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 line-through">Rp 2.100.000</p>
+<p class="text-lg font-bold text-primary">Rp 1.850.000</p>
+<p class="text-[10px] text-gray-400">/pax</p>
+</div>
+</div>
+</div>
+<!-- Flight Card 2: Citilink (Cheaper) -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-soft transition group cursor-pointer border border-transparent hover:border-primary/20">
+<!-- Airline Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center overflow-hidden">
+<!-- Placeholder logo with description -->
+<img alt="Citilink green tail wing" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9xjvcF9t-IBFUNyI2jvQG7JMbTVQ_Mi8rBIVdo31-jDfoWuKqSvO8-izWAtrbgH-Apk3E_0DvxvFjuDOelQWz68x97NnEEyd6EiP0AhFdCllAJKIXUyCFjUBCwr63CaJhbVvAJrIPQvuTXoEKs4VSy0kO-jZsf8gyJy-qxSwW9zaBccXiPugDfnB8dKZyHleVJ5YLD6qFauQ6MHQLng-CRfHBlrtI2-RzTf38sCG4milHLU23Gpjxwsa7i8i_m-qMifI6JwLSyaqk"/>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white text-sm">Citilink</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">QG-680 • Airbus A320</p>
+</div>
+</div>
+<!-- Badge for cheapest -->
+<div class="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide">
+                    Termurah
+                </div>
+</div>
+<!-- Flight Details -->
+<div class="flex items-center justify-between mb-4">
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">09:30</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">JKT</div>
+</div>
+<div class="flex-1 flex flex-col items-center px-4">
+<p class="text-xs text-gray-500 mb-1">1h 55m</p>
+<div class="w-full flex items-center gap-1">
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+<span class="material-symbols-outlined text-gray-400 text-[16px] rotate-90">flight</span>
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+</div>
+<p class="text-xs text-gray-500 mt-1">Direct</p>
+</div>
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">12:25</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">DPS</div>
+</div>
+</div>
+<!-- Footer: Price & Tags -->
+<div class="flex items-end justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+<div class="flex gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                        No Baggage
+                    </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                        Reschedule
+                    </span>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary">Rp 950.000</p>
+<p class="text-[10px] text-gray-400">/pax</p>
+</div>
+</div>
+</div>
+<!-- Flight Card 3: Batik Air -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-soft transition group cursor-pointer border border-transparent hover:border-primary/20">
+<!-- Airline Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center overflow-hidden">
+<!-- Placeholder logo with description -->
+<img alt="Batik Air abstract pattern logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgmrjFjE-6h0Dx5mFAdUY8Rz_cqG6ynOr0Ag5HizkeQ8K8rlHelu_iFx5Tv3EdGYW83i62eb5xKKLnTbC52OsQcr254NIzIWyHpbNNpSvX2WIz6s-esErMWJXPyuB7IHM3bM-gaFAtpfRDXDrwKxUvSOahMJDpBTKsDR0usyO10c5EOUdi3bpMSVknUxtIYOCGn5LFCsenmkq9QCsx7WQ3BO70QSDHnAgI5LBz4p6y4f8OA-9FmCNMLju2S-5sKgJs1ssGomnkJEEH"/>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white text-sm">Batik Air</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">ID-6500 • Boeing 737</p>
+</div>
+</div>
+</div>
+<!-- Flight Details -->
+<div class="flex items-center justify-between mb-4">
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">14:00</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">JKT</div>
+</div>
+<div class="flex-1 flex flex-col items-center px-4">
+<p class="text-xs text-gray-500 mb-1">1h 50m</p>
+<div class="w-full flex items-center gap-1">
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+<span class="material-symbols-outlined text-gray-400 text-[16px] rotate-90">flight</span>
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+</div>
+<p class="text-xs text-gray-500 mt-1">Direct</p>
+</div>
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">16:50</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">DPS</div>
+</div>
+</div>
+<!-- Footer: Price & Tags -->
+<div class="flex items-end justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+<div class="flex gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+                        Meal Included
+                    </span>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary">Rp 1.250.000</p>
+<p class="text-[10px] text-gray-400">/pax</p>
+</div>
+</div>
+</div>
+<!-- Flight Card 4: Lion Air (Layover) -->
+<div class="bg-white dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-soft transition group cursor-pointer border border-transparent hover:border-primary/20 opacity-90">
+<!-- Airline Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center overflow-hidden">
+<!-- Placeholder logo with description -->
+<img alt="Lion Air red logo lion" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3sIndE7CM4uHE1SUP4loqVl3gDKBiU0XrSNBADR0FUqWgkWgo2eLaM9pDbKT5E5KqyQ0NBzIlwkQWc9mjlpF_HLdldU7n5Pp8rr_yeqh9YlslNS_d1zFQHInO8N8PgjimAkcBrGP1ZX3QFN_UmX1LJ5nGV-e9Bodmo62t6K5SVwGNCXztibtHySKdtQd19Ls2zi1A3U89oCFC0R1AURhEg_rBg0B0d707G62gim9uy7xPTxxhzpVmIX8G3-6O6TIJJzLIZPytjhYC"/>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 dark:text-white text-sm">Lion Air</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">JT-32 • Boeing 737</p>
+</div>
+</div>
+</div>
+<!-- Flight Details -->
+<div class="flex items-center justify-between mb-4">
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">16:30</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">JKT</div>
+</div>
+<div class="flex-1 flex flex-col items-center px-4">
+<p class="text-xs text-gray-500 mb-1">4h 20m</p>
+<div class="w-full flex items-center gap-1">
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+<div class="flex flex-col items-center">
+<span class="w-2 h-2 rounded-full bg-gray-400 mb-[2px]"></span>
+<span class="text-[9px] text-gray-400 font-medium">1 Stop</span>
+</div>
+<div class="h-[1px] bg-gray-300 dark:bg-gray-600 flex-1"></div>
+</div>
+<p class="text-xs text-gray-500 mt-1">via SUB</p>
+</div>
+<div class="text-center min-w-[60px]">
+<p class="text-lg font-bold text-gray-900 dark:text-white">20:50</p>
+<div class="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-medium text-gray-600 dark:text-gray-300 mt-1">DPS</div>
+</div>
+</div>
+<!-- Footer: Price & Tags -->
+<div class="flex items-end justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+<div class="flex gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                        Economy
+                    </span>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-primary">Rp 800.000</p>
+<p class="text-[10px] text-gray-400">/pax</p>
+</div>
+</div>
+</div>
+<div class="text-center py-4">
+<button class="text-primary font-semibold text-sm flex items-center justify-center gap-1 mx-auto hover:underline">
+                See more flights
+                <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Simplified) -->
+<div class="fixed bottom-0 w-full bg-white dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-6 flex justify-between items-center z-40 h-[60px] md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col items-center gap-1 text-primary cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">search</span>
+<span class="text-[10px] font-medium">Search</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400 hover:text-primary transition cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">work_history</span>
+<span class="text-[10px] font-medium">My Booking</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-gray-400 hover:text-primary transition cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</div>
+<!-- Floating Action Button for Filters (Mobile enhancement) -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 md:hidden">
+<button class="bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-5 py-3 rounded-full shadow-xl flex items-center gap-2 font-bold text-sm transform transition hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+            Sort &amp; Filter
+        </button>
+</div>
+</body></html>

@@ -35,7 +35,7 @@ export default function Hero() {
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                         </span>
                         <span className="text-xs font-display font-medium text-white uppercase tracking-[0.2em]">
-                            Available for Projects
+                            Siap Menerima Project Baru
                         </span>
                     </motion.div>
 
@@ -46,12 +46,12 @@ export default function Hero() {
                         transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-8 tracking-tight"
                     >
-                        <span className="block mb-2 drop-shadow-2xl">Wujudkan Website</span>
+                        <span className="block mb-2 drop-shadow-2xl">Bikin Bisnis Kamu</span>
                         <span className="text-video-mask block pb-2">
-                            Masa Depan
+                            Go Digital
                         </span>
                         <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-slate-400 font-bold mt-4">
-                            & Aplikasi Impian
+                            Cepat, Keren & Profesional
                         </span>
                     </motion.h1>
 
@@ -62,9 +62,9 @@ export default function Hero() {
                         transition={{ delay: 0.6, duration: 0.6 }}
                         className="text-base sm:text-lg md:text-xl text-slate-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed"
                     >
-                        Transformasi digital dengan sentuhan{" "}
-                        <span className="text-white font-medium">Cyber-Elegance</span>. Kami
-                        menciptakan ekosistem digital yang tidak hanya fungsional, tapi memukau.
+                        Nggak perlu ribet ngurusin website & aplikasi sendiri.{" "}
+                        <span className="text-white font-medium">NovaNext</span> bantu kamu punya website dan aplikasi mobile yang
+                        bukan cuma jalan — tapi bikin pelanggan langsung wow.
                     </motion.p>
 
                     {/* CTA Buttons */}
@@ -78,7 +78,7 @@ export default function Hero() {
                             <div className="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-xl blur opacity-60 group-hover:opacity-100 transition duration-300" />
                             <div className="relative px-8 py-4 bg-black rounded-xl leading-none flex items-center justify-center gap-3 border border-white/10 group-hover:border-transparent transition-all">
                                 <span className="font-display font-bold text-white">
-                                    Konsultasi Gratis
+                                    Mulai Sekarang
                                 </span>
                                 <span className="material-icons text-white transform group-hover:translate-x-1 transition-transform">
                                     arrow_forward
@@ -89,7 +89,7 @@ export default function Hero() {
                             href="#services"
                             className="glass-panel px-8 py-4 rounded-xl text-white font-display font-semibold hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                         >
-                            <span>Lihat Portofolio</span>
+                            <span>Lihat Layanan</span>
                             <span className="material-icons text-sm">expand_more</span>
                         </Link>
                     </motion.div>

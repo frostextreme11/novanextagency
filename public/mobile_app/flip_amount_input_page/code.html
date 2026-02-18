@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flip Amount Input</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec6d13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221810",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Keypad Styles for active state simulation */
+        .keypad-btn:active {
+            background-color: rgba(236, 109, 19, 0.1);
+        }
+        
+        /* Hide scrollbar for clean mobile view */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col overflow-hidden text-[#1b130d] dark:text-white">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-4 py-3 bg-background-light dark:bg-background-dark sticky top-0 z-10">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[#1b130d] dark:text-white">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold text-[#1b130d] dark:text-white">Isi Nominal</h2>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col px-6 pt-6 pb-4">
+<!-- Input Section -->
+<div class="flex-1 flex flex-col items-center justify-center -mt-10 space-y-4">
+<!-- Amount Display -->
+<div class="text-center relative w-full">
+<span class="text-4xl text-gray-400 font-bold mr-1">Rp</span>
+<!-- The input is visually represented by this text for the custom keypad interaction simulation -->
+<h1 class="text-[56px] font-extrabold text-[#1b130d] dark:text-white inline-block tracking-tight leading-none">
+                    150.000<span class="text-primary animate-pulse">|</span>
+</h1>
+</div>
+<!-- Free Admin Fee Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 dark:bg-primary/20 rounded-full">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-primary text-sm font-bold">Biaya Admin: Rp0</span>
+</div>
+<!-- Helper Text -->
+<p class="text-gray-500 dark:text-gray-400 text-sm text-center max-w-[280px]">
+                Transfer jadi makin hemat tanpa biaya admin!
+            </p>
+<!-- Unique Code Info Card -->
+<div class="mt-6 w-full max-w-sm bg-white dark:bg-[#2f2219] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-3">
+<div class="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-full shrink-0">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 text-[20px]">info</span>
+</div>
+<div>
+<p class="text-sm text-[#1b130d] dark:text-gray-200 font-medium leading-snug">Kode Unik</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
+                        3 digit terakhir akan ditambahkan untuk verifikasi otomatis. Kode unik akan dikembalikan ke saldo Flip kakak.
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Section: Numeric Keypad & Action Button -->
+<div class="bg-white dark:bg-[#1a120c] rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-8 pt-4 z-20">
+<!-- Custom Numeric Keypad -->
+<div class="grid grid-cols-3 gap-y-4 gap-x-6 px-6 mb-6">
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">1</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">2</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">3</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">4</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">5</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">6</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">7</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">8</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">9</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-center">000</button>
+<button class="keypad-btn h-14 rounded-full text-2xl font-bold text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">0</button>
+<button class="keypad-btn h-14 rounded-full flex items-center justify-center text-[#1b130d] dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-3xl">backspace</span>
+</button>
+</div>
+<!-- Primary Action Button -->
+<div class="px-6">
+<button class="w-full bg-primary hover:bg-[#d65f0e] active:scale-[0.98] transition-all text-white font-bold text-lg py-4 rounded-xl shadow-lg shadow-orange-200 dark:shadow-none flex items-center justify-center gap-2">
+                Lanjut
+                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -34,13 +34,17 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex space-x-1 items-center bg-white/5 rounded-full p-1 border border-white/5">
-                    {["Layanan", "Harga", "Portofolio"].map((item) => (
+                    {[
+                        { label: "Layanan", href: "/#services" },
+                        { label: "Harga", href: "/#pricing" },
+                        { label: "Showcase", href: "/showcase" },
+                    ].map((item) => (
                         <Link
-                            key={item}
-                            href={`#${item.toLowerCase()}`}
+                            key={item.label}
+                            href={item.href}
                             className="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                         >
-                            {item}
+                            {item.label}
                         </Link>
                     ))}
                 </div>
@@ -78,14 +82,18 @@ export default function Navbar() {
                         className="absolute top-full left-0 right-0 p-4 z-40"
                     >
                         <div className="glass-panel mx-4 rounded-2xl p-6 flex flex-col gap-4">
-                            {["Layanan", "Harga", "Portofolio"].map((item) => (
+                            {[
+                                { label: "Layanan", href: "/#services" },
+                                { label: "Harga", href: "/#pricing" },
+                                { label: "Showcase", href: "/showcase" },
+                            ].map((item) => (
                                 <Link
-                                    key={item}
-                                    href={`#${item.toLowerCase()}`}
+                                    key={item.label}
+                                    href={item.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="text-lg font-medium text-slate-300 hover:text-white py-2 border-b border-white/5"
                                 >
-                                    {item}
+                                    {item.label}
                                 </Link>
                             ))}
                             <a

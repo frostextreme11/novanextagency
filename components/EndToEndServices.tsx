@@ -24,10 +24,10 @@ export default function EndToEndServices() {
                 >
                     <div>
                         <span className="text-primary-glow font-bold tracking-widest text-xs uppercase mb-3 block">
-                            Matrix Services
+                            Full Service
                         </span>
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white">
-                            Layanan End-to-End
+                            Semua Kebutuhan Digital, Satu Tempat
                         </h2>
                     </div>
                     <a
@@ -36,7 +36,7 @@ export default function EndToEndServices() {
                         rel="noopener noreferrer"
                         className="text-slate-400 hover:text-white flex items-center gap-2 group transition-colors text-sm sm:text-base"
                     >
-                        Lihat semua layanan
+                        Tanya langsung
                         <span className="material-icons transform group-hover:translate-x-1 transition-transform">
                             arrow_forward
                         </span>
@@ -62,8 +62,9 @@ export default function EndToEndServices() {
                                     Web Development
                                 </h3>
                                 <p className="text-slate-400 mb-8 leading-relaxed text-sm sm:text-base">
-                                    Bangun kehadiran digital yang kuat dengan teknologi web
-                                    terkini. Responsive, SEO-optimized, dan lightning fast.
+                                    Website yang nggak cuma keren dilihat, tapi juga ngebut,
+                                    SEO-friendly, dan bisa diakses dari HP manapun. Pakai
+                                    teknologi yang sama kayak startup Silicon Valley.
                                 </p>
                                 <div className="flex flex-wrap gap-3">
                                     {techTags.map((tag, i) => (
@@ -121,7 +122,8 @@ export default function EndToEndServices() {
                                 Mobile Apps
                             </h3>
                             <p className="text-slate-400 text-sm mb-6">
-                                Native iOS & Android dengan performa setara Silicon Valley.
+                                Aplikasi native iOS & Android yang smooth banget — bikin
+                                pelanggan betah di genggaman mereka.
                             </p>
                         </div>
                         <div className="flex items-center gap-4 text-slate-500 mt-auto">
@@ -151,8 +153,8 @@ export default function EndToEndServices() {
                             E-Commerce
                         </h3>
                         <p className="text-slate-400 text-sm">
-                            Toko online auto-pilot dengan payment gateway terintegrasi. Siap
-                            mendukung ribuan transaksi harian.
+                            Toko online yang jalan sendiri — payment otomatis, stok terupdate,
+                            dan siap handle ribuan transaksi tiap hari.
                         </p>
                     </motion.div>
 
@@ -167,10 +169,10 @@ export default function EndToEndServices() {
                         <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 sm:gap-8 h-full">
                             <div className="text-center sm:text-left">
                                 <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-2">
-                                    Butuh Solusi Custom?
+                                    Punya Ide Lain?
                                 </h3>
                                 <p className="text-indigo-200 text-sm sm:text-base">
-                                    Diskusikan kebutuhan spesifik sistem enterprise Anda.
+                                    Ceritain aja kebutuhan kamu — kita buatin solusi yang tepat.
                                 </p>
                             </div>
                             <a
@@ -179,7 +181,7 @@ export default function EndToEndServices() {
                                 rel="noopener noreferrer"
                                 className="bg-white text-indigo-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-sm sm:text-base font-bold shadow-lg hover:bg-indigo-50 transition-all transform hover:scale-105 flex items-center gap-2 whitespace-nowrap"
                             >
-                                Hubungi Tim Ahli
+                                Chat Sekarang
                                 <span className="material-icons">arrow_forward</span>
                             </a>
                         </div>

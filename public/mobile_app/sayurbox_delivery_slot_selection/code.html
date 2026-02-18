@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sayurbox Delivery Slot Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec6d",
+                        "primary-dark": "#0eb552",
+                        "accent-orange": "#ff8c00",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#102218",
+                        "kraft-paper": "#f4f1ea",
+                        "neutral-dark": "#1a3826",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    backgroundImage: {
+                        'kraft-texture': "url('https://www.transparenttextures.com/patterns/cream-paper.png')",
+                    }
+                },
+            },
+        }
+    </script>
+<style>/* Custom styles for subtle noise texture if image fails or for added depth */
+.bg-kraft-texture {
+    background-color: #f8fcfa;
+    /* fallback */
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCe-dUU_f_NA3Qw9LyitY0ObQWjUpmEgc-JC2pumXXrO1cJUgI7fnm4lcpIF-5h4t7p10OSgkWH8ZMr2I3iwlf0m6r0wyW0ElcqoMqjq7cKWAqCL8U87rH_1xntzBL-aaHCVYS2-8QH2TUc57jKvy2Co2gPs9Cz5osKM6_RoBY5JnEM-5KIQ6P11-X_iw9zv_RjHp3IFFiHHnrC6xN6R6MI3MvCzeZo1X9DaIrs5LcS4GaOG6F3g-5r8BZllcKEx0B0OegXGV4Y2CC5)
+    }
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar {
+    display: none
+    }
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-neutral-dark dark:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col bg-kraft-paper dark:bg-background-dark bg-kraft-texture mx-auto max-w-md shadow-2xl overflow-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-kraft-paper/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-primary/10 dark:border-white/10 px-4 py-3 flex items-center justify-between">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-neutral-dark dark:text-white">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-neutral-dark dark:text-white flex-1 text-center pr-10">Slot Pengiriman</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col pb-24 overflow-y-auto">
+<!-- Date Selection Heading -->
+<div class="px-5 pt-6 pb-2">
+<h2 class="text-2xl font-extrabold tracking-tight text-neutral-dark dark:text-white leading-tight">
+                    Kapan kamu ingin<br/>panenan ini sampai?
+                </h2>
+</div>
+<!-- Date Selector Strip -->
+<div class="sticky top-[60px] z-10 bg-kraft-paper dark:bg-background-dark bg-kraft-texture pb-2 pt-1 shadow-sm">
+<div class="flex overflow-x-auto no-scrollbar px-5 gap-4 py-2">
+<!-- Active Date -->
+<button class="flex flex-col items-center justify-center min-w-[70px] p-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 transform scale-105 transition-all">
+<span class="text-xs font-semibold opacity-90 uppercase tracking-wide">SEL</span>
+<span class="text-xl font-bold">12</span>
+<span class="text-[10px] font-medium opacity-90">Okt</span>
+</button>
+<!-- Inactive Dates -->
+<button class="flex flex-col items-center justify-center min-w-[70px] p-3 rounded-xl bg-white dark:bg-white/5 border border-primary/10 hover:border-primary/40 transition-all group">
+<span class="text-xs font-semibold text-neutral-dark/60 dark:text-white/60 uppercase tracking-wide group-hover:text-primary">RAB</span>
+<span class="text-xl font-bold text-neutral-dark dark:text-white">13</span>
+<span class="text-[10px] font-medium text-neutral-dark/60 dark:text-white/60">Okt</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[70px] p-3 rounded-xl bg-white dark:bg-white/5 border border-primary/10 hover:border-primary/40 transition-all group">
+<span class="text-xs font-semibold text-neutral-dark/60 dark:text-white/60 uppercase tracking-wide group-hover:text-primary">KAM</span>
+<span class="text-xl font-bold text-neutral-dark dark:text-white">14</span>
+<span class="text-[10px] font-medium text-neutral-dark/60 dark:text-white/60">Okt</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[70px] p-3 rounded-xl bg-white dark:bg-white/5 border border-primary/10 hover:border-primary/40 transition-all group">
+<span class="text-xs font-semibold text-neutral-dark/60 dark:text-white/60 uppercase tracking-wide group-hover:text-primary">JUM</span>
+<span class="text-xl font-bold text-neutral-dark dark:text-white">15</span>
+<span class="text-[10px] font-medium text-neutral-dark/60 dark:text-white/60">Okt</span>
+</button>
+</div>
+</div>
+<!-- Time Slots -->
+<div class="px-5 pt-4 space-y-4">
+<!-- Slot 1: Pagi (Selected) -->
+<div class="relative group cursor-pointer">
+<input checked="" class="peer hidden" id="slot-pagi" name="slot" type="radio"/>
+<label class="flex items-stretch justify-between gap-4 rounded-2xl bg-white dark:bg-white/5 p-4 shadow-sm border-2 border-primary transition-all peer-checked:bg-green-50/50 dark:peer-checked:bg-green-900/10" for="slot-pagi">
+<div class="flex flex-col justify-between py-1">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 text-xs font-bold mb-2">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                    Tersedia
+                                </div>
+<h3 class="text-neutral-dark dark:text-white text-lg font-extrabold leading-tight">Pagi</h3>
+<p class="text-neutral-dark/60 dark:text-white/60 text-sm font-medium mt-1">06:00 - 09:00 WIB</p>
+</div>
+<div class="mt-4 flex items-center text-primary font-bold text-sm">
+<span class="material-symbols-outlined mr-1 text-xl">check_circle</span>
+                                Terpilih
+                            </div>
+</div>
+<div class="w-28 h-28 rounded-xl bg-orange-50 dark:bg-white/5 flex items-center justify-center overflow-hidden relative">
+<!-- Decorative Icon -->
+<span class="material-symbols-outlined text-5xl text-orange-300 dark:text-orange-200/50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">wb_twilight</span>
+<div class="absolute inset-0 bg-gradient-to-tr from-orange-100/40 to-transparent dark:from-white/5 pointer-events-none" data-alt="Soft morning sunlight gradient"></div>
+</div>
+</label>
+</div>
+<!-- Slot 2: Siang (Limited) -->
+<div class="relative group cursor-pointer">
+<input class="peer hidden" id="slot-siang" name="slot" type="radio"/>
+<label class="flex items-stretch justify-between gap-4 rounded-2xl bg-white dark:bg-white/5 p-4 shadow-sm border-2 border-transparent hover:border-primary/30 transition-all peer-checked:border-primary peer-checked:bg-green-50/50 dark:peer-checked:bg-green-900/10" for="slot-siang">
+<div class="flex flex-col justify-between py-1">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 text-xs font-bold mb-2">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+                                    Slot Terbatas
+                                </div>
+<h3 class="text-neutral-dark dark:text-white text-lg font-extrabold leading-tight">Siang</h3>
+<p class="text-neutral-dark/60 dark:text-white/60 text-sm font-medium mt-1">10:00 - 13:00 WIB</p>
+</div>
+<div class="mt-4 flex items-center text-neutral-dark/40 dark:text-white/40 font-medium text-sm peer-checked:text-primary peer-checked:font-bold">
+<span class="material-symbols-outlined mr-1 text-xl">radio_button_unchecked</span>
+<span class="peer-checked:hidden">Pilih Slot</span>
+<span class="hidden peer-checked:inline">Terpilih</span>
+</div>
+</div>
+<div class="w-28 h-28 rounded-xl bg-yellow-50 dark:bg-white/5 flex items-center justify-center overflow-hidden relative">
+<span class="material-symbols-outlined text-5xl text-yellow-400 dark:text-yellow-200/50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">sunny</span>
+<div class="absolute inset-0 bg-gradient-to-tr from-yellow-100/40 to-transparent dark:from-white/5 pointer-events-none" data-alt="Bright midday sun gradient"></div>
+</div>
+</label>
+</div>
+<!-- Slot 3: Sore (Full/Disabled) -->
+<div class="relative group">
+<div class="flex items-stretch justify-between gap-4 rounded-2xl bg-gray-100 dark:bg-white/5 p-4 border border-gray-200 dark:border-white/5 opacity-70 cursor-not-allowed">
+<div class="flex flex-col justify-between py-1">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 text-xs font-bold mb-2">
+<span class="material-symbols-outlined text-[14px]">block</span>
+                                    Penuh
+                                </div>
+<h3 class="text-gray-400 dark:text-gray-500 text-lg font-extrabold leading-tight">Sore</h3>
+<p class="text-gray-400 dark:text-gray-500 text-sm font-medium mt-1">15:00 - 18:00 WIB</p>
+</div>
+<div class="mt-4 flex items-center text-gray-400 dark:text-gray-500 font-medium text-sm">
+                                Tidak Tersedia
+                            </div>
+</div>
+<div class="w-28 h-28 rounded-xl bg-gray-200 dark:bg-white/5 flex items-center justify-center overflow-hidden relative grayscale">
+<span class="material-symbols-outlined text-5xl text-gray-400 dark:text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">wb_twilight</span>
+<div class="absolute inset-0 bg-gradient-to-tr from-gray-200/40 to-transparent dark:from-white/5 pointer-events-none" data-alt="Evening sunset gradient"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Sheet / CTA -->
+<div class="fixed bottom-0 left-0 right-0 p-5 bg-white dark:bg-neutral-900 border-t border-gray-100 dark:border-white/5 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] mx-auto max-w-md z-20 rounded-t-3xl">
+<div class="flex justify-between items-end mb-4 px-1">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-neutral-dark/50 dark:text-white/50 uppercase tracking-wider">Jadwal Terpilih</span>
+<div class="text-neutral-dark dark:text-white font-bold text-lg flex items-center gap-2">
+<span>Sel, 12 Okt</span>
+<span class="w-1 h-1 bg-neutral-dark/30 dark:bg-white/30 rounded-full"></span>
+<span class="text-primary">Pagi (06-09)</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-primary-dark active:scale-[0.98] transition-all text-neutral-dark font-bold text-lg py-4 rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+<span>Konfirmasi Slot</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

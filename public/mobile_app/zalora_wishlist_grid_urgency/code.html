@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zalora Wishlist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#ffffff", 
+                        "background-dark": "#101622",
+                        "secondary-bg": "#f8f9fc",
+                        "text-main": "#0d121b",
+                        "text-muted": "#6b7280",
+                        "alert-red": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "md": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-text-main font-display antialiased selection:bg-primary/20">
+<div class="relative flex h-full min-h-screen w-full flex-col mx-auto max-w-md bg-white dark:bg-background-dark border-x border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between px-5 py-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+<h1 class="text-xl font-bold tracking-tight text-text-main dark:text-white">Wishlist <span class="text-sm font-medium text-text-muted ml-1">(4)</span></h1>
+<button class="flex items-center justify-center w-10 h-10 text-text-main dark:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto px-4 py-6 scrollbar-hide">
+<!-- Grid -->
+<div class="grid grid-cols-2 gap-x-4 gap-y-8">
+<!-- Product 1: Urgency High -->
+<div class="group flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+<img alt="Nike red sneakers on white background" class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKXBgrcKKO1gp7-Nn-1izmLxWjRbKjG01uTfoIaAu_rufxJSFD4p-IP006nkv2YISOrq1LXmhE-wtsSiuAUtNSWgjbttGHrdAYiRrxPdJklAFF17FEdEWWzM4i-XZzWqzofpSfJVq0PsxrnkYrQvD9ZuAI8SMFBqfA4R10zYtxQr6-e_KrGH-Wtp4GRj0YvAzhdxIMVjxcgpHoAvw2agaLO1W_nGye27rgu6zk8ScLfJosdFhh9mz9YL6NWQKb2CzHuIgx872-CLjM"/>
+<!-- Badge -->
+<div class="absolute top-2 left-2 bg-alert-red text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm">
+                            Stok Menipis!
+                        </div>
+<!-- Action Button Overlay -->
+<button class="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-text-main dark:text-white shadow-md hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</button>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-xs font-bold uppercase tracking-wide text-text-muted">Nike</p>
+<h3 class="text-sm font-medium text-text-main dark:text-white line-clamp-1">Air Max 270 React</h3>
+<p class="mt-1 text-sm font-bold text-text-main dark:text-white">Rp 2.299.000</p>
+</div>
+</div>
+<!-- Product 2: Sale -->
+<div class="group flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+<img alt="Woman in black dress posing" class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUK3liEeXOvM2S3qP11G3_1rUrADFV7iA5tFD9L02eNudTDzW-NtxwQyg6_qjFn_HP0GUqeds4oOHUV-uFLFwaU24_tRymXVgnnOM8jfisF5skRaE1qJAM9w1KDzf6nUxlI-u_CkiS_tT-y5BO39y17jsUzLggUOVU6dGPEeqY-N12YSKYcghCE3l5qfR2dc2MfwX6yOmmr3TCMlyFohFeh6gnzxF9_1Gzo1dB3OS8LykAjOoflLcPHZ-uAIcZOuuQLppCfq-mEmOF"/>
+<!-- Badge -->
+<div class="absolute top-2 left-2 bg-text-main dark:bg-white text-white dark:text-text-main text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm">
+                            Sale 25%
+                        </div>
+<!-- Action Button Overlay -->
+<button class="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-text-main dark:text-white shadow-md hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</button>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-xs font-bold uppercase tracking-wide text-text-muted">Mango</p>
+<h3 class="text-sm font-medium text-text-main dark:text-white line-clamp-1">Ribbed Midi Dress</h3>
+<div class="mt-1 flex items-baseline gap-2">
+<p class="text-sm font-bold text-alert-red">Rp 450.000</p>
+<p class="text-xs text-text-muted line-through">Rp 600.000</p>
+</div>
+</div>
+</div>
+<!-- Product 3: Standard -->
+<div class="group flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+<img alt="Brown leather tote bag" class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSX-tRIyq3csSzeGDW6DDSn0WPtEl6t04_pC4NZAQrBhutFnBR7P5Zk1HKWkpWUfZWBTqEVVbyXIFN_V1pEbCU7PoGpCf7o-XkkMF0F7DALY3enLDCYYRAC2H55ltqTkz-28Ty3h7pLh8LAxmuJPVFRparaUPIRucmhuLMoZEOYneE8fOhx6x9O0OBd-kBIV9QFeRpZP7eOT8hTAZcKbDwAt0zWIQm8A0IsrxIr7EBCChMQSFkN_T3Lvn4ZzfkGsBf-_VMc2509kD7"/>
+<!-- Action Button Overlay -->
+<button class="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-text-main dark:text-white shadow-md hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</button>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-xs font-bold uppercase tracking-wide text-text-muted">Fossil</p>
+<h3 class="text-sm font-medium text-text-main dark:text-white line-clamp-1">Carmen Shopper Tote</h3>
+<p class="mt-1 text-sm font-bold text-text-main dark:text-white">Rp 2.850.000</p>
+</div>
+</div>
+<!-- Product 4: Urgency High -->
+<div class="group flex flex-col gap-3">
+<div class="relative aspect-[4/5] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+<img alt="Black oversized t-shirt mockup" class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9gy-xjKGcHreziKcrml8sGXTdJjOb79GYNVUmU19iKAlwUp45UJAptufxrqY4ttoXBFXcZNags41yaIQns_ScqWHYwSTpbdHMrD38A3WyS5VtQBuPW9bLaaTrYG3DEU0-xeShgi5BTH7fFG1deiYyI2ePW9yMZeJeLlkLsNFfo-1GQEZYhAAbMLbZKQEB2Nqi3EaKQwiyoQxoAbWv3Nrr_5i5_ee2nvK4NbMSiZs5Zv8tSKGAV8YpamwE7vghLe9liNgVGvNNhvU5"/>
+<!-- Badge -->
+<div class="absolute top-2 left-2 bg-alert-red text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm animate-pulse">
+                            Stok Menipis!
+                        </div>
+<!-- Action Button Overlay -->
+<button class="absolute bottom-2 right-2 flex h-9 w-9 items-center justify-center rounded-full bg-white dark:bg-gray-700 text-text-main dark:text-white shadow-md hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+</button>
+</div>
+<div class="flex flex-col gap-0.5">
+<p class="text-xs font-bold uppercase tracking-wide text-text-muted">H&amp;M</p>
+<h3 class="text-sm font-medium text-text-main dark:text-white line-clamp-1">Oversized Cotton Tee</h3>
+<p class="mt-1 text-sm font-bold text-text-main dark:text-white">Rp 199.900</p>
+</div>
+</div>
+</div>
+<!-- Empty State Prompt -->
+<div class="mt-10 mb-6 flex items-center justify-center">
+<div class="rounded-xl bg-secondary-bg dark:bg-gray-800/50 p-6 text-center border border-gray-100 dark:border-gray-800 w-full">
+<span class="material-symbols-outlined text-4xl text-primary/40 mb-3">favorite_border</span>
+<h4 class="text-sm font-bold text-text-main dark:text-white">Love it? Save it!</h4>
+<p class="text-xs text-text-muted mt-1 mb-4">Items in your wishlist are just a tap away from being yours.</p>
+<button class="text-primary text-xs font-bold hover:underline">Find more items</button>
+</div>
+</div>
+<!-- Sticky CTA -->
+<div class="mt-4 pb-2">
+<button class="w-full flex items-center justify-center gap-2 rounded-lg bg-text-main dark:bg-white text-white dark:text-text-main h-12 text-sm font-bold tracking-wide shadow-lg hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+                    Add All to Bag
+                 </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 z-30 flex gap-2 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark px-4 pb-5 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-muted dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-muted dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">grid_view</span>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Categories</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-muted dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Bag</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary dark:text-white font-semibold" href="#">
+<span class="material-symbols-filled text-[24px]">favorite</span>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Wishlist</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-text-muted dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+<p class="text-[10px] font-medium leading-normal tracking-wide">Account</p>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KitaBisa Donation Input</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0dd7f2",
+                        "primary-dark": "#0ab8d1", 
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#102022",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex justify-center">
+<div class="w-full max-w-md bg-white dark:bg-[#15282a] shadow-2xl overflow-hidden min-h-screen relative flex flex-col">
+<!-- Sticky Header -->
+<header class="sticky top-0 z-50 bg-white/90 dark:bg-[#15282a]/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 px-4 py-3 flex items-center gap-3">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-200">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold flex-1 text-center pr-10">Donasi</h1>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-32">
+<!-- Campaign Summary Card -->
+<div class="p-4">
+<div class="flex gap-4 p-4 rounded-xl bg-background-light dark:bg-[#1c3235] border border-slate-100 dark:border-slate-800 shadow-sm items-start">
+<div class="w-20 h-20 shrink-0 rounded-lg bg-slate-200 overflow-hidden relative">
+<img alt="Campaign thumbnail showing people helping" class="w-full h-full object-cover" data-alt="Campaign thumbnail showing people helping" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa46Z4_xWCNMd-LBmehmJs-vgZeagtxjIMarOgMWk1nFD1v3tg_4uaOtaMaetjeREmZLqJdSfuo2aZzaItXY-ZwPk4d7CBK3lDh6CGuPSq7yPI45pdBRakKnKPfhNEaTTHwrzanusRzDOGb5MaXdFzOeE27I40tMvDAhsROboXGfCN_VgEQslwYubxFPblrEHgc8oAFth1PwyxDpJKKtN5JSF0w-dTGulHrzf9f79eGBnDdc_RrdImzX4bzhfOAVFVmOtWPUZvX0D2"/>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-sm font-bold leading-tight line-clamp-2 text-slate-900 dark:text-white">Bantu Pak Budi Sembuh dari Kanker Paru-paru Stadium 4</h2>
+<div class="flex items-center gap-1 text-xs font-medium text-cyan-600 dark:text-cyan-400">
+<span class="material-symbols-outlined text-[14px] filled">verified</span>
+<span>Yayasan KitaBisa</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Donation Amount Selection -->
+<div class="px-4 pt-2">
+<h3 class="text-base font-bold mb-3 text-slate-800 dark:text-slate-100">Pilih Nominal Donasi</h3>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<!-- Option 10rb -->
+<button class="relative group flex flex-col items-start p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1c3235] hover:border-primary transition-all">
+<div class="mb-2 p-2 bg-primary/10 rounded-full text-primary-dark dark:text-primary">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<span class="text-lg font-bold">10rb</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-1">Minimal</span>
+</button>
+<!-- Option 50rb (Selected State) -->
+<button class="relative group flex flex-col items-start p-4 rounded-xl border-2 border-primary bg-primary/5 dark:bg-primary/10 transition-all shadow-[0_0_15px_rgba(13,215,242,0.15)]">
+<div class="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[14px] font-bold">check</span>
+</div>
+<div class="mb-2 p-2 bg-primary/20 rounded-full text-primary-dark dark:text-primary">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</div>
+<span class="text-lg font-bold text-slate-900 dark:text-white">50rb</span>
+<span class="text-xs text-primary-dark dark:text-primary mt-1 font-medium">Paling Sering</span>
+</button>
+<!-- Option 100rb -->
+<button class="relative group flex flex-col items-start p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1c3235] hover:border-primary transition-all">
+<div class="mb-2 p-2 bg-primary/10 rounded-full text-primary-dark dark:text-primary">
+<span class="material-symbols-outlined text-[20px]">volunteer_activism</span>
+</div>
+<span class="text-lg font-bold">100rb</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-1">Berdampak Besar</span>
+</button>
+<!-- Custom Input -->
+<label class="relative group flex flex-col items-start p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1c3235] focus-within:border-primary transition-all cursor-text">
+<div class="mb-2 p-2 bg-slate-100 dark:bg-slate-700 rounded-full text-slate-500 dark:text-slate-300">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</div>
+<span class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Nominal Lain</span>
+<div class="flex items-center w-full">
+<span class="text-xs font-bold mr-1 text-slate-400">Rp</span>
+<input class="w-full bg-transparent border-none p-0 text-lg font-bold focus:ring-0 placeholder:text-slate-300 dark:placeholder:text-slate-600 no-spinners" placeholder="0" type="number"/>
+</div>
+</label>
+</div>
+<div class="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-900/40 flex gap-3 items-start">
+<span class="material-symbols-outlined text-orange-500 text-[18px] mt-0.5">info</span>
+<p class="text-xs text-orange-800 dark:text-orange-200 leading-relaxed">Donasi mulai dari <strong>Rp 1.000</strong>. Semakin besar donasimu, semakin cepat target tercapai.</p>
+</div>
+</div>
+<div class="h-2 bg-background-light dark:bg-[#0e1b1d] my-6"></div>
+<!-- Payment Method Section -->
+<div class="px-4">
+<h3 class="text-base font-bold mb-3 text-slate-800 dark:text-slate-100">Metode Pembayaran</h3>
+<button class="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1c3235] hover:bg-slate-50 dark:hover:bg-[#233f42] transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-white border border-slate-100 dark:border-slate-600 flex items-center justify-center overflow-hidden">
+<img alt="GoPay Logo" class="w-8 h-8 object-contain" data-alt="GoPay payment method logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApImnfVt4arm8N8KnqLn8oUGdFLOxq6uQ5DND7Ljx3eW8DcZlrKJJrI8VRprEwdtKC-_jYSBHNXgmv71M_zbpWUtx0VinKgHwJQsS1QBUTgSIyQd85lAyiuWlI29QW2-ffE85r6Czi2DcRu0WdaQ5Npd2rUzCYSy2dTem1QNPC5zLgRebVKiA8OaGE73BchHHJQ6ubbdbsB3Sz_oEe884v0iwavUqP8SO7gYP6QQVP1UzfIjE7u4-kQxox7pjL5gBFaRO5sCpOsc4p"/>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm font-bold text-slate-900 dark:text-white">GoPay</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Saldo: Rp 150.000</span>
+</div>
+</div>
+<div class="flex items-center gap-1 text-primary font-bold text-sm">
+                        Ubah
+                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</div>
+</button>
+</div>
+<!-- Anonymity Toggle -->
+<div class="px-4 mt-6 mb-8">
+<label class="flex items-center justify-between p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-background-light dark:bg-[#1c3235] cursor-pointer select-none">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-white dark:bg-slate-800 rounded-full text-slate-400">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-800 dark:text-slate-100">Sembunyikan nama saya</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Donasi sebagai Anonim</span>
+</div>
+</div>
+<div class="relative">
+<input class="peer sr-only" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+</div>
+<!-- Trust Badge -->
+<div class="px-4 pb-8 flex justify-center items-center gap-2 text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="text-xs font-medium">Pembayaran Aman &amp; Terverifikasi</span>
+</div>
+</main>
+<!-- Bottom Action Bar (Floating) -->
+<div class="absolute bottom-0 left-0 w-full bg-white dark:bg-[#15282a] border-t border-slate-100 dark:border-slate-800 p-4 pb-8 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex items-center justify-between mb-4 px-1">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Donasi</span>
+<span class="text-xl font-extrabold text-slate-900 dark:text-white">Rp 50.000</span>
+</div>
+<button class="w-full bg-primary hover:bg-primary-dark text-white dark:text-[#102022] font-bold text-lg py-4 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span>Donasi Sekarang</span>
+<span class="material-symbols-outlined text-[20px] font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

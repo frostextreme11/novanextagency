@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Erigo Product Detail</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/30">
+<div class="relative min-h-screen w-full mx-auto max-w-md bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden pb-24">
+<!-- Header / Hero Image Section -->
+<div class="relative w-full h-[55vh] group/design-root">
+<!-- Top Navigation Overlay -->
+<div class="absolute top-0 left-0 w-full z-20 flex justify-between items-center p-6 pt-12 bg-gradient-to-b from-black/40 to-transparent">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute top-0 right-0 w-2.5 h-2.5 bg-primary rounded-full border border-black/20"></span>
+</button>
+</div>
+</div>
+<!-- Main Image -->
+<div class="w-full h-full bg-gray-200">
+<img alt="Erigo T-Shirt Oversize Black Samurai" class="w-full h-full object-cover object-top" data-alt="Man wearing black oversize t-shirt urban setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIV598xRgkobJZc3nYotWnGV00Vc8pVkw4QMA_KW_ecN2KuSwszH16g9eb1w9LpBYtXSVFw7JE6WzzrKK-tSMwGFxlPrimdFO_I7tId8njlUBniSSeNWp1Usblj-mErEa62xhTG2rSfMdcJ2IVnlhjO3lh4cDiu7cPKQviyjp68ce1CCLItQmXAEtEDnQ1oAn08qJYrDoh0M048oyNwexY1OH0-PTO83avPDJ7KvpDqefiggZFRrltPtNf1wgfveTRTCuiVBDCtTro"/>
+</div>
+<!-- Image Pagination Indicators -->
+<div class="absolute bottom-8 left-0 w-full flex justify-center gap-2 z-20">
+<div class="w-6 h-1.5 rounded-full bg-primary shadow-sm"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/60 backdrop-blur-sm"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/60 backdrop-blur-sm"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-white/60 backdrop-blur-sm"></div>
+</div>
+<!-- Bottom Fade for smooth transition -->
+<div class="absolute bottom-0 w-full h-12 bg-gradient-to-t from-background-light dark:from-background-dark to-transparent z-10"></div>
+</div>
+<!-- Product Details Container -->
+<div class="relative px-6 -mt-6 z-20">
+<!-- Title & Basic Info -->
+<div class="mb-6">
+<div class="flex justify-between items-start mb-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-primary/10 text-primary dark:text-primary uppercase tracking-wider">
+                        New Arrival
+                    </span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[18px] fill-current">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">4.8</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">(128 reviews)</span>
+</div>
+</div>
+<h1 class="text-slate-900 dark:text-white text-3xl font-black leading-tight tracking-tight mb-3">
+                    Erigo T-Shirt Oversize <br/> Black Samurai
+                </h1>
+<div class="flex items-baseline gap-3">
+<h2 class="text-slate-900 dark:text-white text-2xl font-bold">Rp 149.000</h2>
+<span class="text-slate-400 dark:text-slate-500 text-sm font-medium line-through decoration-slate-400/50">Rp 350.000</span>
+<span class="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-500/10 px-1.5 py-0.5 rounded">
+                        -57%
+                    </span>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-px w-full bg-slate-200 dark:bg-slate-800 mb-6"></div>
+<!-- Size Selector -->
+<div class="mb-8">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wide">Select Size</h3>
+<button class="text-primary text-xs font-semibold hover:underline">Size Chart</button>
+</div>
+<div class="flex gap-3 overflow-x-auto no-scrollbar py-1">
+<label class="group relative cursor-pointer">
+<input class="peer sr-only" name="size" type="radio"/>
+<div class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-primary/30 hover:border-primary/50">
+                            S
+                        </div>
+</label>
+<label class="group relative cursor-pointer">
+<input class="peer sr-only" name="size" type="radio"/>
+<div class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-primary/30 hover:border-primary/50">
+                            M
+                        </div>
+</label>
+<label class="group relative cursor-pointer">
+<input checked="" class="peer sr-only" name="size" type="radio"/>
+<div class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-primary/30 hover:border-primary/50">
+                            L
+                        </div>
+</label>
+<label class="group relative cursor-pointer">
+<input class="peer sr-only" name="size" type="radio"/>
+<div class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-primary/30 hover:border-primary/50">
+                            XL
+                        </div>
+</label>
+<label class="group relative cursor-pointer">
+<input class="peer sr-only" name="size" type="radio"/>
+<div class="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm font-semibold text-slate-600 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:border-primary peer-checked:text-white peer-checked:shadow-lg peer-checked:shadow-primary/30 hover:border-primary/50">
+                            XXL
+                        </div>
+</label>
+</div>
+</div>
+<!-- Description -->
+<div class="mb-8">
+<h3 class="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wide mb-2">Description</h3>
+<p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Material Cotton Combed 30s. Bahan adem, gaya makin keren. Cocok buat daily outfit lo yang santai tapi tetep hype. Sablon plastisol high quality yang awet dan ga gampang pecah.
+                </p>
+<button class="text-primary text-sm font-bold mt-2 flex items-center gap-0.5">
+                    Read more <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<!-- Reviews Summary Block (Simplified from prompt) -->
+<div class="bg-white dark:bg-white/5 rounded-2xl p-5 mb-6 border border-slate-100 dark:border-slate-800">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-slate-900 dark:text-white text-base font-bold">Reviews (128)</h3>
+<button class="text-primary text-sm font-bold">See All</button>
+</div>
+<div class="space-y-3">
+<div class="flex gap-3">
+<div class="flex items-center gap-1 min-w-[30px]">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">5</span>
+<span class="material-symbols-outlined text-[10px] text-slate-400">star</span>
+</div>
+<div class="flex h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700 mt-1.5"><div class="rounded-full bg-primary" style="width: 80%;"></div></div>
+</div>
+<div class="flex gap-3">
+<div class="flex items-center gap-1 min-w-[30px]">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">4</span>
+<span class="material-symbols-outlined text-[10px] text-slate-400">star</span>
+</div>
+<div class="flex h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700 mt-1.5"><div class="rounded-full bg-primary" style="width: 15%;"></div></div>
+</div>
+<div class="flex gap-3">
+<div class="flex items-center gap-1 min-w-[30px]">
+<span class="text-xs font-medium text-slate-700 dark:text-slate-300">3</span>
+<span class="material-symbols-outlined text-[10px] text-slate-400">star</span>
+</div>
+<div class="flex h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700 mt-1.5"><div class="rounded-full bg-primary" style="width: 3%;"></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#1a120b]/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 p-4 pb-8 z-50 flex items-center justify-center">
+<div class="w-full max-w-md flex gap-3 px-2">
+<button class="flex items-center justify-center w-14 h-14 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-white/5 text-slate-900 dark:text-white active:bg-slate-50 dark:active:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">chat</span>
+</button>
+<button class="flex-1 h-14 bg-primary rounded-full text-white font-bold text-lg shadow-lg shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">shopping_bag</span>
+                    Add to Bag
+                </button>
+</div>
+</div>
+</div>
+</body></html>
