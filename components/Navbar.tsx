@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -23,9 +24,13 @@ export default function Navbar() {
         >
             <div className="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-4 flex justify-between items-center relative z-50">
                 <div className="flex items-center gap-3 cursor-pointer group">
-                    <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden rounded-xl">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary opacity-50 group-hover:opacity-100 transition-opacity"></div>
-                        <span className="relative font-display font-bold text-xl text-white">N</span>
+                    <div className="relative w-10 h-10">
+                        <Image
+                            src="/logo/nn_logo.png"
+                            alt="NovaNext Logo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
                     <span className="font-display font-bold text-xl tracking-tight text-white">
                         NovaNext<span className="text-primary">.</span>
@@ -38,6 +43,7 @@ export default function Navbar() {
                         { label: "Layanan", href: "/#services" },
                         { label: "Harga", href: "/#pricing" },
                         { label: "Showcase", href: "/showcase" },
+                        { label: "About Us", href: "/about-us" },
                     ].map((item) => (
                         <Link
                             key={item.label}
@@ -86,6 +92,7 @@ export default function Navbar() {
                                 { label: "Layanan", href: "/#services" },
                                 { label: "Harga", href: "/#pricing" },
                                 { label: "Showcase", href: "/showcase" },
+                                { label: "About Us", href: "/about-us" },
                             ].map((item) => (
                                 <Link
                                     key={item.label}
