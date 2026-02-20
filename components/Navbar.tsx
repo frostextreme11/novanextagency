@@ -43,6 +43,7 @@ export default function Navbar() {
                         { label: "Layanan", href: "/#services" },
                         { label: "Harga", href: "/#pricing" },
                         { label: "Showcase", href: "/showcase" },
+                        { label: "Blog", href: "/blog" },
                         { label: "About Us", href: "/about-us" },
                     ].map((item) => (
                         <Link
@@ -92,6 +93,7 @@ export default function Navbar() {
                                 { label: "Layanan", href: "/#services" },
                                 { label: "Harga", href: "/#pricing" },
                                 { label: "Showcase", href: "/showcase" },
+                                { label: "Blog", href: "/blog" },
                                 { label: "About Us", href: "/about-us" },
                             ].map((item) => (
                                 <Link

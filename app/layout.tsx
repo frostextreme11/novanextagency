@@ -15,6 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://novanext.id"),
   title: "Jasa Pembuatan Website & Aplikasi Mobile Premium - NovaNext IT Agency",
   description: "Jasa bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, dan sistem kasir POS untuk UMKM dan Corporate. Konsultasi Gratis!",
   keywords: ["Bikin website keren murah", "buat website", "bikin aplikasi mobile brand sendiri", "bikin website brand sendiri", "jasa bikin website", "jasa bikin aplikasi mobile", "jasa bikin aplikasi android"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+        <link rel="alternate" type="application/rss+xml" title="Blog NovaNext" href="/feed.xml" />
       </head>
       <body className="bg-background-dark text-slate-300 font-body antialiased overflow-x-hidden min-h-screen selection:bg-primary selection:text-white">
         {/* Fixed Background Noise */}
