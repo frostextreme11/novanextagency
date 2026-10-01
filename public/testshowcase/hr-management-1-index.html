@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TalentFlow — Enterprise HR & Talent Intelligence | NovaNext</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            50: '#eef4ff', 100: '#dae6ff', 200: '#bcd0ff', 300: '#8eb0ff',
+            400: '#5a85ff', 500: '#3b63f5', 600: '#2746e8', 700: '#2037c7',
+            800: '#1f319e', 900: '#1f2f7d', 950: '#161e4d'
+          }
+        },
+        animation: {
+          'fade-in': 'fadeIn 0.3s ease-out',
+          'slide-up': 'slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          'pop': 'pop 0.25s ease-out',
+          'shimmer': 'shimmer 2s linear infinite',
+        },
+        keyframes: {
+          fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+          slideUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+          pop: { '0%': { transform: 'scale(0.95)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+          shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f6f8fc; }
+  ::-webkit-scrollbar { height: 10px; width: 10px; }
+  ::-webkit-scrollbar-track { background: #eef2f8; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: #c7d2e5; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3c3; }
+
+  .kanban-col { min-width: 320px; }
+  .candidate-card { cursor: grab; transition: transform .15s ease, box-shadow .2s ease; }
+  .candidate-card:active { cursor: grabbing; }
+  .candidate-card.dragging { opacity: .4; transform: rotate(2deg) scale(1.02); }
+  .kanban-col-body.drag-over { background: linear-gradient(180deg, rgba(59,99,245,.08), rgba(59,99,245,.02)); border-color: #3b63f5 !important; }
+
+  .gradient-text { background: linear-gradient(135deg, #3b63f5 0%, #8b5cf6 50%, #ec4899 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .glass { backdrop-filter: blur(14px); background: rgba(255,255,255,.75); }
+
+  .avatar-gradient-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .avatar-gradient-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .avatar-gradient-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .avatar-gradient-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  .avatar-gradient-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+  .avatar-gradient-6 { background: linear-gradient(135deg, #30cfd0, #330867); }
+  .avatar-gradient-7 { background: linear-gradient(135deg, #a8edea, #fed6e3); color:#333; }
+  .avatar-gradient-8 { background: linear-gradient(135deg, #ff9a9e, #fecfef); color:#333; }
+
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 8px; background: linear-gradient(90deg,#3b63f5 var(--pct,50%), #e5e7eb var(--pct,50%)); border-radius: 999px; outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: white; border: 3px solid #3b63f5; cursor: pointer; box-shadow: 0 2px 8px rgba(59,99,245,.4); transition: transform .15s; }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: white; border: 3px solid #3b63f5; cursor: pointer; }
+
+  .toast-enter { animation: slideUp .3s cubic-bezier(0.16,1,0.3,1); }
+  .modal-backdrop { animation: fadeIn .2s ease-out; }
+  .modal-content { animation: slideUp .35s cubic-bezier(0.16,1,0.3,1); }
+
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { scrollbar-width: none; }
+
+  .pulse-dot { position: relative; }
+  .pulse-dot::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: currentColor; opacity: .4; animation: ping 1.6s cubic-bezier(0,0,.2,1) infinite; }
+  @keyframes ping { 75%,100% { transform: scale(2); opacity: 0; } }
+
+  .cv-preview { background-image: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; }
+
+  details > summary { list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+</style>
+</head>
+<body class="text-slate-800 antialiased">
+
+<!-- ========== HEADER ========== -->
+<header class="sticky top-0 z-40 glass border-b border-slate-200/70">
+  <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-brand-500/30">
+          <i data-lucide="users-round" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-lg leading-none">TalentFlow</h1>
+          <p class="text-[11px] text-slate-500 leading-none mt-1">HR & Talent Intelligence</p>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-1 bg-slate-100 rounded-xl p-1">
+        <button class="nav-tab px-4 py-1.5 rounded-lg text-sm font-semibold bg-white shadow-sm text-brand-600">Pipeline</button>
+        <button class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">Analytics</button>
+        <button class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">Jobs</button>
+        <button class="nav-tab px-4 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900">Team</button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-brand-50 to-purple-50 border border-brand-200/60 text-[11px] font-bold text-brand-700">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-500 pulse-dot text-brand-500"></span>
+          Demo Prototype by NovaNext
+        </span>
+        <button class="relative p-2 rounded-lg hover:bg-slate-100 transition">
+          <i data-lucide="bell" class="w-5 h-5 text-slate-600"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+        </button>
+        <div class="w-9 h-9 rounded-full avatar-gradient-1 flex items-center justify-center text-white font-bold text-sm shadow-md">AN</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HERO / STATS ========== -->
+<section class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-5">
+    <div>
+      <div class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <span>Workspace</span>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span>Recruitment</span>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span class="text-brand-600 font-semibold">Pipeline Board</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+        <span class="gradient-text">Talent Pipeline</span> Overview
+      </h2>
+      <p class="text-sm text-slate-500 mt-1">Drag & drop kandidat antar tahap. Klik kartu untuk melihat detail evaluasi.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btnAddCandidate" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 text-white font-semibold text-sm shadow-lg shadow-brand-500/30 hover:shadow-xl hover:scale-[1.02] transition">
+        <i data-lucide="user-plus" class="w-4 h-4"></i>
+        Add Candidate
+      </button>
+      <button id="btnExport" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition">
+        <i data-lucide="download" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Export</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div id="statsGrid" class="grid grid-cols-2 lg:grid-cols-5 gap-3"></div>
+</section>
+
+<!-- ========== FILTER BAR ========== -->
+<section class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+  <div class="bg-white rounded-2xl border border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center gap-3 shadow-sm">
+    <div class="flex items-center gap-2 flex-1">
+      <div class="relative flex-1">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input id="searchInput" type="text" placeholder="Cari nama, posisi, atau skill..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition" />
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-xs font-semibold text-slate-500 mr-1">Division:</span>
+      <div id="divisionFilters" class="flex items-center gap-1.5 flex-wrap"></div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="btnViewBoard" class="view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-50 text-brand-700 border border-brand-200 text-xs font-semibold">
+        <i data-lucide="kanban-square" class="w-3.5 h-3.5"></i> Board
+      </button>
+      <button id="btnViewList" class="view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 text-xs font-semibold hover:bg-slate-50">
+        <i data-lucide="list" class="w-3.5 h-3.5"></i> List
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== KANBAN BOARD ========== -->
+<main class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+  <div id="kanbanBoard" class="flex gap-4 overflow-x-auto pb-6 hide-scrollbar snap-x snap-mandatory lg:snap-none"></div>
+
+  <!-- List view (hidden by default) -->
+  <div id="listView" class="hidden bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-xs uppercase text-slate-500 font-semibold">
+          <tr>
+            <th class="text-left px-4 py-3">Candidate</th>
+            <th class="text-left px-4 py-3">Position</th>
+            <th class="text-left px-4 py-3">Division</th>
+            <th class="text-left px-4 py-3">Stage</th>
+            <th class="text-left px-4 py-3">Score</th>
+            <th class="text-left px-4 py-3">Applied</th>
+            <th class="text-right px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="listBody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <p class="text-xs text-slate-500">© 2026 TalentFlow by <span class="font-bold text-slate-700">NovaNext</span> — Enterprise Prototype Demo</p>
+    <div class="flex items-center gap-4 text-xs text-slate-500">
+      <span class="inline-flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> SOC 2 Compliant</span>
+      <span class="inline-flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i> Live State</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== MODAL: CANDIDATE DETAIL ========== -->
+<div id="detailModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="modal-backdrop absolute inset-0 bg-slate-900/60 backdrop-blur-sm" data-close></div>
+  <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ========== MODAL: ADD CANDIDATE ========== -->
+<div id="addModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div class="modal-backdrop absolute inset-0 bg-slate-900/60 backdrop-blur-sm" data-close></div>
+  <div class="modal-content relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <div>
+        <h3 class="font-bold text-lg">Add New Candidate</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Tambahkan pelamar baru ke pipeline Applied.</p>
+      </div>
+      <button data-close class="p-2 rounded-lg hover:bg-slate-100 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <form id="addForm" class="p-6 space-y-4">
+      <div>
+        <label class="text-xs font-semibold text-slate-600">Full Name</label>
+        <input name="name" required class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40" placeholder="e.g. Rama Pratama" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-semibold text-slate-600">Position</label>
+          <input name="position" required class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40" placeholder="Frontend Dev" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-600">Division</label>
+          <select name="division" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+            <option>Engineering</option>
+            <option>Design</option>
+            <option>Marketing</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-600">Experience (years)</label>
+        <input name="exp" type="number" min="0" max="30" value="2" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40" />
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-600">Skills (comma separated)</label>
+        <input name="skills" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/40" placeholder="React, TypeScript, UI/UX" />
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button type="button" data-close class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold hover:bg-slate-50">Cancel</button>
+        <button type="submit" class="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 text-white text-sm font-semibold shadow-lg shadow-brand-500/30">Add to Pipeline</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========== TOAST CONTAINER ========== -->
+<div id="toastContainer" class="fixed top-20 right-4 z-[60] space-y-2 pointer-events-none"></div>
+
+<script>
+/* ============================================================
+   TalentFlow — Enterprise HR Pipeline (Vanilla JS)
+   ============================================================ */
+
+const STAGES = [
+  { id: 'applied',   name: 'Applied',             color: 'slate',   icon: 'inbox',          accent: 'bg-slate-500' },
+  { id: 'screening', name: 'Screening',           color: 'amber',   icon: 'file-search',    accent: 'bg-amber-500' },
+  { id: 'technical', name: 'Technical Interview', color: 'blue',    icon: 'code-2',         accent: 'bg-blue-500' },
+  { id: 'offered',   name: 'Offered',             color: 'emerald', icon: 'badge-check',    accent: 'bg-emerald-500' },
+  { id: 'rejected',  name: 'Rejected',            color: 'rose',    icon: 'x-circle',       accent: 'bg-rose-500' },
+];
+
+const DIVISIONS = ['All', 'Engineering', 'Design', 'Marketing'];
+
+const SEED_CANDIDATES = [
+  { id: 'c1', name: 'Aisha Rahmawati', position: 'Senior Frontend Engineer', division: 'Engineering', stage: 'applied', score: 82, exp: 5, email: 'aisha.r@mail.com', phone: '+62 812-3456-7890', location: 'Jakarta, ID', skills: ['React','TypeScript','Next.js','Tailwind'], applied: '2026-01-12', avatar: 1, notes: [{by:'Rina (HR)', at:'2026-01-13', text:'Portfolio sangat solid, pengalaman di startup fintech 3 tahun.'}] },
+  { id: 'c2', name: 'Budi Santoso', position: 'Backend Engineer', division: 'Engineering', stage: 'applied', score: 68, exp: 3, email: 'budi.s@mail.com', phone: '+62 813-9988-7766', location: 'Bandung, ID', skills: ['Node.js','PostgreSQL','AWS','Docker'], applied: '2026-01-14', avatar: 2, notes: [] },
+  { id: 'c3', name: 'Clara Wijaya', position: 'Product Designer', division: 'Design', stage: 'screening', score: 88, exp: 4, email: 'clara.w@mail.com', phone: '+62 811-2345-6789', location: 'Surabaya, ID', skills: ['Figma','Design System','User Research','Prototyping'], applied: '2026-01-10', avatar: 3, notes: [{by:'Dimas (Lead)', at:'2026-01-15', text:'Case study untuk e-commerce redesign sangat insightful.'}] },
+  { id: 'c4', name: 'Dewi Lestari', position: 'Growth Marketer', division: 'Marketing', stage: 'screening', score: 74, exp: 3, email: 'dewi.l@mail.com', phone: '+62 821-5544-3322', location: 'Jakarta, ID', skills: ['SEO','Content','Analytics','Paid Ads'], applied: '2026-01-11', avatar: 4, notes: [] },
+  { id: 'c5', name: 'Eko Prasetyo', position: 'DevOps Engineer', division: 'Engineering', stage: 'technical', score: 91, exp: 6, email: 'eko.p@mail.com', phone: '+62 878-1122-3344', location: 'Yogyakarta, ID', skills: ['Kubernetes','Terraform','CI/CD','Prometheus'], applied: '2026-01-08', avatar: 5, notes: [{by:'Reza (CTO)', at:'2026-01-16', text:'Technical screening sangat kuat. Lanjut ke system design round.'}] },
+  { id: 'c6', name: 'Farah Nabila', position: 'UI/UX Designer', division: 'Design', stage: 'technical', score: 85, exp: 4, email: 'farah.n@mail.com', phone: '+62 856-7788-9900', location: 'Bali, ID', skills: ['Figma','Motion','Illustration','Webflow'], applied: '2026-01-09', avatar: 6, notes: [] },
+  { id: 'c7', name: 'Gilang Ramadhan', position: 'Mobile Engineer (Flutter)', division: 'Engineering', stage: 'offered', score: 93, exp: 5, email: 'gilang.r@mail.com', phone: '+62 822-3344-5566', location: 'Jakarta, ID', skills: ['Flutter','Dart','Firebase','GraphQL'], applied: '2026-01-05', avatar: 7, notes: [{by:'HR Team', at:'2026-01-18', text:'Offer letter sudah dikirim. Menunggu konfirmasi hingga 2026-01-22.'}] },
+  { id: 'c8', name: 'Hana Pertiwi', position: 'Brand Marketing Lead', division: 'Marketing', stage: 'offered', score: 89, exp: 7, email: 'hana.p@mail.com', phone: '+62 819-9988-7700', location: 'Jakarta, ID', skills: ['Branding','Campaign','PR','Strategy'], applied: '2026-01-04', avatar: 8, notes: [] },
+  { id: 'c9', name: 'Irfan Hakim', position: 'Junior Backend', division: 'Engineering', stage: 'rejected', score: 42, exp: 1, email: 'irfan.h@mail.com', phone: '+62 877-6655-4433', location: 'Medan, ID', skills: ['PHP','MySQL'], applied: '2026-01-13', avatar: 1, notes: [{by:'Rina (HR)', at:'2026-01-17', text:'Belum match dengan requirement senior role.'}] },
+  { id: 'c10', name: 'Jihan Safira', position: 'Content Strategist', division: 'Marketing', stage: 'applied', score: 71, exp: 2, email: 'jihan.s@mail.com', phone: '+62 812-7788-9911', location: 'Jakarta, ID', skills: ['Copywriting','SEO','Social Media'], applied: '2026-01-15', avatar: 3, notes: [] },
+  { id: 'c11', name: 'Kevin Tanaya', position: 'Data Engineer', division: 'Engineering', stage: 'screening', score: 79, exp: 4, email: 'kevin.t@mail.com', phone: '+62 821-1122-3300', location: 'Jakarta, ID', skills: ['Python','Airflow','Spark','BigQuery'], applied: '2026-01-11', avatar: 5, notes: [] },
+  { id: 'c12', name: 'Lia Marlina', position: 'Visual Designer', division: 'Design', stage: 'applied', score: 76, exp: 3, email: 'lia.m@mail.com', phone: '+62 856-9900-1122', location: 'Semarang, ID', skills: ['Illustrator','Photoshop','Branding'], applied: '2026-01-16', avatar: 6, notes: [] },
+];
+
+/* ---------- STATE ENGINE ---------- */
+const State = {
+  candidates: [],
+  filter: { division: 'All', search: '' },
+  view: 'board',
+  activeCandidateId: null,
+  draggingId: null,
+
+  load() {
+    const stored = localStorage.getItem('talentflow_candidates');
+    this.candidates = stored ? JSON.parse(stored) : SEED_CANDIDATES.slice();
+    this.save();
+  },
+  save() {
+    localStorage.setItem('talentflow_candidates', JSON.stringify(this.candidates));
+  },
+  reset() {
+    this.candidates = SEED_CANDIDATES.slice();
+    this.save();
+  },
+  getFiltered() {
+    const s = this.filter.search.toLowerCase().trim();
+    return this.candidates.filter(c => {
+      if (this.filter.division !== 'All' && c.division !== this.filter.division) return false;
+      if (s) {
+        const hay = (c.name + ' ' + c.position + ' ' + c.skills.join(' ')).toLowerCase();
+        if (!hay.includes(s)) return false;
+      }
+      return true;
+    });
+  },
+  moveCandidate(id, newStage) {
+    const c = this.candidates.find(x => x.id === id);
+    if (!c || c.stage === newStage) return false;
+    c.stage = newStage;
+    this.save();
+    return true;
+  },
+  updateCandidate(id, patch) {
+    const c = this.candidates.find(x => x.id === id);
+    if (!c) return;
+    Object.assign(c, patch);
+    this.save();
+  },
+  addNote(id, text, by='You') {
+    const c = this.candidates.find(x => x.id === id);
+    if (!c) return;
+    c.notes = c.notes || [];
+    c.notes.unshift({ by, at: new Date().toISOString().slice(0,10), text });
+    this.save();
+  },
+  addCandidate(data) {
+    const id = 'c' + Date.now();
+    this.candidates.push({
+      id, stage: 'applied', score: 50, notes: [],
+      email: data.name.toLowerCase().replace(/\s+/g,'.') + '@mail.com',
+      phone: '+62 8' + Math.floor(10000000 + Math.random()*89999999),
+      location: 'Jakarta, ID',
+      applied: new Date().toISOString().slice(0,10),
+      avatar: Math.floor(Math.random()*8)+1,
+      ...data,
+      skills: data.skills.split(',').map(s=>s.trim()).filter(Boolean),
+      exp: parseInt(data.exp)||0,
+    });
+    this.save();
+  }
+};
+
+/* ---------- UTILITIES ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+
+function initials(name) {
+  return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+}
+function timeAgo(dateStr) {
+  const d = new Date(dateStr);
+  const diff = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return '1d ago';
+  if (diff < 30) return diff + 'd ago';
+  return Math.floor(diff/30) + 'mo ago';
+}
+function scoreColor(s) {
+  if (s >= 85) return 'emerald';
+  if (s >= 70) return 'blue';
+  if (s >= 55) return 'amber';
+  return 'rose';
+}
+function divisionBadge(div) {
+  const map = {
+    Engineering: 'bg-blue-50 text-blue-700 border-blue-200',
+    Design:      'bg-purple-50 text-purple-700 border-purple-200',
+    Marketing:   'bg-pink-50 text-pink-700 border-pink-200',
+  };
+  return map[div] || 'bg-slate-50 text-slate-700 border-slate-200';
+}
+
+/* ---------- TOAST ---------- */
+function toast(message, type='success') {
+  const container = $('#toastContainer');
+  const colors = {
+    success: { bg: 'bg-emerald-500', icon: 'check-circle-2' },
+    error:   { bg: 'bg-rose-500',    icon: 'alert-circle' },
+    info:    { bg: 'bg-brand-500',   icon: 'info' },
+  };
+  const c = colors[type] || colors.success;
+  const el = document.createElement('div');
+  el.className = `toast-enter pointer-events-auto flex items-center gap-3 ${c.bg} text-white pl-4 pr-5 py-3 rounded-xl shadow-2xl shadow-slate-900/20 min-w-[260px] max-w-sm`;
+  el.innerHTML = `<i data-lucide="${c.icon}" class="w-5 h-5 shrink-0"></i><span class="text-sm font-semibold">${message}</span>`;
+  container.appendChild(el);
+  lucide.createIcons();
+  setTimeout(()=> {
+    el.style.transition = 'all .3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    setTimeout(()=> el.remove(), 300);
+  }, 2800);
+}
+
+/* ---------- STATS ---------- */
+function renderStats() {
+  const filtered = State.getFiltered();
+  const total = filtered.length;
+  const byStage = Object.fromEntries(STAGES.map(s => [s.id, filtered.filter(c=>c.stage===s.id).length]));
+  const avgScore = total ? Math.round(filtered.reduce((a,c)=>a+c.score,0)/total) : 0;
+  const offerRate = total ? Math.round((byStage.offered/total)*100) : 0;
+
+  const stats = [
+    { label: 'Total Candidates', value: total, icon: 'users', color: 'brand', trend: '+12%' },
+    { label: 'In Interview', value: byStage.technical, icon: 'messages-square', color: 'blue', trend: '+3' },
+    { label: 'Offers Extended', value: byStage.offered, icon: 'badge-check', color: 'emerald', trend: '+2' },
+    { label: 'Avg. Score', value: avgScore, icon: 'gauge', color: 'amber', trend: '+5pt' },
+    { label: 'Offer Rate', value: offerRate + '%', icon: 'trending-up', color: 'purple', trend: 'healthy' },
+  ];
+
+  const colorMap = {
+    brand: 'from-brand-500 to-brand-600',
+    blue: 'from-blue-500 to-indigo-600',
+    emerald: 'from-emerald-500 to-teal-600',
+    amber: 'from-amber-500 to-orange-500',
+    purple: 'from-purple-500 to-pink-500',
+  };
+
+  $('#statsGrid').innerHTML = stats.map(s => `
+    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:shadow-md transition group">
+      <div class="flex items-start justify-between mb-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${colorMap[s.color]} flex items-center justify-center shadow-md group-hover:scale-110 transition">
+          <i data-lucide="${s.icon}" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">${s.trend}</span>
+      </div>
+      <div class="text-2xl font-extrabold tracking-tight">${s.value}</div>
+      <div class="text-xs text-slate-500 font-medium">${s.label}</div>
+    </div>
+  `).join('');
+  lucide.createIcons();
+}
+
+/* ---------- DIVISION FILTER ---------- */
+function renderDivisionFilters() {
+  const container = $('#divisionFilters');
+  container.innerHTML = DIVISIONS.map(d => {
+    const active = State.filter.division === d;
+    const count = d === 'All' ? State.candidates.length : State.candidates.filter(c=>c.division===d).length;
+    return `
+      <button data-division="${d}" class="division-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${active ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+        ${d}
+        <span class="${active ? 'bg-white/20' : 'bg-slate-100'} px-1.5 py-0.5 rounded-md text-[10px]">${count}</span>
+      </button>
+    `;
+  }).join('');
+  container.querySelectorAll('.division-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      State.filter.division = btn.dataset.division;
+      renderAll();
+    });
+  });
+}
+
+/* ---------- CANDIDATE CARD ---------- */
+function cardHTML(c) {
+  const scClr = scoreColor(c.score);
+  const scColorMap = { emerald: 'text-emerald-600 bg-emerald-50', blue:'text-blue-600 bg-blue-50', amber:'text-amber-600 bg-amber-50', rose:'text-rose-600 bg-rose-50' };
+  const skillChips = c.skills.slice(0,3).map(sk => `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${sk}</span>`).join('');
+  const more = c.skills.length > 3 ? `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">+${c.skills.length-3}</span>` : '';
+
+  return `
+    <div class="candidate-card bg-white rounded-xl p-3.5 border border-slate-200 shadow-sm hover:shadow-lg hover:border-brand-300 transition group" draggable="true" data-id="${c.id}">
+      <div class="flex items-start gap-3 mb-2.5">
+        <div class="w-10 h-10 rounded-full avatar-gradient-${c.avatar} flex items-center justify-center text-white font-bold text-sm shrink-0 shadow">${initials(c.name)}</div>
+        <div class="flex-1 min-w-0">
+          <h4 class="font-bold text-sm text-slate-900 truncate">${c.name}</h4>
+          <p class="text-xs text-slate-500 truncate">${c.position}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-[10px] font-bold uppercase tracking-wider ${scColorMap[scClr]} px-1.5 py-0.5 rounded">${c.score}</div>
+        </div>
+      </div>
+
+      <div class="flex items-center flex-wrap gap-1 mb-2.5">${skillChips}${more}</div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+        <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded border ${divisionBadge(c.division)}">
+          <span class="w-1.5 h-1.5 rounded-full bg-current opacity-70"></span> ${c.division}
+        </span>
+        <div class="flex items-center gap-2 text-[10px] text-slate-500">
+          <span class="inline-flex items-center gap-0.5"><i data-lucide="calendar" class="w-3 h-3"></i>${timeAgo(c.applied)}</span>
+          ${c.notes && c.notes.length ? `<span class="inline-flex items-center gap-0.5 text-brand-600 font-semibold"><i data-lucide="message-square" class="w-3 h-3"></i>${c.notes.length}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- KANBAN ---------- */
+function renderBoard() {
+  const filtered = State.getFiltered();
+  const board = $('#kanbanBoard');
+  board.innerHTML = STAGES.map(stage => {
+    const items = filtered.filter(c => c.stage === stage.id);
+    return `
+      <div class="kanban-col flex-shrink-0 w-[320px] snap-start" data-stage="${stage.id}">
+        <div class="bg-white/60 rounded-2xl border border-slate-200 flex flex-col h-full">
+          <div class="p-3 flex items-center justify-between border-b border-slate-200/70">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full ${stage.accent}"></span>
+              <h3 class="font-bold text-sm text-slate-800">${stage.name}</h3>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">${items.length}</span>
+            </div>
+            <button class="p-1 rounded hover:bg-slate-100 text-slate-500" title="More">
+              <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="kanban-col-body p-2.5 space-y-2.5 flex-1 min-h-[200px] border-2 border-dashed border-transparent rounded-b-2xl transition" data-stage="${stage.id}">
+            ${items.length ? items.map(cardHTML).join('') : `
+              <div class="flex flex-col items-center justify-center py-10 text-slate-400">
+                <i data-lucide="${stage.icon}" class="w-8 h-8 mb-2 opacity-40"></i>
+                <p class="text-xs">No candidates</p>
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  lucide.createIcons();
+  attachDnD();
+  attachCardClicks();
+}
+
+/* ---------- LIST VIEW ---------- */
+function renderList() {
+  const filtered = State.getFiltered();
+  const stageMap = Object.fromEntries(STAGES.map(s=>[s.id,s]));
+  $('#listBody').innerHTML = filtered.map(c => {
+    const st = stageMap[c.stage];
+    return `
+      <tr class="border-t border-slate-100 hover:bg-slate-50 transition cursor-pointer" data-id="${c.id}">
+        <td class="px-4 py-3">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full avatar-gradient-${c.avatar} flex items-center justify-center text-white font-bold text-xs">${initials(c.name)}</div>
+            <div>
+              <div class="font-semibold text-slate-900">${c.name}</div>
+              <div class="text-xs text-slate-500">${c.email}</div>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 py-3 text-slate-700">${c.position}</td>
+        <td class="px-4 py-3"><span class="inline-flex text-[11px] font-semibold px-2 py-0.5 rounded border ${divisionBadge(c.division)}">${c.division}</span></td>
+        <td class="px-4 py-3"><span class="inline-flex items-center gap-1.5 text-xs font-semibold"><span class="w-2 h-2 rounded-full ${st.accent}"></span>${st.name}</span></td>
+        <td class="px-4 py-3"><span class="font-bold text-slate-900">${c.score}</span><span class="text-xs text-slate-400">/100</span></td>
+        <td class="px-4 py-3 text-xs text-slate-500">${timeAgo(c.applied)}</td>
+        <td class="px-4 py-3 text-right">
+          <button class="list-view-btn p-1.5 rounded hover:bg-slate-200" data-id="${c.id}"><i data-lucide="eye" class="w-4 h-4"></i></button>
+        </td>
+      </tr>
+    `;
+  }).join('') || `<tr><td colspan="7" class="text-center py-12 text-slate-400">No candidates match your filter.</td></tr>`;
+  lucide.createIcons();
+
+  $$('#listBody tr[data-id]').forEach(tr => {
+    tr.addEventListener('click', () => openDetailModal(tr.dataset.id));
+  });
+}
+
+/* ---------- DRAG & DROP ---------- */
+function attachDnD() {
+  $$('.candidate-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      State.draggingId = card.dataset.id;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', card.dataset.id); } catch(_){}
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      State.draggingId = null;
+      $$('.kanban-col-body').forEach(b => b.classList.remove('drag-over'));
+    });
+  });
+
+  $$('.kanban-col-body').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', e => {
+      if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over');
+    });
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const id = State.draggingId || e.dataTransfer.getData('text/plain');
+      const newStage = zone.dataset.stage;
+      if (!id) return;
+      const c = State.candidates.find(x=>x.id===id);
+      if (!c) return;
+      const oldStage = c.stage;
+      if (oldStage === newStage) return;
+      if (State.moveCandidate(id, newStage)) {
+        const stageName = STAGES.find(s=>s.id===newStage).name;
+        toast(`${c.name} moved to ${stageName}`, 'success');
+        renderAll();
+      }
+    });
+  });
+}
+
+/* ---------- CARD CLICKS ---------- */
+function attachCardClicks() {
+  $$('.candidate-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (card.classList.contains('dragging')) return;
+      openDetailModal(card.dataset.id);
+    });
+  });
+}
+
+/* ---------- DETAIL MODAL ---------- */
+function openDetailModal(id) {
+  const c = State.candidates.find(x=>x.id===id);
+  if (!c) return;
+  State.activeCandidateId = id;
+  const stageOptions = STAGES.map(s => `<option value="${s.id}" ${c.stage===s.id?'selected':''}>${s.name}</option>`).join('');
+  const scClr = scoreColor(c.score);
+  const scColorMap = { emerald:'from-emerald-500 to-teal-500', blue:'from-blue-500 to-indigo-500', amber:'from-amber-500 to-orange-500', rose:'from-rose-500 to-pink-500' };
+
+  $('#modalBody').innerHTML = `
+    <div class="relative bg-gradient-to-br from-brand-600 via-purple-600 to-pink-500 p-6 text-white">
+      <button data-close class="absolute top-4 right-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex items-start gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur border-2 border-white/30 flex items-center justify-center text-xl font-extrabold">${initials(c.name)}</div>
+        <div class="flex-1">
+          <h2 class="text-2xl font-extrabold">${c.name}</h2>
+          <p class="text-white/80">${c.position}</p>
+          <div class="flex flex-wrap items-center gap-3 mt-2 text-xs">
+            <span class="inline-flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5"></i>${c.email}</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="phone" class="w-3.5 h-3.5"></i>${c.phone}</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>${c.location}</span>
+            <span class="inline-flex items-center gap-1"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>${c.exp} years exp</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto">
+      <div class="grid lg:grid-cols-3 gap-0">
+        <!-- Left: CV preview + skills -->
+        <div class="lg:col-span-2 p-6 border-r border-slate-100">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-sm flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-brand-600"></i> CV Preview</h3>
+            <button class="text-xs font-semibold text-brand-600 hover:underline inline-flex items-center gap-1" onclick="toast('Download started','info')">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDF
+            </button>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+            <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
+              <div class="w-12 h-12 rounded-full avatar-gradient-${c.avatar} flex items-center justify-center text-white font-bold">${initials(c.name)}</div>
+              <div>
+                <div class="font-bold text-slate-900">${c.name}</div>
+                <div class="text-xs text-slate-500">${c.position} · ${c.location}</div>
+              </div>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Experience</div>
+              <div class="space-y-1.5">
+                <div class="h-2 cv-preview rounded w-full animate-shimmer"></div>
+                <div class="h-2 cv-preview rounded w-5/6 animate-shimmer"></div>
+                <div class="h-2 cv-preview rounded w-4/6 animate-shimmer"></div>
+              </div>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1 mt-3">Education</div>
+              <div class="space-y-1.5">
+                <div class="h-2 cv-preview rounded w-3/4 animate-shimmer"></div>
+                <div class="h-2 cv-preview rounded w-1/2 animate-shimmer"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> Skills & Expertise</h3>
+            <div class="flex flex-wrap gap-1.5">
+              ${c.skills.map(sk => `<span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-gradient-to-r from-brand-50 to-purple-50 text-brand-700 border border-brand-200">${sk}</span>`).join('')}
+            </div>
+          </div>
+
+          <!-- Interviewer notes -->
+          <div class="mt-5">
+            <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="message-square-text" class="w-4 h-4 text-emerald-600"></i> Interviewer Notes</h3>
+            <div class="space-y-2 mb-3" id="notesList">
+              ${(c.notes||[]).length ? c.notes.map(n => `
+                <div class="bg-white border border-slate-200 rounded-lg p-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold text-slate-700">${n.by}</span>
+                    <span class="text-[10px] text-slate-400">${n.at}</span>
+                  </div>
+                  <p class="text-xs text-slate-600 leading-relaxed">${n.text}</p>
+                </div>
+              `).join('') : `<p class="text-xs text-slate-400 italic">Belum ada catatan.</p>`}
+            </div>
+            <div class="flex gap-2">
+              <input id="noteInput" type="text" placeholder="Tambah catatan interview..." class="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500/40" />
+              <button id="btnAddNote" class="px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800">Post</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Evaluation -->
+        <div class="p-6 bg-slate-50/50">
+          <h3 class="font-bold text-sm mb-3 flex items-center gap-2"><i data-lucide="gauge-circle" class="w-4 h-4 text-brand-600"></i> Evaluation Score</h3>
+
+          <div class="bg-white rounded-xl p-4 border border-slate-200 mb-4">
+            <div class="flex items-end justify-between mb-3">
+              <div>
+                <div class="text-[10px] font-bold uppercase text-slate-500">Overall Score</div>
+                <div class="text-4xl font-extrabold bg-gradient-to-r ${scColorMap[scClr]} bg-clip-text text-transparent" id="scoreDisplay">${c.score}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-[10px] font-bold uppercase text-slate-500">Rating</div>
+                <div class="text-sm font-bold text-slate-700" id="scoreLabel">${c.score>=85?'Excellent':c.score>=70?'Good':c.score>=55?'Average':'Below'}</div>
+              </div>
+            </div>
+            <input id="scoreSlider" type="range" min="0" max="100" value="${c.score}" class="w-full" style="--pct:${c.score}%" />
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+              <span>0</span><span>50</span><span>100</span>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 border border-slate-200 mb-4">
+            <div class="text-[10px] font-bold uppercase text-slate-500 mb-2">Current Stage</div>
+            <select id="stageSelect" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg bg-white font-semibold">
+              ${stageOptions}
+            </select>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 border border-slate-200 space-y-2.5">
+            <div class="text-[10px] font-bold uppercase text-slate-500 mb-1">Breakdown</div>
+            ${[
+              {k:'Technical', v: Math.min(100, c.score + 5)},
+              {k:'Communication', v: Math.max(30, c.score - 10)},
+              {k:'Culture Fit', v: Math.min(100, c.score + 2)},
+              {k:'Experience', v: Math.min(100, 50 + c.exp*8)},
+            ].map(m => `
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-600 font-medium">${m.k}</span>
+                  <span class="font-bold text-slate-800">${m.v}</span>
+                </div>
+                <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-brand-500 to-purple-500 rounded-full transition-all" style="width:${m.v}%"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-4">
+            <button id="btnReject" class="px-3 py-2.5 rounded-lg bg-rose-50 text-rose-700 text-xs font-bold border border-rose-200 hover:bg-rose-100 transition inline-flex items-center justify-center gap-1.5">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i> Reject
+            </button>
+            <button id="btnAdvance" class="px-3 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition inline-flex items-center justify-center gap-1.5">
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i> Advance
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  $('#detailModal').classList.remove('hidden');
+  $('#detailModal').classList.add('flex');
+  lucide.createIcons();
+
+  // Attach listeners
+  const slider = $('#scoreSlider');
+  slider.addEventListener('input', e => {
+    const v = parseInt(e.target.value);
+    slider.style.setProperty('--pct', v+'%');
+    $('#scoreDisplay').textContent = v;
+    $('#scoreLabel').textContent = v>=85?'Excellent':v>=70?'Good':v>=55?'Average':'Below';
+  });
+  slider.addEventListener('change', e => {
+    const v = parseInt(e.target.value);
+    State.updateCandidate(id, { score: v });
+    toast(`Score updated to ${v}`, 'success');
+    renderStats();
+  });
+
+  $('#stageSelect').addEventListener('change', e => {
+    const newStage = e.target.value;
+    if (State.moveCandidate(id, newStage)) {
+      const stageName = STAGES.find(s=>s.id===newStage).name;
+      toast(`Moved to ${stageName}`, 'success');
+      renderAll();
+    }
+  });
+
+  $('#btnAddNote').addEventListener('click', () => {
+    const txt = $('#noteInput').value.trim();
+    if (!txt) { toast('Catatan tidak boleh kosong','error'); return; }
+    State.addNote(id, txt, 'You (Interviewer)');
+    toast('Note added', 'success');
+    openDetailModal(id); // re-render
+    renderBoard();
+  });
+  $('#noteInput').addEventListener('keydown', e => { if (e.key==='Enter') $('#btnAddNote').click(); });
+
+  $('#btnReject').addEventListener('click', () => {
+    State.moveCandidate(id, 'rejected');
+    toast(`${c.name} marked as rejected`, 'info');
+    closeDetailModal();
+    renderAll();
+  });
+  $('#btnAdvance').addEventListener('click', () => {
+    const idx = STAGES.findIndex(s=>s.id===c.stage);
+    const next = STAGES[Math.min(idx+1, STAGES.length-2)]; // skip rejected
+    if (next && next.id !== c.stage) {
+      State.moveCandidate(id, next.id);
+      toast(`${c.name} advanced to ${next.name}`, 'success');
+      closeDetailModal();
+      renderAll();
+    } else {
+      toast('Already at final stage', 'info');
+    }
+  });
+
+  $$('#detailModal [data-close]').forEach(el => el.addEventListener('click', closeDetailModal));
+}
+
+function closeDetailModal() {
+  $('#detailModal').classList.add('hidden');
+  $('#detailModal').classList.remove('flex');
+  State.activeCandidateId = null;
+}
+
+/* ---------- ADD MODAL ---------- */
+function openAddModal() {
+  $('#addModal').classList.remove('hidden');
+  $('#addModal').classList.add('flex');
+}
+function closeAddModal() {
+  $('#addModal').classList.add('hidden');
+  $('#addModal').classList.remove('flex');
+  $('#addForm').reset();
+}
+
+/* ---------- RENDER ALL ---------- */
+function renderAll() {
+  renderStats();
+  renderDivisionFilters();
+  if (State.view === 'board') {
+    $('#kanbanBoard').classList.remove('hidden');
+    $('#kanbanBoard').classList.add('flex');
+    $('#listView').classList.add('hidden');
+    renderBoard();
+  } else {
+    $('#kanbanBoard').classList.add('hidden');
+    $('#kanbanBoard').classList.remove('flex');
+    $('#listView').classList.remove('hidden');
+    renderList();
+  }
+}
+
+/* ---------- INIT ---------- */
+function init() {
+  State.load();
+  renderAll();
+  lucide.createIcons();
+
+  // Search
+  let searchTimer;
+  $('#searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      State.filter.search = e.target.value;
+      renderAll();
+    }, 180);
+  });
+
+  // View toggles
+  $('#btnViewBoard').addEventListener('click', () => {
+    State.view = 'board';
+    $('#btnViewBoard').className = 'view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-50 text-brand-700 border border-brand-200 text-xs font-semibold';
+    $('#btnViewList').className = 'view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 text-xs font-semibold hover:bg-slate-50';
+    renderAll();
+    lucide.createIcons();
+  });
+  $('#btnViewList').addEventListener('click', () => {
+    State.view = 'list';
+    $('#btnViewList').className = 'view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-50 text-brand-700 border border-brand-200 text-xs font-semibold';
+    $('#btnViewBoard').className = 'view-toggle inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 text-xs font-semibold hover:bg-slate-50';
+    renderAll();
+    lucide.createIcons();
+  });
+
+  // Add candidate
+  $('#btnAddCandidate').addEventListener('click', openAddModal);
+  $$('#addModal [data-close]').forEach(el => el.addEventListener('click', closeAddModal));
+  $('#addForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = Object.fromEntries(fd.entries());
+    if (!data.skills) data.skills = '';
+    State.addCandidate(data);
+    toast(`${data.name} added to pipeline`, 'success');
+    closeAddModal();
+    renderAll();
+  });
+
+  // Export
+  $('#btnExport').addEventListener('click', () => {
+    toast('Exporting pipeline data...', 'info');
+    setTimeout(() => toast('Exported 📊 pipeline.csv', 'success'), 900);
+  });
+
+  // Nav tabs (demo only)
+  $$('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.nav-tab').forEach(t => t.className = 'nav-tab px-4 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900');
+      tab.className = 'nav-tab px-4 py-1.5 rounded-lg text-sm font-semibold bg-white shadow-sm text-brand-600';
+      if (tab.textContent.trim() !== 'Pipeline') toast(tab.textContent.trim() + ' module (demo)', 'info');
+    });
+  });
+
+  // Esc to close
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeDetailModal(); closeAddModal(); }
+  });
+
+  // Welcome toast
+  setTimeout(() => toast('Welcome to TalentFlow — Drag cards to move stages!', 'info'), 500);
+}
+
+init();
+</script>
+</body>
+</html>

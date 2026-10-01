@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#070b14" />
+<title>NovaPOS — Point of Sale Kasir Resto & Retail | Demo Prototype by NovaNext</title>
+
+<!-- ============ DEPENDENCIES ============ -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+        colors: {
+          ink: { 950:'#070b14', 900:'#0b1220', 850:'#0f172a', 800:'#131c30', 700:'#1c2942', 600:'#27364f' },
+          brand: { 400:'#34d399', 500:'#10b981', 600:'#059669' },
+          sun: { 400:'#fbbf24', 500:'#f59e0b' },
+        },
+        boxShadow: {
+          soft: '0 10px 30px -12px rgba(0,0,0,.6)',
+          glow: '0 0 0 1px rgba(16,185,129,.35), 0 8px 30px -8px rgba(16,185,129,.45)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  *{ -webkit-tap-highlight-color: transparent; }
+  html,body{ overscroll-behavior:none; }
+  body{ background:#070b14; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:#27364f; border-radius:99px; }
+  ::-webkit-scrollbar-thumb:hover{ background:#3a4d6b; }
+
+  .no-bar::-webkit-scrollbar{ width:0; height:0; }
+
+  /* ---------- Animations ---------- */
+  @keyframes nvFadeIn{ from{opacity:0} to{opacity:1} }
+  @keyframes nvPop{ 0%{opacity:0;transform:scale(.94) translateY(10px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+  @keyframes nvSlideRight{ from{transform:translateX(100%)} to{transform:translateX(0)} }
+  @keyframes nvSlideUp{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+  @keyframes nvToastIn{ 0%{opacity:0;transform:translateY(-14px) scale(.96)} 100%{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes nvToastOut{ 0%{opacity:1} 100%{opacity:0;transform:translateY(-10px) scale(.97)} }
+  @keyframes nvRowIn{ from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes nvCardIn{ from{opacity:0;transform:translateY(10px) scale(.97)} to{opacity:1;transform:none} }
+  @keyframes nvPulse{ 0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)} 100%{box-shadow:0 0 0 16px rgba(16,185,129,0)} }
+  @keyframes nvFlash{ 0%{background:rgba(16,185,129,.28)} 100%{background:transparent} }
+  @keyframes nvBump{ 0%{transform:scale(1)} 35%{transform:scale(1.35)} 100%{transform:scale(1)} }
+  @keyframes nvFloat{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes nvShine{ 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  @keyframes nvRing{ 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+
+  .anim-fade{ animation:nvFadeIn .25s ease both }
+  .anim-pop{ animation:nvPop .22s cubic-bezier(.2,.9,.3,1.2) both }
+  .anim-slide-r{ animation:nvSlideRight .28s cubic-bezier(.3,.8,.2,1) both }
+  .anim-slide-u{ animation:nvSlideUp .3s cubic-bezier(.3,.8,.2,1) both }
+  .anim-toast{ animation:nvToastIn .26s cubic-bezier(.2,.9,.3,1.3) both }
+  .anim-row{ animation:nvRowIn .22s ease both }
+  .anim-card{ animation:nvCardIn .3s ease both }
+  .anim-pulse{ animation:nvPulse .7s ease-out }
+  .anim-flash{ animation:nvFlash .8s ease-out }
+  .anim-bump{ animation:nvBump .38s cubic-bezier(.3,1.4,.5,1) }
+  .anim-float{ animation:nvFloat 3.5s ease-in-out infinite }
+  .stagger > *{ animation:nvCardIn .3s ease both }
+  .stagger > *:nth-child(1){animation-delay:.0s}.stagger > *:nth-child(2){animation-delay:.02s}
+  .stagger > *:nth-child(3){animation-delay:.04s}.stagger > *:nth-child(4){animation-delay:.06s}
+  .stagger > *:nth-child(5){animation-delay:.08s}.stagger > *:nth-child(6){animation-delay:.1s}
+  .stagger > *:nth-child(7){animation-delay:.12s}.stagger > *:nth-child(8){animation-delay:.14s}
+  .stagger > *:nth-child(9){animation-delay:.16s}.stagger > *:nth-child(10){animation-delay:.18s}
+
+  .shine{ background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.14) 45%,transparent 70%); background-size:200% 100%; animation:nvShine 2.6s linear infinite }
+  .press{ transition:transform .12s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease }
+  .press:active{ transform:scale(.96) }
+  .num-key{ transition:transform .08s ease, background .15s ease }
+  .num-key:active{ transform:scale(.93); background:rgba(16,185,129,.22) }
+
+  /* ---------- Thermal receipt ---------- */
+  #print-area{ display:none }
+  .thermal{
+    font-family:"JetBrains Mono","Courier New",ui-monospace,monospace;
+    font-weight:600; color:#000; background:#fff; line-height:1.35;
+    padding:4mm 3mm; box-sizing:border-box;
+  }
+  .thermal .trow{ display:flex; justify-content:space-between; gap:6px; align-items:flex-start }
+  .thermal .tc{ text-align:center }
+  .thermal .thr{ border-top:1px dashed #000; margin:3px 0 }
+  .thermal .tsm{ font-size:.82em }
+  .thermal .tlg{ font-size:1.15em }
+  .thermal .tbold{ font-weight:800 }
+  .thermal .tcut{ word-break:break-word; flex:1 }
+  .thermal .tbar{
+    height:34px; margin:6px auto 0; width:78%;
+    background-image:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 4px,#000 4px 5px,transparent 5px 8px,#000 8px 11px,transparent 11px 13px);
+  }
+  .thermal.paper-58{ width:58mm; font-size:10.5px }
+  .thermal.paper-80{ width:80mm; font-size:12px }
+
+  /* ---------- Print ---------- */
+  @page{ size:auto; margin:0 }
+  @media print{
+    html,body{ height:auto!important; overflow:visible!important; background:#fff!important; -webkit-print-color-adjust:exact; print-color-adjust:exact }
+    body > *:not(#print-area){ display:none!important }
+    #print-area{ display:block!important }
+    #print-area .thermal{ box-shadow:none!important; margin:0!important; border:0!important; border-radius:0!important }
+    .no-print{ display:none!important }
+  }
+</style>
+</head>
+
+<body class="font-sans text-slate-100 antialiased h-[100dvh] overflow-hidden select-none">
+
+<!-- ================= APP SHELL ================= -->
+<div class="h-[100dvh] w-full flex flex-col bg-[radial-gradient(1200px_600px_at_15%_-10%,rgba(16,185,129,.10),transparent),radial-gradient(900px_500px_at_100%_0%,rgba(59,130,246,.10),transparent)]">
+
+  <!-- ============ HEADER ============ -->
+  <header class="shrink-0 h-14 sm:h-16 px-2.5 sm:px-4 flex items-center gap-2 sm:gap-3 border-b border-white/10 bg-ink-900/80 backdrop-blur-xl z-30">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="relative h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-xl bg-gradient-to-br from-brand-400 to-emerald-600 grid place-items-center shadow-glow">
+        <i data-lucide="store" class="w-5 h-5 text-ink-950"></i>
+        <span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-brand-400 ring-2 ring-ink-900"></span>
+      </div>
+      <div class="leading-tight min-w-0">
+        <div class="flex items-center gap-1.5">
+          <h1 class="font-extrabold text-sm sm:text-base tracking-tight truncate">Nova<span class="text-brand-400">POS</span></h1>
+          <span class="hidden sm:inline text-[9px] font-bold px-1.5 py-0.5 rounded bg-brand-500/15 text-brand-400 border border-brand-500/30">v2.4</span>
+        </div>
+        <p class="text-[10px] sm:text-[11px] text-slate-400 truncate" id="hdrStore">Warung Kopi NovaNext</p>
+      </div>
+    </div>
+
+    <!-- status pills (desktop) -->
+    <div class="hidden xl:flex items-center gap-1.5 ml-2">
+      <span class="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-ink-800 border border-white/10 text-slate-300">
+        <span class="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse"></span> Shift Aktif
+      </span>
+      <span class="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-ink-800 border border-white/10 text-slate-300">
+        <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-400"></i><span id="hdrClock">--:--:--</span>
+      </span>
+      <span id="hdrOmzet" class="flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-lg bg-ink-800 border border-white/10 text-sun-400">
+        <i data-lucide="wallet" class="w-3.5 h-3.5"></i><span>Rp 0</span>
+      </span>
+    </div>
+
+    <!-- badge -->
+    <div class="ml-auto hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5">
+      <span class="relative flex h-2 w-2">
+        <span class="absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75 animate-ping"></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-400"></span>
+      </span>
+      <span class="text-[11px] font-semibold text-slate-300">Demo Prototype by <span class="text-white font-extrabold">NovaNext</span></span>
+    </div>
+
+    <div class="flex items-center gap-1 sm:gap-1.5 ml-auto md:ml-0">
+      <button data-act="sound" title="Suara kasir" class="press h-9 w-9 grid place-items-center rounded-xl bg-ink-800 border border-white/10 hover:border-brand-500/50 hover:text-brand-400">
+        <i data-lucide="volume-2" class="w-4 h-4" id="soundIcon"></i>
+      </button>
+      <button data-act="held" title="Pesanan diparkir" class="press relative h-9 w-9 grid place-items-center rounded-xl bg-ink-800 border border-white/10 hover:border-sun-500/50 hover:text-sun-400">
+        <i data-lucide="pause" class="w-4 h-4"></i>
+        <span id="heldBadge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-sun-500 text-ink-950 text-[10px] font-extrabold grid place-items-center">0</span>
+      </button>
+      <button data-act="history" class="press h-9 px-2.5 flex items-center gap-1.5 rounded-xl bg-ink-800 border border-white/10 hover:border-brand-500/50 hover:text-brand-400 text-xs font-bold">
+        <i data-lucide="receipt-text" class="w-4 h-4"></i><span class="hidden sm:inline">Riwayat</span>
+      </button>
+      <button data-act="settings" class="press h-9 w-9 grid place-items-center rounded-xl bg-ink-800 border border-white/10 hover:border-brand-500/50 hover:text-brand-400">
+        <i data-lucide="settings-2" class="w-4 h-4"></i>
+      </button>
+      <button data-act="toggleCart" class="press lg:hidden relative h-9 w-9 grid place-items-center rounded-xl bg-brand-500 text-ink-950 font-bold">
+        <i data-lucide="shopping-cart" class="w-4 h-4" id="cartIcon"></i>
+        <span id="cartBadge" class="hidden absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-white text-ink-950 text-[10px] font-extrabold grid place-items-center">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <main class="flex-1 min-h-0 flex">
+
+    <!-- ---------- LEFT : CATALOG ---------- -->
+    <section class="flex-1 min-w-0 flex flex-col">
+      <!-- search + filter -->
+      <div class="shrink-0 px-3 sm:px-4 pt-3 pb-2 space-y-2.5">
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            <input id="searchInput" type="search" placeholder="Cari produk / SKU…  (F2)" autocomplete="off"
+              class="w-full h-10 pl-9 pr-9 rounded-xl bg-ink-850 border border-white/10 text-sm placeholder:text-slate-500 outline-none focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 transition" />
+            <button id="clearSearch" class="hidden absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 grid place-items-center rounded-lg text-slate-400 hover:text-white">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <button data-act="newProduct" class="press h-10 px-3 flex items-center gap-1.5 rounded-xl bg-ink-850 border border-white/10 hover:border-brand-500/50 text-xs font-bold">
+            <i data-lucide="plus" class="w-4 h-4 text-brand-400"></i><span class="hidden sm:inline">Produk</span>
+          </button>
+          <div class="hidden sm:flex h-10 items-center gap-1 p-1 rounded-xl bg-ink-850 border border-white/10">
+            <button data-view="grid" class="view-btn press h-8 w-8 grid place-items-center rounded-lg bg-brand-500/20 text-brand-400"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
+            <button data-view="list" class="view-btn press h-8 w-8 grid place-items-center rounded-lg text-slate-400"><i data-lucide="rows-3" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+        <div id="catChips" class="flex items-center gap-2 overflow-x-auto no-bar pb-0.5"></div>
+      </div>
+
+      <!-- product grid -->
+      <div id="catalogScroll" class="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pb-24 lg:pb-4">
+        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-3"></div>
+        <div id="emptyCatalog" class="hidden h-full min-h-[280px] flex-col items-center justify-center text-center gap-3">
+          <div class="anim-float h-16 w-16 rounded-2xl bg-ink-850 border border-white/10 grid place-items-center">
+            <i data-lucide="package-search" class="w-7 h-7 text-slate-500"></i>
+          </div>
+          <p class="font-bold">Produk tidak ditemukan</p>
+          <p class="text-xs text-slate-500 max-w-[240px]">Coba kata kunci lain atau reset filter kategori.</p>
+          <button data-act="resetFilter" class="press mt-1 px-4 h-9 rounded-xl bg-brand-500 text-ink-950 text-xs font-extrabold">Reset Filter</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- RIGHT : CART ---------- -->
+    <aside id="cartPanel"
+      class="fixed lg:static inset-y-0 right-0 z-50 lg:z-20 w-full sm:w-[420px] lg:w-[390px] xl:w-[420px] shrink-0
+             bg-ink-900/95 lg:bg-ink-900/60 backdrop-blur-xl border-l border-white/10 flex flex-col
+             translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
+      <div class="flex-1 min-h-0 flex flex-col">
+        <!-- cart head -->
+        <div class="shrink-0 px-3 sm:px-4 pt-3 pb-2 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shopping-cart" class="w-4 h-4 text-brand-400"></i>
+            <h2 class="font-extrabold text-sm">Keranjang Kasir</h2>
+            <span id="cartCount" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-brand-500/15 text-brand-400 border border-brand-500/25">0 item</span>
+            <button data-act="closeCart" class="press ml-auto lg:hidden h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <button data-act="clearCart" class="press ml-auto hidden lg:grid h-8 w-8 place-items-center rounded-lg bg-ink-800 border border-white/10 hover:border-rose-500/50 hover:text-rose-400" title="Kosongkan">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- order type -->
+          <div id="orderType" class="mt-2.5 grid grid-cols-3 gap-1 p-1 rounded-xl bg-ink-850 border border-white/10">
+            <button data-otype="Dine In" class="otype press h-8 rounded-lg text-[11px] font-bold">Dine In</button>
+            <button data-otype="Take Away" class="otype press h-8 rounded-lg text-[11px] font-bold">Take Away</button>
+            <button data-otype="Delivery" class="otype press h-8 rounded-lg text-[11px] font-bold">Delivery</button>
+          </div>
+
+          <div class="mt-2 flex items-center gap-2">
+            <div class="relative flex-1">
+              <i data-lucide="user-round" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input id="custName" placeholder="Nama pelanggan (opsional)" class="w-full h-8 pl-8 pr-2 rounded-lg bg-ink-850 border border-white/10 text-[11px] outline-none focus:border-brand-500/60" />
+            </div>
+            <input id="tableNo" placeholder="Meja" class="w-16 h-8 px-2 rounded-lg bg-ink-850 border border-white/10 text-[11px] text-center outline-none focus:border-brand-500/60" />
+          </div>
+        </div>
+
+        <!-- cart items -->
+        <div id="cartScroll" class="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 py-2.5 space-y-2"></div>
+
+        <!-- totals -->
+        <div class="shrink-0 border-t border-white/10 bg-ink-900/70 backdrop-blur px-3 sm:px-4 pt-2.5 pb-3 space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span>Subtotal</span><span id="tSub" class="font-mono font-semibold text-slate-200">Rp 0</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1 p-0.5 rounded-lg bg-ink-850 border border-white/10">
+              <button data-dtype="rp" class="dtype press px-2 h-7 rounded-md text-[11px] font-extrabold">Rp</button>
+              <button data-dtype="pct" class="dtype press px-2 h-7 rounded-md text-[11px] font-extrabold">%</button>
+            </div>
+            <div class="relative flex-1">
+              <i data-lucide="ticket-percent" class="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-sun-400"></i>
+              <input id="discInput" type="number" min="0" value="0" placeholder="Diskon" class="w-full h-8 pl-8 pr-7 rounded-lg bg-ink-850 border border-white/10 text-xs font-semibold outline-none focus:border-sun-500/60" />
+              <span id="discSuffix" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-500">Rp</span>
+            </div>
+            <button data-act="quickDisc" class="press h-8 px-2 rounded-lg bg-ink-850 border border-white/10 text-[11px] font-bold text-slate-300 hover:text-sun-400">10%</button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span id="discRowLabel" class="text-xs text-slate-400">Diskon</span>
+            <span id="tDisc" class="text-xs font-mono font-semibold text-rose-300">- Rp 0</span>
+          </div>
+
+          <!-- switches -->
+          <div class="grid grid-cols-2 gap-2">
+            <button data-switch="service" class="sw press flex items-center justify-between gap-2 px-2.5 h-9 rounded-xl bg-ink-850 border border-white/10">
+              <span class="text-[11px] font-bold leading-none text-left">Service<br><span class="font-semibold text-slate-500 text-[9px]">5%</span></span>
+              <span class="swdot relative h-4 w-7 rounded-full bg-ink-600 transition"><span class="absolute top-0.5 left-0.5 h-3 w-3 rounded-full bg-slate-300 transition-all"></span></span>
+            </button>
+            <button data-switch="tax" class="sw press flex items-center justify-between gap-2 px-2.5 h-9 rounded-xl bg-ink-850 border border-white/10">
+              <span class="text-[11px] font-bold leading-none text-left">PB1<br><span class="font-semibold text-slate-500 text-[9px]">10%</span></span>
+              <span class="swdot relative h-4 w-7 rounded-full bg-ink-600 transition"><span class="absolute top-0.5 left-0.5 h-3 w-3 rounded-full bg-slate-300 transition-all"></span></span>
+            </button>
+          </div>
+
+          <div class="h-px my-1 border-t border-dashed border-white/15"></div>
+
+          <div class="flex items-end justify-between">
+            <div class="leading-none">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Bayar</p>
+              <p class="text-[10px] text-slate-500 mt-0.5" id="taxNote">PB1 10% nonaktif</p>
+            </div>
+            <p id="tTotal" class="font-mono text-2xl sm:text-[26px] font-extrabold text-brand-400 leading-none">Rp 0</p>
+          </div>
+
+          <div class="grid grid-cols-[auto_1fr] gap-2 pt-0.5">
+            <button data-act="hold" class="press h-12 px-3 rounded-xl bg-ink-800 border border-white/10 hover:border-sun-500/50 hover:text-sun-400 flex flex-col items-center justify-center" title="Parkir pesanan">
+              <i data-lucide="pause" class="w-4 h-4"></i><span class="text-[9px] font-bold mt-0.5">Parkir</span>
+            </button>
+            <button data-act="pay" class="press group h-12 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow-glow disabled:opacity-40 disabled:shadow-none">
+              <i data-lucide="banknote" class="w-4 h-4"></i> Bayar Sekarang <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- mobile bottom bar -->
+  <div class="lg:hidden shrink-0 h-[62px] px-3 pb-[env(safe-area-inset-bottom)] flex items-center gap-2 border-t border-white/10 bg-ink-900/95 backdrop-blur-xl z-30">
+    <button data-act="toggleCart" class="press h-11 px-3 flex items-center gap-2 rounded-xl bg-ink-850 border border-white/10">
+      <i data-lucide="shopping-cart" class="w-4 h-4 text-brand-400"></i>
+      <div class="leading-none text-left">
+        <p class="text-[9px] font-bold text-slate-400" id="mItems">0 item</p>
+        <p class="text-sm font-mono font-extrabold" id="mTotal">Rp 0</p>
+      </div>
+    </button>
+    <button data-act="pay" class="press flex-1 h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 font-extrabold text-sm flex items-center justify-center gap-2 disabled:opacity-40">
+      <i data-lucide="banknote" class="w-4 h-4"></i> Bayar
+    </button>
+  </div>
+</div>
+
+<!-- overlay for mobile cart -->
+<div id="cartOverlay" class="hidden lg:hidden fixed inset-0 z-40 bg-ink-950/70 backdrop-blur-sm anim-fade"></div>
+
+<!-- ================= TOASTS ================= -->
+<div id="toasts" class="fixed top-3 left-1/2 -translate-x-1/2 z-[90] w-[calc(100%-24px)] max-w-sm flex flex-col gap-2 pointer-events-none"></div>
+
+<!-- ================= MODAL ROOT ================= -->
+<div id="modalRoot" class="hidden fixed inset-0 z-[80] items-center justify-center p-3 sm:p-6">
+  <div class="absolute inset-0 bg-ink-950/80 backdrop-blur-md anim-fade" data-modal-close></div>
+  <div id="modalBox" class="relative w-full max-w-md max-h-[92dvh] overflow-hidden rounded-2xl bg-ink-850 border border-white/10 shadow-soft anim-pop flex flex-col"></div>
+</div>
+
+<!-- ================= PRINT AREA ================= -->
+<div id="print-area" aria-hidden="true"></div>
+
+<script>
+/* =====================================================================
+   NovaPOS — Point of Sale Engine  (Vanilla ES6+, single file)
+   Demo Prototype by NovaNext
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  /* ---------------- Persistence helper ---------------- */
+  const KEY = 'novanext_pos_v1_';
+  const LS = {
+    get(k, d) { try { const v = localStorage.getItem(KEY + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); } catch (e) {} },
+  };
+
+  /* ---------------- Mock Data ---------------- */
+  const CATEGORIES = [
+    { id: 'all', name: 'Semua Menu', icon: 'layout-grid' },
+    { id: 'makanan', name: 'Makanan', icon: 'chef-hat' },
+    { id: 'minuman', name: 'Minuman', icon: 'coffee' },
+    { id: 'snack', name: 'Snack', icon: 'cookie' },
+  ];
+
+  const SEED = [
+    { id:'P01', name:'Nasi Goreng Spesial', cat:'makanan', price:28000, stock:24, emoji:'🍚', badge:'Best' },
+    { id:'P02', name:'Mie Goreng Jawa', cat:'makanan', price:25000, stock:18, emoji:'🍜', badge:'' },
+    { id:'P03', name:'Ayam Geprek Sambal Bawang', cat:'makanan', price:26000, old:31000, stock:12, emoji:'🍗', badge:'Promo' },
+    { id:'P04', name:'Ayam Bakar Madu', cat:'makanan', price:32000, stock:9, emoji:'🔥', badge:'' },
+    { id:'P05', name:'Soto Ayam Lamongan', cat:'makanan', price:22000, stock:15, emoji:'🍲', badge:'' },
+    { id:'P06', name:'Sate Ayam Madura (10)', cat:'makanan', price:30000, stock:11, emoji:'🍢', badge:'Best' },
+    { id:'P07', name:'Bebek Goreng Sambal Ijo', cat:'makanan', price:38000, stock:5, emoji:'🦆', badge:'' },
+    { id:'P08', name:'Nasi Uduk Komplit', cat:'makanan', price:20000, stock:20, emoji:'🍛', badge:'' },
+    { id:'P09', name:'Bakso Sapi Jumbo', cat:'makanan', price:24000, stock:14, emoji:'🥣', badge:'' },
+    { id:'P10', name:'Kwetiau Siram Seafood', cat:'makanan', price:33000, stock:7, emoji:'🍤', badge:'Baru' },
+    { id:'P11', name:'Ikan Nila Bakar', cat:'makanan', price:35000, stock:4, emoji:'🐟', badge:'' },
+    { id:'P12', name:'Capcay Goreng Spesial', cat:'makanan', price:26000, stock:10, emoji:'🥦', badge:'' },
+
+    { id:'D01', name:'Es Teh Manis Jumbo', cat:'minuman', price:8000, stock:60, emoji:'🧋', badge:'Best' },
+    { id:'D02', name:'Teh Tawar Hangat', cat:'minuman', price:6000, stock:60, emoji:'🫖', badge:'' },
+    { id:'D03', name:'Es Jeruk Peras', cat:'minuman', price:12000, stock:40, emoji:'🍊', badge:'' },
+    { id:'D04', name:'Kopi Susu Gula Aren', cat:'minuman', price:20000, old:24000, stock:35, emoji:'☕', badge:'Promo' },
+    { id:'D05', name:'Americano Dingin', cat:'minuman', price:18000, stock:30, emoji:'🧊', badge:'' },
+    { id:'D06', name:'Cappuccino Classic', cat:'minuman', price:22000, stock:26, emoji:'☕', badge:'' },
+    { id:'D07', name:'Matcha Latte', cat:'minuman', price:25000, stock:16, emoji:'🍵', badge:'Baru' },
+    { id:'D08', name:'Es Cendol Dawet', cat:'minuman', price:15000, stock:22, emoji:'🥤', badge:'' },
+    { id:'D09', name:'Jus Alpukat Kental', cat:'minuman', price:22000, stock:19, emoji:'🥑', badge:'' },
+    { id:'D10', name:'Jus Mangga Madu', cat:'minuman', price:20000, stock:17, emoji:'🥭', badge:'' },
+    { id:'D11', name:'Air Mineral 600ml', cat:'minuman', price:5000, stock:90, emoji:'💧', badge:'' },
+    { id:'D12', name:'Susu Kurma Palm', cat:'minuman', price:18000, stock:13, emoji:'🥛', badge:'' },
+
+    { id:'S01', name:'Kentang Goreng Besar', cat:'snack', price:18000, stock:28, emoji:'🍟', badge:'Best' },
+    { id:'S02', name:'Pisang Goreng Keju', cat:'snack', price:17000, stock:21, emoji:'🍌', badge:'' },
+    { id:'S03', name:'Roti Bakar Coklat Keju', cat:'snack', price:15000, stock:25, emoji:'🍞', badge:'' },
+    { id:'S04', name:'Dimsum Ayam (4 pcs)', cat:'snack', price:19000, stock:12, emoji:'🥟', badge:'Baru' },
+    { id:'S05', name:'Cireng Rujak', cat:'snack', price:12000, stock:30, emoji:'🥠', badge:'' },
+    { id:'S06', name:'Onion Rings', cat:'snack', price:16000, stock:18, emoji:'🧅', badge:'' },
+    { id:'S07', name:'Chicken Wings BBQ', cat:'snack', price:25000, stock:8, emoji:'🍖', badge:'' },
+    { id:'S08', name:'Tahu Crispy Sambal', cat:'snack', price:13000, stock:23, emoji:'🍥', badge:'' },
+  ];
+
+  const DEFAULT_STORE = {
+    name: 'Warung Kopi NovaNext',
+    address: 'Jl. Merdeka No. 88, Bandung',
+    phone: '0812-3456-7890',
+    footer: 'Terima kasih atas kunjungan Anda 🙏',
+    cashier: 'Rani',
+    paper: '80',
+    sound: true,
+  };
+
+  const NOTES_PRESET = ['Tanpa Bawang', 'Pedas Level 2', 'Less Sugar', 'Tanpa Es', 'Extra Sambal', 'Kemas Terpisah'];
+
+  /* ---------------- UI State Engine ---------------- */
+  const state = {
+    products: LS.get('products', SEED),
+    cart: LS.get('cart', []),
+    held: LS.get('held', []),
+    history: LS.get('history', []),
+    seq: LS.get('seq', 1),
+    store: Object.assign({}, DEFAULT_STORE, LS.get('store', {})),
+    ui: {
+      cat: 'all', search: '', view: 'grid', cartOpen: false,
+      discType: LS.get('discType', 'rp'), discVal: LS.get('discVal', 0),
+      service: LS.get('service', false), tax: LS.get('tax', true),
+      otype: 'Dine In', payMethod: 'cash', cash: 0, paper: LS.get('paper', '80'),
+    },
+    modal: { open: false, type: null, payload: null },
+  };
+
+  /* ---------------- Utils ---------------- */
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const rp = n => 'Rp ' + (Math.round(n || 0)).toLocaleString('id-ID');
+  const nmr = n => (Math.round(n || 0)).toLocaleString('id-ID');
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const icons = () => { try { lucide.createIcons(); } catch (e) {} };
+  const now = () => new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const dOnly = d => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+  const tOnly = d => `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+  function persist() {
+    LS.set('products', state.products); LS.set('cart', state.cart);
+    LS.set('held', state.held); LS.set('history', state.history.slice(-200));
+    LS.set('seq', state.seq); LS.set('store', state.store);
+    LS.set('discType', state.ui.discType); LS.set('discVal', state.ui.discVal);
+    LS.set('service', state.ui.service); LS.set('tax', state.ui.tax);
+    LS.set('paper', state.ui.paper);
+  }
+
+  /* ---------------- Sound ---------------- */
+  let AC = null;
+  function beep(freq, dur, type) {
+    if (!state.store.sound) return;
+    try {
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      const o = AC.createOscillator(), g = AC.createGain();
+      o.type = type || 'triangle'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, AC.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.08, AC.currentTime + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + (dur || 0.09));
+      o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + (dur || 0.1));
+    } catch (e) {}
+  }
+  const sfx = {
+    add: () => { beep(880, .07); setTimeout(() => beep(1180, .07), 60); },
+    ok: () => { beep(660, .08); setTimeout(() => beep(880, .08), 80); setTimeout(() => beep(1320, .12), 160); },
+    err: () => { beep(200, .16, 'sawtooth'); },
+    tap: () => beep(520, .04, 'square'),
+    print: () => { let i = 0; const iv = setInterval(() => { beep(120 + Math.random() * 90, .04, 'sawtooth'); if (++i > 10) clearInterval(iv); }, 60); },
+  };
+
+  /* ---------------- Toasts ---------------- */
+  function toast(msg, type, sub) {
+    const wrap = $('#toasts');
+    const map = {
+      success: { i: 'circle-check-big', c: 'text-brand-400', bg: 'from-brand-500/20' },
+      info: { i: 'info', c: 'text-sky-400', bg: 'from-sky-500/20' },
+      warn: { i: 'triangle-alert', c: 'text-sun-400', bg: 'from-sun-500/20' },
+      error: { i: 'circle-x', c: 'text-rose-400', bg: 'from-rose-500/20' },
+    }[type || 'success'];
+    const el = document.createElement('div');
+    el.className = 'anim-toast pointer-events-auto flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-white/10 bg-gradient-to-r ' + map.bg + ' to-ink-850/95 backdrop-blur-xl shadow-soft';
+    el.innerHTML = `<i data-lucide="${map.i}" class="w-4 h-4 ${map.c} shrink-0"></i>
+      <div class="min-w-0"><p class="text-xs font-bold leading-tight">${esc(msg)}</p>${sub ? `<p class="text-[10px] text-slate-400 truncate">${esc(sub)}</p>` : ''}</div>`;
+    wrap.appendChild(el); icons();
+    while (wrap.children.length > 3) wrap.removeChild(wrap.firstChild);
+    setTimeout(() => { el.style.animation = 'nvToastOut .25s ease forwards'; setTimeout(() => el.remove(), 260); }, 1900);
+  }
+
+  /* ---------------- Modal engine ---------------- */
+  function openModal(html, opts) {
+    const root = $('#modalRoot'), old = $('#modalBox');
+    // fresh node => no leaked event listeners from previous modals
+    const box = old.cloneNode(false);
+    old.replaceWith(box);
+    box.innerHTML = html;
+    box.style.maxWidth = (opts && opts.width) || '';
+    box.classList.remove('anim-pop'); void box.offsetWidth; box.classList.add('anim-pop');
+    root.classList.remove('hidden'); root.classList.add('flex');
+    state.modal = { open: true, type: (opts && opts.type) || 'generic' };
+    icons();
+  }
+  function closeModal() {
+    $('#modalRoot').classList.add('hidden'); $('#modalRoot').classList.remove('flex');
+    $('#modalBox').innerHTML = ''; state.modal = { open: false, type: null, payload: null };
+  }
+  function confirmDialog(o) {
+    return new Promise(res => {
+      openModal(`
+        <div class="p-5">
+          <div class="flex items-start gap-3">
+            <div class="h-11 w-11 shrink-0 rounded-xl grid place-items-center ${o.danger ? 'bg-rose-500/15 text-rose-400 border border-rose-500/30' : 'bg-brand-500/15 text-brand-400 border border-brand-500/30'}">
+              <i data-lucide="${o.danger ? 'triangle-alert' : 'circle-help'}" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0">
+              <h3 class="font-extrabold text-sm">${esc(o.title)}</h3>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">${esc(o.desc || '')}</p>
+            </div>
+          </div>
+          <div class="mt-5 grid grid-cols-2 gap-2">
+            <button data-c="no" class="press h-11 rounded-xl bg-ink-800 border border-white/10 text-xs font-bold">Batal</button>
+            <button data-c="yes" class="press h-11 rounded-xl ${o.danger ? 'bg-rose-500 text-white' : 'bg-brand-500 text-ink-950'} text-xs font-extrabold">${esc(o.yes || 'Ya, Lanjutkan')}</button>
+          </div>
+        </div>`, { width: '380px', type: 'confirm' });
+      $('#modalBox').addEventListener('click', e => {
+        const b = e.target.closest('[data-c]'); if (!b) return;
+        closeModal(); res(b.dataset.c === 'yes');
+      });
+    });
+  }
+
+  /* ---------------- Totals ---------------- */
+  function calc() {
+    const u = state.ui;
+    const subtotal = state.cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const items = state.cart.reduce((s, i) => s + i.qty, 0);
+    let disc = u.discType === 'pct'
+      ? Math.round(subtotal * Math.min(Math.max(u.discVal, 0), 100) / 100)
+      : Math.min(Math.max(u.discVal, 0), subtotal);
+    const dpp = Math.max(subtotal - disc, 0);
+    const service = u.service ? Math.round(dpp * 0.05) : 0;
+    const tax = u.tax ? Math.round((dpp + service) * 0.10) : 0;
+    const total = dpp + service + tax;
+    return { subtotal, items, disc, dpp, service, tax, total };
+  }
+
+  /* ---------------- Catalog render ---------------- */
+  function filtered() {
+    const q = state.ui.search.trim().toLowerCase();
+    return state.products.filter(p =>
+      (state.ui.cat === 'all' || p.cat === state.ui.cat) &&
+      (!q || p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || (p.badge || '').toLowerCase().includes(q))
+    );
+  }
+
+  function renderChips() {
+    const counts = { all: state.products.length };
+    CATEGORIES.forEach(c => { if (c.id !== 'all') counts[c.id] = state.products.filter(p => p.cat === c.id).length; });
+    $('#catChips').innerHTML = CATEGORIES.map(c => {
+      const on = state.ui.cat === c.id;
+      return `<button data-cat="${c.id}" class="press shrink-0 flex items-center gap-1.5 h-9 px-3 rounded-xl border text-xs font-bold transition
+        ${on ? 'bg-brand-500 text-ink-950 border-brand-400 shadow-glow' : 'bg-ink-850 border-white/10 text-slate-300 hover:border-brand-500/40'}">
+        <i data-lucide="${c.icon}" class="w-3.5 h-3.5"></i>${c.name}
+        <span class="${on ? 'bg-ink-950/20' : 'bg-white/10'} px-1.5 py-px rounded-md text-[10px]">${counts[c.id]}</span></button>`;
+    }).join('');
+  }
+
+  function productCard(p, i) {
+    const inCart = state.cart.find(c => c.id === p.id);
+    const low = p.stock <= 6;
+    const off = p.old ? Math.round((1 - p.price / p.old) * 100) : 0;
+    if (state.ui.view === 'list') {
+      return `<button data-add="${p.id}" class="press group text-left flex items-center gap-3 p-2.5 rounded-xl bg-ink-850 border border-white/10 hover:border-brand-500/50">
+        <div class="h-11 w-11 shrink-0 rounded-lg bg-ink-800 grid place-items-center text-xl">${p.emoji}</div>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-bold truncate">${esc(p.name)}</p>
+          <p class="text-[11px] font-mono text-brand-400 font-semibold">${rp(p.price)}</p>
+        </div>
+        ${inCart ? `<span class="h-6 min-w-[24px] px-1.5 rounded-lg bg-brand-500 text-ink-950 text-[11px] font-extrabold grid place-items-center">${inCart.qty}</span>` : ''}
+        <i data-lucide="plus-circle" class="w-5 h-5 text-slate-500 group-hover:text-brand-400"></i>
+      </button>`;
+    }
+    return `<button data-add="${p.id}" style="animation-delay:${Math.min(i * 18, 240)}ms"
+      class="press anim-card group relative text-left rounded-2xl p-2.5 bg-ink-850 border border-white/10 hover:border-brand-500/60 hover:bg-ink-800 overflow-hidden">
+      ${p.badge ? `<span class="absolute top-2 left-2 z-10 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md ${p.badge === 'Promo' ? 'bg-rose-500 text-white' : p.badge === 'Baru' ? 'bg-sky-500 text-white' : 'bg-sun-500 text-ink-950'}">${p.badge}</span>` : ''}
+      ${inCart ? `<span class="absolute top-2 right-2 z-10 h-5 min-w-[20px] px-1 rounded-md bg-brand-500 text-ink-950 text-[10px] font-extrabold grid place-items-center shadow-glow">${inCart.qty}</span>` : ''}
+      <div class="relative h-16 sm:h-20 rounded-xl bg-gradient-to-br from-ink-800 to-ink-900 border border-white/5 grid place-items-center text-3xl sm:text-4xl mb-2 group-hover:scale-[1.04] transition-transform duration-300">
+        ${p.emoji}
+        ${off ? `<span class="absolute bottom-1 right-1 text-[9px] font-extrabold text-rose-300 bg-ink-950/70 px-1 rounded">-${off}%</span>` : ''}
+      </div>
+      <p class="text-[11px] sm:text-xs font-bold leading-snug line-clamp-2 h-[28px] sm:h-[32px]">${esc(p.name)}</p>
+      <div class="mt-1 flex items-end justify-between gap-1">
+        <div>
+          <p class="font-mono text-xs sm:text-sm font-extrabold text-brand-400">${rp(p.price)}</p>
+          ${p.old ? `<p class="font-mono text-[10px] text-slate-500 line-through">${rp(p.old)}</p>` : ''}
+        </div>
+        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${low ? 'bg-rose-500/15 text-rose-300' : 'bg-white/5 text-slate-400'}">${p.stock}</span>
+      </div>
+      <div class="absolute inset-x-2.5 bottom-2.5 h-[2px] rounded-full bg-gradient-to-r from-brand-500 to-transparent scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></div>
+    </button>`;
+  }
+
+  function renderCatalog() {
+    const list = filtered();
+    const grid = $('#productGrid'), empty = $('#emptyCatalog'), scroll = $('#catalogScroll');
+    grid.className = state.ui.view === 'list'
+      ? 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2'
+      : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2.5 sm:gap-3';
+    grid.innerHTML = list.map(productCard).join('');
+    empty.classList.toggle('hidden', list.length > 0);
+    empty.classList.toggle('flex', list.length === 0);
+    scroll.classList.toggle('items-start', true);
+    icons();
+  }
+
+  /* ---------------- Cart render ---------------- */
+  function renderCart() {
+    const box = $('#cartScroll'), t = calc();
+    if (!state.cart.length) {
+      box.innerHTML = `<div class="h-full min-h-[180px] flex flex-col items-center justify-center text-center gap-2 py-6">
+        <div class="anim-float h-14 w-14 rounded-2xl bg-ink-850 border border-dashed border-white/15 grid place-items-center">
+          <i data-lucide="shopping-basket" class="w-6 h-6 text-slate-500"></i></div>
+        <p class="text-xs font-bold text-slate-300">Keranjang masih kosong</p>
+        <p class="text-[11px] text-slate-500 max-w-[200px]">Tap produk di panel kiri untuk menambah item ke transaksi.</p></div>`;
+    } else {
+      box.innerHTML = state.cart.map((it, idx) => {
+        const p = state.products.find(x => x.id === it.id) || {};
+        return `<div class="anim-row group flex gap-2.5 p-2.5 rounded-xl bg-ink-850 border border-white/10 hover:border-brand-500/40" data-row="${it.id}">
+          <div class="h-11 w-11 shrink-0 rounded-lg bg-ink-800 grid place-items-center text-xl">${p.emoji || '🍽️'}</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start gap-2">
+              <p class="text-[11px] sm:text-xs font-bold leading-snug line-clamp-2 flex-1">${esc(it.name)}</p>
+              <button data-del="${it.id}" class="press h-6 w-6 grid place-items-center rounded-md text-slate-500 hover:text-rose-400 hover:bg-rose-500/10">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+            </div>
+            ${it.note ? `<p class="mt-0.5 text-[10px] italic text-sun-400 truncate">“${esc(it.note)}”</p>` : ''}
+            <div class="mt-1.5 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1">
+                <button data-qty="-" data-id="${it.id}" class="press h-7 w-7 rounded-lg bg-ink-800 border border-white/10 grid place-items-center hover:border-brand-500/50"><i data-lucide="minus" class="w-3 h-3"></i></button>
+                <span class="w-7 text-center font-mono text-xs font-extrabold">${it.qty}</span>
+                <button data-qty="+" data-id="${it.id}" class="press h-7 w-7 rounded-lg bg-brand-500/15 border border-brand-500/30 text-brand-400 grid place-items-center hover:bg-brand-500/25"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                <button data-note="${it.id}" class="press h-7 w-7 rounded-lg bg-ink-800 border border-white/10 grid place-items-center text-slate-400 hover:text-sun-400" title="Catatan"><i data-lucide="pencil-line" class="w-3 h-3"></i></button>
+              </div>
+              <p class="font-mono text-xs font-extrabold">${rp(it.price * it.qty)}</p>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // totals
+    $('#tSub').textContent = rp(t.subtotal);
+    $('#tDisc').textContent = '- ' + rp(t.disc);
+    $('#tTotal').textContent = rp(t.total);
+    $('#discRowLabel').textContent = t.disc ? `Diskon (${state.ui.discType === 'pct' ? state.ui.discVal + '%' : 'nominal'})` : 'Diskon';
+    $('#taxNote').textContent = `${state.ui.tax ? 'PB1 10% ' + rp(t.tax) : 'Tanpa PB1'}${state.ui.service ? ' • Service 5% ' + rp(t.service) : ''}`;
+    $('#cartCount').textContent = t.items + ' item';
+    $('#mItems').textContent = t.items + ' item';
+    $('#mTotal').textContent = rp(t.total);
+
+    const badge = $('#cartBadge');
+    if (t.items) { badge.textContent = t.items; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
+    $$('[data-act="pay"]').forEach(b => b.disabled = !state.cart.length);
+
+    // switches visual
+    $$('[data-switch]').forEach(b => {
+      const on = state.ui[b.dataset.switch];
+      const dot = $('.swdot', b), knob = $('span', dot);
+      dot.style.background = on ? 'rgba(16,185,129,.9)' : '#27364f';
+      knob.style.transform = on ? 'translateX(12px)' : 'translateX(0)';
+      knob.style.background = on ? '#070b14' : '#cbd5e1';
+      b.classList.toggle('border-brand-500/50', on);
+    });
+    // discount type visual
+    $$('[data-dtype]').forEach(b => {
+      const on = b.dataset.dtype === state.ui.discType;
+      b.className = 'dtype press px-2 h-7 rounded-md text-[11px] font-extrabold ' + (on ? 'bg-sun-500 text-ink-950' : 'text-slate-400');
+    });
+    $('#discSuffix').textContent = state.ui.discType === 'pct' ? '%' : 'Rp';
+    if (document.activeElement !== $('#discInput')) $('#discInput').value = state.ui.discVal || '';
+    // order type
+    $$('[data-otype]').forEach(b => {
+      const on = b.dataset.otype === state.ui.otype;
+      b.className = 'otype press h-8 rounded-lg text-[11px] font-bold ' + (on ? 'bg-brand-500 text-ink-950' : 'text-slate-400');
+    });
+    $('#tableNo').classList.toggle('opacity-40', state.ui.otype !== 'Dine In');
+    $('#tableNo').disabled = state.ui.otype !== 'Dine In';
+
+    // header omzet
+    const today = state.history.filter(h => new Date(h.at).toDateString() === now().toDateString() && !h.void);
+    const omzet = today.reduce((s, h) => s + h.total, 0);
+    $('#hdrOmzet').innerHTML = `<i data-lucide="wallet" class="w-3.5 h-3.5"></i><span>${rp(omzet)}</span>`;
+    // held badge
+    const hb = $('#heldBadge');
+    if (state.held.length) { hb.textContent = state.held.length; hb.classList.remove('hidden'); } else hb.classList.add('hidden');
+
+    icons(); persist();
+  }
+
+  /* ---------------- Cart actions ---------------- */
+  function addToCart(id) {
+    const p = state.products.find(x => x.id === id); if (!p) return;
+    const line = state.cart.find(c => c.id === id);
+    const qty = line ? line.qty + 1 : 1;
+    if (qty > p.stock) { sfx.err(); toast('Stok tidak cukup', 'warn', `${p.name} • sisa ${p.stock}`); return; }
+    if (line) line.qty = qty; else state.cart.push({ id: p.id, name: p.name, price: p.price, qty: 1, note: '' });
+    sfx.add();
+    const row = $(`[data-row="${id}"]`); if (row) { row.classList.remove('anim-flash'); void row.offsetWidth; row.classList.add('anim-flash'); }
+    const ci = $('#cartIcon'); if (ci) { ci.classList.remove('anim-bump'); void ci.offsetWidth; ci.classList.add('anim-bump'); }
+    const icon = $('#cartBadge'); if (icon) { icon.classList.remove('anim-pulse'); void icon.offsetWidth; icon.classList.add('anim-pulse'); }
+    renderCart(); renderCatalog();
+  }
+  function changeQty(id, d) {
+    const line = state.cart.find(c => c.id === id); if (!line) return;
+    const p = state.products.find(x => x.id === id) || { stock: 999 };
+    const q = line.qty + d;
+    if (q <= 0) { state.cart = state.cart.filter(c => c.id !== id); sfx.tap(); }
+    else if (q > p.stock) { sfx.err(); toast('Melebihi stok', 'warn', `Maksimum ${p.stock} pcs`); return; }
+    else { line.qty = q; sfx.tap(); }
+    renderCart(); renderCatalog();
+  }
+
+  /* ---------------- Payment ---------------- */
+  function renderPay() {
+    const t = calc(); const u = state.ui;
+    const cash = u.cash || 0;
+    const change = cash - t.total;
+    const enough = cash >= t.total;
+    const quick = [t.total, 20000, 50000, 100000, 150000, 200000, 500000];
+    const methods = [
+      { id: 'cash', name: 'Tunai', icon: 'banknote' },
+      { id: 'qris', name: 'QRIS', icon: 'qr-code' },
+      { id: 'debit', name: 'Debit/Kredit', icon: 'credit-card' },
+    ];
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 bg-gradient-to-br from-brand-500/10 to-transparent">
+        <div class="flex items-center gap-2">
+          <i data-lucide="calculator" class="w-4 h-4 text-brand-400"></i>
+          <h3 class="font-extrabold text-sm">Pembayaran</h3>
+          <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+        <p class="mt-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Tagihan</p>
+        <p class="font-mono text-3xl font-extrabold text-brand-400 leading-none mt-0.5">${rp(t.total)}</p>
+        <p class="text-[10px] text-slate-400 mt-1">${t.items} item • ${state.ui.otype}${$('#custName').value ? ' • ' + esc($('#custName').value) : ''}</p>
+      </div>
+
+      <div class="overflow-y-auto p-4 space-y-3">
+        <div class="grid grid-cols-3 gap-2">
+          ${methods.map(m => `<button data-method="${m.id}" class="paym press flex flex-col items-center gap-1 h-16 rounded-xl border text-[11px] font-bold
+            ${u.payMethod === m.id ? 'bg-brand-500/15 border-brand-500/50 text-brand-400' : 'bg-ink-800 border-white/10 text-slate-300'}">
+            <i data-lucide="${m.icon}" class="w-4 h-4"></i>${m.name}</button>`).join('')}
+        </div>
+
+        <div class="rounded-xl bg-ink-900 border border-white/10 p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${u.payMethod === 'cash' ? 'Uang Diterima' : 'Nominal Dibayar'}</span>
+            <span class="text-[10px] font-bold ${enough || u.payMethod !== 'cash' ? 'text-brand-400' : 'text-rose-400'}">${u.payMethod !== 'cash' ? 'Auto' : (enough ? 'Cukup' : 'Kurang ' + rp(t.total - cash))}</span>
+          </div>
+          <p class="font-mono text-2xl font-extrabold mt-1 ${enough || u.payMethod !== 'cash' ? 'text-white' : 'text-rose-400'}">${rp(cash)}</p>
+          <div class="mt-2 flex items-center justify-between text-xs border-t border-dashed border-white/10 pt-2">
+            <span class="text-slate-400 font-semibold">Kembalian</span>
+            <span class="font-mono font-extrabold ${change >= 0 ? 'text-sun-400' : 'text-rose-400'}">${rp(Math.max(change, 0))}</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          ${quick.map((v, i) => `<button data-quick="${i}" class="press px-2.5 h-8 rounded-lg bg-ink-800 border border-white/10 text-[11px] font-bold hover:border-brand-500/50">${i === 0 ? 'Uang Pas' : nmr(v)}</button>`).join('')}
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          ${[1,2,3,4,5,6,7,8,9].map(n => `<button data-num="${n}" class="num-key press h-12 rounded-xl bg-ink-800 border border-white/10 font-mono text-lg font-extrabold">${n}</button>`).join('')}
+          <button data-num="000" class="num-key press h-12 rounded-xl bg-ink-800 border border-white/10 font-mono text-sm font-extrabold">000</button>
+          <button data-num="0" class="num-key press h-12 rounded-xl bg-ink-800 border border-white/10 font-mono text-lg font-extrabold">0</button>
+          <button data-num="del" class="num-key press h-12 rounded-xl bg-ink-800 border border-white/10 grid place-items-center text-rose-400"><i data-lucide="delete" class="w-5 h-5"></i></button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button data-num="c" class="press h-11 rounded-xl bg-ink-800 border border-white/10 text-xs font-bold">Reset</button>
+          <button id="btnSettle" class="press h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 text-xs font-extrabold flex items-center justify-center gap-1.5 disabled:opacity-40">
+            <i data-lucide="printer-check" class="w-4 h-4"></i> Selesai & Cetak</button>
+        </div>
+      </div>`, { width: '400px', type: 'pay' });
+
+    $('#btnSettle').disabled = state.ui.payMethod === 'cash' && !enough;
+    $('#modalBox').addEventListener('click', e => { onPayClick(e); });
+  }
+
+  function onPayClick(e) {
+    const t = calc(); const u = state.ui;
+    const num = e.target.closest('[data-num]'), q = e.target.closest('[data-quick]'),
+          m = e.target.closest('[data-method]'), settle = e.target.closest('#btnSettle');
+    if (m) { u.payMethod = m.dataset.method; u.cash = u.payMethod === 'cash' ? 0 : t.total; sfx.tap(); renderPay(); return; }
+    if (q) {
+      const i = +q.dataset.quick;
+      u.cash = i === 0 ? t.total : [t.total, 20000, 50000, 100000, 150000, 200000, 500000][i];
+      sfx.tap(); renderPay(); return;
+    }
+    if (num) {
+      const k = num.dataset.num; sfx.tap();
+      let cur = String(u.cash || 0);
+      if (k === 'c') cur = '0';
+      else if (k === 'del') cur = cur.length > 1 ? cur.slice(0, -1) : '0';
+      else if (k === '000') cur = (cur === '0' ? '' : cur) + '000';
+      else cur = (cur === '0' ? '' : cur) + k;
+      u.cash = Math.min(parseInt(cur || '0', 10), 999999999);
+      renderPay(); return;
+    }
+    if (settle) settleOrder();
+  }
+
+  function settleOrder() {
+    const t = calc();
+    const paid = state.ui.payMethod === 'cash' ? state.ui.cash : t.total;
+    if (state.ui.payMethod === 'cash' && paid < t.total) { sfx.err(); return; }
+    const d = now();
+    const tx = {
+      id: 'INV-' + d.getFullYear().toString().slice(2) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + String(state.seq).padStart(4, '0'),
+      at: d.toISOString(), cashier: state.store.cashier,
+      otype: state.ui.otype, customer: $('#custName').value.trim(), table: $('#tableNo').value.trim(),
+      items: state.cart.map(i => ({ ...i })), method: state.ui.payMethod,
+      subtotal: t.subtotal, disc: t.disc, discType: state.ui.discType, service: t.service,
+      tax: t.tax, taxOn: state.ui.tax, serviceOn: state.ui.service,
+      total: t.total, paid, change: Math.max(paid - t.total, 0), void: false,
+    };
+    // reduce stock
+    tx.items.forEach(i => { const p = state.products.find(x => x.id === i.id); if (p) p.stock = Math.max(0, p.stock - i.qty); });
+    state.history.push(tx); state.seq++;
+    state.cart = []; state.ui.cash = 0; state.ui.discVal = 0;
+    $('#custName').value = ''; $('#tableNo').value = '';
+    persist(); closeModal(); sfx.ok();
+    toast('Transaksi berhasil', 'success', tx.id + ' • ' + rp(tx.total));
+    renderCart(); renderCatalog(); renderChips();
+    setTimeout(() => openReceipt(tx, true), 260);
+  }
+
+  /* ---------------- Receipt (thermal print) ---------------- */
+  function center(s) { return `<div class="tc">${s}</div>`; }
+  function row(l, r, cls) { return `<div class="trow ${cls || ''}"><span class="tcut">${l}</span><span>${r}</span></div>`; }
+  function hr() { return `<div class="thr"></div>`; }
+
+  function buildReceipt(tx) {
+    const s = state.store;
+    let h = `<div class="thermal paper-${state.ui.paper}">`;
+    h += center(`<div class="tbold tlg uppercase">${esc(s.name)}</div>`);
+    h += center(`<div class="tsm">${esc(s.address)}</div>`);
+    h += center(`<div class="tsm">Telp ${esc(s.phone)}</div>`);
+    h += hr();
+    h += row('No', esc(tx.id));
+    h += row('Tanggal', dOnly(new Date(tx.at)) + ' ' + tOnly(new Date(tx.at)));
+    h += row('Kasir', esc(tx.cashier));
+    h += row('Tipe', esc(tx.otype) + (tx.table ? ' / Meja ' + esc(tx.table) : ''));
+    if (tx.customer) h += row('Pelanggan', esc(tx.customer));
+    h += hr();
+    tx.items.forEach(i => {
+      h += `<div class="tbold tcut">${esc(i.name)}</div>`;
+      h += row(`${i.qty} x ${nmr(i.price)}`, nmr(i.price * i.qty));
+      if (i.note) h += `<div class="tsm">   &gt; ${esc(i.note)}</div>`;
+    });
+    h += hr();
+    h += row('Subtotal', nmr(tx.subtotal));
+    if (tx.disc) h += row('Diskon' + (tx.discType === 'pct' ? ' (%)' : ''), '-' + nmr(tx.disc));
+    if (tx.service) h += row('Service Charge 5%', nmr(tx.service));
+    if (tx.taxOn) h += row('PB1 10%', nmr(tx.tax));
+    h += row('TOTAL', 'Rp ' + nmr(tx.total), 'tbold tlg');
+    h += hr();
+    const mname = { cash: 'TUNAI', qris: 'QRIS', debit: 'KARTU DEBIT' }[tx.method] || 'TUNAI';
+    h += row('Bayar (' + mname + ')', nmr(tx.paid));
+    if (tx.method === 'cash') h += row('Kembalian', nmr(tx.change));
+    h += hr();
+    h += center(`<div class="tsm">${esc(s.footer)}</div>`);
+    h += center(`<div class="tsm">--- NovaPOS by NovaNext ---</div>`);
+    h += `<div class="tbar"></div>`;
+    h += center(`<div class="tsm">${tx.id}</div>`);
+    h += `</div>`;
+    return h;
+  }
+
+  function openReceipt(tx, isNew) {
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <div class="h-9 w-9 rounded-xl bg-brand-500/15 border border-brand-500/30 grid place-items-center text-brand-400"><i data-lucide="badge-check" class="w-5 h-5"></i></div>
+        <div class="min-w-0">
+          <h3 class="font-extrabold text-sm leading-tight">${isNew ? 'Pembayaran Berhasil' : 'Struk ' + esc(tx.id)}</h3>
+          <p class="text-[11px] text-slate-400">${rp(tx.total)} • Kembalian ${rp(tx.change)}</p>
+        </div>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="px-4 pt-3">
+        <div class="flex items-center gap-1 p-1 rounded-xl bg-ink-800 border border-white/10 w-fit">
+          ${[58, 80].map(w => `<button data-paper="${w}" class="press px-3 h-7 rounded-lg text-[11px] font-bold ${+state.ui.paper === w ? 'bg-brand-500 text-ink-950' : 'text-slate-400'}">${w}mm</button>`).join('')}
+          <span class="text-[10px] text-slate-500 px-2">Thermal</span>
+        </div>
+      </div>
+      <div class="flex-1 min-h-0 overflow-y-auto p-4 bg-ink-900/60">
+        <div class="mx-auto w-fit bg-white rounded-md shadow-soft" id="receiptPreview">${buildReceipt(tx)}</div>
+      </div>
+      <div class="shrink-0 p-3 border-t border-white/10 grid grid-cols-2 gap-2">
+        <button data-modal-close class="press h-11 rounded-xl bg-ink-800 border border-white/10 text-xs font-bold">Tutup</button>
+        <button id="btnPrint" class="press h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 text-xs font-extrabold flex items-center justify-center gap-1.5">
+          <i data-lucide="printer" class="w-4 h-4"></i> Cetak Struk</button>
+      </div>`, { width: '440px', type: 'receipt' });
+    $('#modalBox').dataset.tx = tx.id;
+    $('#btnPrint').addEventListener('click', () => printTx(tx));
+    $$('#modalBox [data-paper]').forEach(b => b.addEventListener('click', () => {
+      state.ui.paper = b.dataset.paper; persist(); sfx.tap(); openReceipt(tx, isNew);
+    }));
+  }
+
+  function printTx(tx) {
+    $('#print-area').innerHTML = buildReceipt(tx);
+    sfx.print();
+    toast('Mengirim ke printer…', 'info', `${state.ui.paper}mm thermal • ${tx.id}`);
+    setTimeout(() => window.print(), 220);
+  }
+
+  /* ---------------- Z Report print ---------------- */
+  function buildReport() {
+    const list = state.history.filter(h => new Date(h.at).toDateString() === now().toDateString());
+    const ok = list.filter(h => !h.void);
+    const total = ok.reduce((s, h) => s + h.total, 0);
+    const qty = ok.reduce((s, h) => s + h.items.reduce((a, i) => a + i.qty, 0), 0);
+    const by = m => ok.filter(h => h.method === m).reduce((s, h) => s + h.total, 0);
+    const sold = {};
+    ok.forEach(h => h.items.forEach(i => { sold[i.name] = (sold[i.name] || 0) + i.qty; }));
+    const top = Object.entries(sold).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    let h = `<div class="thermal paper-${state.ui.paper}">`;
+    h += center(`<div class="tbold tlg">LAPORAN PENJUALAN</div>`);
+    h += center(`<div class="tsm">Z-REPORT • ${dOnly(now())} ${tOnly(now())}</div>`);
+    h += center(`<div class="tsm">${esc(state.store.name)}</div>`);
+    h += hr();
+    h += row('Transaksi', nmr(ok.length));
+    h += row('Item Terjual', nmr(qty));
+    h += row('Void', nmr(list.length - ok.length));
+    h += row('OMZET', 'Rp ' + nmr(total), 'tbold tlg');
+    h += hr();
+    h += `<div class="tbold">METODE BAYAR</div>`;
+    h += row('Tunai', nmr(by('cash')));
+    h += row('QRIS', nmr(by('qris')));
+    h += row('Debit/Kredit', nmr(by('debit')));
+    h += hr();
+    h += `<div class="tbold">PRODUK TERLARIS</div>`;
+    top.forEach(([n, q], i) => h += row(`${i + 1}. ${esc(n).slice(0, 18)}`, nmr(q) + 'x'));
+    h += hr();
+    h += center(`<div class="tsm">--- NovaPOS by NovaNext ---</div>`);
+    h += `</div>`;
+    return h;
+  }
+
+  /* ---------------- History drawer ---------------- */
+  function renderHistory() {
+    const today = state.history.filter(h => new Date(h.at).toDateString() === now().toDateString());
+    const ok = today.filter(h => !h.void);
+    const total = ok.reduce((s, h) => s + h.total, 0);
+    const qty = ok.reduce((s, h) => s + h.items.reduce((a, i) => a + i.qty, 0), 0);
+    const avg = ok.length ? total / ok.length : 0;
+    const cards = [
+      { l: 'Omzet Hari Ini', v: rp(total), i: 'wallet', c: 'text-brand-400' },
+      { l: 'Transaksi', v: nmr(ok.length), i: 'receipt-text', c: 'text-sky-400' },
+      { l: 'Item Terjual', v: nmr(qty), i: 'package', c: 'text-sun-400' },
+      { l: 'Rata-rata', v: rp(avg), i: 'trending-up', c: 'text-violet-400' },
+    ];
+    const listHtml = state.history.slice().reverse().map(h => `
+      <div class="p-2.5 rounded-xl border ${h.void ? 'border-rose-500/30 bg-rose-500/5' : 'border-white/10 bg-ink-850'}">
+        <div class="flex items-center gap-2">
+          <div class="h-8 w-8 rounded-lg bg-ink-800 grid place-items-center text-[10px] font-extrabold ${h.method === 'cash' ? 'text-brand-400' : h.method === 'qris' ? 'text-violet-400' : 'text-sky-400'}">
+            <i data-lucide="${h.method === 'cash' ? 'banknote' : h.method === 'qris' ? 'qr-code' : 'credit-card'}" class="w-4 h-4"></i></div>
+          <div class="min-w-0 flex-1">
+            <p class="font-mono text-[11px] font-bold truncate">${esc(h.id)}</p>
+            <p class="text-[10px] text-slate-500">${dOnly(new Date(h.at))} ${tOnly(new Date(h.at))} • ${h.otype} • ${h.items.length} produk</p>
+          </div>
+          <div class="text-right">
+            <p class="font-mono text-xs font-extrabold ${h.void ? 'line-through text-rose-400' : ''}">${rp(h.total)}</p>
+            ${h.void ? '<p class="text-[9px] font-bold text-rose-400">VOID</p>' : `<p class="text-[9px] text-brand-400 font-bold">+${rp(h.change)} kembali</p>`}
+          </div>
+        </div>
+        <div class="mt-2 flex gap-1.5">
+          <button data-reprint="${h.id}" class="press flex-1 h-8 rounded-lg bg-ink-800 border border-white/10 text-[10px] font-bold flex items-center justify-center gap-1"><i data-lucide="printer" class="w-3 h-3"></i>Cetak</button>
+          ${h.void ? '' : `<button data-void="${h.id}" class="press h-8 px-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[10px] font-bold">Void</button>`}
+        </div>
+      </div>`).join('') || `<div class="py-10 text-center text-xs text-slate-500">Belum ada transaksi tersimpan.</div>`;
+
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <i data-lucide="receipt-text" class="w-4 h-4 text-brand-400"></i>
+        <h3 class="font-extrabold text-sm">Riwayat & Rekap Kasir</h3>
+        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-500/15 text-brand-400 border border-brand-500/25">${state.history.length}</span>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="overflow-y-auto p-4 space-y-3">
+        <div class="grid grid-cols-2 gap-2">
+          ${cards.map(c => `<div class="p-2.5 rounded-xl bg-ink-900 border border-white/10">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-400"><i data-lucide="${c.i}" class="w-3 h-3 ${c.c}"></i>${c.l}</div>
+            <p class="font-mono text-sm font-extrabold mt-0.5 ${c.c}">${c.v}</p></div>`).join('')}
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnZ" class="press h-10 rounded-xl bg-ink-800 border border-white/10 text-[11px] font-bold flex items-center justify-center gap-1.5"><i data-lucide="file-bar-chart" class="w-4 h-4 text-brand-400"></i>Cetak Z-Report</button>
+          <button id="btnClearHist" class="press h-10 rounded-xl bg-ink-800 border border-white/10 text-[11px] font-bold flex items-center justify-center gap-1.5 text-rose-400"><i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Riwayat</button>
+        </div>
+        <div class="space-y-2">${listHtml}</div>
+      </div>`, { width: '480px', type: 'history' });
+
+    $('#btnZ').addEventListener('click', () => {
+      $('#print-area').innerHTML = buildReport(); sfx.print();
+      toast('Cetak laporan penjualan…', 'info'); setTimeout(() => window.print(), 200);
+    });
+    $('#btnClearHist').addEventListener('click', async () => {
+      if (await confirmDialog({ title: 'Hapus semua riwayat?', desc: 'Data transaksi demo akan dihapus permanen dari localStorage.', yes: 'Hapus', danger: true })) {
+        state.history = []; state.seq = 1; persist(); closeModal(); toast('Riwayat dibersihkan', 'warn'); renderCart();
+      }
+    });
+    $('#modalBox').addEventListener('click', async e => {
+      const r = e.target.closest('[data-reprint]'), v = e.target.closest('[data-void]');
+      if (r) { const tx = state.history.find(x => x.id === r.dataset.reprint); renderHistory(); setTimeout(() => openReceipt(tx, false), 120); }
+      if (v) {
+        const tx = state.history.find(x => x.id === v.dataset.void);
+        if (await confirmDialog({ title: 'Void transaksi ini?', desc: tx.id + ' • ' + rp(tx.total) + '. Stok tidak dikembalikan.', yes: 'Void', danger: true })) {
+          tx.void = true; persist(); toast('Transaksi di-void', 'warn', tx.id); renderHistory(); renderCart();
+        }
+      }
+    });
+  }
+
+  /* ---------------- Held orders ---------------- */
+  function renderHeld() {
+    const html = state.held.length ? state.held.map((h, i) => `
+      <div class="p-2.5 rounded-xl bg-ink-850 border border-white/10">
+        <div class="flex items-center gap-2">
+          <div class="min-w-0 flex-1">
+            <p class="text-[11px] font-bold truncate">${esc(h.label)}</p>
+            <p class="text-[10px] text-slate-500">${dOnly(new Date(h.at))} ${tOnly(new Date(h.at))} • ${h.items.reduce((a, x) => a + x.qty, 0)} item</p>
+          </div>
+          <p class="font-mono text-xs font-extrabold text-brand-400">${rp(h.total)}</p>
+        </div>
+        <div class="mt-2 flex gap-1.5">
+          <button data-resume="${i}" class="press flex-1 h-8 rounded-lg bg-brand-500 text-ink-950 text-[10px] font-extrabold">Lanjutkan</button>
+          <button data-drop="${i}" class="press h-8 px-2 rounded-lg bg-ink-800 border border-white/10 text-rose-400 text-[10px] font-bold">Hapus</button>
+        </div>
+      </div>`).join('') : `<div class="py-10 text-center text-xs text-slate-500">Tidak ada pesanan diparkir.</div>`;
+
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <i data-lucide="pause" class="w-4 h-4 text-sun-400"></i><h3 class="font-extrabold text-sm">Pesanan Diparkir</h3>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="overflow-y-auto p-4 space-y-2">${html}</div>`, { width: '400px', type: 'held' });
+
+    $('#modalBox').addEventListener('click', e => {
+      const res = e.target.closest('[data-resume]'), drop = e.target.closest('[data-drop]');
+      if (res) {
+        const h = state.held[+res.dataset.resume];
+        state.cart = h.items; state.ui.otype = h.otype || 'Dine In';
+        state.held.splice(+res.dataset.resume, 1); persist(); closeModal();
+        toast('Pesanan dilanjutkan', 'success', h.label); renderCart(); renderCatalog();
+      }
+      if (drop) { state.held.splice(+drop.dataset.drop, 1); persist(); toast('Pesanan dihapus', 'warn'); renderHeld(); renderCart(); }
+    });
+  }
+
+  /* ---------------- Product CRUD ---------------- */
+  function renderProductForm(id) {
+    const p = id ? state.products.find(x => x.id === id) : null;
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <i data-lucide="${p ? 'pencil' : 'package-plus'}" class="w-4 h-4 text-brand-400"></i>
+        <h3 class="font-extrabold text-sm">${p ? 'Edit Produk' : 'Tambah Produk Baru'}</h3>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="overflow-y-auto p-4 space-y-2.5">
+        <label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">Nama Produk</span>
+          <input id="fName" value="${p ? esc(p.name) : ''}" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs outline-none focus:border-brand-500/60"></label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">Harga</span>
+            <input id="fPrice" type="number" value="${p ? p.price : ''}" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs font-mono outline-none focus:border-brand-500/60"></label>
+          <label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">Stok</span>
+            <input id="fStock" type="number" value="${p ? p.stock : 10}" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs font-mono outline-none focus:border-brand-500/60"></label>
+        </div>
+        <label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">Kategori</span>
+          <select id="fCat" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs outline-none focus:border-brand-500/60">
+            ${['makanan', 'minuman', 'snack'].map(c => `<option value="${c}" ${p && p.cat === c ? 'selected' : ''}>${c[0].toUpperCase() + c.slice(1)}</option>`).join('')}
+          </select></label>
+        <label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">Emoji / Ikon</span>
+          <input id="fEmoji" value="${p ? esc(p.emoji) : '🍽️'}" maxlength="4" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-lg text-center outline-none focus:border-brand-500/60"></label>
+        <div class="flex gap-1.5 flex-wrap pt-1">
+          ${['🍚','🍜','🍗','☕','🧋','🍵','🍟','🥟','🍰','🥗','🍹','🍦'].map(e => `<button data-emoji="${e}" class="press h-9 w-9 rounded-lg bg-ink-900 border border-white/10 text-base">${e}</button>`).join('')}
+        </div>
+      </div>
+      <div class="shrink-0 p-3 border-t border-white/10 grid ${p ? 'grid-cols-2' : 'grid-cols-1'} gap-2">
+        ${p ? `<button id="fDel" class="press h-11 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-bold">Hapus</button>` : ''}
+        <button id="fSave" class="press h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 text-xs font-extrabold">${p ? 'Simpan Perubahan' : 'Tambah Produk'}</button>
+      </div>`, { width: '400px', type: 'product' });
+
+    $$('#modalBox [data-emoji]').forEach(b => b.addEventListener('click', () => { $('#fEmoji').value = b.dataset.emoji; sfx.tap(); }));
+    $('#fSave').addEventListener('click', () => {
+      const name = $('#fName').value.trim(), price = +$('#fPrice').value, stock = +$('#fStock').value;
+      if (!name || !price) { sfx.err(); toast('Nama & harga wajib diisi', 'error'); return; }
+      const data = { name, price, stock, cat: $('#fCat').value, emoji: $('#fEmoji').value || '🍽️', badge: p ? p.badge : 'Baru' };
+      if (p) Object.assign(p, data); else state.products.push(Object.assign({ id: 'C' + Date.now().toString().slice(-5) }, data));
+      persist(); closeModal(); sfx.ok();
+      toast(p ? 'Produk diperbarui' : 'Produk ditambahkan', 'success', name);
+      renderChips(); renderCatalog(); renderCart();
+    });
+    if (p) $('#fDel').addEventListener('click', async () => {
+      if (await confirmDialog({ title: 'Hapus produk?', desc: p.name + ' akan dihapus dari katalog.', yes: 'Hapus', danger: true })) {
+        state.products = state.products.filter(x => x.id !== p.id);
+        state.cart = state.cart.filter(c => c.id !== p.id);
+        persist(); closeModal(); toast('Produk dihapus', 'warn', p.name); renderChips(); renderCatalog(); renderCart();
+      }
+    });
+  }
+
+  /* ---------------- Settings ---------------- */
+  function renderSettings() {
+    const s = state.store;
+    const f = (id, label, val, ph) => `<label class="block"><span class="text-[10px] font-bold text-slate-400 uppercase">${label}</span>
+      <input id="${id}" value="${esc(val)}" placeholder="${ph || ''}" class="mt-1 w-full h-10 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs outline-none focus:border-brand-500/60"></label>`;
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <i data-lucide="settings-2" class="w-4 h-4 text-brand-400"></i><h3 class="font-extrabold text-sm">Pengaturan Toko & Struk</h3>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="overflow-y-auto p-4 space-y-2.5">
+        ${f('sName', 'Nama Toko', s.name)}${f('sAddr', 'Alamat', s.address)}
+        <div class="grid grid-cols-2 gap-2">${f('sPhone', 'Telepon', s.phone)}${f('sCashier', 'Nama Kasir', s.cashier)}</div>
+        ${f('sFooter', 'Catatan Kaki Struk', s.footer)}
+        <div class="rounded-xl bg-ink-900 border border-white/10 p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold">Lebar Kertas Thermal</span>
+            <div class="flex gap-1 p-0.5 rounded-lg bg-ink-850 border border-white/10">
+              ${[58, 80].map(w => `<button data-p="${w}" class="press px-2.5 h-7 rounded-md text-[11px] font-bold ${+s.paper === w ? 'bg-brand-500 text-ink-950' : 'text-slate-400'}">${w}mm</button>`).join('')}
+            </div>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold">Suara Kasir</span>
+            <button id="sSound" class="press px-2.5 h-7 rounded-md text-[11px] font-bold ${s.sound ? 'bg-brand-500 text-ink-950' : 'bg-ink-800 text-slate-400 border border-white/10'}">${s.sound ? 'Aktif' : 'Mati'}</button>
+          </div>
+        </div>
+        <div class="rounded-xl bg-ink-900 border border-white/10 p-3">
+          <p class="text-[10px] font-bold text-slate-400 uppercase mb-1.5">Reset Data Demo</p>
+          <button id="sReset" class="press w-full h-9 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[11px] font-bold">Reset ke data awal</button>
+        </div>
+      </div>
+      <div class="shrink-0 p-3 border-t border-white/10">
+        <button id="sSave" class="press w-full h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 text-xs font-extrabold">Simpan Pengaturan</button>
+      </div>`, { width: '420px', type: 'settings' });
+
+    $$('[data-p]').forEach(b => b.addEventListener('click', () => { state.store.paper = b.dataset.p; renderSettings(); }));
+    $('#sSound').addEventListener('click', () => { state.store.sound = !state.store.sound; updateSoundIcon(); renderSettings(); });
+    $('#sSave').addEventListener('click', () => {
+      Object.assign(state.store, {
+        name: $('#sName').value.trim() || 'NovaPOS Store', address: $('#sAddr').value.trim(),
+        phone: $('#sPhone').value.trim(), cashier: $('#sCashier').value.trim() || 'Kasir',
+        footer: $('#sFooter').value.trim(), paper: state.store.paper,
+      });
+      state.ui.paper = state.store.paper; persist(); closeModal();
+      toast('Pengaturan disimpan', 'success', state.store.name); renderCart();
+    });
+    $('#sReset').addEventListener('click', async () => {
+      if (await confirmDialog({ title: 'Reset seluruh data demo?', desc: 'Katalog, keranjang, riwayat & pengaturan kembali ke kondisi awal.', yes: 'Reset', danger: true })) {
+        Object.keys(localStorage).filter(k => k.startsWith(KEY)).forEach(k => localStorage.removeItem(k));
+        location.reload();
+      }
+    });
+  }
+
+  /* ---------------- Note editor ---------------- */
+  function renderNote(id) {
+    const it = state.cart.find(c => c.id === id); if (!it) return;
+    openModal(`
+      <div class="shrink-0 p-4 border-b border-white/10 flex items-center gap-2">
+        <i data-lucide="pencil-line" class="w-4 h-4 text-sun-400"></i>
+        <h3 class="font-extrabold text-sm">Catatan Item</h3>
+        <button data-modal-close class="press ml-auto h-8 w-8 grid place-items-center rounded-lg bg-ink-800 border border-white/10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="p-4 space-y-2.5">
+        <p class="text-xs font-bold">${esc(it.name)}</p>
+        <input id="noteInput" value="${esc(it.note || '')}" placeholder="Contoh: pedas, tanpa bawang…" class="w-full h-11 px-3 rounded-xl bg-ink-900 border border-white/10 text-xs outline-none focus:border-brand-500/60">
+        <div class="flex flex-wrap gap-1.5">
+          ${NOTES_PRESET.map(n => `<button data-preset="${esc(n)}" class="press px-2.5 h-8 rounded-lg bg-ink-800 border border-white/10 text-[11px] font-semibold hover:border-sun-500/50">${n}</button>`).join('')}
+        </div>
+      </div>
+      <div class="shrink-0 p-3 border-t border-white/10 grid grid-cols-2 gap-2">
+        <button data-modal-close class="press h-11 rounded-xl bg-ink-800 border border-white/10 text-xs font-bold">Batal</button>
+        <button id="noteSave" class="press h-11 rounded-xl bg-gradient-to-r from-brand-500 to-emerald-400 text-ink-950 text-xs font-extrabold">Simpan</button>
+      </div>`, { width: '380px', type: 'note' });
+    $('#noteInput').focus();
+    $$('[data-preset]').forEach(b => b.addEventListener('click', () => {
+      const inp = $('#noteInput'); inp.value = (inp.value ? inp.value + ', ' : '') + b.dataset.preset; sfx.tap();
+    }));
+    $('#noteSave').addEventListener('click', () => { it.note = $('#noteInput').value.trim(); persist(); closeModal(); toast('Catatan disimpan', 'success'); renderCart(); });
+  }
+
+  /* ---------------- Cart drawer (mobile) ---------------- */
+  function toggleCart(open) {
+    state.ui.cartOpen = open === undefined ? !state.ui.cartOpen : open;
+    $('#cartPanel').classList.toggle('translate-x-full', !state.ui.cartOpen);
+    $('#cartOverlay').classList.toggle('hidden', !state.ui.cartOpen);
+    document.body.style.overflow = '';
+  }
+
+  /* ---------------- Sound icon ---------------- */
+  function updateSoundIcon() {
+    const i = $('#soundIcon');
+    i.outerHTML = `<i data-lucide="${state.store.sound ? 'volume-2' : 'volume-x'}" class="w-4 h-4 ${state.store.sound ? 'text-brand-400' : 'text-slate-500'}" id="soundIcon"></i>`;
+    icons();
+  }
+
+  /* ---------------- Clock ---------------- */
+  setInterval(() => { const c = $('#hdrClock'); if (c) c.textContent = tOnly(now()); }, 1000);
+
+  /* ---------------- Global events ---------------- */
+  document.addEventListener('click', e => {
+    const el = e.target;
+    const add = el.closest('[data-add]');
+    if (add) return addToCart(add.dataset.add);
+    const cat = el.closest('[data-cat]');
+    if (cat) { state.ui.cat = cat.dataset.cat; sfx.tap(); renderChips(); renderCatalog(); return; }
+    const q = el.closest('[data-qty]');
+    if (q) return changeQty(q.dataset.id, q.dataset.qty === '+' ? 1 : -1);
+    const del = el.closest('[data-del]');
+    if (del) { state.cart = state.cart.filter(c => c.id !== del.dataset.del); sfx.tap(); toast('Item dihapus', 'info'); renderCart(); renderCatalog(); return; }
+    const note = el.closest('[data-note]');
+    if (note) return renderNote(note.dataset.note);
+    const ot = el.closest('[data-otype]');
+    if (ot) { state.ui.otype = ot.dataset.otype; sfx.tap(); renderCart(); return; }
+    const dt = el.closest('[data-dtype]');
+    if (dt) { state.ui.discType = dt.dataset.dtype; sfx.tap(); renderCart(); return; }
+    const sw = el.closest('[data-switch]');
+    if (sw) {
+      const k = sw.dataset.switch; state.ui[k] = !state.ui[k]; sfx.tap();
+      toast(k === 'tax' ? (state.ui.tax ? 'PB1 10% aktif' : 'PB1 10% nonaktif') : (state.ui.service ? 'Service charge 5% aktif' : 'Service charge nonaktif'), 'info');
+      renderCart(); return;
+    }
+    const view = el.closest('[data-view]');
+    if (view) {
+      state.ui.view = view.dataset.view; sfx.tap();
+      $$('[data-view]').forEach(b => { const on = b.dataset.view === state.ui.view; b.className = 'view-btn press h-8 w-8 grid place-items-center rounded-lg ' + (on ? 'bg-brand-500/20 text-brand-400' : 'text-slate-400'); });
+      renderCatalog(); return;
+    }
+    if (el.closest('[data-modal-close]')) { closeModal(); return; }
+    const act = el.closest('[data-act]');
+    if (act) {
+      const a = act.dataset.act;
+      if (a === 'toggleCart') return toggleCart();
+      if (a === 'closeCart') return toggleCart(false);
+      if (a === 'history') return renderHistory();
+      if (a === 'settings') return renderSettings();
+      if (a === 'held') return renderHeld();
+      if (a === 'newProduct') return renderProductForm(null);
+      if (a === 'resetFilter') { state.ui.cat = 'all'; state.ui.search = ''; $('#searchInput').value = ''; renderChips(); renderCatalog(); return; }
+      if (a === 'sound') { state.store.sound = !state.store.sound; persist(); updateSoundIcon(); toast('Suara kasir ' + (state.store.sound ? 'aktif' : 'nonaktif'), 'info'); if (state.store.sound) sfx.tap(); return; }
+      if (a === 'clearCart') return (async () => {
+        if (!state.cart.length) return toast('Keranjang sudah kosong', 'info');
+        if (await confirmDialog({ title: 'Kosongkan keranjang?', desc: state.cart.length + ' produk akan dibuang dari transaksi ini.', yes: 'Kosongkan', danger: true })) {
+          state.cart = []; state.ui.discVal = 0; renderCart(); renderCatalog(); toast('Keranjang dikosongkan', 'warn');
+        }
+      })();
+      if (a === 'quickDisc') { state.ui.discType = 'pct'; state.ui.discVal = 10; sfx.tap(); renderCart(); toast('Diskon 10% diterapkan', 'success'); return; }
+      if (a === 'hold') return (async () => {
+        if (!state.cart.length) return toast('Tidak ada item untuk diparkir', 'warn');
+        const label = $('#custName').value.trim() || 'Parkir #' + (state.held.length + 1);
+        state.held.push({ label, at: now().toISOString(), otype: state.ui.otype, items: state.cart.map(i => ({ ...i })), total: calc().total });
+        state.cart = []; state.ui.discVal = 0; $('#custName').value = ''; $('#tableNo').value = '';
+        persist(); renderCart(); renderCatalog(); toast('Pesanan diparkir', 'success', label);
+      })();
+      if (a === 'pay') {
+        if (!state.cart.length) return toast('Keranjang kosong', 'warn');
+        if (window.innerWidth < 1024) toggleCart(false);
+        state.ui.cash = 0; return renderPay();
+      }
+    }
+  });
+
+  $('#modalRoot').addEventListener('click', e => { if (e.target.dataset.modalClose !== undefined) closeModal(); });
+
+  $('#searchInput').addEventListener('input', e => {
+    state.ui.search = e.target.value;
+    $('#clearSearch').classList.toggle('hidden', !e.target.value);
+    renderCatalog();
+  });
+  $('#clearSearch').addEventListener('click', () => {
+    state.ui.search = ''; $('#searchInput').value = ''; $('#clearSearch').classList.add('hidden'); renderCatalog(); $('#searchInput').focus();
+  });
+  $('#cartOverlay').addEventListener('click', () => toggleCart(false));
+  $('#discInput').addEventListener('input', e => {
+    state.ui.discVal = Math.max(0, +e.target.value || 0);
+    $('#tSub').textContent = rp(calc().subtotal); $('#tDisc').textContent = '- ' + rp(calc().disc); $('#tTotal').textContent = rp(calc().total);
+    $('#taxNote').textContent = `${state.ui.tax ? 'PB1 10% ' + rp(calc().tax) : 'Tanpa PB1'}${state.ui.service ? ' • Service 5% ' + rp(calc().service) : ''}`;
+    persist();
+  });
+  $('#custName').addEventListener('input', () => {});
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) toggleCart(false); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F2') { e.preventDefault(); $('#searchInput').focus(); }
+    if (e.key === 'F4') { e.preventDefault(); if (state.cart.length) { state.ui.cash = 0; renderPay(); } }
+    if (e.key === 'Escape') {
+      if (state.modal.open) closeModal();
+      else if (state.ui.cartOpen) toggleCart(false);
+    }
+    if (state.modal.open && state.modal.type === 'pay') {
+      if (/^[0-9]$/.test(e.key)) { state.ui.cash = parseInt(String(state.ui.cash || 0) === '0' ? '' : state.ui.cash + e.key, 10); renderPay(); }
+      if (e.key === 'Backspace') { const c = String(state.ui.cash || 0); state.ui.cash = +(c.length > 1 ? c.slice(0, -1) : 0); renderPay(); }
+      if (e.key === 'Enter' && (state.ui.payMethod !== 'cash' || state.ui.cash >= calc().total)) settleOrder();
+    }
+  });
+
+  /* ---------------- Boot ---------------- */
+  function boot() {
+    $('#hdrStore').textContent = state.store.name + ' • Kasir: ' + state.store.cashier;
+    document.title = 'NovaPOS — ' + state.store.name + ' | Demo Prototype by NovaNext';
+    renderChips(); renderCatalog(); renderCart(); icons();
+    setTimeout(() => toast('Selamat datang di NovaPOS', 'success', 'Demo Prototype by NovaNext'), 500);
+    if (window.innerWidth < 1024) toggleCart(false);
+  }
+  boot();
+
+  window.NovaPOS = { state, calc, toast, buildReceipt, buildReport };
+})();
+</script>
+</body>
+</html>

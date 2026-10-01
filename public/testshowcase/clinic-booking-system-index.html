@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediConnect - Telemedicine & Clinic Appointment Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        accent: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'slide-down': 'slideDown 0.3s ease-out',
+                        'scale-in': 'scaleIn 0.2s ease-out',
+                        'pulse-soft': 'pulseSoft 2s infinite',
+                        'shimmer': 'shimmer 1.5s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideDown: { '0%': { opacity: '0', transform: 'translateY(-10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+                        pulseSoft: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0.7' } },
+                        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scroll-behavior: smooth; }
+        .font-display { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+        .font-body { font-family: 'Inter', system-ui, sans-serif; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        /* Animation classes */
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.4s ease-out; }
+        .animate-slide-down { animation: slideDown 0.3s ease-out; }
+        .animate-scale-in { animation: scaleIn 0.2s ease-out; }
+        
+        /* Focus visible */
+        *:focus-visible { outline: 2px solid #22c55e; outline-offset: 2px; }
+        
+        /* Toast animations */
+        .toast-enter { animation: slideInRight 0.3s ease-out; }
+        .toast-exit { animation: slideOutRight 0.3s ease-in; }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        /* Wizard step indicator */
+        .wizard-step.active .step-circle { background: #22c55e; border-color: #22c55e; color: white; }
+        .wizard-step.completed .step-circle { background: #22c55e; border-color: #22c55e; color: white; }
+        .wizard-step.completed .step-circle::before { content: '✓'; }
+        
+        /* Slot button states */
+        .slot-btn.available:hover { background: #dcfce7; border-color: #22c55e; }
+        .slot-btn.booked { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
+        .slot-btn.selected { background: #22c55e; border-color: #22c55e; color: white; }
+        
+        /* Video call mock */
+        .video-feed { background: #1e293b; }
+        .video-feed::before { content: ''; position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%) move 3s infinite; }
+        
+        /* Shimmer loading */
+        .shimmer { background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        
+        /* Modal backdrop blur */
+        .modal-backdrop { backdrop-filter: blur(4px); background: rgba(15, 23, 42, 0.5); }
+    </style>
+</head>
+<body class="font-body bg-slate-50 min-h-screen">
+    <!-- ==================== HEADER / NAVBAR ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
+        <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+            <div class="flex h-16 items-center justify-between">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <a href="#" class="flex items-center gap-2" aria-label="MediConnect Home">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
+                            <i data-lucide="heart-pulse" class="h-6 w-6 text-white"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-slate-900">MediConnect</span>
+                    </a>
+                    <span class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary-700 border border-primary-200">
+                        Demo Prototype by NovaNext
+                    </span>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex md:items-center md:gap-6">
+                    <a href="#doctors" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Dokter</a>
+                    <a href="#booking" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Booking</a>
+                    <a href="#teleconsult" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Telemedicine</a>
+                    <a href="#records" class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors">Rekam Medis</a>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <button id="cartBtn" class="relative p-2 text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all" aria-label="Keranjang Booking">
+                        <i data-lucide="shopping-bag" class="h-5 w-5"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-500 text-xs font-bold text-white hidden">0</span>
+                    </button>
+                    <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all" aria-label="Buka Menu" aria-expanded="false">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobileDrawer" class="md:hidden fixed inset-0 z-40 hidden">
+            <div class="fixed inset-0 bg-slate-900/50 modal-backdrop" aria-hidden="true"></div>
+            <aside class="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white shadow-xl animate-slide-in-right" role="dialog" aria-label="Menu navigasi">
+                <div class="flex h-16 items-center justify-between border-b border-slate-200 px-4">
+                    <span class="font-display font-semibold text-slate-900">Menu</span>
+                    <button id="closeDrawer" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors" aria-label="Tutup Menu">
+                        <i data-lucide="x" class="h-5 w-5"></i>
+                    </button>
+                </div>
+                <nav class="p-4 space-y-2" aria-label="Navigasi mobile">
+                    <a href="#doctors" class="drawer-link flex items-center gap-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                        <i data-lucide="user-round-cog" class="h-5 w-5"></i> Katalog Dokter
+                    </a>
+                    <a href="#booking" class="drawer-link flex items-center gap-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                        <i data-lucide="calendar-clock" class="h-5 w-5"></i> Booking Wizard
+                    </a>
+                    <a href="#teleconsult" class="drawer-link flex items-center gap-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                        <i data-lucide="video" class="h-5 w-5"></i> Telekonsultasi
+                    </a>
+                    <a href="#records" class="drawer-link flex items-center gap-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                        <i data-lucide="file-heart" class="h-5 w-5"></i> Rekam Medis
+                    </a>
+                </nav>
+                <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-200">
+                    <div class="flex items-center gap-3 px-3 py-3 rounded-xl bg-primary-50 text-primary-700">
+                        <i data-lucide="info" class="h-5 w-5"></i>
+                        <span class="text-sm font-medium">Demo Prototype by NovaNext</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="pt-16 min-h-screen" id="mainContent">
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden bg-gradient-to-b from-primary-50 via-white to-accent-50">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%2322c55e" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-32 relative">
+                <div class="text-center max-w-3xl mx-auto animate-slide-up">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 text-primary-700 text-sm font-medium mb-6 animate-fade-in">
+                        <i data-lucide="shield-check" class="h-4 w-4"></i>
+                        <span>Jadwal Bebas Bentrok • Konfirmasi Instan • HIPAA Compliant</span>
+                    </div>
+                    <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6">
+                        Konsultasi Medis <span class="text-primary-600">Tanpa Batas</span> Ruang & Waktu
+                    </h1>
+                    <p class="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                        Platform telemedicine terintegrasi dengan jadwal dokter real-time, antrian digital, dan ruang konsultasi video aman. Booking dalam 4 langkah mudah.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="#booking" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primary-600 text-white font-semibold text-lg hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-500/25 active:scale-[0.98]">
+                            <i data-lucide="calendar-plus" class="h-5 w-5 inline-block mr-2"></i>
+                            Mulai Booking Sekarang
+                        </a>
+                        <a href="#doctors" class="w-full sm:w-auto px-8 py-4 rounded-2xl border-2 border-slate-200 text-slate-700 font-semibold text-lg hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 transition-all">
+                            <i data-lucide="search" class="h-5 w-5 inline-block mr-2"></i>
+                            Cari Dokter Spesialis
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Stats Bar -->
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all">
+                        <div class="font-display text-3xl sm:text-4xl font-bold text-primary-600 mb-1" data-count="127">0</div>
+                        <div class="text-sm text-slate-600 font-medium">Dokter Spesialis</div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all">
+                        <div class="font-display text-3xl sm:text-4xl font-bold text-primary-600 mb-1" data-count="24">0</div>
+                        <div class="text-sm text-slate-600 font-medium">Poliklinik Tersedia</div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all">
+                        <div class="font-display text-3xl sm:text-4xl font-bold text-primary-600 mb-1" data-count="8942">0</div>
+                        <div class="text-sm text-slate-600 font-medium">Konsultasi Selesai</div>
+                    </div>
+                    <div class="text-center p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-100 hover:border-primary-200 hover:shadow-lg transition-all">
+                        <div class="font-display text-3xl sm:text-4xl font-bold text-primary-600 mb-1" data-count="98">0</div>
+                        <div class="text-sm text-slate-600 font-medium">% Kepuasan Pasien</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DOCTORS CATALOG ==================== -->
+        <section id="doctors" class="py-20 sm:py-28 bg-white">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
+                    <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700 mb-4">Katalog Dokter</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Temukan Dokter Spesialis Terbaik</h2>
+                    <p class="text-slate-600 leading-relaxed">Filter berdasarkan poliklinik, lihat jadwal praktik, dan booking slot konsultasi yang tersedia secara real-time.</p>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap items-center justify-center gap-3 mb-10 animate-slide-up" role="tablist" aria-label="Filter poliklinik">
+                    <button data-filter="all" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium bg-primary-50 text-primary-700 border border-primary-200 shadow-sm" role="tab" aria-selected="true">Semua</button>
+                    <button data-filter="umum" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Umum</button>
+                    <button data-filter="gigi" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Gigi</button>
+                    <button data-filter="jantung" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Jantung</button>
+                    <button data-filter="anak" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Anak</button>
+                    <button data-filter="kulit" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Kulit</button>
+                    <button data-filter="mata" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Mata</button>
+                    <button data-filter="saraf" class="filter-tab px-5 py-2.5 rounded-full text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 border border-slate-200 transition-all" role="tab" aria-selected="false">Saraf</button>
+                </div>
+
+                <!-- Doctors Grid -->
+                <div id="doctorsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="Daftar dokter">
+                    <!-- Doctors rendered by JS -->
+                </div>
+
+                <!-- Load More -->
+                <div class="text-center mt-10 animate-fade-in">
+                    <button id="loadMoreBtn" class="px-8 py-3 rounded-2xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 transition-all hidden">
+                        <i data-lucide="loader-2" class="h-5 w-5 inline-block mr-2 animate-spin hidden" id="loadSpinner"></i>
+                        <span id="loadText">Muat Lebih Banyak</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== BOOKING WIZARD ==================== -->
+        <section id="booking" class="py-20 sm:py-28 bg-slate-50">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Wizard Header -->
+                    <div class="text-center mb-10 animate-fade-in">
+                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700 mb-4">Booking Wizard</span>
+                        <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Booking Konsultasi 4 Langkah</h2>
+                        <p class="text-slate-600">Pilih dokter, tentukan jadwal, isi identitas, dan dapatkan e-tiket instan.</p>
+                    </div>
+
+                    <!-- Step Indicator -->
+                    <div class="flex items-center justify-between mb-10 relative animate-slide-up" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Progress booking">
+                        <div class="relative z-10 flex h-1 w-full hidden md:block">
+                            <div class="h-full bg-slate-200 rounded-full">
+                                <div id="progressBar" class="h-full bg-primary-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between w-full md:hidden">
+                            <div class="w-1/4"><div id="progressBarMobile" class="h-1 bg-primary-500 rounded-full" style="width: 0%"></div></div>
+                            <div class="w-1/4"><div class="h-1 bg-slate-200 rounded-full"></div></div>
+                            <div class="w-1/4"><div class="h-1 bg-slate-200 rounded-full"></div></div>
+                            <div class="w-1/4"><div class="h-1 bg-slate-200 rounded-full"></div></div>
+                        </div>
+                        <ol class="flex items-center justify-between w-full relative z-10" aria-label="Langkah booking">
+                            <li class="wizard-step relative flex flex-col items-center" data-step="1">
+                                <div class="step-circle flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-400 font-bold text-lg transition-all">1</div>
+                                <span class="mt-2 text-xs font-medium text-slate-600 text-center hidden sm:block">Pilih Dokter</span>
+                            </li>
+                            <li class="wizard-step relative flex flex-col items-center" data-step="2">
+                                <div class="step-circle flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-400 font-bold text-lg transition-all">2</div>
+                                <span class="mt-2 text-xs font-medium text-slate-600 text-center hidden sm:block">Pilih Jam</span>
+                            </li>
+                            <li class="wizard-step relative flex flex-col items-center" data-step="3">
+                                <div class="step-circle flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-400 font-bold text-lg transition-all">3</div>
+                                <span class="mt-2 text-xs font-medium text-slate-600 text-center hidden sm:block">Identitas</span>
+                            </li>
+                            <li class="wizard-step relative flex flex-col items-center" data-step="4">
+                                <div class="step-circle flex h-12 w-12 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-400 font-bold text-lg transition-all">4</div>
+                                <span class="mt-2 text-xs font-medium text-slate-600 text-center hidden sm:block">E-Tiket</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Wizard Content -->
+                    <div id="wizardContent" class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8 animate-fade-in">
+                        <!-- Step 1: Select Doctor -->
+                        <div id="step1" class="wizard-panel" data-step="1" role="tabpanel" aria-labelledby="step1-title">
+                            <h3 id="step1-title" class="font-display text-xl font-bold text-slate-900 mb-6">Pilih Dokter Spesialis</h3>
+                            <div class="space-y-4" id="doctorSelectionList" role="listbox" aria-label="Pilih dokter">
+                                <!-- Rendered by JS -->
+                            </div>
+                            <div class="mt-8 flex justify-end">
+                                <button id="nextStep1" class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-slate-200 text-slate-500 font-semibold disabled:cursor-not-allowed disabled:opacity-50 transition-all" disabled>
+                                    <span class="flex items-center justify-center gap-2">Lanjut ke Pilih Jam <i data-lucide="chevron-right" class="h-4 w-4"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Select Date & Time -->
+                        <div id="step2" class="wizard-panel hidden" data-step="2" role="tabpanel" aria-labelledby="step2-title">
+                            <h3 id="step2-title" class="font-display text-xl font-bold text-slate-900 mb-6">Pilih Tanggal & Jam Konsultasi</h3>
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Calendar -->
+                                <div class="lg:col-span-2 space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-3">Tanggal Konsultasi</label>
+                                        <div id="calendarContainer" class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                                            <!-- Calendar rendered by JS -->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-3">Slot Waktu Tersedia</label>
+                                        <div id="timeSlotsContainer" class="space-y-4">
+                                            <p class="text-slate-500 text-center py-8">Pilih tanggal terlebih dahulu</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Selected Doctor Summary -->
+                                <div class="lg:col-span-1">
+                                    <div class="bg-primary-50 border border-primary-100 rounded-2xl p-6 sticky top-24">
+                                        <h4 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                            <i data-lucide="user-check" class="h-5 w-5 text-primary-600"></i>
+                                            Dokter Terpilih
+                                        </h4>
+                                        <div id="selectedDoctorSummary" class="space-y-3">
+                                            <p class="text-slate-500 text-center py-4">Belum ada dokter dipilih</p>
+                                        </div>
+                                        <div class="mt-6 p-4 bg-white rounded-xl border border-slate-100">
+                                            <div class="flex items-center justify-between text-sm mb-2">
+                                                <span class="text-slate-600">Konsultasi</span>
+                                                <span class="font-semibold text-slate-900" id="consultFee">Rp 0</span>
+                                            </div>
+                                            <div class="flex items-center justify-between text-sm mb-2">
+                                                <span class="text-slate-600">Admin Fee</span>
+                                                <span class="font-semibold text-slate-900">Rp 15.000</span>
+                                            </div>
+                                            <div class="border-t border-slate-100 pt-2 flex items-center justify-between font-semibold text-slate-900">
+                                                <span>Total</span>
+                                                <span id="totalFee">Rp 0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-8 flex justify-between">
+                                <button id="prevStep2" class="px-6 py-3 rounded-2xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition-all">
+                                    <i data-lucide="chevron-left" class="h-4 w-4 inline-block mr-2"></i> Kembali
+                                </button>
+                                <button id="nextStep2" class="px-8 py-3 rounded-2xl bg-slate-200 text-slate-500 font-semibold disabled:cursor-not-allowed disabled:opacity-50 transition-all" disabled>
+                                    <span class="flex items-center justify-center gap-2">Lanjut ke Identitas <i data-lucide="chevron-right" class="h-4 w-4"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Patient Identity -->
+                        <div id="step3" class="wizard-panel hidden" data-step="3" role="tabpanel" aria-labelledby="step3-title">
+                            <h3 id="step3-title" class="font-display text-xl font-bold text-slate-900 mb-6">Data Identitas Pasien</h3>
+                            <form id="patientForm" class="space-y-6" novalidate>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="patientName" class="block text-sm font-medium text-slate-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
+                                        <input type="text" id="patientName" name="patientName" required autocomplete="name" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all" placeholder="Nama lengkap sesuai KTP">
+                                        <p class="mt-1 text-sm text-red-500 hidden" id="nameError">Nama wajib diisi</p>
+                                    </div>
+                                    <div>
+                                        <label for="patientNIK" class="block text-sm font-medium text-slate-700 mb-2">NIK <span class="text-red-500">*</span></label>
+                                        <input type="text" id="patientNIK" name="patientNIK" required autocomplete="off" maxlength="16" pattern="[0-9]{16}" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all" placeholder="16 digit NIK">
+                                        <p class="mt-1 text-sm text-red-500 hidden" id="nikError">NIK harus 16 digit angka</p>
+                                    </div>
+                                    <div>
+                                        <label for="patientPhone" class="block text-sm font-medium text-slate-700 mb-2">No. WhatsApp <span class="text-red-500">*</span></label>
+                                        <input type="tel" id="patientPhone" name="patientPhone" required autocomplete="tel" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all" placeholder="08xxxxxxxxxx">
+                                        <p class="mt-1 text-sm text-red-500 hidden" id="phoneError">Nomor WhatsApp tidak valid</p>
+                                    </div>
+                                    <div>
+                                        <label for="patientEmail" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
+                                        <input type="email" id="patientEmail" name="patientEmail" autocomplete="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all" placeholder="email@domain.com">
+                                    </div>
+                                    <div>
+                                        <label for="patientDOB" class="block text-sm font-medium text-slate-700 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
+                                        <input type="date" id="patientDOB" name="patientDOB" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all">
+                                        <p class="mt-1 text-sm text-red-500 hidden" id="dobError">Tanggal lahir wajib diisi</p>
+                                    </div>
+                                    <div>
+                                        <label for="patientGender" class="block text-sm font-medium text-slate-700 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
+                                        <select id="patientGender" name="patientGender" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all appearance-none bg-no-repeat bg-right pr-10" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E'); background-position: right 0.75rem center;">
+                                            <option value="">Pilih</option>
+                                            <option value="Laki-laki">Laki-laki</option>
+                                            <option value="Perempuan">Perempuan</option>
+                                        </select>
+                                        <p class="mt-1 text-sm text-red-500 hidden" id="genderError">Jenis kelamin wajib dipilih</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Medical Record Section -->
+                                <div class="border-t border-slate-100 pt-6">
+                                    <h4 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                        <i data-lucide="file-heart" class="h-5 w-5 text-primary-600"></i>
+                                        Rekam Medis & Keluhan
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="chiefComplaint" class="block text-sm font-medium text-slate-700 mb-2">Keluhan Utama <span class="text-red-500">*</span></label>
+                                            <textarea id="chiefComplaint" name="chiefComplaint" rows="3" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all resize-none" placeholder="Contoh: Sakit gigi molar kiri bawah sejak 2 hari lalu, nyeri saat makan dingin/panas..."></textarea>
+                                            <p class="mt-1 text-sm text-red-500 hidden" id="complaintError">Keluhan utama wajib diisi</p>
+                                        </div>
+                                        <div>
+                                            <label for="medicalHistory" class="block text-sm font-medium text-slate-700 mb-2">Riwayat Penyakit / Alergi</label>
+                                            <textarea id="medicalHistory" name="medicalHistory" rows="2" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all resize-none" placeholder="Contoh: Alergi penisilin, riwayat diabetes tipe 2, dll. (Opsional)"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 mb-2">Lampiran Foto Gejala (Opsional)</label>
+                                            <div class="relative">
+                                                <input type="file" id="medicalAttachment" name="medicalAttachment" accept="image/*,application/pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                                <div id="attachmentDropzone" class="border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center hover:border-primary-400 hover:bg-primary-50 transition-all">
+                                                    <i data-lucide="upload-cloud" class="h-12 w-12 mx-auto text-slate-300 mb-3"></i>
+                                                    <p class="text-slate-600 mb-1">Klik atau tarik foto gejala ke sini</p>
+                                                    <p class="text-xs text-slate-400">Maks 5MB • JPG, PNG, PDF</p>
+                                                </div>
+                                                <div id="attachmentPreview" class="hidden mt-3 p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between">
+                                                    <div class="flex items-center gap-3">
+                                                        <i data-lucide="file-image" class="h-6 w-6 text-primary-600"></i>
+                                                        <div>
+                                                            <p class="font-medium text-slate-900" id="attachFileName"></p>
+                                                            <p class="text-xs text-slate-500" id="attachFileSize"></p>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" id="removeAttachment" class="text-slate-400 hover:text-red-500 transition-colors" aria-label="Hapus lampiran">
+                                                        <i data-lucide="x" class="h-5 w-5"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="mt-8 flex justify-between">
+                                <button id="prevStep3" class="px-6 py-3 rounded-2xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition-all">
+                                    <i data-lucide="chevron-left" class="h-4 w-4 inline-block mr-2"></i> Kembali
+                                </button>
+                                <button id="nextStep3" class="px-8 py-3 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-500/25">
+                                    <span class="flex items-center justify-center gap-2">Buat E-Tiket <i data-lucide="chevron-right" class="h-4 w-4"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: E-Ticket -->
+                        <div id="step4" class="wizard-panel hidden" data-step="4" role="tabpanel" aria-labelledby="step4-title">
+                            <h3 id="step4-title" class="font-display text-xl font-bold text-slate-900 mb-6">E-Tiket Konsultasi</h3>
+                            <div id="eticketContainer" class="animate-scale-in">
+                                <!-- E-Ticket rendered by JS -->
+                            </div>
+                            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                                <button id="downloadTicket" class="w-full sm:w-auto px-8 py-3 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-500/25 flex items-center justify-center gap-2">
+                                    <i data-lucide="download" class="h-5 w-5"></i> Unduh E-Tiket (PDF)
+                                </button>
+                                <button id="newBooking" class="w-full sm:w-auto px-8 py-3 rounded-2xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 transition-all flex items-center justify-center gap-2">
+                                    <i data-lucide="plus" class="h-5 w-5"></i> Booking Baru
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELECONSULTATION MOCK ==================== -->
+        <section id="teleconsult" class="py-20 sm:py-28 bg-white">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
+                    <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-accent-100 text-accent-700 mb-4">Telekonsultasi</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Ruang Konsultasi Video Virtual</h2>
+                    <p class="text-slate-600 leading-relaxed">Simulasi ruang telekonsultasi dengan video call mock, timer sesi, chat real-time, dan fitur rekam medis terintegrasi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                    <!-- Upcoming Sessions -->
+                    <div class="lg:col-span-1 space-y-4">
+                        <h3 class="font-display text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i data-lucide="calendar-clock" class="h-5 w-5 text-accent-600"></i>
+                            Sesi Mendatang
+                        </h3>
+                        <div id="upcomingSessions" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Video Call Mock -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-slate-900 rounded-3xl overflow-hidden shadow-2xl">
+                            <!-- Video Call Header -->
+                            <div class="bg-slate-800/50 px-6 py-4 border-b border-slate-700 flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-slate-400">
+                                        <i data-lucide="user-round" class="h-6 w-6"></i>
+                                    </div>
+                                    <div>
+                                        <p id="callDoctorName" class="font-semibold text-white">Menunggu sesi...</p>
+                                        <p id="callSpecialty" class="text-sm text-slate-400">Pilih sesi dari daftar</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div id="callTimer" class="flex items-center gap-2 px-4 py-2 bg-slate-700 rounded-full font-mono text-lg text-white hidden">
+                                        <i data-lucide="clock" class="h-5 w-5"></i>
+                                        <span>00:00:00</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button id="toggleMic" class="p-3 rounded-xl bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all" aria-label="Toggle mikrofon">
+                                            <i data-lucide="mic" class="h-5 w-5" id="micIcon"></i>
+                                        </button>
+                                        <button id="toggleCam" class="p-3 rounded-xl bg-slate-700 text-slate-300 hover:bg-slate-600 hover:text-white transition-all" aria-label="Toggle kamera">
+                                            <i data-lucide="video" class="h-5 w-5" id="camIcon"></i>
+                                        </button>
+                                        <button id="endCall" class="p-3 rounded-xl bg-red-600/20 text-red-400 hover:bg-red-600/30 hover:text-red-300 transition-all" aria-label="Akhiri panggilan">
+                                            <i data-lucide="phone-off" class="h-5 w-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Video Feeds -->
+                            <div class="relative h-[400px] md:h-[500px]">
+                                <!-- Doctor Feed (Main) -->
+                                <div id="doctorVideoFeed" class="video-feed relative w-full h-full flex items-center justify-center">
+                                    <div class="text-center text-slate-400">
+                                        <i data-lucide="video-off" class="h-16 w-16 mx-auto mb-4 opacity-50"></i>
+                                        <p class="text-lg">Video dokter akan muncul di sini</p>
+                                        <p class="text-sm mt-2">Klik "Mulai Konsultasi" pada sesi</p>
+                                    </div>
+                                    <!-- Mock video indicator -->
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
+                                            <div class="absolute inset-0 flex items-center justify-center">
+                                                <div class="text-center">
+                                                    <div class="w-24 h-24 rounded-full border-4 border-primary-500/30 mb-4 mx-auto animate-pulse"></div>
+                                                    <p class="text-white font-medium" id="mockDoctorName">Dr. Sarah Wijaya</p>
+                                                    <p class="text-slate-400 text-sm">Spesialis Gigi</p>
+                                                </div>
+                                            </div>
+                                            <!-- Recording indicator -->
+                                            <div id="recordingIndicator" class="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-red-600/80 rounded-full text-white text-sm hidden">
+                                                <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse"></span>
+                                                <span>REC</span>
+                                            </div>
+                                            <!-- Connection quality -->
+                                            <div class="absolute bottom-4 left-4 flex items-center gap-2 text-slate-400 text-xs">
+                                                <i data-lucide="wifi" class="h-4 w-4 text-primary-400" id="connectionIcon"></i>
+                                                <span id="connectionQuality">Koneksi Baik</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Patient Feed (PiP) -->
+                                <div id="patientVideoFeed" class="absolute bottom-4 right-4 w-48 h-36 md:w-64 md:h-48 rounded-xl overflow-hidden border-2 border-slate-600 bg-slate-800 z-10">
+                                    <div class="w-full h-full flex items-center justify-center text-slate-500">
+                                        <i data-lucide="user-round" class="h-10 w-10"></i>
+                                    </div>
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-1">
+                                        <p class="text-xs text-white text-center truncate">Anda (Preview)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat & Notes Panel -->
+                            <div class="border-t border-slate-700 bg-slate-800">
+                                <div class="flex border-b border-slate-700">
+                                    <button data-tab="chat" class="call-tab flex-1 py-3 px-4 text-center text-sm font-medium text-slate-300 hover:text-white transition-colors border-b-2 border-transparent" role="tab" aria-selected="true">
+                                        <i data-lucide="message-square" class="h-4 w-4 inline-block mr-1"></i> Chat
+                                    </button>
+                                    <button data-tab="notes" class="call-tab flex-1 py-3 px-4 text-center text-sm font-medium text-slate-300 hover:text-white transition-colors border-b-2 border-transparent" role="tab" aria-selected="false">
+                                        <i data-lucide="clipboard-list" class="h-4 w-4 inline-block mr-1"></i> Catatan Medis
+                                    </button>
+                                    <button data-tab="prescription" class="call-tab flex-1 py-3 px-4 text-center text-sm font-medium text-slate-300 hover:text-white transition-colors border-b-2 border-transparent" role="tab" aria-selected="false">
+                                        <i data-lucide="pill" class="h-4 w-4 inline-block mr-1"></i> Resep
+                                    </button>
+                                </div>
+                                <div class="p-4 h-64 overflow-y-auto">
+                                    <!-- Chat Tab -->
+                                    <div id="chatPanel" class="call-panel space-y-3" role="tabpanel">
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DW</div>
+                                            <div class="bg-slate-700 rounded-2xl px-4 py-3 max-w-xs">
+                                                <p class="text-white text-sm">Halo, selamat pagi. Apa keluhan Anda hari ini?</p>
+                                                <span class="text-xs text-slate-400 block mt-1">09:15</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3 justify-end">
+                                            <div class="bg-primary-500 rounded-2xl px-4 py-3 max-w-xs text-white text-sm">
+                                                <p>Pagi dokter, gigi molar kiri bawah saya sakit sejak 2 hari lalu...</p>
+                                                <span class="text-xs text-primary-100 block mt-1 text-right">09:16</span>
+                                            </div>
+                                            <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PA</div>
+                                        </div>
+                                        <div class="flex items-start gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DW</div>
+                                            <div class="bg-slate-700 rounded-2xl px-4 py-3 max-w-xs">
+                                                <p class="text-white text-sm">Apakah ada gejala bengkak atau demam?</p>
+                                                <span class="text-xs text-slate-400 block mt-1">09:17</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start gap-3 justify-end">
+                                            <div class="bg-primary-500 rounded-2xl px-4 py-3 max-w-xs text-white text-sm">
+                                                <p>Tidak ada bengkak, tapi sensitif saat minum dingin.</p>
+                                                <span class="text-xs text-primary-100 block mt-1 text-right">09:18</span>
+                                            </div>
+                                            <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PA</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Notes Tab -->
+                                    <div id="notesPanel" class="call-panel hidden" role="tabpanel">
+                                        <div class="space-y-4">
+                                            <div class="bg-slate-700 rounded-xl p-4">
+                                                <div class="flex items-start justify-between gap-2 mb-2">
+                                                    <h5 class="font-medium text-white">Anamnesis</h5>
+                                                    <span class="text-xs text-slate-400">09:20</span>
+                                                </div>
+                                                <p class="text-slate-300 text-sm">Pasien keluhan nyeri gigi 36 (molar kiri bawah) sejak 2 hari. Nyeri terpicu stimuli dingin/panas. Tidak ada bengkak, tidak demam. Riwayat: pernah tambal gigi 36 2 tahun lalu.</p>
+                                            </div>
+                                            <div class="bg-slate-700 rounded-xl p-4">
+                                                <div class="flex items-start justify-between gap-2 mb-2">
+                                                    <h5 class="font-medium text-white">Diagnosa Sementara</h5>
+                                                    <span class="text-xs text-slate-400">09:25</span>
+                                                </div>
+                                                <p class="text-slate-300 text-sm">Pulpitis Irreversibel Gigi 36. Perlu root canal treatment.</p>
+                                            </div>
+                                            <div class="bg-slate-700 rounded-xl p-4">
+                                                <div class="flex items-start justify-between gap-2 mb-2">
+                                                    <h5 class="font-medium text-white">Tindakan</h5>
+                                                    <span class="text-xs text-slate-400">09:26</span>
+                                                </div>
+                                                <p class="text-slate-300 text-sm">Anestesi lokal, akses kavitas pulpa, ekstirpasi pulpa, biomechanical preparation, obturasi saluran akar, restorasi sementara.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Prescription Tab -->
+                                    <div id="prescriptionPanel" class="call-panel hidden" role="tabpanel">
+                                        <div class="space-y-3">
+                                            <div class="bg-slate-700 rounded-xl p-4 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
+                                                        <i data-lucide="pill" class="h-5 w-5 text-primary-400"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-white">Mefenamic Acid 500mg</p>
+                                                        <p class="text-xs text-slate-400">3x1 sehari setelah makan • 5 hari</p>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs bg-primary-500/20 text-primary-400 px-2 py-1 rounded-full">Resep</span>
+                                            </div>
+                                            <div class="bg-slate-700 rounded-xl p-4 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center">
+                                                        <i data-lucide="droplet" class="h-5 w-5 text-primary-400"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-white">Amoxicillin 500mg</p>
+                                                        <p class="text-xs text-slate-400">3x1 sehari setelah makan • 7 hari</p>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs bg-primary-500/20 text-primary-400 px-2 py-1 rounded-full">Resep</span>
+                                            </div>
+                                            <div class="bg-slate-700 rounded-xl p-4 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-lg bg-accent-500/20 flex items-center justify-center">
+                                                        <i data-lucide="pill" class="h-5 w-5 text-accent-400"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-white">Paracetamol 500mg</p>
+                                                        <p class="text-xs text-slate-400">Prn (saat nyeri) • Maks 4x sehari</p>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs bg-accent-500/20 text-accent-400 px-2 py-1 rounded-full">OTC</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Chat Input -->
+                                <div id="chatInputArea" class="border-t border-slate-700 p-4 hidden">
+                                    <div class="flex items-center gap-3">
+                                        <input type="text" id="chatInput" placeholder="Ketik pesan..." class="flex-1 px-4 py-3 rounded-xl bg-slate-700 border border-slate-600 text-white placeholder-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 focus:outline-none transition-all">
+                                        <button id="sendChat" class="p-3 rounded-xl bg-primary-500 text-white hover:bg-primary-600 transition-all" aria-label="Kirim pesan">
+                                            <i data-lucide="send" class="h-5 w-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Call Controls (when not in call) -->
+                        <div id="preCallControls" class="mt-6 text-center">
+                            <p class="text-slate-500 mb-4">Pilih sesi dari daftar sebelah untuk memulai simulasi telekonsultasi</p>
+                            <button id="startCallDemo" class="px-8 py-3 rounded-2xl bg-accent-600 text-white font-semibold hover:bg-accent-700 transition-all shadow-lg hover:shadow-accent-500/25 hidden">
+                                <i data-lucide="video" class="h-5 w-5 inline-block mr-2"></i>
+                                Mulai Simulasi Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MEDICAL RECORDS ==================== -->
+        <section id="records" class="py-20 sm:py-28 bg-slate-50">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
+                    <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-700 mb-4">Rekam Medis</span>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4">Riwayat Konsultasi & Dokumen</h2>
+                    <p class="text-slate-600 leading-relaxed">Akses riwayat kunjungan, hasil diagnosa, resep obat, dan lampiran medis Anda kapan saja.</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-6" id="recordsList">
+                    <!-- Records rendered by JS -->
+                </div>
+
+                <div class="text-center mt-10 animate-fade-in">
+                    <button id="addRecordDemo" class="px-8 py-3 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg hover:shadow-primary-500/25 flex items-center justify-center gap-2 mx-auto">
+                        <i data-lucide="plus" class="h-5 w-5"></i> Tambah Rekam Medis Demo
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-slate-900 text-slate-300 py-12">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <a href="#" class="flex items-center gap-2 mb-4">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
+                            <i data-lucide="heart-pulse" class="h-6 w-6 text-white"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-white">MediConnect</span>
+                    </a>
+                    <p class="text-slate-400 max-w-xs leading-relaxed">Platform telemedicine terintegrasi untuk konsultasi medis modern, aman, dan terjangkau. Dibangun dengan standar keamanan data medis tertinggi.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Produk</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#doctors" class="hover:text-primary-400 transition-colors">Katalog Dokter</a></li>
+                        <li><a href="#booking" class="hover:text-primary-400 transition-colors">Booking Online</a></li>
+                        <li><a href="#teleconsult" class="hover:text-primary-400 transition-colors">Telekonsultasi</a></li>
+                        <li><a href="#records" class="hover:text-primary-400 transition-colors">Rekam Medis Digital</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Dukungan</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Bantuan & FAQ</a></li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="hover:text-primary-400 transition-colors">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-slate-500">© 2025 MediConnect. Demo Prototype by NovaNext. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="#" class="text-slate-400 hover:text-primary-400 transition-colors" aria-label="Twitter">
+                        <i data-lucide="twitter" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="text-slate-400 hover:text-primary-400 transition-colors" aria-label="LinkedIn">
+                        <i data-lucide="linkedin" class="h-5 w-5"></i>
+                    </a>
+                    <a href="#" class="text-slate-400 hover:text-primary-400 transition-colors" aria-label="GitHub">
+                        <i data-lucide="github" class="h-5 w-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3" role="region" aria-live="polite" aria-label="Notifikasi"></div>
+
+    <!-- ==================== MODAL CONFIRMATION ==================== -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-backdrop fixed inset-0" id="modalBackdrop"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-xl max-w-md w-full animate-scale-in">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="modalTitle" class="font-display text-lg font-bold text-slate-900">Konfirmasi</h3>
+                        <button id="modalClose" class="p-1 text-slate-400 hover:text-slate-600 transition-colors" aria-label="Tutup">
+                            <i data-lucide="x" class="h-5 w-5"></i>
+                        </button>
+                    </div>
+                    <p id="modalMessage" class="text-slate-600 mb-6">Apakah Anda yakin?</p>
+                    <div class="flex justify-end gap-3">
+                        <button id="modalCancel" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 transition-all">Batal</button>
+                        <button id="modalConfirm" class="px-4 py-2.5 rounded-xl bg-primary-600 text-white font-medium hover:bg-primary-700 transition-all">Ya, Lanjutkan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ============================================
+        // INITIALIZE LUCIDE ICONS
+        // ============================================
+        lucide.createIcons();
+
+        // ============================================
+        // MOCK DATA GENERATOR
+        // ============================================
+        const MockData = {
+            specialties: [
+                { id: 'umum', name: 'Umum', icon: 'stethoscope', color: 'accent' },
+                { id: 'gigi', name: 'Gigi', icon: 'tooth', color: 'primary' },
+                { id: 'jantung', name: 'Jantung', icon: 'heart', color: 'rose' },
+                { id: 'anak', name: 'Anak', icon: 'baby', color: 'amber' },
+                { id: 'kulit', name: 'Kulit & Kelamin', icon: 'skin', color: 'emerald' },
+                { id: 'mata', name: 'Mata', icon: 'eye', color: 'violet' },
+                { id: 'saraf', name: 'Saraf', icon: 'brain', color: 'indigo' },
+            ],
+
+            doctors: [
+                {
+                    id: 'doc-1',
+                    name: 'Dr. Sarah Wijaya',
+                    specialty: 'gigi',
+                    title: 'Spesialis Gigi (Sp.KG)',
+                    hospital: 'RS Medika Permata',
+                    rating: 4.9,
+                    reviews: 234,
+                    experience: 12,
+                    fee: 350000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['09:00', '09:30', '10:00', '10:30', '14:00', '14:30', '15:00'],
+                        '2025-01-21': ['09:00', '09:30', '10:00', '14:00', '14:30'],
+                        '2025-01-22': ['09:00', '09:30', '10:00', '10:30', '11:00', '14:00', '14:30', '15:00'],
+                        '2025-01-23': ['14:00', '14:30', '15:00', '15:30', '16:00'],
+                        '2025-01-24': ['09:00', '09:30', '10:00', '14:00', '14:30'],
+                        '2025-01-25': ['09:00', '09:30', '10:00', '10:30'],
+                        '2025-01-27': ['09:00', '09:30', '10:00', '10:30', '14:00', '14:30'],
+                    },
+                    bookedSlots: {
+                        '2025-01-20': ['10:00'],
+                        '2025-01-21': ['14:30'],
+                        '2025-01-22': ['09:30', '15:00'],
+                    },
+                    bio: 'Ahli endodontik dan restoratif estetik dengan pengalaman 12+ tahun. Mahir root canal treatment mikroskopik.',
+                    education: ['FKG Universitas Indonesia', 'Spesialis Gigi RS Cipto Mangunkusumo'],
+                },
+                {
+                    id: 'doc-2',
+                    name: 'Dr. Andi Pratama',
+                    specialty: 'jantung',
+                    title: 'Spesialis Jantung (Sp.JP)',
+                    hospital: 'RS Jantung Harapan Kita',
+                    rating: 4.8,
+                    reviews: 189,
+                    experience: 15,
+                    fee: 500000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['08:00', '08:30', '09:00', '13:00', '13:30'],
+                        '2025-01-21': ['08:00', '08:30', '09:00', '09:30', '13:00'],
+                        '2025-01-22': ['08:00', '08:30', '13:00', '13:30', '14:00'],
+                        '2025-01-23': ['08:00', '08:30', '09:00', '13:00'],
+                        '2025-01-24': ['08:00', '13:00', '13:30', '14:00'],
+                        '2025-01-27': ['08:00', '08:30', '09:00', '13:00', '13:30'],
+                    },
+                    bookedSlots: {
+                        '2025-01-20': ['08:30'],
+                        '2025-01-22': ['13:30'],
+                    },
+                    bio: 'Kardiolog intervensi senior, pakar stent dan angiografi. Memberikan edukasi pencegahan penyakit jantung.',
+                    education: ['FK Universitas Gadjah Mada', 'Spesialis Jantung RS Harapan Kita', 'Fellowship Intervensi Kardiovaskular'],
+                },
+                {
+                    id: 'doc-3',
+                    name: 'Dr. Maya Sari',
+                    specialty: 'anak',
+                    title: 'Spesialis Anak (Sp.A)',
+                    hospital: 'RSIA Bunda Jakarta',
+                    rating: 4.9,
+                    reviews: 312,
+                    experience: 10,
+                    fee: 300000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['10:00', '10:30', '11:00', '11:30', '15:00', '15:30'],
+                        '2025-01-21': ['10:00', '10:30', '11:00', '15:00', '15:30', '16:00'],
+                        '2025-01-22': ['10:00', '10:30', '11:00', '11:30', '15:00'],
+                        '2025-01-23': ['10:00', '10:30', '11:00', '15:00', '15:30'],
+                        '2025-01-24': ['10:00', '10:30', '11:00', '11:30'],
+                        '2025-01-25': ['09:00', '09:30', '10:00'],
+                        '2025-01-27': ['10:00', '10:30', '11:00', '15:00'],
+                    },
+                    bookedSlots: {
+                        '2025-01-21': ['11:00'],
+                        '2025-01-23': ['15:30'],
+                    },
+                    bio: 'Spesialis anak dengan fokus pertumbuhan & perkembangan, imunisasi, dan nutrisi balita. Ramah & sabar.',
+                    education: ['FK Universitas Airlangga', 'Spesialis Anak RS Dr. Soetomo'],
+                },
+                {
+                    id: 'doc-4',
+                    name: 'Dr. Budi Santoso',
+                    specialty: 'umum',
+                    title: 'Dokter Umum',
+                    hospital: 'Klinik Sehat Sentosa',
+                    rating: 4.7,
+                    reviews: 456,
+                    experience: 20,
+                    fee: 150000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30', '14:00', '14:30', '15:00'],
+                        '2025-01-21': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30', '14:00'],
+                        '2025-01-22': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30', '14:00', '14:30'],
+                        '2025-01-23': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30'],
+                        '2025-01-24': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30', '14:00'],
+                        '2025-01-25': ['08:00', '08:30', '09:00', '09:30', '10:00'],
+                        '2025-01-27': ['08:00', '08:30', '09:00', '09:30', '10:00', '13:00', '13:30'],
+                    },
+                    bookedSlots: {
+                        '2025-01-20': ['09:00', '14:00'],
+                        '2025-01-21': ['13:30'],
+                        '2025-01-22': ['09:30'],
+                    },
+                    bio: 'Dokter umum berpengalaman 20 tahun, penanganan penyakit tropis, manajemen diabetes & hipertensi.',
+                    education: ['FK Universitas Padjadjaran', 'Klinik Sehat Sentosa sejak 2005'],
+                },
+                {
+                    id: 'doc-5',
+                    name: 'Dr. Lisa Permata',
+                    specialty: 'kulit',
+                    title: 'Spesialis Kulit & Kelamin (Sp.KK)',
+                    hospital: 'RS Dermatologi Nusantara',
+                    rating: 4.8,
+                    reviews: 167,
+                    experience: 8,
+                    fee: 400000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['13:00', '13:30', '14:00', '14:30', '15:00'],
+                        '2025-01-21': ['09:00', '09:30', '10:00', '13:00', '13:30'],
+                        '2025-01-22': ['13:00', '13:30', '14:00', '14:30'],
+                        '2025-01-23': ['09:00', '09:30', '10:00', '13:00'],
+                        '2025-01-24': ['13:00', '13:30', '14:00', '14:30', '15:00'],
+                        '2025-01-27': ['09:00', '09:30', '10:00', '13:00', '13:30'],
+                    },
+                    bookedSlots: {
+                        '2025-01-20': ['14:00'],
+                        '2025-01-22': ['13:30'],
+                    },
+                    bio: 'Ahli dermatologi kosmetik & medis. Penanganan jerawat, anti-aging, laser, filler, dan penyakit kulit tropis.',
+                    education: ['FK Universitas Indonesia', 'Spesialis Kulit RS Dr. Cipto Mangunkusumo'],
+                },
+                {
+                    id: 'doc-6',
+                    name: 'Dr. Robert Tan',
+                    specialty: 'mata',
+                    title: 'Spesialis Mata (Sp.M)',
+                    hospital: 'RS Mata Jakarta Eye Center',
+                    rating: 4.9,
+                    reviews: 203,
+                    experience: 14,
+                    fee: 450000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['08:00', '08:30', '09:00', '09:30'],
+                        '2025-01-21': ['08:00', '08:30', '09:00', '09:30', '13:00'],
+                        '2025-01-22': ['08:00', '08:30', '09:00', '13:00', '13:30'],
+                        '2025-01-23': ['08:00', '08:30', '09:00', '09:30'],
+                        '2025-01-24': ['08:00', '08:30', '09:00', '13:00'],
+                        '2025-01-27': ['08:00', '08:30', '09:00', '09:30', '13:00'],
+                    },
+                    bookedSlots: {
+                        '2025-01-21': ['08:30'],
+                    },
+                    bio: 'Pakar Katarak & Refraktif (LASIK/SMILE). Bedah retina & glaucoma. Teknologi diagnostik terbaru.',
+                    education: ['FK Universitas Sumatera Utara', 'Spesialis Mata RS Mata Cicendo', 'Fellowship Katarak Singapura'],
+                },
+                {
+                    id: 'doc-7',
+                    name: 'Dr. Dewi Lestari',
+                    specialty: 'saraf',
+                    title: 'Spesialis Saraf (Sp.S)',
+                    hospital: 'RS Neuro Spesialis',
+                    rating: 4.8,
+                    reviews: 145,
+                    experience: 11,
+                    fee: 450000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['13:00', '13:30', '14:00', '14:30'],
+                        '2025-01-21': ['13:00', '13:30', '14:00'],
+                        '2025-01-22': ['13:00', '13:30', '14:00', '14:30'],
+                        '2025-01-23': ['13:00', '13:30'],
+                        '2025-01-24': ['13:00', '13:30', '14:00'],
+                        '2025-01-27': ['13:00', '13:30', '14:00', '14:30'],
+                    },
+                    bookedSlots: {
+                        '2025-01-20': ['13:30'],
+                    },
+                    bio: 'Neurolog fokus stroke, epilepsy, migraine, dan demensia. EEG, EMG, dan terapi trombolisis stroke akut.',
+                    education: ['FK Universitas Hasanuddin', 'Spesialis Saraf RS Dr. Wahidin Sudirohusodo'],
+                },
+                {
+                    id: 'doc-8',
+                    name: 'Dr. Ahmad Fauzi',
+                    specialty: 'umum',
+                    title: 'Dokter Umum',
+                    hospital: 'Klinik Pratama Sejahtera',
+                    rating: 4.6,
+                    reviews: 298,
+                    experience: 18,
+                    fee: 120000,
+                    avatar: null,
+                    schedule: {
+                        '2025-01-20': ['15:00', '15:30', '16:00', '16:30', '17:00'],
+                        '2025-01-21': ['15:00', '15:30', '16:00', '16:30'],
+                        '2025-01-22': ['15:00', '15:30', '16:00', '16:30', '17:00'],
+                        '2025-01-23': ['15:00', '15:30', '16:00'],
+                        '2025-01-24': ['15:00', '15:30', '16:00', '16:30'],
+                        '2025-01-25': ['10:00', '10:30', '11:00', '11:30'],
+                        '2025-01-27': ['15:00', '15:30', '16:00', '16:30'],
+                    },
+                    bookedSlots: {},
+                    bio: 'Dokter umum dengan minat geriatri & paliatif. Home care & telemedicine untuk lansia.',
+                    education: ['FK Universitas Diponegoro', 'Klinik Pratama Sejahtera sejak 2007'],
+                },
+            ],
+
+            // Generate initial medical records from localStorage or defaults
+            getMedicalRecords() {
+                const stored = localStorage.getItem('mediconnect_records');
+                if (stored) return JSON.parse(stored);
+                const defaults = [
+                    {
+                        id: 'rec-1',
+                        date: '2025-01-15',
+                        doctor: 'Dr. Sarah Wijaya',
+                        specialty: 'Gigi',
+                        diagnosis: 'Karies Dentin Gigi 36 (Pulpitis Reversibel)',
+                        treatment: 'Tambal Komposit Gigi 36',
+                        prescription: ['Paracetamol 500mg 3x1', 'Amoxicillin 500mg 3x1 (5 hari)'],
+                        attachment: null,
+                        fee: 450000,
+                        status: 'Selesai',
+                        type: 'Offline',
+                    },
+                    {
+                        id: 'rec-2',
+                        date: '2025-01-10',
+                        doctor: 'Dr. Budi Santoso',
+                        specialty: 'Umum',
+                        diagnosis: 'Hipertensi Esensial Stadium 1',
+                        treatment: 'Konseling gaya hidup, monitoring tekanan darah mingguan',
+                        prescription: ['Amlodipine 5mg 1x1'],
+                        attachment: 'tekanan_darah.pdf',
+                        fee: 150000,
+                        status: 'Kontrol 1 bulan',
+                        type: 'Online',
+                    },
+                    {
+                        id: 'rec-3',
+                        date: '2025-01-05',
+                        doctor: 'Dr. Maya Sari',
+                        specialty: 'Anak',
+                        diagnosis: 'Infeksi Saluran Pernapasan Atas (ISPA)',
+                        treatment: 'Pemberian obat simptomatik, perbaikan nutrisi',
+                        prescription: ['Paracetamol sirup 120mg/5ml 3x1', 'OBH Combi sirup 3x1', 'Zinc 20mg 1x1'],
+                        attachment: null,
+                        fee: 300000,
+                        status: 'Sembuh',
+                        type: 'Offline',
+                    },
+                ];
+                localStorage.setItem('mediconnect_records', JSON.stringify(defaults));
+                return defaults;
+            },
+
+            saveMedicalRecords(records) {
+                localStorage.setItem('mediconnect_records', JSON.stringify(records));
+            },
+
+            // Generate upcoming sessions
+            getUpcomingSessions() {
+                const stored = localStorage.getItem('mediconnect_bookings');
+                if (stored) return JSON.parse(stored);
+                return [];
+            },
+
+            saveUpcomingSessions(sessions) {
+                localStorage.setItem('mediconnect_bookings', JSON.stringify(sessions));
+            },
+
+            // Get booked slots for a doctor on a date
+            getBookedSlots(doctorId, date) {
+                const doctor = this.doctors.find(d => d.id === doctorId);
+                if (!doctor) return [];
+                return doctor.bookedSlots[date] || [];
+            },
+
+            // Book a slot
+            bookSlot(doctorId, date, time) {
+                const doctor = this.doctors.find(d => d.id === doctorId);
+                if (!doctor) return false;
+                if (!doctor.bookedSlots[date]) doctor.bookedSlots[date] = [];
+                if (!doctor.bookedSlots[date].includes(time)) {
+                    doctor.bookedSlots[date].push(time);
+                    return true;
+                }
+                return false;
+            },
+        };
+
+        // ============================================
+        // UI STATE ENGINE
+        // ============================================
+        const State = {
+            activeFilter: 'all',
+            currentStep: 1,
+            selectedDoctor: null,
+            selectedDate: null,
+            selectedTime: null,
+            patientData: {},
+            medicalAttachment: null,
+            activeCallTab: 'chat',
+            isInCall: false,
+            callTimer: null,
+            callSeconds: 0,
+            displayedDoctorsCount: 6,
+            toasts: [],
+            modal: { open: false, resolve: null, title: '', message: '' },
+
+            // Subscribe pattern for reactive updates
+            subscribers: new Set(),
+            subscribe(fn) { this.subscribers.add(fn); },
+            unsubscribe(fn) { this.subscribers.delete(fn); },
+            notify() { this.subscribers.forEach(fn => fn()); },
+
+            // Setters that trigger notify
+            setFilter(filter) { this.activeFilter = filter; this.notify(); },
+            setStep(step) { this.currentStep = step; this.notify(); },
+            setDoctor(doctor) { this.selectedDoctor = doctor; this.notify(); },
+            setDate(date) { this.selectedDate = date; this.notify(); },
+            setTime(time) { this.selectedTime = time; this.notify(); },
+            setPatientData(data) { this.patientData = { ...this.patientData, ...data }; this.notify(); },
+            setAttachment(file) { this.medicalAttachment = file; this.notify(); },
+            setCallTab(tab) { this.activeCallTab = tab; this.notify(); },
+            setInCall(val) { this.isInCall = val; this.notify(); },
+            addToast(toast) { this.toasts = [...this.toasts, toast]; this.notify(); },
+            removeToast(id) { this.toasts = this.toasts.filter(t => t.id !== id); this.notify(); },
+            openModal(title, message) {
+                return new Promise(resolve => {
+                    this.modal = { open: true, resolve, title, message };
+                    this.notify();
+                });
+            },
+            closeModal(result) {
+                this.modal.open = false;
+                if (this.modal.resolve) this.modal.resolve(result);
+                this.notify();
+            },
+            loadMoreDoctors() {
+                this.displayedDoctorsCount += 3;
+                this.notify();
+            },
+            resetWizard() {
+                this.currentStep = 1;
+                this.selectedDoctor = null;
+                this.selectedDate = null;
+                this.selectedTime = null;
+                this.patientData = {};
+                this.medicalAttachment = null;
+                this.notify();
+            },
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        const Utils = {
+            formatRupiah(num) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+            },
+            formatDate(dateStr) {
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            },
+            formatShortDate(dateStr) {
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+            },
+            getInitials(name) {
+                return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            },
+            generateId() {
+                return 'id-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            },
+            animateCounter(el, target, duration = 1500) {
+                let start = 0;
+                const startTime = performance.now();
+                const animate = (now) => {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.floor(eased * target);
+                    el.textContent = current.toLocaleString('id-ID');
+                    if (progress < 1) requestAnimationFrame(animate);
+                };
+                requestAnimationFrame(animate);
+            },
+            debounce(fn, delay) {
+                let timeoutId;
+                return (...args) => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => fn(...args), delay);
+                };
+            },
+            validateNIK(nik) { return /^\d{16}$/.test(nik); },
+            validatePhone(phone) { return /^08\d{8,11}$/.test(phone); },
+            validateEmail(email) { return !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); },
+        };
+
+        // ============================================
+        // TOAST SYSTEM
+        // ============================================
+        const Toast = {
+            container: null,
+            init() {
+                this.container = document.getElementById('toastContainer');
+            },
+            show(message, type = 'success', duration = 4000) {
+                const id = Utils.generateId();
+                const icons = {
+                    success: 'check-circle',
+                    error: 'alert-circle',
+                    warning: 'alert-triangle',
+                    info: 'info',
+                };
+                const colors = {
+                    success: 'bg-green-500',
+                    error: 'bg-red-500',
+                    warning: 'bg-amber-500',
+                    info: 'bg-blue-500',
+                };
+                const toast = document.createElement('div');
+                toast.id = `toast-${id}`;
+                toast.className = `toast-enter flex items-center gap-3 px-4 py-3 rounded-xl ${colors[type]} text-white shadow-lg min-w-[280px] max-w-md animate-fade-in`;
+                toast.innerHTML = `
+                    <i data-lucide="${icons[type]}" class="h-5 w-5 flex-shrink-0"></i>
+                    <p class="text-sm font-medium flex-1">${message}</p>
+                    <button class="text-white/80 hover:text-white transition-opacity" aria-label="Tutup" onclick="Toast.dismiss('${id}')">
+                        <i data-lucide="x" class="h-4 w-4"></i>
+                    </button>
+                `;
+                this.container.appendChild(toast);
+                lucide.createIcons({ nodes: [toast] });
+                
+                setTimeout(() => this.dismiss(id), duration);
+                return id;
+            },
+            dismiss(id) {
+                const toast = document.getElementById(`toast-${id}`);
+                if (toast) {
+                    toast.classList.remove('toast-enter');
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            },
+            success(msg, dur) { return this.show(msg, 'success', dur); },
+            error(msg, dur) { return this.show(msg, 'error', dur); },
+            warning(msg, dur) { return this.show(msg, 'warning', dur); },
+            info(msg, dur) { return this.show(msg, 'info', dur); },
+        };
+
+        // ============================================
+        // MODAL SYSTEM
+        // ============================================
+        const Modal = {
+            el: null,
+            init() {
+                this.el = document.getElementById('confirmModal');
+                document.getElementById('modalBackdrop').addEventListener('click', () => this.close(false));
+                document.getElementById('modalClose').addEventListener('click', () => this.close(false));
+                document.getElementById('modalCancel').addEventListener('click', () => this.close(false));
+                document.getElementById('modalConfirm').addEventListener('click', () => this.close(true));
+            },
+            open(title, message) {
+                return new Promise(resolve => {
+                    document.getElementById('modalTitle').textContent = title;
+                    document.getElementById('modalMessage').textContent = message;
+                    this.el.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    this.resolve = resolve;
+                });
+            },
+            close(result) {
+                this.el.classList.add('hidden');
+                document.body.style.overflow = '';
+                if (this.resolve) this.resolve(result);
+            },
+        };
+
+        // ============================================
+        // RENDER ENGINE
+        // ============================================
+        const Render = {
+            // Render doctor cards
+            doctors() {
+                const container = document.getElementById('doctorsGrid');
+                const filtered = State.activeFilter === 'all' 
+                    ? MockData.doctors 
+                    : MockData.doctors.filter(d => d.specialty === State.activeFilter);
+                
+                const displayed = filtered.slice(0, State.displayedDoctorsCount);
+                const hasMore = filtered.length > State.displayedDoctorsCount;
+                
+                container.innerHTML = displayed.map((doc, idx) => `
+                    <article class="doctor-card bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl hover:border-primary-200 transition-all duration-300 animate-slide-up" style="animation-delay: ${idx * 0.05}s" data-doctor-id="${doc.id}">
+                        <div class="relative h-48 bg-gradient-to-br from-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-100 to-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-50 flex items-center justify-center">
+                            <div class="w-24 h-24 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                                <i data-lucide="${MockData.specialties.find(s => s.id === doc.specialty)?.icon || 'user'}" class="h-10 w-10 text-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-600"></i>
+                            </div>
+                        </div>
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <h3 class="font-display font-bold text-slate-900">${doc.name}</h3>
+                                    <p class="text-sm text-slate-500">${doc.title}</p>
+                                </div>
+                                <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                    <i data-lucide="star" class="h-4 w-4 fill-current"></i>
+                                    <span class="font-semibold">${doc.rating}</span>
+                                    <span class="text-slate-400">(${doc.reviews})</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-slate-600">
+                                <span class="flex items-center gap-1"><i data-lucide="building-2" class="h-3.5 w-3.5"></i>${doc.hospital}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="briefcase" class="h-3.5 w-3.5"></i>${doc.experience} thn</span>
+                            </div>
+                            <p class="text-sm text-slate-500 line-clamp-2">${doc.bio}</p>
+                            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                                <span class="font-display font-bold text-lg text-primary-600">${Utils.formatRupiah(doc.fee)}</span>
+                                <span class="text-xs text-slate-500">/konsultasi</span>
+                            </div>
+                            <button class="btn-book-doctor w-full py-2.5 rounded-xl bg-primary-50 text-primary-700 font-semibold hover:bg-primary-100 transition-all flex items-center justify-center gap-2" data-doctor-id="${doc.id}">
+                                <i data-lucide="calendar-plus" class="h-4 w-4"></i> Pilih & Booking
+                            </button>
+                        </div>
+                    </article>
+                `).join('');
+
+                // Load more button
+                document.getElementById('loadMoreBtn').classList.toggle('hidden', !hasMore);
+                document.getElementById('loadText').textContent = hasMore ? `Muat ${Math.min(3, filtered.length - State.displayedDoctorsCount)} Dokter Lainnya` : 'Semua Dokter Ditampilkan';
+
+                lucide.createIcons({ nodes: [container] });
+                this.bindDoctorCards();
+            },
+
+            bindDoctorCards() {
+                document.querySelectorAll('.btn-book-doctor').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const doctorId = btn.dataset.doctorId;
+                        const doctor = MockData.doctors.find(d => d.id === doctorId);
+                        if (doctor) {
+                            State.setDoctor(doctor);
+                            State.setStep(2);
+                            // Scroll to booking section
+                            document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // Update wizard to step 2
+                            setTimeout(() => Render.wizard(), 100);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.doctor-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('.btn-book-doctor')) return;
+                        const doctorId = card.dataset.doctorId;
+                        const doctor = MockData.doctors.find(d => d.id === doctorId);
+                        if (doctor) Render.doctorDetailModal(doctor);
+                    });
+                });
+            },
+
+            // Doctor detail modal
+            doctorDetailModal(doctor) {
+                const spec = MockData.specialties.find(s => s.id === doctor.specialty);
+                const modalHtml = `
+                    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" id="docDetailModal">
+                        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scale-in">
+                            <div class="relative h-48 bg-gradient-to-br from-${spec.color}-100 to-${spec.color}-50">
+                                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+                                    <div class="w-28 h-28 rounded-full bg-white flex items-center justify-center shadow-xl border-4 border-white">
+                                        <i data-lucide="${spec.icon}" class="h-12 w-12 text-${spec.color}-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-16 px-6 pb-6 space-y-4">
+                                <div class="text-center">
+                                    <h3 class="font-display text-2xl font-bold text-slate-900">${doctor.name}</h3>
+                                    <p class="text-${spec.color}-600 font-medium">${doctor.title}</p>
+                                    <div class="flex items-center justify-center gap-4 mt-2 text-sm text-slate-600">
+                                        <span class="flex items-center gap-1"><i data-lucide="building-2" class="h-4 w-4"></i>${doctor.hospital}</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="star" class="h-4 w-4 fill-current text-amber-500"></i>${doctor.rating} (${doctor.reviews} ulasan)</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="briefcase" class="h-4 w-4"></i>${doctor.experience} thn</span>
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-100 pt-4">
+                                    <h4 class="font-semibold text-slate-900 mb-2">Tentang Dokter</h4>
+                                    <p class="text-slate-600">${doctor.bio}</p>
+                                    <h4 class="font-semibold text-slate-900 mb-2 mt-4">Pendidikan</h4>
+                                    <ul class="space-y-1 text-sm text-slate-600">
+                                        ${doctor.education.map(e => `<li class="flex items-center gap-2"><i data-lucide="graduation-cap" class="h-3.5 w-3.5 text-${spec.color}-500"></i>${e}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                <div class="border-t border-slate-100 pt-4">
+                                    <h4 class="font-semibold text-slate-900 mb-3">Biaya Konsultasi</h4>
+                                    <div class="flex items-center justify-between text-lg">
+                                        <span class="text-slate-600">Konsultasi</span>
+                                        <span class="font-display font-bold text-${spec.color}-600">${Utils.formatRupiah(doctor.fee)}</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 pt-4 border-t border-slate-100">
+                                    <button class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition-all" onclick="document.getElementById('docDetailModal').remove()">
+                                        Tutup
+                                    </button>
+                                    <button class="flex-1 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all" onclick="startBookingFromModal('${doctor.id}')">
+                                        <i data-lucide="calendar-plus" class="h-4 w-4 inline-block mr-2"></i> Booking Sekarang
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                lucide.createIcons({ nodes: [document.getElementById('docDetailModal')] });
+                
+                // Close on backdrop click
+                document.getElementById('docDetailModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'docDetailModal') e.target.remove();
+                });
+            },
+
+            // Filter tabs
+            filterTabs() {
+                document.querySelectorAll('.filter-tab').forEach(btn => {
+                    const isActive = btn.dataset.filter === State.activeFilter;
+                    btn.classList.toggle('bg-primary-50', isActive);
+                    btn.classList.toggle('text-primary-700', isActive);
+                    btn.classList.toggle('border-primary-200', isActive);
+                    btn.classList.toggle('shadow-sm', isActive);
+                    btn.classList.toggle('text-slate-600', !isActive);
+                    btn.classList.toggle('border-slate-200', !isActive);
+                    btn.setAttribute('aria-selected', isActive);
+                });
+            },
+
+            // Wizard progress
+            wizardProgress() {
+                const steps = document.querySelectorAll('.wizard-step');
+                const progressBar = document.getElementById('progressBar');
+                const progressBarMobile = document.getElementById('progressBarMobile');
+                
+                steps.forEach(step => {
+                    const stepNum = parseInt(step.dataset.step);
+                    const circle = step.querySelector('.step-circle');
+                    
+                    step.classList.toggle('active', stepNum === State.currentStep);
+                    step.classList.toggle('completed', stepNum < State.currentStep);
+                    
+                    if (stepNum < State.currentStep) {
+                        circle.innerHTML = '<i data-lucide="check" class="h-5 w-5"></i>';
+                    } else {
+                        circle.textContent = stepNum;
+                    }
+                });
+                
+                const progress = ((State.currentStep - 1) / 3) * 100;
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressBarMobile) progressBarMobile.style.width = `${progress}%`;
+                
+                lucide.createIcons({ nodes: document.querySelectorAll('.step-circle') });
+            },
+
+            // Wizard panels
+            wizard() {
+                // Hide all panels
+                document.querySelectorAll('.wizard-panel').forEach(p => p.classList.add('hidden'));
+                // Show current
+                document.getElementById(`step${State.currentStep}`)?.classList.remove('hidden');
+                
+                this.wizardProgress();
+                
+                // Render step-specific content
+                switch (State.currentStep) {
+                    case 1: this.step1Doctors(); break;
+                    case 2: this.step2Calendar(); break;
+                    case 3: this.step3Form(); break;
+                    case 4: this.step4ETicket(); break;
+                }
+            },
+
+            // Step 1: Doctor selection in wizard
+            step1Doctors() {
+                const container = document.getElementById('doctorSelectionList');
+                const filtered = State.activeFilter === 'all' 
+                    ? MockData.doctors 
+                    : MockData.doctors.filter(d => d.specialty === State.activeFilter);
+                
+                container.innerHTML = filtered.map(doc => `
+                    <label class="doctor-select-option relative cursor-pointer" data-doctor-id="${doc.id}">
+                        <input type="radio" name="wizardDoctor" value="${doc.id}" class="absolute inset-0 opacity-0" ${State.selectedDoctor?.id === doc.id ? 'checked' : ''}>
+                        <div class="relative p-4 rounded-2xl border-2 transition-all ${State.selectedDoctor?.id === doc.id ? 'border-primary-500 bg-primary-50' : 'border-slate-200 hover:border-primary-300'}">
+                            <div class="flex items-start gap-4">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-100 to-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-50 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="${MockData.specialties.find(s => s.id === doc.specialty)?.icon || 'user'}" class="h-6 w-6 text-${doc.specialty === 'gigi' ? 'primary' : doc.specialty === 'jantung' ? 'rose' : doc.specialty === 'anak' ? 'amber' : doc.specialty === 'kulit' ? 'emerald' : doc.specialty === 'mata' ? 'violet' : doc.specialty === 'saraf' ? 'indigo' : 'accent'}-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <div>
+                                            <h4 class="font-semibold text-slate-900 truncate">${doc.name}</h4>
+                                            <p class="text-sm text-slate-500">${doc.title}</p>
+                                            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1"><i data-lucide="building-2" class="h-3 w-3"></i>${doc.hospital}</p>
+                                        </div>
+                                        <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                            <i data-lucide="star" class="h-3.5 w-3.5 fill-current"></i>
+                                            <span>${doc.rating}</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-2 flex items-center gap-3 text-sm text-slate-600">
+                                        <span class="flex items-center gap-1"><i data-lucide="briefcase" class="h-3.5 w-3.5"></i>${doc.experience} thn pengalaman</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="users" class="h-3.5 w-3.5"></i>${doc.reviews} pasien</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-display font-bold text-lg text-primary-600">${Utils.formatRupiah(doc.fee)}</p>
+                                    <p class="text-xs text-slate-500">/konsultasi</p>
+                                </div>
+                            </div>
+                            <!-- Selection indicator -->
+                            <div class="absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${State.selectedDoctor?.id === doc.id ? 'bg-primary-500 border-primary-500 text-white' : 'border-slate-300'}">
+                                ${State.selectedDoctor?.id === doc.id ? '<i data-lucide="check" class="h-3.5 w-3.5"></i>' : ''}
+                            </div>
+                        </div>
+                    </label>
+                `).join('');
+
+                // Bind radio selection
+                document.querySelectorAll('.doctor-select-option input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const doctorId = e.target.value;
+                        const doctor = MockData.doctors.find(d => d.id === doctorId);
+                        State.setDoctor(doctor);
+                        document.getElementById('nextStep1').disabled = false;
+                        document.getElementById('nextStep1').classList.remove('bg-slate-200', 'text-slate-500');
+                        document.getElementById('nextStep1').classList.add('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'shadow-lg', 'hover:shadow-primary-500/25');
+                        Render.step1Doctors(); // Re-render to update selection
+                    });
+                });
+
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            // Step 2: Calendar & Time Slots
+            step2Calendar() {
+                if (!State.selectedDoctor) {
+                    State.setStep(1);
+                    return;
+                }
+
+                // Update summary
+                this.updateDoctorSummary();
+                
+                // Render calendar
+                this.renderCalendar();
+                
+                // Render time slots for selected date
+                this.renderTimeSlots();
+                
+                // Update next button
+                const nextBtn = document.getElementById('nextStep2');
+                if (State.selectedDate && State.selectedTime) {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('bg-slate-200', 'text-slate-500');
+                    nextBtn.classList.add('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'shadow-lg', 'hover:shadow-primary-500/25');
+                } else {
+                    nextBtn.disabled = true;
+                    nextBtn.classList.add('bg-slate-200', 'text-slate-500');
+                    nextBtn.classList.remove('bg-primary-600', 'text-white', 'hover:bg-primary-700', 'shadow-lg', 'hover:shadow-primary-500/25');
+                }
+            },
+
+            updateDoctorSummary() {
+                const doc = State.selectedDoctor;
+                const spec = MockData.specialties.find(s => s.id === doc.specialty);
+                const container = document.getElementById('selectedDoctorSummary');
+                
+                container.innerHTML = `
+                    <div class="flex items-start gap-3 p-3 bg-white rounded-xl border border-slate-100">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-${spec.color}-100 to-${spec.color}-50 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="${spec.icon}" class="h-5 w-5 text-${spec.color}-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-slate-900 truncate">${doc.name}</p>
+                            <p class="text-sm text-${spec.color}-600">${doc.title}</p>
+                            <p class="text-xs text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="building-2" class="h-3 w-3"></i>${doc.hospital}</p>
+                        </div>
+                    </div>
+                    ${State.selectedDate ? `
+                    <div class="p-3 bg-primary-50 rounded-xl border border-primary-100 flex items-center gap-3">
+                        <i data-lucide="calendar-clock" class="h-5 w-5 text-primary-600 flex-shrink-0"></i>
+                        <div>
+                            <p class="text-sm font-medium text-primary-800">${Utils.formatDate(State.selectedDate)}</p>
+                            <p class="text-xs text-primary-600">${State.selectedTime} WIB</p>
+                        </div>
+                    </div>
+                    ` : ''}
+                `;
+                
+                // Update fees
+                document.getElementById('consultFee').textContent = Utils.formatRupiah(doc.fee);
+                const total = doc.fee + 15000;
+                document.getElementById('totalFee').textContent = Utils.formatRupiah(total);
+                
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            renderCalendar() {
+                const container = document.getElementById('calendarContainer');
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                // Get next 30 days
+                const days = [];
+                for (let i = 0; i < 30; i++) {
+                    const d = new Date(today);
+                    d.setDate(today.getDate() + i);
+                    days.push(d);
+                }
+                
+                // Group by week
+                const weeks = [];
+                let currentWeek = [];
+                days.forEach((day, idx) => {
+                    if (idx === 0) {
+                        // Pad start of first week
+                        for (let i = 0; i < day.getDay(); i++) {
+                            currentWeek.push(null);
+                        }
+                    }
+                    currentWeek.push(day);
+                    if (day.getDay() === 6 || idx === days.length - 1) {
+                        // Pad end of week
+                        while (currentWeek.length < 7) currentWeek.push(null);
+                        weeks.push(currentWeek);
+                        currentWeek = [];
+                    }
+                });
+                
+                const doc = State.selectedDoctor;
+                const bookedSlots = doc.bookedSlots || {};
+                
+                container.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-center" role="grid" aria-label="Kalender konsultasi">
+                            <thead>
+                                <tr class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                    ${['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map(d => `<th class="py-2">${d}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${weeks.map(week => `
+                                    <tr>
+                                        ${week.map(day => {
+                                            if (!day) return '<td class="py-2"></td>';
+                                            const dateStr = day.toISOString().split('T')[0];
+                                            const isToday = dateStr === today.toISOString().split('T')[0];
+                                            const isSelected = dateStr === State.selectedDate;
+                                            const hasSlots = doc.schedule[dateStr] && doc.schedule[dateStr].length > 0;
+                                            const isPast = day < today;
+                                            const isFullyBooked = hasSlots && doc.schedule[dateStr].every(t => bookedSlots[dateStr]?.includes(t));
+                                            
+                                            let classes = 'relative p-1';
+                                            let btnClasses = 'w-10 h-10 mx-auto rounded-full text-sm font-medium transition-all';
+                                            
+                                            if (isPast || !hasSlots) {
+                                                btnClasses += ' text-slate-300 cursor-not-allowed';
+                                            } else if (isFullyBooked) {
+                                                btnClasses += ' text-slate-400 cursor-not-allowed relative';
+                                            } else if (isSelected) {
+                                                btnClasses += ' bg-primary-600 text-white shadow-lg';
+                                            } else if (isToday) {
+                                                btnClasses += ' bg-primary-100 text-primary-700 font-bold';
+                                            } else {
+                                                btnClasses += ' text-slate-700 hover:bg-primary-50 hover:text-primary-600';
+                                            }
+                                            
+                                            return `
+                                                <td class="${classes}">
+                                                    ${!isPast && hasSlots && !isFullyBooked ? `
+                                                        <button class="cal-day-btn ${btnClasses}" data-date="${dateStr}" ${isPast || !hasSlots || isFullyBooked ? 'disabled' : ''} aria-label="${Utils.formatDate(dateStr)} ${isToday ? '(Hari ini)' : ''}">
+                                                            ${day.getDate()}
+                                                            ${isFullyBooked ? '<span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-red-400"></span>' : ''}
+                                                        </button>
+                                                    ` : `
+                                                        <span class="${btnClasses}">${day.getDate()}</span>
+                                                    `}
+                                                </td>
+                                            `;
+                                        }).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3 text-center">
+                        <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary-100"></span> Hari ini</span>
+                        <span class="inline-flex items-center gap-1 ml-3"><span class="w-2 h-2 rounded-full bg-primary-600"></span> Dipilih</span>
+                        <span class="inline-flex items-center gap-1 ml-3"><span class="w-2 h-2 rounded-full bg-red-400"></span> Penuh</span>
+                    </p>
+                `;
+                
+                // Bind calendar days
+                document.querySelectorAll('.cal-day-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        State.setDate(btn.dataset.date);
+                        State.setTime(null); // Reset time when date changes
+                        Render.step2Calendar();
+                    });
+                });
+            },
+
+            renderTimeSlots() {
+                const container = document.getElementById('timeSlotsContainer');
+                const doc = State.selectedDoctor;
+                
+                if (!State.selectedDate) {
+                    container.innerHTML = '<p class="text-slate-500 text-center py-8">Pilih tanggal terlebih dahulu</p>';
+                    return;
+                }
+                
+                const slots = doc.schedule[State.selectedDate] || [];
+                const booked = doc.bookedSlots[State.selectedDate] || [];
+                
+                if (slots.length === 0) {
+                    container.innerHTML = '<p class="text-slate-500 text-center py-8">Dokter tidak praktik pada tanggal ini</p>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="flex flex-wrap gap-2" role="listbox" aria-label="Slot waktu tersedia">
+                        ${slots.map(time => {
+                            const isBooked = booked.includes(time);
+                            const isSelected = time === State.selectedTime;
+                            return `
+                                <button class="slot-btn px-4 py-2.5 rounded-xl text-sm font-medium border transition-all min-w-[80px] ${isBooked ? 'booked' : 'available'} ${isSelected ? 'selected' : ''}" 
+                                        data-time="${time}" 
+                                        ${isBooked ? 'disabled' : ''}
+                                        role="option"
+                                        aria-selected="${isSelected}"
+                                        aria-disabled="${isBooked}">
+                                    ${time}
+                                    ${isBooked ? '<i data-lucide="lock" class="h-3 w-3 inline-block ml-1"></i>' : ''}
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    ${slots.every(t => booked.includes(t)) ? '<p class="text-xs text-red-500 text-center mt-2">Semua slot sudah terisi untuk hari ini</p>' : ''}
+                `;
+                
+                // Bind time slots
+                document.querySelectorAll('.slot-btn:not(.booked)').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        State.setTime(btn.dataset.time);
+                        Render.step2Calendar();
+                    });
+                });
+                
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            // Step 3: Patient Form
+            step3Form() {
+                if (!State.selectedDoctor || !State.selectedDate || !State.selectedTime) {
+                    State.setStep(1);
+                    return;
+                }
+                
+                // Prefill form from state
+                const form = document.getElementById('patientForm');
+                Object.entries(State.patientData).forEach(([key, value]) => {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) input.value = value;
+                });
+                
+                // Restore attachment preview
+                if (State.medicalAttachment) {
+                    this.showAttachmentPreview(State.medicalAttachment);
+                }
+                
+                // Validate form on input
+                this.bindFormValidation();
+            },
+
+            bindFormValidation() {
+                const form = document.getElementById('patientForm');
+                const requiredFields = ['patientName', 'patientNIK', 'patientPhone', 'patientDOB', 'patientGender', 'chiefComplaint'];
+                
+                const validate = () => {
+                    let valid = true;
+                    requiredFields.forEach(field => {
+                        const input = form.querySelector(`[name="${field}"]`);
+                        const errorEl = document.getElementById(`${field}Error`);
+                        if (input) {
+                            let fieldValid = true;
+                            if (field === 'patientNIK') fieldValid = Utils.validateNIK(input.value);
+                            else if (field === 'patientPhone') fieldValid = Utils.validatePhone(input.value);
+                            else if (field === 'patientEmail') fieldValid = Utils.validateEmail(input.value);
+                            else fieldValid = input.value.trim() !== '';
+                            
+                            if (!fieldValid) {
+                                input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20');
+                                input.classList.remove('border-slate-200', 'focus:border-primary-500', 'focus:ring-primary-500/20');
+                                errorEl?.classList.remove('hidden');
+                                valid = false;
+                            } else {
+                                input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20');
+                                input.classList.add('border-slate-200', 'focus:border-primary-500', 'focus:ring-primary-500/20');
+                                errorEl?.classList.add('hidden');
+                            }
+                        }
+                    });
+                    
+                    const nextBtn = document.getElementById('nextStep3');
+                    if (valid) {
+                        nextBtn.disabled = false;
+                        nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        nextBtn.disabled = true;
+                        nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                };
+                
+                // Real-time validation
+                requiredFields.forEach(field => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    if (input) {
+                        input.addEventListener('input', validate);
+                        input.addEventListener('change', validate);
+                    }
+                });
+                
+                // Attachment handling
+                const attachInput = document.getElementById('medicalAttachment');
+                const dropzone = document.getElementById('attachmentDropzone');
+                const preview = document.getElementById('attachmentPreview');
+                
+                attachInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                            Toast.error('Ukuran file maksimal 5MB');
+                            attachInput.value = '';
+                            return;
+                        }
+                        State.setAttachment(file);
+                        this.showAttachmentPreview(file);
+                    }
+                });
+                
+                // Drag & drop
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(evt => {
+                    dropzone.addEventListener(evt, e => { e.preventDefault(); e.stopPropagation(); });
+                });
+                ['dragenter', 'dragover'].forEach(evt => {
+                    dropzone.addEventListener(evt, () => dropzone.classList.add('border-primary-400', 'bg-primary-50'));
+                });
+                ['dragleave', 'drop'].forEach(evt => {
+                    dropzone.addEventListener(evt, () => dropzone.classList.remove('border-primary-400', 'bg-primary-50'));
+                });
+                dropzone.addEventListener('drop', (e) => {
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                            Toast.error('Ukuran file maksimal 5MB');
+                            return;
+                        }
+                        attachInput.files = e.dataTransfer.files;
+                        State.setAttachment(file);
+                        this.showAttachmentPreview(file);
+                    }
+                });
+                
+                document.getElementById('removeAttachment').addEventListener('click', () => {
+                    State.setAttachment(null);
+                    attachInput.value = '';
+                    dropzone.classList.remove('hidden');
+                    preview.classList.add('hidden');
+                });
+                
+                validate();
+            },
+
+            showAttachmentPreview(file) {
+                const dropzone = document.getElementById('attachmentDropzone');
+                const preview = document.getElementById('attachmentPreview');
+                dropzone.classList.add('hidden');
+                preview.classList.remove('hidden');
+                document.getElementById('attachFileName').textContent = file.name;
+                document.getElementById('attachFileSize').textContent = `${(file.size / 1024).toFixed(1)} KB`;
+            },
+
+            // Step 4: E-Ticket
+            step4ETicket() {
+                if (!State.selectedDoctor || !State.patientData.patientName) {
+                    State.setStep(1);
+                    return;
+                }
+                
+                const container = document.getElementById('eticketContainer');
+                const doc = State.selectedDoctor;
+                const spec = MockData.specialties.find(s => s.id === doc.specialty);
+                const bookingId = 'MC-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+                const bookingDate = new Date();
+                
+                // Save booking to localStorage
+                const booking = {
+                    id: bookingId,
+                    date: State.selectedDate,
+                    time: State.selectedTime,
+                    doctor: doc.name,
+                    specialty: doc.specialty,
+                    hospital: doc.hospital,
+                    patient: State.patientData,
+                    fee: doc.fee + 15000,
+                    status: 'Confirmed',
+                    type: 'Online',
+                    createdAt: bookingDate.toISOString(),
+                };
+                
+                const sessions = MockData.getUpcomingSessions();
+                sessions.unshift(booking);
+                MockData.saveUpcomingSessions(sessions);
+                
+                container.innerHTML = `
+                    <div class="bg-white border-2 border-slate-200 rounded-2xl overflow-hidden animate-slide-up">
+                        <!-- Ticket Header -->
+                        <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-5 text-white relative overflow-hidden">
+                            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+                            <div class="relative flex items-center justify-between">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i data-lucide="ticket" class="h-6 w-6"></i>
+                                        <span class="font-display font-bold text-xl">E-TIKET KONSULTASI</span>
+                                    </div>
+                                    <p class="text-primary-100 text-sm">MediConnect Telemedicine Portal</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs text-primary-200 uppercase tracking-wider">Booking ID</p>
+                                    <p class="font-mono font-bold text-lg">${bookingId}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ticket Body -->
+                        <div class="p-6 space-y-5">
+                            <!-- Doctor Info -->
+                            <div class="flex items-start gap-4 p-4 bg-primary-50 rounded-xl border border-primary-100">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-${spec.color}-100 to-${spec.color}-50 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="${spec.icon}" class="h-7 w-7 text-${spec.color}-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-display font-bold text-slate-900">${doc.name}</h4>
+                                    <p class="text-${spec.color}-600 font-medium">${doc.title}</p>
+                                    <p class="text-sm text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="building-2" class="h-3.5 w-3.5"></i>${doc.hospital}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-display font-bold text-lg text-primary-600">${Utils.formatRupiah(doc.fee)}</p>
+                                    <p class="text-xs text-slate-500">Biaya Konsultasi</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Schedule Info -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <i data-lucide="calendar" class="h-3.5 w-3.5"></i> Tanggal
+                                    </p>
+                                    <p class="font-semibold text-slate-900">${Utils.formatDate(State.selectedDate)}</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <i data-lucide="clock" class="h-3.5 w-3.5"></i> Waktu
+                                    </p>
+                                    <p class="font-semibold text-slate-900">${State.selectedTime} WIB</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <i data-lucide="user" class="h-3.5 w-3.5"></i> Pasien
+                                    </p>
+                                    <p class="font-semibold text-slate-900">${State.patientData.patientName}</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <i data-lucide="phone" class="h-3.5 w-3.5"></i> Kontak
+                                    </p>
+                                    <p class="font-semibold text-slate-900">${State.patientData.patientPhone}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Summary -->
+                            <div class="border-t border-slate-100 pt-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-600">Biaya Konsultasi</span>
+                                    <span class="font-medium text-slate-900">${Utils.formatRupiah(doc.fee)}</span>
+                                </div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-600">Biaya Admin Platform</span>
+                                    <span class="font-medium text-slate-900">${Utils.formatRupiah(15000)}</span>
+                                </div>
+                                <div class="flex justify-between text-sm mb-1 text-slate-400">
+                                    <span>Diskon Promo</span>
+                                    <span class="text-green-600">-${Utils.formatRupiah(0)}</span>
+                                </div>
+                                <div class="border-t border-slate-100 pt-2 flex justify-between font-bold text-lg text-slate-900">
+                                    <span>Total Dibayar</span>
+                                    <span class="text-primary-600">${Utils.formatRupiah(doc.fee + 15000)}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- QR Code Placeholder -->
+                            <div class="text-center py-4">
+                                <div class="inline-block p-3 bg-slate-100 rounded-xl">
+                                    <div class="w-32 h-32 bg-white rounded-lg flex items-center justify-center border border-slate-200">
+                                        <div class="text-center text-slate-400">
+                                            <i data-lucide="qr-code" class="h-8 w-8 mx-auto mb-1"></i>
+                                            <p class="text-xs">QR Code</p>
+                                            <p class="text-[10px] font-mono">${bookingId}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-2">Tunjukkan QR ini saat check-in</p>
+                            </div>
+                            
+                            <!-- Important Notes -->
+                            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                                <h5 class="font-semibold text-amber-800 mb-2 flex items-center gap-2"><i data-lucide="alert-triangle" class="h-5 w-5"></i> Perhatian</h5>
+                                <ul class="text-sm text-amber-700 space-y-1">
+                                    <li class="flex items-start gap-2"><i data-lucide="check" class="h-3.5 w-3.5 flex-shrink-0 mt-0.5"></i> Datang/join 10 menit sebelum jadwal</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="check" class="h-3.5 w-3.5 flex-shrink-0 mt-0.5"></i> Siapkan KTP & kartu BPJS (jika berlaku)</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="check" class="h-3.5 w-3.5 flex-shrink-0 mt-0.5"></i> Untuk telekonsultasi, link video call akan dikirim ke WhatsApp</li>
+                                    <li class="flex items-start gap-2"><i data-lucide="check" class="h-3.5 w-3.5 flex-shrink-0 mt-0.5"></i> Pembatalan maksimal 2 jam sebelum jadwal</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            // Upcoming Sessions
+            upcomingSessions() {
+                const container = document.getElementById('upcomingSessions');
+                const sessions = MockData.getUpcomingSessions();
+                
+                if (sessions.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-12 text-slate-500">
+                            <i data-lucide="calendar-x" class="h-12 w-12 mx-auto text-slate-300 mb-3"></i>
+                            <p class="font-medium">Belum ada jadwal konsultasi</p>
+                            <p class="text-sm mt-1">Booking konsultasi pertama Anda</p>
+                            <button onclick="document.getElementById('booking').scrollIntoView({behavior: 'smooth'})" class="mt-4 px-4 py-2 text-sm bg-primary-50 text-primary-700 rounded-xl hover:bg-primary-100 transition-all">
+                                Mulai Booking
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = sessions.map(session => {
+                    const spec = MockData.specialties.find(s => s.id === session.specialty);
+                    const sessionDate = new Date(session.date + 'T' + session.time);
+                    const isUpcoming = sessionDate > new Date();
+                    return `
+                        <article class="session-card bg-white rounded-2xl border border-slate-100 p-4 hover:shadow-lg hover:border-primary-200 transition-all ${!isUpcoming ? 'opacity-60' : ''}" data-session-id="${session.id}">
+                            <div class="flex items-start gap-3">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-${spec.color}-100 to-${spec.color}-50 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="${spec.icon}" class="h-5 w-5 text-${spec.color}-600"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h5 class="font-semibold text-slate-900 truncate">${session.doctor}</h5>
+                                        <span class="text-xs px-2 py-1 rounded-full ${isUpcoming ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}">${isUpcoming ? 'Mendatang' : 'Selesai'}</span>
+                                    </div>
+                                    <p class="text-sm text-${spec.color}-600">${session.specialty} • ${session.hospital}</p>
+                                    <div class="flex items-center gap-3 mt-2 text-sm text-slate-500">
+                                        <span class="flex items-center gap-1"><i data-lucide="calendar" class="h-3.5 w-3.5"></i>${Utils.formatShortDate(session.date)}</span>
+                                        <span class="flex items-center gap-1"><i data-lucide="clock" class="h-3.5 w-3.5"></i>${session.time}</span>
+                                    </div>
+                                    ${isUpcoming ? `
+                                        <div class="mt-3 flex gap-2">
+                                            <button class="btn-join-call flex-1 px-3 py-2 rounded-xl bg-primary-50 text-primary-700 text-sm font-medium hover:bg-primary-100 transition-all flex items-center justify-center gap-1" data-session-id="${session.id}">
+                                                <i data-lucide="video" class="h-3.5 w-3.5"></i> Gabung
+                                            </button>
+                                            <button class="btn-view-ticket px-3 py-2 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-all" data-session-id="${session.id}">
+                                                <i data-lucide="ticket" class="h-3.5 w-3.5"></i>
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+                
+                // Bind session buttons
+                document.querySelectorAll('.btn-join-call').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const session = sessions.find(s => s.id === btn.dataset.sessionId);
+                        if (session) Teleconsult.startSession(session);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-view-ticket').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const session = sessions.find(s => s.id === btn.dataset.sessionId);
+                        if (session) Render.showETicketModal(session);
+                    });
+                });
+                
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            // Medical Records
+            medicalRecords() {
+                const container = document.getElementById('recordsList');
+                const records = MockData.getMedicalRecords();
+                
+                if (records.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-12 text-slate-500">
+                            <i data-lucide="file-heart" class="h-12 w-12 mx-auto text-slate-300 mb-3"></i>
+                            <p class="font-medium">Belum ada rekam medis</p>
+                            <p class="text-sm mt-1">Rekam medis akan muncul setelah konsultasi</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = records.map((record, idx) => {
+                    const spec = MockData.specialties.find(s => s.name.toLowerCase() === record.specialty.toLowerCase());
+                    return `
+                        <article class="record-card bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:border-primary-200 transition-all animate-slide-up" style="animation-delay: ${idx * 0.05}s">
+                            <div class="p-6">
+                                <div class="flex items-start justify-between gap-4 mb-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-${spec?.color || 'primary'}-100 to-${spec?.color || 'primary'}-50 flex items-center justify-center">
+                                            <i data-lucide="${spec?.icon || 'file-heart'}" class="h-6 w-6 text-${spec?.color || 'primary'}-600"></i>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <h4 class="font-display font-bold text-slate-900">${record.doctor}</h4>
+                                                <span class="text-xs px-2 py-1 rounded-full bg-${spec?.color || 'primary'}-100 text-${spec?.color || 'primary'}-700">${record.specialty}</span>
+                                                <span class="text-xs px-2 py-1 rounded-full ${record.type === 'Online' ? 'bg-accent-100 text-accent-700' : 'bg-primary-100 text-primary-700'}">${record.type}</span>
+                                            </div>
+                                            <p class="text-sm text-slate-500">${Utils.formatDate(record.date)}</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-display font-bold text-primary-600">${Utils.formatRupiah(record.fee)}</p>
+                                        <p class="text-xs text-slate-500">${record.status}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Diagnosa</p>
+                                        <p class="text-slate-900">${record.diagnosis}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tindakan</p>
+                                        <p class="text-slate-900">${record.treatment}</p>
+                                    </div>
+                                </div>
+                                
+                                ${record.prescription && record.prescription.length > 0 ? `
+                                    <div class="mb-4">
+                                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1"><i data-lucide="pill" class="h-3.5 w-3.5"></i> Resep Obat</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${record.prescription.map(med => `<span class="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700">${med}</span>`).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                    <div class="flex items-center gap-3 text-sm text-slate-500">
+                                        ${record.attachment ? `
+                                            <button class="btn-view-attachment flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium" data-attachment="${record.attachment}">
+                                                <i data-lucide="paperclip" class="h-4 w-4"></i> Lihat Lampiran
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button class="btn-download-record px-3 py-2 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-all flex items-center gap-1" data-record-id="${record.id}">
+                                            <i data-lucide="download" class="h-3.5 w-3.5"></i> Unduh PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+                
+                // Bind record buttons
+                document.querySelectorAll('.btn-download-record').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const record = records.find(r => r.id === btn.dataset.recordId);
+                        if (record) this.generateRecordPDF(record);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-view-attachment').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        Toast.info('Fitur pratinjau lampiran (demo)');
+                    });
+                });
+                
+                lucide.createIcons({ nodes: [container] });
+            },
+
+            generateRecordPDF(record) {
+                // Mock PDF generation
+                Toast.success(`Membuat PDF rekam medis ${record.doctor}...`);
+                setTimeout(() => {
+                    Toast.success('PDF berhasil dibuat! (Demo)');
+                }, 1000);
+            },
+
+            showETicketModal(session) {
+                const spec = MockData.specialties.find(s => s.id === session.specialty);
+                const modalHtml = `
+                    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop" id="eticketModal">
+                        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-scale-in">
+                            <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-5 text-white relative">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="ticket" class="h-6 w-6"></i>
+                                        <span class="font-display font-bold text-lg">E-TIKET</span>
+                                    </div>
+                                    <button class="p-1 text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-colors" onclick="document.getElementById('eticketModal').remove()">
+                                        <i data-lucide="x" class="h-5 w-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-6 space-y-4">
+                                <div class="flex items-center gap-3 p-3 bg-primary-50 rounded-xl border border-primary-100">
+                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-${spec.color}-100 to-${spec.color}-50 flex items-center justify-center">
+                                        <i data-lucide="${spec.icon}" class="h-5 w-5 text-${spec.color}-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-slate-900">${session.doctor}</p>
+                                        <p class="text-sm text-${spec.color}-600">${session.specialty}</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                    <div class="p-3 bg-slate-50 rounded-lg"><p class="text-slate-500">Tanggal</p><p class="font-semibold">${Utils.formatDate(session.date)}</p></div>
+                                    <div class="p-3 bg-slate-50 rounded-lg"><p class="text-slate-500">Waktu</p><p class="font-semibold">${session.time}</p></div>
+                                    <div class="p-3 bg-slate-50 rounded-lg"><p class="text-slate-500">Pasien</p><p class="font-semibold">${session.patient.patientName}</p></div>
+                                    <div class="p-3 bg-slate-50 rounded-lg"><p class="text-slate-500">Booking ID</p><p class="font-mono font-semibold text-xs">${session.id}</p></div>
+                                </div>
+                                <div class="border-t border-slate-100 pt-4">
+                                    <div class="flex justify-between font-bold text-lg">
+                                        <span>Total</span>
+                                        <span class="text-primary-600">${Utils.formatRupiah(session.fee)}</span>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 pt-2">
+                                    <button class="flex-1 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all" onclick="Toast.success('PDF e-tiket diunduh (demo)'); document.getElementById('eticketModal').remove()">
+                                        <i data-lucide="download" class="h-4 w-4 inline-block mr-2"></i> Unduh PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                lucide.createIcons({ nodes: [document.getElementById('eticketModal')] });
+                document.getElementById('eticketModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'eticketModal') e.target.remove();
+                });
+            },
+
+            // Full re-render
+            all() {
+                this.doctors();
+                this.filterTabs();
+                this.wizard();
+                this.upcomingSessions();
+                this.medicalRecords();
+            },
+        };
+
+        // ============================================
+        // TELECONSULTATION MOCK
+        // ============================================
+        const Teleconsult = {
+            callTimerInterval: null,
+            
+            startSession(session) {
+                const doc = MockData.doctors.find(d => d.name === session.doctor);
+                State.setInCall(true);
+                
+                // Update UI
+                document.getElementById('callDoctorName').textContent = session.doctor;
+                document.getElementById('callSpecialty').textContent = `${session.specialty} • ${session.hospital}`;
+                document.getElementById('mockDoctorName').textContent = session.doctor;
+                document.getElementById('callTimer').classList.remove('hidden');
+                document.getElementById('preCallControls').classList.add('hidden');
+                document.getElementById('chatInputArea').classList.remove('hidden');
+                document.getElementById('recordingIndicator').classList.remove('hidden');
+                
+                // Start timer
+                State.callSeconds = 0;
+                this.updateTimerDisplay();
+                this.callTimerInterval = setInterval(() => {
+                    State.callSeconds++;
+                    this.updateTimerDisplay();
+                }, 1000);
+                
+                // Simulate connection quality changes
+                this.simulateConnection();
+                
+                Toast.success(`Terhubung ke ${session.doctor}`);
+            },
+            
+            updateTimerDisplay() {
+                const hrs = Math.floor(State.callSeconds / 3600).toString().padStart(2, '0');
+                const mins = Math.floor((State.callSeconds % 3600) / 60).toString().padStart(2, '0');
+                const secs = (State.callSeconds % 60).toString().padStart(2, '0');
+                document.querySelector('#callTimer span').textContent = `${hrs}:${mins}:${secs}`;
+            },
+            
+            simulateConnection() {
+                const qualities = ['Sangat Baik', 'Baik', 'Cukup', 'Kurang'];
+                const icons = ['wifi', 'wifi', 'wifi', 'wifi-off'];
+                let current = 0;
+                
+                const interval = setInterval(() => {
+                    if (!State.isInCall) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    current = (current + 1) % qualities.length;
+                    document.getElementById('connectionQuality').textContent = qualities[current];
+                    document.getElementById('connectionIcon').dataset.lucide = icons[current];
+                    lucide.createIcons({ nodes: [document.getElementById('connectionIcon')] });
+                }, 15000);
+            },
+            
+            endCall() {
+                State.setInCall(false);
+                if (this.callTimerInterval) {
+                    clearInterval(this.callTimerInterval);
+                    this.callTimerInterval = null;
+                }
+                
+                document.getElementById('callTimer').classList.add('hidden');
+                document.getElementById('preCallControls').classList.remove('hidden');
+                document.getElementById('chatInputArea').classList.add('hidden');
+                document.getElementById('recordingIndicator').classList.add('hidden');
+                document.getElementById('callDoctorName').textContent = 'Menunggu sesi...';
+                document.getElementById('callSpecialty').textContent = 'Pilih sesi dari daftar';
+                document.getElementById('mockDoctorName').textContent = 'Dr. Sarah Wijaya';
+                document.getElementById('startCallDemo').classList.remove('hidden');
+                
+                // Reset mic/cam
+                document.getElementById('micIcon').dataset.lucide = 'mic';
+                document.getElementById('camIcon').dataset.lucide = 'video';
+                document.getElementById('toggleMic').classList.remove('bg-red-600/20', 'text-red-400');
+                document.getElementById('toggleCam').classList.remove('bg-red-600/20', 'text-red-400');
+                lucide.createIcons({ nodes: [document.getElementById('micIcon'), document.getElementById('camIcon')] });
+                
+                Toast.info('Konsultasi berakhir');
+            },
+            
+            toggleMic() {
+                const btn = document.getElementById('toggleMic');
+                const icon = document.getElementById('micIcon');
+                const isMuted = btn.classList.toggle('bg-red-600/20');
+                btn.classList.toggle('text-red-400', isMuted);
+                btn.classList.toggle('text-slate-300', !isMuted);
+                icon.dataset.lucide = isMuted ? 'mic-off' : 'mic';
+                lucide.createIcons({ nodes: [icon] });
+                Toast[isMuted ? 'warning' : 'success'](isMuted ? 'Mikrofon dimatikan' : 'Mikrofon diaktifkan');
+            },
+            
+            toggleCam() {
+                const btn = document.getElementById('toggleCam');
+                const icon = document.getElementById('camIcon');
+                const isOff = btn.classList.toggle('bg-red-600/20');
+                btn.classList.toggle('text-red-400', isOff);
+                btn.classList.toggle('text-slate-300', !isOff);
+                icon.dataset.lucide = isOff ? 'video-off' : 'video';
+                lucide.createIcons({ nodes: [icon] });
+                Toast[isOff ? 'warning' : 'success'](isOff ? 'Kamera dimatikan' : 'Kamera diaktifkan');
+            },
+            
+            switchTab(tab) {
+                State.setCallTab(tab);
+                document.querySelectorAll('.call-tab').forEach(btn => {
+                    const isActive = btn.dataset.tab === tab;
+                    btn.classList.toggle('text-white', isActive);
+                    btn.classList.toggle('border-primary-500', isActive);
+                    btn.classList.toggle('text-slate-300', !isActive);
+                    btn.setAttribute('aria-selected', isActive);
+                });
+                document.querySelectorAll('.call-panel').forEach(panel => {
+                    panel.classList.toggle('hidden', panel.id !== `${tab}Panel`);
+                });
+                document.getElementById('chatInputArea').classList.toggle('hidden', tab !== 'chat');
+            },
+            
+            sendChat() {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+                if (!message) return;
+                
+                const chatPanel = document.getElementById('chatPanel');
+                const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                
+                const msgHtml = `
+                    <div class="flex items-start gap-3 justify-end animate-fade-in">
+                        <div class="bg-primary-500 rounded-2xl px-4 py-3 max-w-xs text-white text-sm">
+                            <p>${message}</p>
+                            <span class="text-xs text-primary-100 block mt-1 text-right">${time}</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">PA</div>
+                    </div>
+                `;
+                chatPanel.insertAdjacentHTML('beforeend', msgHtml);
+                chatPanel.scrollTop = chatPanel.scrollHeight;
+                input.value = '';
+                
+                // Simulate doctor reply after 2-4 seconds
+                setTimeout(() => {
+                    const replies = [
+                        'Baik, terima kasih informasinya. Saya akan catat.',
+                        'Apakah ada keluhan lain yang ingin disampaikan?',
+                        'Saya akan berikan resep dan anjuran perawatan.',
+                        'Pertanyaan yang baik. Izinkan saya jelaskan...',
+                    ];
+                    const reply = replies[Math.floor(Math.random() * replies.length)];
+                    const replyTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    const replyHtml = `
+                        <div class="flex items-start gap-3 animate-fade-in">
+                            <div class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DW</div>
+                            <div class="bg-slate-700 rounded-2xl px-4 py-3 max-w-xs">
+                                <p class="text-white text-sm">${reply}</p>
+                                <span class="text-xs text-slate-400 block mt-1">${replyTime}</span>
+                            </div>
+                        </div>
+                    `;
+                    chatPanel.insertAdjacentHTML('beforeend', replyHtml);
+                    chatPanel.scrollTop = chatPanel.scrollHeight;
+                }, 2000 + Math.random() * 2000);
+            },
+        };
+
+        // ============================================
+        // EVENT HANDLERS & INITIALIZATION
+        // ============================================
+        function initEventListeners() {
+            // Mobile menu drawer
+            document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                document.getElementById('mobileDrawer').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            document.getElementById('closeDrawer').addEventListener('click', () => {
+                document.getElementById('mobileDrawer').classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+            document.querySelectorAll('.drawer-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('mobileDrawer').classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Filter tabs
+            document.querySelectorAll('.filter-tab').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    State.setFilter(btn.dataset.filter);
+                    State.displayedDoctorsCount = 6; // Reset load more
+                });
+            });
+
+            // Load more doctors
+            document.getElementById('loadMoreBtn').addEventListener('click', () => {
+                State.loadMoreDoctors();
+            });
+
+            // Wizard navigation
+            document.getElementById('nextStep1').addEventListener('click', () => {
+                if (State.selectedDoctor) State.setStep(2);
+            });
+            document.getElementById('prevStep2').addEventListener('click', () => State.setStep(1));
+            document.getElementById('nextStep2').addEventListener('click', () => {
+                if (State.selectedDate && State.selectedTime) State.setStep(3);
+            });
+            document.getElementById('prevStep3').addEventListener('click', () => State.setStep(2));
+            document.getElementById('nextStep3').addEventListener('click', async () => {
+                const form = document.getElementById('patientForm');
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                State.setPatientData(data);
+                State.setStep(4);
+            });
+            document.getElementById('newBooking').addEventListener('click', () => {
+                State.resetWizard();
+                Render.wizard();
+                document.getElementById('doctors').scrollIntoView({ behavior: 'smooth' });
+            });
+            document.getElementById('downloadTicket').addEventListener('click', () => {
+                Toast.success('E-Tiket PDF diunduh (demo)');
+            });
+
+            // Teleconsultation controls
+            document.getElementById('startCallDemo').addEventListener('click', () => {
+                const sessions = MockData.getUpcomingSessions();
+                if (sessions.length > 0) {
+                    Teleconsult.startSession(sessions[0]);
+                } else {
+                    // Create demo session
+                    const demoSession = {
+                        id: 'demo-1',
+                        doctor: 'Dr. Sarah Wijaya',
+                        specialty: 'Gigi',
+                        hospital: 'RS Medika Permata',
+                        date: new Date().toISOString().split('T')[0],
+                        time: '10:00',
+                        patient: { patientName: 'Pasien Demo' },
+                    };
+                    Teleconsult.startSession(demoSession);
+                }
+            });
+            document.getElementById('endCall').addEventListener('click', () => Teleconsult.endCall());
+            document.getElementById('toggleMic').addEventListener('click', () => Teleconsult.toggleMic());
+            document.getElementById('toggleCam').addEventListener('click', () => Teleconsult.toggleCam());
+            document.querySelectorAll('.call-tab').forEach(btn => {
+                btn.addEventListener('click', () => Teleconsult.switchTab(btn.dataset.tab));
+            });
+            document.getElementById('sendChat').addEventListener('click', () => Teleconsult.sendChat());
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') Teleconsult.sendChat();
+            });
+
+            // Add record demo
+            document.getElementById('addRecordDemo').addEventListener('click', () => {
+                const records = MockData.getMedicalRecords();
+                const newRecord = {
+                    id: 'rec-' + Date.now(),
+                    date: new Date().toISOString().split('T')[0],
+                    doctor: 'Dr. Demo NovaNext',
+                    specialty: 'Umum',
+                    diagnosis: 'Pemeriksaan Rutin',
+                    treatment: 'Konseling gaya hidup sehat',
+                    prescription: ['Vitamin D 1000 IU 1x1'],
+                    attachment: null,
+                    fee: 150000,
+                    status: 'Selesai',
+                    type: 'Demo',
+                };
+                records.unshift(newRecord);
+                MockData.saveMedicalRecords(records);
+                Render.medicalRecords();
+                Toast.success('Rekam medis demo ditambahkan');
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Keyboard navigation for wizard
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.target.matches('.wizard-panel:not(.hidden) button:not(:disabled)')) {
+                    e.target.click();
+                }
+            });
+        }
+
+        // Global functions for inline handlers
+        window.startBookingFromModal = (doctorId) => {
+            const doctor = MockData.doctors.find(d => d.id === doctorId);
+            if (doctor) {
+                State.setDoctor(doctor);
+                State.setStep(2);
+                document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('docDetailModal')?.remove();
+                setTimeout(() => Render.wizard(), 100);
+            }
+        };
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize systems
+            Toast.init();
+            Modal.init();
+            
+            // Subscribe to state changes
+            State.subscribe(() => Render.all());
+            
+            // Initial render
+            Render.all();
+            
+            // Event listeners
+            initEventListeners();
+            
+            // Animate counters
+            document.querySelectorAll('[data-count]').forEach(el => {
+                const target = parseInt(el.dataset.count);
+                Utils.animateCounter(el, target);
+            });
+            
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-slide-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            
+            document.querySelectorAll('section > div > div:not(:first-child)').forEach(el => observer.observe(el));
+            
+            // Welcome toast
+            setTimeout(() => {
+                Toast.success('Selamat datang di MediConnect! Demo prototype by NovaNext', 5000);
+            }, 1000);
+        });
+
+        // Cleanup on unload
+        window.addEventListener('beforeunload', () => {
+            if (Teleconsult.callTimerInterval) clearInterval(Teleconsult.callTimerInterval);
+        });
+    </script>
+</body>
+</html>

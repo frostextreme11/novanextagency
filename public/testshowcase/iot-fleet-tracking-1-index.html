@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#060b16" />
+<title>FleetPulse IoT — Fleet Tracking & Warehouse Dashboard | Demo by NovaNext</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+  html,body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;}
+  body{
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(14,165,233,.14), transparent 60%),
+      radial-gradient(700px 500px at -10% 10%, rgba(16,185,129,.10), transparent 60%),
+      #060b16;
+    background-attachment:fixed;
+    color:#e2e8f0;
+    -webkit-tap-highlight-color:transparent;
+  }
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-thumb{background:#334155;border-radius:99px}
+  ::-webkit-scrollbar-track{background:transparent}
+  .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{scrollbar-width:none}
+
+  .glass{background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .card-hover{transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease}
+  .card-hover:hover{transform:translateY(-3px);border-color:rgba(56,189,248,.35);box-shadow:0 12px 30px -12px rgba(14,165,233,.35)}
+
+  /* Buttons & inputs */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.5rem .8rem;border-radius:.75rem;font-size:.78rem;font-weight:700;background:rgba(30,41,59,.9);border:1px solid rgba(148,163,184,.18);color:#e2e8f0;transition:all .18s ease;cursor:pointer;white-space:nowrap}
+  .btn:hover{background:rgba(51,65,85,.95);border-color:rgba(148,163,184,.35)}
+  .btn:active{transform:scale(.95)}
+  .btn-primary{background:linear-gradient(135deg,#0ea5e9,#2563eb);border-color:transparent;color:#fff;box-shadow:0 8px 20px -8px rgba(14,165,233,.7)}
+  .btn-primary:hover{background:linear-gradient(135deg,#38bdf8,#3b82f6)}
+  .btn-danger{color:#fda4af}.btn-danger:hover{background:rgba(244,63,94,.18);border-color:rgba(244,63,94,.5)}
+  .btn-danger-solid{background:linear-gradient(135deg,#f43f5e,#be123c);border-color:transparent;color:#fff}
+  .btn-sm{padding:.38rem .55rem;font-size:.7rem;border-radius:.6rem}
+  .btn-icon{width:2.4rem;height:2.4rem;padding:0;border-radius:.8rem}
+  .btn.on{background:rgba(14,165,233,.2);border-color:rgba(56,189,248,.6);color:#7dd3fc}
+  .inp{width:100%;background:rgba(2,6,23,.7);border:1px solid rgba(148,163,184,.22);border-radius:.75rem;padding:.6rem .8rem;font-size:.875rem;color:#f1f5f9;outline:none;transition:border-color .2s, box-shadow .2s}
+  .inp:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+  select.inp option{background:#0f172a}
+  .lbl{display:block;font-size:.7rem;font-weight:700;color:#94a3b8;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+
+  .chip{padding:.35rem .75rem;border-radius:99px;font-size:.72rem;font-weight:700;background:rgba(15,23,42,.85);border:1px solid rgba(148,163,184,.2);color:#94a3b8;cursor:pointer;transition:all .18s;white-space:nowrap}
+  .chip:hover{color:#e2e8f0;border-color:rgba(148,163,184,.4)}
+  .chip.on{background:rgba(14,165,233,.2);border-color:rgba(56,189,248,.65);color:#7dd3fc}
+
+  /* Badges */
+  .badge{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:99px;font-size:.68rem;font-weight:800;border:1px solid transparent;white-space:nowrap}
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .st-Moving{background:rgba(16,185,129,.15);color:#6ee7b7;border-color:rgba(16,185,129,.35)}
+  .st-Moving::before{animation:blink 1.2s infinite}
+  .st-Idle{background:rgba(245,158,11,.15);color:#fcd34d;border-color:rgba(245,158,11,.35)}
+  .st-Maintenance{background:rgba(167,139,250,.15);color:#c4b5fd;border-color:rgba(167,139,250,.35)}
+  .demo-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.6rem;font-weight:800;letter-spacing:.04em;padding:.12rem .55rem;border-radius:99px;color:#fde68a;background:linear-gradient(90deg,rgba(245,158,11,.18),rgba(244,63,94,.18));border:1px solid rgba(245,158,11,.4);white-space:nowrap}
+  .demo-badge .dot{width:6px;height:6px;border-radius:50%;background:#fbbf24;animation:blink 1.4s infinite}
+
+  /* Nav */
+  .nav-btn{display:flex;align-items:center;gap:.5rem;padding:.55rem .95rem;border-radius:.8rem;font-size:.82rem;font-weight:700;color:#94a3b8;transition:all .2s;position:relative;cursor:pointer}
+  .nav-btn:hover{color:#e2e8f0;background:rgba(51,65,85,.5)}
+  .nav-btn.active{color:#fff;background:linear-gradient(135deg,rgba(14,165,233,.28),rgba(37,99,235,.28));box-shadow:inset 0 0 0 1px rgba(56,189,248,.45)}
+  .nb-badge{min-width:1.1rem;height:1.1rem;padding:0 .3rem;border-radius:99px;background:#f43f5e;color:#fff;font-size:.62rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+  .bottom-nav .nav-btn{flex-direction:column;gap:.15rem;font-size:.65rem;padding:.45rem .2rem;flex:1;border-radius:.7rem}
+
+  /* Tabs */
+  .tab-pane{display:none}
+  .tab-pane.active{display:block;animation:fadeUp .45s ease both}
+
+  /* Animations */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+  @keyframes logIn{from{opacity:0;transform:translateX(24px) scale(.97);background:rgba(56,189,248,.25)}to{opacity:1;transform:none}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes ping{0%{box-shadow:0 0 0 0 var(--c)}80%,100%{box-shadow:0 0 0 14px transparent}}
+  @keyframes shimmer{from{background-position:-200% 0}to{background-position:200% 0}}
+  .anim-in{animation:fadeUp .5s ease both}
+  .stagger > *{animation:fadeUp .5s ease both}
+  .stagger > *:nth-child(2){animation-delay:.05s}.stagger > *:nth-child(3){animation-delay:.1s}
+  .stagger > *:nth-child(4){animation-delay:.15s}.stagger > *:nth-child(5){animation-delay:.2s}
+  .stagger > *:nth-child(n+6){animation-delay:.25s}
+
+  /* Toast */
+  .toast{display:flex;gap:.7rem;align-items:flex-start;padding:.75rem .9rem;border-radius:.9rem;background:rgba(15,23,42,.96);border:1px solid rgba(148,163,184,.2);box-shadow:0 14px 40px -10px rgba(0,0,0,.7);backdrop-filter:blur(10px);animation:slideIn .35s cubic-bezier(.2,.9,.3,1.2) both;max-width:100%;position:relative;overflow:hidden}
+  .toast.out{opacity:0;transform:translateX(30px);transition:all .3s ease}
+  .toast .bar{position:absolute;left:0;bottom:0;height:2px;background:currentColor;animation:bar 3.6s linear forwards;opacity:.7}
+  @keyframes bar{from{width:100%}to{width:0}}
+  .toast.t-success{color:#6ee7b7}.toast.t-error{color:#fda4af}.toast.t-warn{color:#fcd34d}.toast.t-info{color:#7dd3fc}
+
+  /* Modal */
+  #modal{visibility:hidden;opacity:0;transition:opacity .25s ease, visibility .25s}
+  #modal.open{visibility:visible;opacity:1}
+  #modalPanel{transform:translateY(24px) scale(.97);transition:transform .3s cubic-bezier(.2,.9,.3,1.1)}
+  #modal.open #modalPanel{transform:none}
+
+  /* Drawer */
+  #drawerBg{opacity:0;visibility:hidden;transition:all .3s}
+  #drawer{transform:translateX(-100%);transition:transform .35s cubic-bezier(.2,.9,.3,1)}
+  body.drawer-open #drawerBg{opacity:1;visibility:visible}
+  body.drawer-open #drawer{transform:none}
+
+  /* Log */
+  .log-item{display:flex;gap:.65rem;padding:.65rem .75rem;border-radius:.8rem;background:rgba(2,6,23,.45);border:1px solid rgba(148,163,184,.1);border-left:3px solid var(--lc);transition:opacity .3s, background .2s}
+  .log-item:hover{background:rgba(30,41,59,.6)}
+  .log-item.fresh{animation:logIn .6s ease both}
+  .log-item.acked{opacity:.5}
+  .lvl-critical{--lc:#f43f5e}.lvl-warning{--lc:#f59e0b}.lvl-info{--lc:#38bdf8}
+  .lic{width:1.9rem;height:1.9rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:color-mix(in srgb,var(--lc) 18%,transparent);color:var(--lc)}
+
+  /* Leaflet fixes with Tailwind preflight */
+  .leaflet-container{background:#0b1220;font-family:'Plus Jakarta Sans',sans-serif;outline:none}
+  .leaflet-container img.leaflet-tile,.leaflet-container .leaflet-marker-icon,.leaflet-container .leaflet-marker-shadow{max-width:none!important;max-height:none!important}
+  .leaflet-container svg{max-width:none!important;max-height:none!important}
+  .leaflet-control-zoom a{background:rgba(15,23,42,.92)!important;color:#e2e8f0!important;border-color:rgba(148,163,184,.25)!important}
+  .leaflet-control-zoom a:hover{background:#1e293b!important}
+  .leaflet-control-attribution{background:rgba(15,23,42,.7)!important;color:#64748b!important;font-size:9px!important}
+  .leaflet-control-attribution a{color:#7dd3fc!important}
+  .leaflet-tooltip{background:rgba(15,23,42,.95);color:#e2e8f0;border:1px solid rgba(148,163,184,.3);border-radius:8px;font-weight:700;font-size:11px;box-shadow:none}
+  .leaflet-tooltip-top:before{border-top-color:rgba(15,23,42,.95)}
+  #mapWrap{isolation:isolate}
+
+  .veh-pin{--c:#10b981;position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .veh-pin.Moving{--c:#10b981}.veh-pin.Idle{--c:#f59e0b}.veh-pin.Maintenance{--c:#a78bfa}
+  .veh-dot{width:28px;height:28px;border-radius:50%;background:var(--c);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.5);transition:transform .2s}
+  .veh-pin:hover .veh-dot{transform:scale(1.15)}
+  .veh-pin.Moving .veh-dot{animation:ping 1.8s infinite}
+  .veh-pin.sel .veh-dot{outline:3px solid #38bdf8;outline-offset:2px}
+  .veh-arrow{transition:transform .4s linear}
+  .veh-label{position:absolute;top:33px;left:50%;transform:translateX(-50%);font-size:9.5px;font-weight:800;background:rgba(2,6,23,.88);color:#fff;padding:1px 6px;border-radius:99px;white-space:nowrap;border:1px solid rgba(255,255,255,.15);pointer-events:none}
+  .hub-pin{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#0ea5e9,#2563eb);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px rgba(14,165,233,.25),0 6px 16px rgba(0,0,0,.5)}
+  .dest-pin{width:10px;height:10px;border-radius:50%;background:#475569;border:2px solid #94a3b8}
+  .route-line{stroke-dasharray:6 8;animation:dash 1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-14}}
+
+  /* Table */
+  .tbl th{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b;font-weight:800;text-align:left;padding:.7rem .8rem;white-space:nowrap}
+  .tbl td{padding:.7rem .8rem;font-size:.82rem;border-top:1px solid rgba(148,163,184,.1);vertical-align:middle}
+  .tbl tbody tr{transition:background .2s;animation:fadeUp .4s ease both}
+  .tbl tbody tr:hover{background:rgba(30,41,59,.55)}
+
+  .live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 0 rgba(16,185,129,.7);animation:livepulse 1.6s infinite}
+  @keyframes livepulse{70%{box-shadow:0 0 0 8px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+  .gradient-text{background:linear-gradient(90deg,#38bdf8,#34d399);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .skeleton-bar{background:linear-gradient(90deg,#1e293b,#334155,#1e293b);background-size:200% 100%;animation:shimmer 1.5s infinite}
+  .bottom-nav{padding-bottom:env(safe-area-inset-bottom)}
+
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body class="min-h-screen pb-24 lg:pb-8">
+
+<!-- ================= HEADER ================= -->
+<header class="sticky top-0 z-40 glass border-b border-slate-700/40">
+  <div class="max-w-[1700px] mx-auto px-3 sm:px-5 h-16 flex items-center gap-2 sm:gap-3">
+    <button class="btn btn-icon lg:hidden" data-act="drawer" aria-label="Menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/30 shrink-0">
+        <i data-lucide="truck" class="w-5 h-5 text-white"></i>
+      </div>
+      <div class="leading-tight min-w-0">
+        <h1 class="font-extrabold text-[15px] sm:text-lg tracking-tight truncate">FleetPulse <span class="gradient-text">IoT</span></h1>
+        <span class="demo-badge"><span class="dot"></span>Demo Prototype by NovaNext</span>
+      </div>
+    </div>
+
+    <nav id="navDesktop" class="hidden lg:flex ml-6 gap-1"></nav>
+
+    <div class="ml-auto flex items-center gap-2">
+      <div class="hidden md:flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-700/50 text-xs font-bold">
+        <span class="live-dot"></span><span class="text-emerald-300">LIVE</span>
+        <span id="clock" class="text-slate-300 tabular-nums">--:--:--</span>
+      </div>
+      <div class="hidden lg:flex items-center gap-1.5">
+        <button class="btn btn-icon" data-act="toggleSim" title="Jeda / Lanjutkan simulasi">
+          <i data-lucide="pause" class="w-4 h-4 sim-ico-pause"></i><i data-lucide="play" class="w-4 h-4 sim-ico-play hidden"></i>
+        </button>
+        <button class="chip" data-act="speed" data-val="1">1x</button>
+        <button class="chip" data-act="speed" data-val="2">2x</button>
+        <button class="chip" data-act="speed" data-val="4">4x</button>
+      </div>
+      <button class="btn btn-icon relative" data-act="tab" data-id="incidents" aria-label="Insiden">
+        <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
+        <span data-badge="alerts" class="nb-badge absolute -top-1.5 -right-1.5 hidden">0</span>
+      </button>
+      <button class="btn btn-icon hidden lg:inline-flex" data-act="resetDemo" title="Reset data demo"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= DRAWER (mobile) ================= -->
+<div id="drawerBg" data-act="drawer" class="fixed inset-0 z-[60] bg-slate-950/70 backdrop-blur-sm lg:hidden"></div>
+<aside id="drawer" class="fixed top-0 left-0 bottom-0 w-[82%] max-w-xs z-[70] glass border-r border-slate-700/50 p-4 flex flex-col gap-5 lg:hidden overflow-y-auto">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center"><i data-lucide="truck" class="w-4 h-4 text-white"></i></div>
+      <div class="leading-tight"><p class="font-extrabold">FleetPulse <span class="gradient-text">IoT</span></p><span class="demo-badge"><span class="dot"></span>Demo by NovaNext</span></div>
+    </div>
+    <button class="btn btn-icon" data-act="drawer"><i data-lucide="x" class="w-4 h-4"></i></button>
+  </div>
+  <div>
+    <p class="lbl">Navigasi</p>
+    <div id="navDrawer" class="flex flex-col gap-1"></div>
+  </div>
+  <div>
+    <p class="lbl">Kontrol Simulasi</p>
+    <div class="flex items-center gap-2 flex-wrap">
+      <button class="btn" data-act="toggleSim"><i data-lucide="pause" class="w-4 h-4 sim-ico-pause"></i><i data-lucide="play" class="w-4 h-4 sim-ico-play hidden"></i><span class="sim-label">Jeda</span></button>
+      <button class="chip" data-act="speed" data-val="1">1x</button>
+      <button class="chip" data-act="speed" data-val="2">2x</button>
+      <button class="chip" data-act="speed" data-val="4">4x</button>
+    </div>
+  </div>
+  <div class="grid gap-2">
+    <button class="btn" data-act="simIncident"><i data-lucide="siren" class="w-4 h-4"></i> Simulasikan Insiden</button>
+    <button class="btn btn-danger" data-act="resetDemo"><i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Data Demo</button>
+  </div>
+  <p class="mt-auto text-[11px] text-slate-500 leading-relaxed">Data dummy disimpan di localStorage browser. Seluruh telemetri adalah simulasi untuk keperluan demo.</p>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-[1700px] mx-auto px-3 sm:px-5 pt-4 sm:pt-5">
+
+  <!-- ===== TAB: DASHBOARD ===== -->
+  <section id="tab-dashboard" class="tab-pane active" data-tab="dashboard">
+    <!-- KPI -->
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 stagger mb-4">
+      <div class="glass rounded-2xl p-3.5 card-hover">
+        <div class="flex items-center justify-between"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Armada Aktif</p><span class="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-300 flex items-center justify-center"><i data-lucide="navigation" class="w-4 h-4"></i></span></div>
+        <p class="mt-2 text-2xl font-extrabold"><span data-kpi="active">0</span><span class="text-sm text-slate-500 font-semibold"> / <span data-kpi="total">0</span></span></p>
+      </div>
+      <div class="glass rounded-2xl p-3.5 card-hover">
+        <div class="flex items-center justify-between"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Rata-rata Kecepatan</p><span class="w-8 h-8 rounded-lg bg-sky-500/15 text-sky-300 flex items-center justify-center"><i data-lucide="gauge" class="w-4 h-4"></i></span></div>
+        <p class="mt-2 text-2xl font-extrabold"><span data-kpi="speed">0</span><span class="text-sm text-slate-500 font-semibold"> km/j</span></p>
+      </div>
+      <div class="glass rounded-2xl p-3.5 card-hover">
+        <div class="flex items-center justify-between"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Rata-rata BBM</p><span class="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-300 flex items-center justify-center"><i data-lucide="fuel" class="w-4 h-4"></i></span></div>
+        <p class="mt-2 text-2xl font-extrabold"><span data-kpi="fuel">0</span><span class="text-sm text-slate-500 font-semibold"> %</span></p>
+      </div>
+      <div class="glass rounded-2xl p-3.5 card-hover">
+        <div class="flex items-center justify-between"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Insiden Terbuka</p><span class="w-8 h-8 rounded-lg bg-rose-500/15 text-rose-300 flex items-center justify-center"><i data-lucide="triangle-alert" class="w-4 h-4"></i></span></div>
+        <p class="mt-2 text-2xl font-extrabold"><span data-kpi="alerts">0</span><span class="text-sm text-slate-500 font-semibold"> alert</span></p>
+      </div>
+      <div class="glass rounded-2xl p-3.5 card-hover col-span-2 md:col-span-1">
+        <div class="flex items-center justify-between"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Kapasitas Gudang</p><span class="w-8 h-8 rounded-lg bg-violet-500/15 text-violet-300 flex items-center justify-center"><i data-lucide="warehouse" class="w-4 h-4"></i></span></div>
+        <p class="mt-2 text-2xl font-extrabold"><span data-kpi="cap">0</span><span class="text-sm text-slate-500 font-semibold"> %</span></p>
+      </div>
+    </div>
+
+    <!-- Split screen: Map + Live panel -->
+    <div class="grid lg:grid-cols-[1fr_390px] gap-4 lg:h-[calc(100vh-318px)] lg:min-h-[560px]">
+      <div id="mapWrap" class="relative glass rounded-2xl overflow-hidden h-[62vh] min-h-[420px] lg:h-full">
+        <div id="map" class="absolute inset-0"></div>
+
+        <div class="absolute top-3 left-3 right-3 z-[1000] flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button class="chip on" data-set="mapFilter" data-val="all">Semua</button>
+          <button class="chip" data-set="mapFilter" data-val="Moving">Moving</button>
+          <button class="chip" data-set="mapFilter" data-val="Idle">Idle</button>
+          <button class="chip" data-set="mapFilter" data-val="Maintenance">Maintenance</button>
+          <span class="w-px bg-slate-600/60 mx-1 shrink-0"></span>
+          <button class="chip flex items-center gap-1" data-act="fitAll"><i data-lucide="maximize-2" class="w-3 h-3"></i>Fit</button>
+          <button class="chip flex items-center gap-1" data-act="tileToggle"><i data-lucide="layers" class="w-3 h-3"></i>Peta</button>
+        </div>
+
+        <!-- Selected vehicle card -->
+        <div id="selCard" class="absolute left-3 bottom-3 right-16 sm:right-auto sm:w-[370px] z-[1000] glass rounded-2xl p-3.5 hidden">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="font-extrabold text-lg leading-tight" id="sel-plate">-</p>
+              <p class="text-[11px] text-slate-400 truncate" id="sel-sub">-</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="sel-status" class="badge st-Idle">Idle</span>
+              <button class="btn btn-icon !w-8 !h-8 !rounded-lg" data-act="selClose" aria-label="Tutup"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+            <div class="rounded-xl bg-slate-950/60 py-2"><p class="text-[10px] text-slate-400 font-bold uppercase">Speed</p><p class="font-extrabold"><span id="sel-speed">0</span><span class="text-[10px] text-slate-500"> km/j</span></p></div>
+            <div class="rounded-xl bg-slate-950/60 py-2"><p class="text-[10px] text-slate-400 font-bold uppercase">BBM</p><p class="font-extrabold"><span id="sel-fuel">0</span><span class="text-[10px] text-slate-500"> %</span></p></div>
+            <div class="rounded-xl bg-slate-950/60 py-2"><p class="text-[10px] text-slate-400 font-bold uppercase">Suhu</p><p class="font-extrabold"><span id="sel-temp">0</span><span class="text-[10px] text-slate-500"> °C</span></p></div>
+          </div>
+          <div class="mt-2.5 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div id="sel-bar" class="h-full rounded-full transition-all duration-500"></div></div>
+          <div class="flex gap-1.5 mt-3">
+            <button id="sel-follow" class="btn btn-sm flex-1" data-act="selFollow"><i data-lucide="locate-fixed" class="w-3.5 h-3.5"></i>Ikuti</button>
+            <button class="btn btn-sm flex-1" data-act="dispatch"><i data-lucide="play" class="w-3.5 h-3.5"></i>Jalan</button>
+            <button class="btn btn-sm flex-1" data-act="idle"><i data-lucide="pause" class="w-3.5 h-3.5"></i>Idle</button>
+            <button class="btn btn-sm flex-1" data-act="maint"><i data-lucide="wrench" class="w-3.5 h-3.5"></i>Servis</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: live status panel -->
+      <aside class="glass rounded-2xl flex flex-col overflow-hidden h-[560px] lg:h-full">
+        <div class="p-4 border-b border-slate-700/40">
+          <div class="flex items-center justify-between">
+            <h2 class="font-extrabold flex items-center gap-2"><span class="live-dot"></span>Live Status Log</h2>
+            <button class="btn btn-sm" data-act="simIncident" title="Simulasikan insiden"><i data-lucide="siren" class="w-3.5 h-3.5"></i>Simulasi</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+            <div class="rounded-xl py-2 st-Moving !border"><p class="text-lg font-extrabold leading-none" data-count="Moving">0</p><p class="text-[10px] font-bold mt-1 !before:hidden">Moving</p></div>
+            <div class="rounded-xl py-2 st-Idle !border"><p class="text-lg font-extrabold leading-none" data-count="Idle">0</p><p class="text-[10px] font-bold mt-1">Idle</p></div>
+            <div class="rounded-xl py-2 st-Maintenance !border"><p class="text-lg font-extrabold leading-none" data-count="Maintenance">0</p><p class="text-[10px] font-bold mt-1">Maintenance</p></div>
+          </div>
+          <div class="flex gap-1.5 mt-3 overflow-x-auto no-scrollbar">
+            <button class="chip on" data-set="logFilter" data-val="all">Semua</button>
+            <button class="chip" data-set="logFilter" data-val="critical">Kritis</button>
+            <button class="chip" data-set="logFilter" data-val="warning">Peringatan</button>
+            <button class="chip" data-set="logFilter" data-val="info">Info</button>
+          </div>
+        </div>
+        <ul id="liveLog" class="flex-1 overflow-y-auto p-3 space-y-2"></ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== TAB: FLEET ===== -->
+  <section id="tab-fleet" class="tab-pane" data-tab="fleet">
+    <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-extrabold">Status Armada</h2>
+        <p class="text-sm text-slate-400">Telemetri real-time kecepatan, bahan bakar, suhu mesin & status.</p>
+      </div>
+      <div class="md:ml-auto flex flex-col sm:flex-row gap-2">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+          <input id="fleetSearch" class="inp !pl-9 sm:w-60" placeholder="Cari plat / driver..." />
+        </div>
+        <button class="btn btn-primary" data-act="addVehicle"><i data-lucide="plus" class="w-4 h-4"></i>Tambah Armada</button>
+      </div>
+    </div>
+    <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+      <button class="chip on" data-set="fleetFilter" data-val="all">Semua</button>
+      <button class="chip" data-set="fleetFilter" data-val="Moving">Moving</button>
+      <button class="chip" data-set="fleetFilter" data-val="Idle">Idle</button>
+      <button class="chip" data-set="fleetFilter" data-val="Maintenance">Maintenance</button>
+    </div>
+    <div id="fleetGrid" class="grid sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- ===== TAB: WAREHOUSE ===== -->
+  <section id="tab-warehouse" class="tab-pane" data-tab="warehouse">
+    <div class="mb-4">
+      <h2 class="text-xl sm:text-2xl font-extrabold">Gudang & Inventaris</h2>
+      <p class="text-sm text-slate-400">Barometer kapasitas gudang dan stok pallet per zona.</p>
+    </div>
+    <div class="grid lg:grid-cols-[360px_1fr] gap-4">
+      <div class="space-y-4">
+        <div class="glass rounded-2xl p-5">
+          <h3 class="font-extrabold flex items-center gap-2 mb-1"><i data-lucide="gauge" class="w-4 h-4 text-sky-400"></i>Barometer Kapasitas</h3>
+          <p class="text-xs text-slate-400">Gudang Pusat Cakung — 600 posisi pallet</p>
+          <div class="relative mt-3 flex justify-center">
+            <svg viewBox="0 0 220 128" class="w-full max-w-[320px]">
+              <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="#1e293b" stroke-width="16" stroke-linecap="round"/>
+              <path id="g-arc" d="M 20 110 A 90 90 0 0 1 200 110" pathLength="100" fill="none" stroke="#10b981" stroke-width="16" stroke-linecap="round" style="stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.2s cubic-bezier(.3,1,.4,1), stroke .6s"/>
+              <g id="g-needle" style="transform-box:view-box;transform-origin:110px 110px;transform:rotate(-90deg);transition:transform 1.2s cubic-bezier(.3,1.35,.5,1)">
+                <line x1="110" y1="110" x2="110" y2="42" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="110" cy="110" r="7" fill="#e2e8f0"/><circle cx="110" cy="110" r="3" fill="#0f172a"/>
+              </g>
+              <text x="20" y="127" fill="#64748b" font-size="9" text-anchor="middle" font-weight="700">0%</text>
+              <text x="110" y="14" fill="#64748b" font-size="9" text-anchor="middle" font-weight="700">50%</text>
+              <text x="200" y="127" fill="#64748b" font-size="9" text-anchor="middle" font-weight="700">100%</text>
+            </svg>
+          </div>
+          <div class="text-center -mt-1">
+            <p class="text-4xl font-extrabold"><span id="g-pct">0</span><span class="text-lg text-slate-500">%</span></p>
+            <p id="g-state" class="text-xs font-bold mt-1 text-emerald-300">Kapasitas aman</p>
+          </div>
+          <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+            <div class="rounded-xl bg-slate-950/60 py-2.5"><p class="font-extrabold text-lg" id="w-total">0</p><p class="text-[10px] text-slate-400 font-bold uppercase">Terisi</p></div>
+            <div class="rounded-xl bg-slate-950/60 py-2.5"><p class="font-extrabold text-lg" id="w-free">0</p><p class="text-[10px] text-slate-400 font-bold uppercase">Kosong</p></div>
+            <div class="rounded-xl bg-slate-950/60 py-2.5"><p class="font-extrabold text-lg text-rose-300" id="w-low">0</p><p class="text-[10px] text-slate-400 font-bold uppercase">Stok Rendah</p></div>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-5">
+          <h3 class="font-extrabold flex items-center gap-2 mb-3"><i data-lucide="layers" class="w-4 h-4 text-sky-400"></i>Okupansi per Zona</h3>
+          <div id="zoneBars" class="space-y-3"></div>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl overflow-hidden">
+        <div class="p-4 flex flex-col xl:flex-row gap-3 xl:items-center border-b border-slate-700/40">
+          <h3 class="font-extrabold flex items-center gap-2"><i data-lucide="package" class="w-4 h-4 text-sky-400"></i>Inventaris Stok Pallet</h3>
+          <div class="xl:ml-auto grid grid-cols-2 sm:flex gap-2">
+            <div class="relative col-span-2 sm:col-auto">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+              <input id="invSearch" class="inp !pl-9 sm:w-52" placeholder="Cari SKU / nama..." />
+            </div>
+            <select id="invCat" class="inp sm:w-40"></select>
+            <select id="invZone" class="inp sm:w-32"></select>
+            <button class="btn btn-primary col-span-2 sm:col-auto" data-act="invAdd"><i data-lucide="plus" class="w-4 h-4"></i>Tambah</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="tbl w-full min-w-[760px]">
+            <thead><tr><th>SKU</th><th>Barang</th><th>Kategori</th><th>Zona</th><th style="min-width:150px">Pallet</th><th>Status</th><th class="text-right">Aksi</th></tr></thead>
+            <tbody id="invBody"></tbody>
+          </table>
+        </div>
+        <p id="invEmpty" class="hidden p-8 text-center text-slate-500 text-sm">Tidak ada data yang cocok dengan filter.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TAB: INCIDENTS ===== -->
+  <section id="tab-incidents" class="tab-pane" data-tab="incidents">
+    <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-extrabold">Log Insiden & Peringatan</h2>
+        <p class="text-sm text-slate-400">Riwayat alert telemetri armada dan inventaris gudang.</p>
+      </div>
+      <div class="md:ml-auto flex flex-wrap gap-2">
+        <button class="btn" data-act="simIncident"><i data-lucide="siren" class="w-4 h-4"></i>Simulasikan Insiden</button>
+        <button class="btn" data-act="ackAll"><i data-lucide="check-check" class="w-4 h-4"></i>Tandai Selesai</button>
+        <button class="btn btn-danger" data-act="clearAlerts"><i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Log</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mb-4 stagger">
+      <div class="glass rounded-2xl p-3.5 text-center"><p class="text-2xl font-extrabold text-rose-300" data-inc="critical">0</p><p class="text-[11px] font-bold text-slate-400 uppercase">Kritis</p></div>
+      <div class="glass rounded-2xl p-3.5 text-center"><p class="text-2xl font-extrabold text-amber-300" data-inc="warning">0</p><p class="text-[11px] font-bold text-slate-400 uppercase">Peringatan</p></div>
+      <div class="glass rounded-2xl p-3.5 text-center"><p class="text-2xl font-extrabold text-sky-300" data-inc="info">0</p><p class="text-[11px] font-bold text-slate-400 uppercase">Info</p></div>
+    </div>
+    <div class="flex gap-2 mb-3 overflow-x-auto no-scrollbar">
+      <button class="chip on" data-set="incFilter" data-val="all">Semua</button>
+      <button class="chip" data-set="incFilter" data-val="critical">Kritis</button>
+      <button class="chip" data-set="incFilter" data-val="warning">Peringatan</button>
+      <button class="chip" data-set="incFilter" data-val="info">Info</button>
+      <button class="chip" data-set="incFilter" data-val="open">Belum selesai</button>
+    </div>
+    <ul id="incList" class="grid lg:grid-cols-2 gap-2"></ul>
+  </section>
+</main>
+
+<footer class="max-w-[1700px] mx-auto px-5 mt-8 text-center text-[11px] text-slate-500">
+  FleetPulse IoT — <span class="text-amber-300 font-bold">Demo Prototype by NovaNext</span> · Seluruh data adalah simulasi dummy.
+</footer>
+
+<!-- Bottom nav (mobile) -->
+<nav id="navBottom" class="bottom-nav lg:hidden fixed bottom-0 inset-x-0 z-50 glass border-t border-slate-700/50 flex gap-1 px-2 pt-1.5"></nav>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed top-[76px] right-3 left-3 sm:left-auto sm:w-[360px] z-[9000] flex flex-col gap-2 pointer-events-none"></div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-4">
+  <div data-act="modalClose" class="absolute inset-0 bg-slate-950/75 backdrop-blur-sm"></div>
+  <div id="modalPanel" class="relative glass w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-5 max-h-[92vh] overflow-y-auto"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* =====================================================
+   0. HELPERS
+===================================================== */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const uid = () => Math.random().toString(36).slice(2, 9);
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const fmtTime = ts => new Date(ts).toLocaleTimeString('id-ID', { hour12: false });
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const icons = () => { if (window.lucide) lucide.createIcons(); };
+
+/* =====================================================
+   1. MOCK DATA GENERATOR
+===================================================== */
+const KEY = 'novanext_fleetpulse_v1';
+const SCALE = 30;            // time compression for visible movement
+const ZONES = ['A', 'B', 'C', 'D'];
+const ZONE_CAP = 150;        // pallet positions / zone
+const TEMP_LIMIT = 105;
+const CATS = ['Elektronik', 'Makanan & Minuman', 'Farmasi', 'Otomotif', 'FMCG'];
+
+const HUB = { n: 'Gudang Pusat Cakung', lat: -6.1780, lng: 106.9300 };
+const LOCS = [
+  { n: 'Monas', lat: -6.1754, lng: 106.8272 }, { n: 'Pelabuhan Tanjung Priok', lat: -6.1080, lng: 106.8800 },
+  { n: 'Kelapa Gading', lat: -6.1580, lng: 106.9050 }, { n: 'Cengkareng', lat: -6.1256, lng: 106.6559 },
+  { n: 'Bekasi Timur', lat: -6.2383, lng: 106.9756 }, { n: 'Depok', lat: -6.4025, lng: 106.7942 },
+  { n: 'Tangerang Kota', lat: -6.1783, lng: 106.6319 }, { n: 'Sudirman CBD', lat: -6.2088, lng: 106.8190 },
+  { n: 'Cawang', lat: -6.2420, lng: 106.8680 }, { n: 'Pluit', lat: -6.1170, lng: 106.7900 },
+  { n: 'Pulogadung', lat: -6.1900, lng: 106.9100 }, { n: 'BSD City', lat: -6.3010, lng: 106.6520 },
+  { n: 'Cibitung', lat: -6.2650, lng: 107.0850 }
+];
+
+const Data = { fleet: [], inv: [], alerts: [] };
+
+function seedFleet() {
+  const base = [
+    ['B-1234', 'Reefer Truck', 'Andi Prasetyo', 'Moving'], ['B-5521', 'Box Truck', 'Budi Santoso', 'Moving'],
+    ['D-8890', 'Trailer 40ft', 'Citra Lestari', 'Moving'], ['B-7710', 'Van Last-Mile', 'Dewi Anggraini', 'Moving'],
+    ['B-3092', 'Pickup CDD', 'Eko Wahyudi', 'Idle'], ['F-4410', 'Box Truck', 'Fajar Nugroho', 'Moving'],
+    ['B-6128', 'Reefer Truck', 'Gita Permata', 'Maintenance'], ['B-9043', 'Van Last-Mile', 'Hendra Kusuma', 'Moving']
+  ];
+  return base.map(([plate, type, driver, status], i) => {
+    const loc = LOCS[(i * 3 + 1) % LOCS.length];
+    const v = {
+      id: 'V' + (i + 1), plate, type, driver, status,
+      lat: loc.lat + rand(-.004, .004), lng: loc.lng + rand(-.004, .004),
+      speed: status === 'Moving' ? rand(30, 60) : 0, fuel: rand(38, 96),
+      temp: status === 'Moving' ? rand(80, 92) : rand(38, 52), heading: rand(0, 360),
+      tLat: 0, tLng: 0, tName: '', idleLeft: status === 'Idle' ? rand(6, 14) : 0,
+      auto: status !== 'Maintenance', heatLeft: 0, overLeft: 0, odo: Math.round(rand(12000, 90000))
+    };
+    if (status === 'Moving') pickTarget(v);
+    return v;
+  });
+}
+
+function seedInv() {
+  const rows = [
+    ['EL-1001', 'Smart TV 55" LED', 'Elektronik', 'A', 38, 10], ['EL-1020', 'Laptop Business 14"', 'Elektronik', 'A', 26, 12],
+    ['AT-5008', 'Oli Mesin 1L', 'Otomotif', 'A', 31, 10], ['FD-2005', 'Minyak Goreng 2L', 'Makanan & Minuman', 'B', 64, 20],
+    ['FD-2031', 'Susu UHT 1L', 'Makanan & Minuman', 'B', 52, 25], ['FD-2066', 'Mie Instan Dus', 'Makanan & Minuman', 'B', 20, 20],
+    ['FM-3012', 'Sabun Cair 500ml', 'FMCG', 'C', 44, 15], ['FM-3044', 'Deterjen Bubuk 1kg', 'FMCG', 'C', 37, 15],
+    ['AT-5023', 'Ban Motor 80/90', 'Otomotif', 'C', 18, 8], ['PH-4002', 'Vitamin C 500mg', 'Farmasi', 'D', 22, 18],
+    ['PH-4017', 'Masker Medis 50pcs', 'Farmasi', 'D', 14, 16], ['PH-4030', 'Alkohol 70% 5L', 'Farmasi', 'D', 40, 15]
+  ];
+  return rows.map(([sku, name, cat, zone, qty, min]) => ({ id: uid(), sku, name, cat, zone, qty, min }));
+}
+
+function seedAlerts() {
+  const n = Date.now();
+  return [
+    { level: 'warning', type: 'stock', msg: 'Stok Masker Medis 50pcs (PH-4017) di bawah minimum — Zona D', vid: null, ago: 9 },
+    { level: 'critical', type: 'temp', msg: 'Suhu armada B-6128 di atas ambang batas (112°C > 105°C) — dialihkan ke servis', vid: 'V7', ago: 22 },
+    { level: 'info', type: 'arrive', msg: 'B-3092 tiba di Cawang dan masuk status Idle', vid: 'V5', ago: 41 },
+    { level: 'info', type: 'sys', msg: 'Sistem telemetri FleetPulse terhubung — 8 perangkat IoT online', vid: null, ago: 60 }
+  ].map(a => ({ id: uid(), ts: n - a.ago * 60000, level: a.level, type: a.type, msg: a.msg, vid: a.vid, ack: a.level === 'info', fresh: false }));
+}
+
+const Store = {
+  load() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } },
+  save() { try { localStorage.setItem(KEY, JSON.stringify({ fleet: Data.fleet, inv: Data.inv, alerts: Data.alerts.slice(0, 100) })); } catch (e) {} },
+  noSave: false
+};
+
+function initData() {
+  const s = Store.load();
+  if (s && Array.isArray(s.fleet) && s.fleet.length) {
+    Data.fleet = s.fleet; Data.inv = s.inv || []; Data.alerts = (s.alerts || []).map(a => ({ ...a, fresh: false }));
+  } else {
+    Data.fleet = seedFleet(); Data.inv = seedInv(); Data.alerts = seedAlerts(); Store.save();
+  }
+}
+
+function pickTarget(v) {
+  let t, tries = 0;
+  do { t = pick(LOCS); tries++; }
+  while (tries < 10 && Math.hypot(t.lat - v.lat, t.lng - v.lng) < 0.03);
+  v.tLat = t.lat; v.tLng = t.lng; v.tName = t.n;
+}
+
+/* =====================================================
+   2. UI STATE ENGINE
+===================================================== */
+const State = {
+  tab: 'dashboard', mapFilter: 'all', logFilter: 'all', incFilter: 'all', fleetFilter: 'all',
+  fleetSearch: '', invSearch: '', invCat: 'all', invZone: 'all',
+  selected: null, follow: false, paused: false, speed: 1, tileDark: true, drawer: false
+};
+
+const NAV = [
+  { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+  { id: 'fleet', label: 'Armada', icon: 'truck' },
+  { id: 'warehouse', label: 'Gudang', icon: 'warehouse' },
+  { id: 'incidents', label: 'Insiden', icon: 'triangle-alert', badge: 'alerts' }
+];
+
+/* =====================================================
+   3. TOAST & MODAL
+===================================================== */
+const Toast = {
+  show(msg, type = 'info', title) {
+    const cfg = {
+      success: ['circle-check', 'Berhasil'], error: ['circle-x', 'Gagal / Kritis'],
+      warn: ['triangle-alert', 'Peringatan'], info: ['info', 'Info']
+    }[type];
+    const box = $('#toasts');
+    while (box.children.length >= 4) box.firstChild.remove();
+    const el = document.createElement('div');
+    el.className = `toast t-${type} pointer-events-auto`;
+    el.innerHTML = `<i data-lucide="${cfg[0]}" class="w-5 h-5 shrink-0 mt-0.5"></i>
+      <div class="min-w-0"><p class="text-xs font-extrabold">${esc(title || cfg[1])}</p><p class="text-[13px] text-slate-200 leading-snug">${esc(msg)}</p></div>
+      <span class="bar"></span>`;
+    box.appendChild(el); icons();
+    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3600);
+  }
+};
+
+const Modal = {
+  el: null, panel: null,
+  init() { this.el = $('#modal'); this.panel = $('#modalPanel'); },
+  show(html) { this.panel.innerHTML = html; this.el.classList.add('open'); icons(); },
+  close() { this.el.classList.remove('open'); },
+  confirm({ title, text, okText = 'Ya, Lanjutkan', danger = false, icon = 'circle-help', onOk }) {
+    this.show(`
+      <div class="text-center">
+        <div class="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center ${danger ? 'bg-rose-500/15 text-rose-300' : 'bg-sky-500/15 text-sky-300'}"><i data-lucide="${icon}" class="w-7 h-7"></i></div>
+        <h3 class="mt-3 text-lg font-extrabold">${esc(title)}</h3>
+        <p class="mt-1 text-sm text-slate-400">${text}</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mt-5">
+        <button class="btn !py-2.5" data-act="modalClose">Batal</button>
+        <button id="mOk" class="btn !py-2.5 ${danger ? 'btn-danger-solid' : 'btn-primary'}">${esc(okText)}</button>
+      </div>`);
+    $('#mOk').onclick = () => { this.close(); onOk && onOk(); };
+  },
+  form({ title, icon = 'square-pen', body, okText = 'Simpan', onSubmit }) {
+    this.show(`
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-extrabold flex items-center gap-2"><span class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-300 flex items-center justify-center"><i data-lucide="${icon}" class="w-4 h-4"></i></span>${esc(title)}</h3>
+        <button class="btn btn-icon !w-8 !h-8 !rounded-lg" data-act="modalClose" type="button"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="mForm" class="space-y-3.5" novalidate>
+        ${body}
+        <p id="mErr" class="hidden text-xs font-bold text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-lg px-3 py-2"></p>
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button type="button" class="btn !py-2.5" data-act="modalClose">Batal</button>
+          <button type="submit" class="btn btn-primary !py-2.5">${esc(okText)}</button>
+        </div>
+      </form>`);
+    $('#mForm').onsubmit = e => {
+      e.preventDefault();
+      const fd = Object.fromEntries(new FormData(e.target).entries());
+      const err = onSubmit(fd);
+      if (err) { const m = $('#mErr'); m.textContent = err; m.classList.remove('hidden'); }
+      else this.close();
+    };
+    setTimeout(() => { const f = $('#mForm input'); f && f.focus(); }, 150);
+  }
+};
+
+/* =====================================================
+   4. ALERT ENGINE
+===================================================== */
+const cool = {};
+function pushAlert({ level, type, msg, vid = null, key = null, cd = 0, toast = true }) {
+  if (key) {
+    const n = Date.now();
+    if (cool[key] && n - cool[key] < cd) return;
+    cool[key] = n;
+  }
+  Data.alerts.unshift({ id: uid(), ts: Date.now(), level, type, msg, vid, ack: false, fresh: true });
+  if (Data.alerts.length > 100) Data.alerts.pop();
+  if (toast && level === 'critical') Toast.show(msg, 'error', 'Insiden Kritis');
+  else if (toast && level === 'warning') Toast.show(msg, 'warn');
+  UI.renderLogs(); UI.updateBadges(); Store.save();
+}
+
+/* =====================================================
+   5. SIMULATION ENGINE
+===================================================== */
+const Sim = {
+  step(dt) {
+    Data.fleet.forEach(v => {
+      const cosLat = Math.cos(v.lat * Math.PI / 180);
+      let targetTemp = v.status === 'Moving' ? 86 : v.status === 'Idle' ? 50 : 36;
+
+      if (v.status === 'Moving') {
+        if (!v.tName) pickTarget(v);
+        if (v.overLeft > 0) { v.speed = Math.min(92, v.speed + rand(3, 7)); v.overLeft -= dt; }
+        else if (v.speed > 70) v.speed -= 5;
+        else v.speed = clamp(v.speed + rand(-4, 4), 22, 68);
+
+        const distKm = v.speed / 3600 * dt * SCALE;
+        const dx = (v.tLng - v.lng) * 111 * cosLat, dy = (v.tLat - v.lat) * 111;
+        const d = Math.hypot(dx, dy);
+        v.heading = (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360;
+        if (d <= distKm) {
+          v.lat = v.tLat; v.lng = v.tLng; v.status = 'Idle'; v.speed = 0; v.idleLeft = rand(6, 12);
+          pushAlert({ level: 'info', type: 'arrive', vid: v.id, msg: `${v.plate} tiba di ${v.tName} dan masuk status Idle`, toast: false });
+        } else {
+          v.lat += dy / d * distKm / 111; v.lng += dx / d * distKm / (111 * cosLat);
+        }
+        v.odo += distKm;
+        v.fuel = clamp(v.fuel - dt * 0.05 * (v.speed / 50), 0, 100);
+        if (Math.random() < dt * 0.003) v.heatLeft = 9;
+        if (Math.random() < dt * 0.003) v.overLeft = 6;
+      } else if (v.status === 'Idle') {
+        v.speed = 0;
+        v.fuel = clamp(v.fuel - dt * 0.004, 0, 100);
+        if (v.auto && v.fuel > 5) {
+          v.idleLeft -= dt;
+          if (v.idleLeft <= 0) {
+            v.status = 'Moving'; v.speed = rand(25, 40); pickTarget(v);
+            pushAlert({ level: 'info', type: 'depart', vid: v.id, msg: `${v.plate} berangkat menuju ${v.tName}`, toast: false });
+          }
+        }
+      } else { v.speed = 0; }
+
+      if (v.heatLeft > 0) { targetTemp = 113; v.heatLeft -= dt; }
+      v.temp += (targetTemp - v.temp) * Math.min(1, dt * 0.35) + rand(-.4, .4);
+
+      // Threshold rules
+      if (v.temp > TEMP_LIMIT)
+        pushAlert({ level: 'critical', type: 'temp', vid: v.id, key: v.id + 't', cd: 45000, msg: `Suhu armada ${v.plate} di atas ambang batas (${Math.round(v.temp)}°C > ${TEMP_LIMIT}°C)` });
+      if (v.status !== 'Maintenance' && v.fuel < 15 && v.fuel >= 3)
+        pushAlert({ level: v.fuel < 8 ? 'critical' : 'warning', type: 'fuel', vid: v.id, key: v.id + 'f', cd: 90000, msg: `Level BBM armada ${v.plate} rendah (${Math.round(v.fuel)}%) — segera isi bahan bakar` });
+      if (v.speed > 80)
+        pushAlert({ level: 'warning', type: 'speed', vid: v.id, key: v.id + 's', cd: 40000, msg: `Armada ${v.plate} melebihi batas kecepatan (${Math.round(v.speed)} km/j)` });
+      if (v.fuel < 3 && v.status === 'Moving') {
+        v.status = 'Idle'; v.speed = 0; v.auto = false;
+        pushAlert({ level: 'critical', type: 'fuel', vid: v.id, msg: `${v.plate} kehabisan BBM dan dihentikan otomatis` });
+      }
+    });
+  },
+
+  triggerIncident() {
+    const cand = Data.fleet.filter(v => v.status !== 'Maintenance');
+    if (!cand.length) return Toast.show('Tidak ada armada aktif untuk disimulasikan.', 'warn');
+    const v = pick(cand), kind = pick(['temp', 'fuel', 'speed', 'door']);
+    if (kind === 'temp') { delete cool[v.id + 't']; v.heatLeft = 8; v.temp = Math.max(v.temp, 100); }
+    else if (kind === 'fuel') { delete cool[v.id + 'f']; v.fuel = 12; }
+    else if (kind === 'speed' && v.status === 'Moving') { delete cool[v.id + 's']; v.overLeft = 6; }
+    else pushAlert({ level: 'warning', type: 'door', vid: v.id, msg: `Pintu kargo armada ${v.plate} terbuka saat kendaraan bergerak` });
+    Toast.show(`Insiden simulasi dipicu pada ${v.plate}.`, 'info', 'Simulasi');
+    if (kind === 'speed' && v.status !== 'Moving') pushAlert({ level: 'warning', type: 'door', vid: v.id, msg: `Sensor getaran abnormal terdeteksi pada ${v.plate}` });
+  }
+};
+
+/* =====================================================
+   6. MAP VIEW (Leaflet)
+===================================================== */
+const MapView = {
+  map: null, markers: {}, line: null, dark: null, light: null,
+  init() {
+    this.map = L.map('map', { zoomControl: false, preferCanvas: false }).setView([HUB.lat - .03, HUB.lng - .08], 11);
+    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+    this.dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19 });
+    this.light = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 19 });
+    this.dark.addTo(this.map);
+
+    // Hub + geofence
+    L.circle([HUB.lat, HUB.lng], { radius: 900, color: '#38bdf8', weight: 1.5, fillColor: '#38bdf8', fillOpacity: .08, dashArray: '4 6' }).addTo(this.map);
+    L.marker([HUB.lat, HUB.lng], { icon: L.divIcon({ className: '', html: '<div class="hub-pin"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.3 6.5l8-3.2a2 2 0 0 1 1.4 0l8 3.2A2 2 0 0 1 22 8.35Z"/><path d="M6 18h12M6 14h12"/></svg></div>', iconSize: [38, 38], iconAnchor: [19, 19] }) })
+      .addTo(this.map).bindTooltip(HUB.n, { direction: 'top', offset: [0, -18] });
+    LOCS.forEach(l => L.marker([l.lat, l.lng], { icon: L.divIcon({ className: '', html: '<div class="dest-pin"></div>', iconSize: [10, 10], iconAnchor: [5, 5] }), interactive: true, keyboard: false })
+      .addTo(this.map).bindTooltip(l.n, { direction: 'top', offset: [0, -6] }));
+
+    this.map.on('click', () => UI.select(null));
+    this.map.on('dragstart', () => { if (State.follow) UI.setFollow(false); });
+  },
+  pinHTML(v) {
+    return `<div class="veh-pin ${v.status}"><div class="veh-dot"><svg class="veh-arrow" style="transform:rotate(${v.heading}deg)" viewBox="0 0 24 24" width="15" height="15" fill="#fff"><path d="M12 2 L19.5 21 L12 16.5 L4.5 21 Z"/></svg></div><span class="veh-label">${esc(v.plate)}</span></div>`;
+  },
+  sync() {
+    const ids = new Set(Data.fleet.map(v => v.id));
+    Object.keys(this.markers).forEach(id => { if (!ids.has(id)) { this.map.removeLayer(this.markers[id]); delete this.markers[id]; } });
+    Data.fleet.forEach(v => {
+      let m = this.markers[v.id];
+      if (!m) {
+        m = L.marker([v.lat, v.lng], { icon: L.divIcon({ className: '', html: this.pinHTML(v), iconSize: [34, 34], iconAnchor: [17, 17] }), zIndexOffset: 500 });
+        m.on('click', e => { L.DomEvent.stopPropagation(e); UI.select(v.id, true); });
+        this.markers[v.id] = m;
+      }
+      const visible = State.mapFilter === 'all' || State.mapFilter === v.status;
+      if (visible && !this.map.hasLayer(m)) m.addTo(this.map);
+      if (!visible && this.map.hasLayer(m)) this.map.removeLayer(m);
+      m.setLatLng([v.lat, v.lng]);
+      const el = m.getElement();
+      if (el) {
+        const pin = el.firstChild;
+        const cls = `veh-pin ${v.status}${State.selected === v.id ? ' sel' : ''}`;
+        if (pin.className !== cls) pin.className = cls;
+        const ar = pin.querySelector('.veh-arrow'); if (ar) ar.style.transform = `rotate(${v.heading}deg)`;
+      }
+    });
+    // Route line for selected vehicle
+    const sel = Data.fleet.find(v => v.id === State.selected);
+    if (sel && sel.status === 'Moving') {
+      const pts = [[sel.lat, sel.lng], [sel.tLat, sel.tLng]];
+      if (!this.line) this.line = L.polyline(pts, { color: '#38bdf8', weight: 2.5, opacity: .85, className: 'route-line' }).addTo(this.map);
+      else this.line.setLatLngs(pts);
+    } else if (this.line) { this.map.removeLayer(this.line); this.line = null; }
+    if (sel && State.follow && State.tab === 'dashboard') this.map.panTo([sel.lat, sel.lng], { animate: true, duration: .5, easeLinearity: 1 });
+  },
+  fitAll() {
+    const pts = Data.fleet.map(v => [v.lat, v.lng]).concat([[HUB.lat, HUB.lng]]);
+    this.map.flyToBounds(pts, { padding: [60, 60], duration: .9, maxZoom: 13 });
+  },
+  toggleTiles() {
+    State.tileDark = !State.tileDark;
+    if (State.tileDark) { this.map.removeLayer(this.light); this.dark.addTo(this.map); }
+    else { this.map.removeLayer(this.dark); this.light.addTo(this.map); }
+  }
+};
+
+/* =====================================================
+   7. UI RENDERERS
+===================================================== */
+const levelMeta = {
+  critical: { icon: 'triangle-alert', label: 'Kritis', cls: 'text-rose-300' },
+  warning: { icon: 'circle-alert', label: 'Peringatan', cls: 'text-amber-300' },
+  info: { icon: 'info', label: 'Info', cls: 'text-sky-300' }
+};
+const statusLabel = { Moving: 'Moving', Idle: 'Idle', Maintenance: 'Maintenance' };
+const fuelColor = f => f < 15 ? '#f43f5e' : f < 35 ? '#f59e0b' : '#10b981';
+const tempCls = t => t > TEMP_LIMIT ? 'text-rose-400' : t > 95 ? 'text-amber-300' : 'text-slate-100';
+
+const UI = {
+  /* ---------- Navigation ---------- */
+  renderNav() {
+    const mk = (n, cls) => `<button class="nav-btn ${cls}" data-act="tab" data-id="${n.id}"><i data-lucide="${n.icon}" class="w-[18px] h-[18px]"></i><span>${n.label}</span>${n.badge ? `<span data-badge="${n.badge}" class="nb-badge hidden">0</span>` : ''}</button>`;
+    $('#navDesktop').innerHTML = NAV.map(n => mk(n, '')).join('');
+    $('#navDrawer').innerHTML = NAV.map(n => mk(n, '!py-3')).join('');
+    $('#navBottom').innerHTML = NAV.map(n => mk(n, '')).join('');
+  },
+  switchTab(id, replay = true) {
+    State.tab = id;
+    $$('.tab-pane').forEach(p => p.classList.toggle('active', p.dataset.tab === id));
+    $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id === 'dashboard') setTimeout(() => MapView.map && MapView.map.invalidateSize(), 60);
+    if (id === 'fleet') this.renderFleet(true);
+    if (id === 'warehouse') { this.renderInventory(); this.updateWarehouse(true); }
+    if (id === 'incidents') this.renderLogs();
+    this.toggleDrawer(false);
+  },
+  toggleDrawer(force) {
+    State.drawer = force === undefined ? !State.drawer : force;
+    document.body.classList.toggle('drawer-open', State.drawer);
+  },
+  syncChips() {
+    $$('[data-set]').forEach(c => c.classList.toggle('on', State[c.dataset.set] === c.dataset.val));
+    $$('[data-act="speed"]').forEach(c => c.classList.toggle('on', String(State.speed) === c.dataset.val));
+    $$('.sim-ico-pause').forEach(e => e.classList.toggle('hidden', State.paused));
+    $$('.sim-ico-play').forEach(e => e.classList.toggle('hidden', !State.paused));
+    $$('.sim-label').forEach(e => e.textContent = State.paused ? 'Lanjutkan' : 'Jeda');
+  },
+
+  /* ---------- KPIs & badges ---------- */
+  updateKPIs() {
+    const f = Data.fleet, n = f.length || 1;
+    const moving = f.filter(v => v.status === 'Moving');
+    const set = (k, v) => { const el = $(`[data-kpi="${k}"]`); if (el && el.textContent !== String(v)) el.textContent = v; };
+    set('active', moving.length); set('total', f.length);
+    set('speed', moving.length ? Math.round(moving.reduce((s, v) => s + v.speed, 0) / moving.length) : 0);
+    set('fuel', Math.round(f.reduce((s, v) => s + v.fuel, 0) / n));
+    set('alerts', Data.alerts.filter(a => !a.ack && a.level !== 'info').length);
+    set('cap', this.capacity().pct);
+    ['Moving', 'Idle', 'Maintenance'].forEach(s => { const el = $(`[data-count="${s}"]`); if (el) el.textContent = f.filter(v => v.status === s).length; });
+  },
+  updateBadges() {
+    const c = Data.alerts.filter(a => !a.ack && a.level !== 'info').length;
+    $$('[data-badge="alerts"]').forEach(b => { b.textContent = c > 99 ? '99+' : c; b.classList.toggle('hidden', c === 0); });
+    ['critical', 'warning', 'info'].forEach(l => { const el = $(`[data-inc="${l}"]`); if (el) el.textContent = Data.alerts.filter(a => a.level === l).length; });
+  },
+
+  /* ---------- Alerts / logs ---------- */
+  alertHTML(a) {
+    const m = levelMeta[a.level], v = Data.fleet.find(x => x.id === a.vid);
+    return `<li class="log-item lvl-${a.level} ${a.fresh ? 'fresh' : ''} ${a.ack ? 'acked' : ''}">
+      <span class="lic"><i data-lucide="${m.icon}" class="w-4 h-4"></i></span>
+      <div class="min-w-0 flex-1">
+        <p class="text-[13px] leading-snug text-slate-100">${esc(a.msg)}</p>
+        <div class="flex items-center flex-wrap gap-x-2 gap-y-1 mt-1.5">
+          <span class="text-[10px] font-extrabold uppercase ${m.cls}">${m.label}</span>
+          <span class="text-[10px] text-slate-500 tabular-nums">${fmtTime(a.ts)}</span>
+          ${v ? `<button class="text-[10px] font-bold text-sky-300 hover:underline flex items-center gap-1" data-act="track" data-id="${v.id}"><i data-lucide="map-pin" class="w-3 h-3"></i>Lacak ${esc(v.plate)}</button>` : ''}
+          ${!a.ack && a.level !== 'info' ? `<button class="ml-auto text-[10px] font-bold text-emerald-300 hover:underline flex items-center gap-1" data-act="ackAlert" data-id="${a.id}"><i data-lucide="check" class="w-3 h-3"></i>Selesai</button>` : ''}
+        </div>
+      </div>
+    </li>`;
+  },
+  renderLogs() {
+    const live = $('#liveLog');
+    if (live) {
+      const list = Data.alerts.filter(a => State.logFilter === 'all' || a.level === State.logFilter).slice(0, 40);
+      live.innerHTML = list.length ? list.map(a => this.alertHTML(a)).join('') : `<li class="text-center text-sm text-slate-500 py-10">Tidak ada log untuk filter ini.</li>`;
+    }
+    const inc = $('#incList');
+    if (inc && State.tab === 'incidents') {
+      const list = Data.alerts.filter(a => State.incFilter === 'all' ? true : State.incFilter === 'open' ? (!a.ack && a.level !== 'info') : a.level === State.incFilter);
+      inc.innerHTML = list.length ? list.map(a => this.alertHTML(a)).join('') : `<li class="lg:col-span-2 glass rounded-2xl text-center text-sm text-slate-500 py-14">Log kosong. Klik "Simulasikan Insiden" untuk mencoba.</li>`;
+    }
+    Data.alerts.forEach(a => a.fresh = false);
+    icons(); this.updateBadges();
+  },
+
+  /* ---------- Selected vehicle ---------- */
+  select(id, fly) {
+    State.selected = id;
+    const card = $('#selCard');
+    if (!id) { card.classList.add('hidden'); UI.setFollow(false); MapView.sync(); return; }
+    const v = Data.fleet.find(x => x.id === id); if (!v) return;
+    card.classList.remove('hidden'); card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'fadeUp .35s ease both';
+    if (fly) MapView.map.flyTo([v.lat, v.lng], Math.max(MapView.map.getZoom(), 13), { duration: .9 });
+    this.updateSel(); MapView.sync();
+  },
+  setFollow(on) {
+    State.follow = on;
+    $('#sel-follow').classList.toggle('on', on);
+  },
+  updateSel() {
+    const v = Data.fleet.find(x => x.id === State.selected); if (!v) return;
+    $('#sel-plate').textContent = v.plate;
+    $('#sel-sub').textContent = `${v.type} · ${v.driver} · ${v.status === 'Moving' ? 'Menuju ' + v.tName : v.status === 'Idle' ? 'Standby' : 'Dalam servis'}`;
+    const st = $('#sel-status'); st.className = `badge st-${v.status}`; st.textContent = v.status;
+    $('#sel-speed').textContent = Math.round(v.speed);
+    $('#sel-fuel').textContent = Math.round(v.fuel);
+    const t = $('#sel-temp'); t.textContent = Math.round(v.temp); t.className = tempCls(v.temp);
+    const b = $('#sel-bar'); b.style.width = v.fuel + '%'; b.style.background = fuelColor(v.fuel);
+  },
+
+  /* ---------- Fleet ---------- */
+  fleetCard(v, anim) {
+    return `<article data-card="${v.id}" class="glass rounded-2xl p-4 card-hover ${anim ? 'anim-in' : ''}" ${anim ? `style="animation-delay:${Math.min(anim * 0.05, .4)}s"` : ''}>
+      <div class="flex items-start justify-between gap-2">
+        <div class="min-w-0">
+          <h3 class="font-extrabold text-lg tracking-tight">${esc(v.plate)}</h3>
+          <p class="text-xs text-slate-400 truncate">${esc(v.type)} · ${esc(v.driver)}</p>
+        </div>
+        <span data-t="status" class="badge st-${v.status}">${v.status}</span>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+        <div class="rounded-xl bg-slate-950/60 py-2.5"><i data-lucide="gauge" class="w-3.5 h-3.5 mx-auto text-sky-300"></i><p class="font-extrabold mt-1"><span data-t="speed">0</span></p><p class="text-[10px] text-slate-500 font-bold">km/j</p></div>
+        <div class="rounded-xl bg-slate-950/60 py-2.5"><i data-lucide="fuel" class="w-3.5 h-3.5 mx-auto text-amber-300"></i><p class="font-extrabold mt-1"><span data-t="fuel">0</span></p><p class="text-[10px] text-slate-500 font-bold">% BBM</p></div>
+        <div class="rounded-xl bg-slate-950/60 py-2.5"><i data-lucide="thermometer" class="w-3.5 h-3.5 mx-auto text-rose-300"></i><p class="font-extrabold mt-1"><span data-t="temp">0</span></p><p class="text-[10px] text-slate-500 font-bold">°C mesin</p></div>
+      </div>
+      <div class="mt-3 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div data-bar class="h-full rounded-full transition-all duration-500"></div></div>
+      <p class="mt-3 text-[11px] text-slate-400 flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i><span data-t="loc" class="truncate"></span></p>
+      <p class="text-[10px] text-slate-600 mt-0.5 pl-5 tabular-nums" data-t="coord"></p>
+      <div class="grid grid-cols-3 gap-1.5 mt-3.5">
+        <button class="btn btn-sm btn-primary" data-act="track" data-id="${v.id}"><i data-lucide="crosshair" class="w-3.5 h-3.5"></i>Lacak</button>
+        <button class="btn btn-sm" data-act="dispatch" data-id="${v.id}"><i data-lucide="play" class="w-3.5 h-3.5"></i>Jalan</button>
+        <button class="btn btn-sm" data-act="idle" data-id="${v.id}"><i data-lucide="pause" class="w-3.5 h-3.5"></i>Idle</button>
+        <button class="btn btn-sm" data-act="maint" data-id="${v.id}"><i data-lucide="wrench" class="w-3.5 h-3.5"></i>Servis</button>
+        <button class="btn btn-sm" data-act="refuel" data-id="${v.id}"><i data-lucide="fuel" class="w-3.5 h-3.5"></i>BBM</button>
+        <button class="btn btn-sm btn-danger" data-act="delVehicle" data-id="${v.id}"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i>Hapus</button>
+      </div>
+    </article>`;
+  },
+  renderFleet(animate = false) {
+    const q = State.fleetSearch.toLowerCase();
+    const list = Data.fleet.filter(v => (State.fleetFilter === 'all' || v.status === State.fleetFilter) && (!q || (v.plate + ' ' + v.driver + ' ' + v.type).toLowerCase().includes(q)));
+    $('#fleetGrid').innerHTML = list.length
+      ? list.map((v, i) => this.fleetCard(v, animate ? i + 1 : 0)).join('')
+      : `<div class="col-span-full glass rounded-2xl text-center py-14 text-slate-500 text-sm">Tidak ada armada yang cocok.</div>`;
+    icons(); this.updateFleetLive();
+  },
+  updateFleetLive() {
+    if (State.tab !== 'fleet') return;
+    Data.fleet.forEach(v => {
+      const c = document.querySelector(`[data-card="${v.id}"]`); if (!c) return;
+      const t = k => c.querySelector(`[data-t="${k}"]`);
+      const setT = (k, val) => { const e = t(k); if (e && e.textContent !== String(val)) e.textContent = val; };
+      setT('speed', Math.round(v.speed)); setT('fuel', Math.round(v.fuel));
+      setT('temp', Math.round(v.temp)); t('temp').className = tempCls(v.temp);
+      setT('loc', v.status === 'Moving' ? 'Menuju ' + v.tName : v.status === 'Idle' ? 'Standby — menunggu penugasan' : 'Dalam perawatan bengkel');
+      setT('coord', `${v.lat.toFixed(4)}, ${v.lng.toFixed(4)} · ODO ${Math.round(v.odo).toLocaleString('id-ID')} km`);
+      const st = t('status'); const cls = `badge st-${v.status}`; if (st.className !== cls) { st.className = cls; st.textContent = v.status; }
+      const bar = c.querySelector('[data-bar]'); bar.style.width = v.fuel + '%'; bar.style.background = fuelColor(v.fuel);
+    });
+  },
+
+  /* ---------- Warehouse ---------- */
+  capacity() {
+    const total = Data.inv.reduce((s, i) => s + i.qty, 0), cap = ZONES.length * ZONE_CAP;
+    return { total, cap, pct: Math.round(total / cap * 100) };
+  },
+  zoneUsed(z, excl) { return Data.inv.filter(i => i.zone === z && i.id !== excl).reduce((s, i) => s + i.qty, 0); },
+  updateWarehouse(replay) {
+    const { total, cap, pct } = this.capacity();
+    const col = pct < 65 ? '#10b981' : pct < 85 ? '#f59e0b' : '#f43f5e';
+    const arc = $('#g-arc'), needle = $('#g-needle');
+    const apply = () => { arc.style.strokeDashoffset = 100 - pct; arc.style.stroke = col; needle.style.transform = `rotate(${pct * 1.8 - 90}deg)`; };
+    if (replay) {
+      arc.style.transition = 'none'; needle.style.transition = 'none';
+      arc.style.strokeDashoffset = 100; needle.style.transform = 'rotate(-90deg)';
+      void arc.getBoundingClientRect(); arc.style.transition = ''; needle.style.transition = '';
+      requestAnimationFrame(() => requestAnimationFrame(apply));
+    } else apply();
+    $('#g-pct').textContent = pct;
+    const gs = $('#g-state');
+    gs.textContent = pct < 65 ? 'Kapasitas aman' : pct < 85 ? 'Okupansi tinggi — pantau inbound' : 'Hampir penuh — batasi inbound!';
+    gs.style.color = col;
+    $('#w-total').textContent = total; $('#w-free').textContent = cap - total;
+    $('#w-low').textContent = Data.inv.filter(i => i.qty <= i.min).length;
+    ZONES.forEach(z => {
+      const used = this.zoneUsed(z), p = Math.round(used / ZONE_CAP * 100);
+      const c = p < 65 ? '#10b981' : p < 85 ? '#f59e0b' : '#f43f5e';
+      const row = $(`[data-zone="${z}"]`); if (!row) return;
+      row.querySelector('[data-zv]').textContent = `${used} / ${ZONE_CAP} (${p}%)`;
+      const b = row.querySelector('[data-zb]'); b.style.width = p + '%'; b.style.background = c;
+    });
+    this.updateKPIs();
+  },
+  renderZoneBars() {
+    $('#zoneBars').innerHTML = ZONES.map(z => `<div data-zone="${z}">
+      <div class="flex justify-between text-xs mb-1"><span class="font-bold">Zona ${z}</span><span data-zv class="text-slate-400 tabular-nums">0</span></div>
+      <div class="h-2.5 rounded-full bg-slate-800 overflow-hidden"><div data-zb class="h-full rounded-full" style="width:0;transition:width 1s cubic-bezier(.3,1,.4,1), background .5s"></div></div></div>`).join('');
+  },
+  renderInventory() {
+    const q = State.invSearch.toLowerCase();
+    const list = Data.inv.filter(i => (State.invCat === 'all' || i.cat === State.invCat) && (State.invZone === 'all' || i.zone === State.invZone) && (!q || (i.sku + ' ' + i.name).toLowerCase().includes(q)));
+    $('#invBody').innerHTML = list.map((i, idx) => {
+      const low = i.qty <= i.min, p = clamp(i.qty / (i.min * 4) * 100, 4, 100);
+      return `<tr style="animation-delay:${Math.min(idx * 0.03, .3)}s">
+        <td class="font-bold text-sky-300 tabular-nums">${esc(i.sku)}</td>
+        <td class="font-semibold">${esc(i.name)}</td>
+        <td class="text-slate-400">${esc(i.cat)}</td>
+        <td><span class="px-2 py-0.5 rounded-md bg-slate-800 text-xs font-extrabold">${i.zone}</span></td>
+        <td><div class="flex items-center gap-2"><span class="font-extrabold w-8 tabular-nums">${i.qty}</span><div class="flex-1 h-1.5 rounded-full bg-slate-800 overflow-hidden min-w-[60px]"><div class="h-full rounded-full transition-all" style="width:${p}%;background:${low ? '#f43f5e' : '#38bdf8'}"></div></div></div></td>
+        <td>${low ? '<span class="badge" style="background:rgba(244,63,94,.15);color:#fda4af;border-color:rgba(244,63,94,.35)">Rendah</span>' : '<span class="badge" style="background:rgba(16,185,129,.15);color:#6ee7b7;border-color:rgba(16,185,129,.35)">Normal</span>'}</td>
+        <td><div class="flex justify-end gap-1">
+          <button class="btn btn-sm !px-2" data-act="invDec" data-id="${i.id}" title="Outbound 1 pallet"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+          <button class="btn btn-sm !px-2" data-act="invInc" data-id="${i.id}" title="Inbound 1 pallet"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+          <button class="btn btn-sm !px-2" data-act="invEdit" data-id="${i.id}" title="Edit"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+          <button class="btn btn-sm btn-danger !px-2" data-act="invDel" data-id="${i.id}" title="Hapus"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        </div></td></tr>`;
+    }).join('');
+    $('#invEmpty').classList.toggle('hidden', list.length > 0);
+    icons();
+  }
+};
+
+/* =====================================================
+   8. ACTIONS (CRUD + interactions)
+===================================================== */
+const vehOf = id => Data.fleet.find(v => v.id === id);
+const afterFleetChange = (animate = false) => { MapView.sync(); UI.updateKPIs(); UI.updateSel(); if (State.tab === 'fleet') UI.renderFleet(animate); Store.save(); };
+
+function setStatus(v, status) {
+  if (v.status === status) return Toast.show(`${v.plate} sudah berstatus ${status}.`, 'info');
+  if (status === 'Moving') {
+    if (v.fuel < 5) return Toast.show(`BBM ${v.plate} terlalu rendah. Isi bahan bakar dulu.`, 'error', 'Tidak dapat berjalan');
+    v.status = 'Moving'; v.auto = true; v.speed = rand(25, 40); pickTarget(v);
+    pushAlert({ level: 'info', type: 'depart', vid: v.id, msg: `${v.plate} dikirim manual menuju ${v.tName}`, toast: false });
+    Toast.show(`${v.plate} berangkat menuju ${v.tName}.`, 'success');
+  } else if (status === 'Idle') {
+    v.status = 'Idle'; v.speed = 0; v.auto = false;
+    pushAlert({ level: 'info', type: 'idle', vid: v.id, msg: `${v.plate} dihentikan manual (Idle)`, toast: false });
+    Toast.show(`${v.plate} dihentikan — status Idle.`, 'info');
+  } else {
+    v.status = 'Maintenance'; v.speed = 0; v.auto = false;
+    pushAlert({ level: 'info', type: 'maint', vid: v.id, msg: `${v.plate} dijadwalkan servis di bengkel`, toast: false });
+    Toast.show(`${v.plate} masuk jadwal Maintenance.`, 'warn', 'Servis');
+  }
+  afterFleetChange();
+}
+
+function vehicleForm() {
+  Modal.form({
+    title: 'Tambah Armada Baru', icon: 'truck', okText: 'Tambah Armada',
+    body: `
+      <div><label class="lbl">Plat Nomor</label><input name="plate" class="inp" placeholder="cth: B-2024" maxlength="10" required /></div>
+      <div><label class="lbl">Tipe Kendaraan</label>
+        <select name="type" class="inp">${['Box Truck', 'Reefer Truck', 'Trailer 40ft', 'Van Last-Mile', 'Pickup CDD'].map(t => `<option>${t}</option>`).join('')}</select></div>
+      <div><label class="lbl">Nama Driver</label><input name="driver" class="inp" placeholder="cth: Rina Marlina" maxlength="30" required /></div>`,
+    onSubmit(fd) {
+      const plate = (fd.plate || '').trim().toUpperCase(), driver = (fd.driver || '').trim();
+      if (!plate || !driver) return 'Plat nomor dan nama driver wajib diisi.';
+      if (Data.fleet.some(v => v.plate === plate)) return `Plat ${plate} sudah terdaftar.`;
+      const v = { id: 'V' + uid(), plate, type: fd.type, driver, status: 'Idle', lat: HUB.lat + rand(-.003, .003), lng: HUB.lng + rand(-.003, .003), speed: 0, fuel: 100, temp: 42, heading: 0, tLat: 0, tLng: 0, tName: '', idleLeft: 3, auto: true, heatLeft: 0, overLeft: 0, odo: 0 };
+      Data.fleet.push(v);
+      pushAlert({ level: 'info', type: 'new', vid: v.id, msg: `Armada baru ${plate} (${v.type}) ditambahkan ke jaringan IoT`, toast: false });
+      Toast.show(`Armada ${plate} berhasil ditambahkan.`, 'success');
+      afterFleetChange(true);
+    }
+  });
+}
+
+function invForm(item) {
+  const e = !!item;
+  Modal.form({
+    title: e ? 'Edit Stok Pallet' : 'Tambah Stok Pallet', icon: 'package', okText: e ? 'Simpan Perubahan' : 'Tambah Stok',
+    body: `
+      <div class="grid grid-cols-3 gap-3">
+        <div class="col-span-1"><label class="lbl">SKU</label><input name="sku" class="inp" value="${e ? esc(item.sku) : ''}" placeholder="XX-0000" maxlength="10" required /></div>
+        <div class="col-span-2"><label class="lbl">Nama Barang</label><input name="name" class="inp" value="${e ? esc(item.name) : ''}" placeholder="Nama barang" maxlength="40" required /></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Kategori</label><select name="cat" class="inp">${CATS.map(c => `<option ${e && item.cat === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+        <div><label class="lbl">Zona</label><select name="zone" class="inp">${ZONES.map(z => `<option ${e && item.zone === z ? 'selected' : ''}>${z}</option>`).join('')}</select></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="lbl">Jumlah Pallet</label><input name="qty" type="number" min="0" class="inp" value="${e ? item.qty : 10}" required /></div>
+        <div><label class="lbl">Minimum Stok</label><input name="min" type="number" min="0" class="inp" value="${e ? item.min : 10}" required /></div>
+      </div>
+      <p class="text-[11px] text-slate-500">Kapasitas tiap zona maksimal ${ZONE_CAP} pallet.</p>`,
+    onSubmit(fd) {
+      const sku = fd.sku.trim().toUpperCase(), name = fd.name.trim(), qty = parseInt(fd.qty, 10), min = parseInt(fd.min, 10);
+      if (!sku || !name) return 'SKU dan nama barang wajib diisi.';
+      if (isNaN(qty) || qty < 0 || isNaN(min) || min < 0) return 'Jumlah dan minimum harus angka ≥ 0.';
+      if (Data.inv.some(i => i.sku === sku && (!e || i.id !== item.id))) return `SKU ${sku} sudah ada.`;
+      if (UI.zoneUsed(fd.zone, e ? item.id : null) + qty > ZONE_CAP) return `Zona ${fd.zone} melebihi kapasitas (${ZONE_CAP} pallet).`;
+      if (e) { Object.assign(item, { sku, name, cat: fd.cat, zone: fd.zone, qty, min }); Toast.show(`${name} berhasil diperbarui.`, 'success'); }
+      else { Data.inv.unshift({ id: uid(), sku, name, cat: fd.cat, zone: fd.zone, qty, min }); Toast.show(`${name} ditambahkan ke Zona ${fd.zone}.`, 'success'); }
+      checkStock(e ? item : Data.inv[0]); invChanged();
+    }
+  });
+}
+
+function checkStock(i) {
+  if (i.qty <= i.min) pushAlert({ level: 'warning', type: 'stock', key: 'stk' + i.id, cd: 15000, msg: `Stok ${i.name} (${i.sku}) di bawah minimum — ${i.qty}/${i.min} pallet, Zona ${i.zone}` });
+  const { pct } = UI.capacity();
+  if (pct >= 90) pushAlert({ level: 'critical', type: 'cap', key: 'cap', cd: 30000, msg: `Kapasitas gudang kritis: ${pct}% terisi` });
+}
+function invChanged() { UI.renderInventory(); UI.updateWarehouse(); Store.save(); }
+
+function adjustInv(id, d) {
+  const i = Data.inv.find(x => x.id === id); if (!i) return;
+  if (d < 0 && i.qty <= 0) return Toast.show(`Stok ${i.name} sudah 0 pallet.`, 'error', 'Outbound ditolak');
+  if (d > 0 && UI.zoneUsed(i.zone) + d > ZONE_CAP) return Toast.show(`Zona ${i.zone} penuh (${ZONE_CAP} pallet).`, 'error', 'Inbound ditolak');
+  i.qty += d;
+  Toast.show(`${d > 0 ? 'Inbound' : 'Outbound'} 1 pallet ${i.name} → sisa ${i.qty}.`, d > 0 ? 'success' : 'info');
+  if (d < 0) checkStock(i);
+  invChanged();
+}
+
+const Actions = {
+  tab: d => UI.switchTab(d.id),
+  drawer: () => UI.toggleDrawer(),
+  modalClose: () => Modal.close(),
+  toggleSim: () => { State.paused = !State.paused; UI.syncChips(); Toast.show(State.paused ? 'Simulasi telemetri dijeda.' : 'Simulasi telemetri dilanjutkan.', 'info', 'Simulasi'); },
+  speed: d => { State.speed = +d.val; UI.syncChips(); Toast.show(`Kecepatan simulasi ${d.val}x.`, 'info', 'Simulasi'); },
+  resetDemo: () => { UI.toggleDrawer(false); Modal.confirm({
+    title: 'Reset Data Demo?', danger: true, icon: 'rotate-ccw', okText: 'Ya, Reset',
+    text: 'Seluruh armada, inventaris, dan log insiden akan dikembalikan ke data awal.',
+    onOk: () => { Store.noSave = true; localStorage.removeItem(KEY); Toast.show('Data direset. Memuat ulang...', 'success'); setTimeout(() => location.reload(), 700); } }); },
+
+  track: d => {
+    if (State.tab !== 'dashboard') UI.switchTab('dashboard');
+    setTimeout(() => { UI.select(d.id, true); }, State.tab === 'dashboard' ? 80 : 120);
+    const v = vehOf(d.id); if (v) Toast.show(`Melacak ${v.plate} di peta.`, 'info', 'Tracking');
+  },
+  dispatch: d => { const v = vehOf(d.id || State.selected); v && setStatus(v, 'Moving'); },
+  idle: d => { const v = vehOf(d.id || State.selected); v && setStatus(v, 'Idle'); },
+  maint: d => { const v = vehOf(d.id || State.selected); v && setStatus(v, 'Maintenance'); },
+  refuel: d => {
+    const v = vehOf(d.id); if (!v) return;
+    if (v.fuel > 95) return Toast.show(`Tangki ${v.plate} sudah penuh.`, 'info');
+    v.fuel = 100; delete cool[v.id + 'f'];
+    pushAlert({ level: 'info', type: 'refuel', vid: v.id, msg: `${v.plate} diisi bahan bakar hingga 100%`, toast: false });
+    Toast.show(`Tangki ${v.plate} terisi penuh (100%).`, 'success', 'Isi BBM'); afterFleetChange();
+  },
+  addVehicle: () => vehicleForm(),
+  delVehicle: d => {
+    const v = vehOf(d.id); if (!v) return;
+    Modal.confirm({ title: `Hapus armada ${v.plate}?`, danger: true, icon: 'trash-2', okText: 'Ya, Hapus',
+      text: `Perangkat IoT <b class="text-slate-200">${esc(v.plate)}</b> (${esc(v.driver)}) akan dihapus dari pelacakan.`,
+      onOk: () => {
+        Data.fleet = Data.fleet.filter(x => x.id !== v.id);
+        if (State.selected === v.id) UI.select(null);
+        pushAlert({ level: 'info', type: 'del', msg: `Armada ${v.plate} dihapus dari jaringan`, toast: false });
+        Toast.show(`Armada ${v.plate} dihapus.`, 'success'); afterFleetChange();
+      } });
+  },
+  selClose: () => UI.select(null),
+  selFollow: () => { UI.setFollow(!State.follow); Toast.show(State.follow ? 'Mode ikuti aktif.' : 'Mode ikuti nonaktif.', 'info', 'Tracking'); },
+  fitAll: () => { MapView.fitAll(); Toast.show('Menampilkan seluruh armada.', 'info', 'Peta'); },
+  tileToggle: () => { MapView.toggleTiles(); Toast.show(State.tileDark ? 'Peta mode gelap.' : 'Peta mode terang.', 'info', 'Peta'); },
+
+  invAdd: () => invForm(),
+  invEdit: d => { const i = Data.inv.find(x => x.id === d.id); i && invForm(i); },
+  invInc: d => adjustInv(d.id, 1),
+  invDec: d => adjustInv(d.id, -1),
+  invDel: d => {
+    const i = Data.inv.find(x => x.id === d.id); if (!i) return;
+    Modal.confirm({ title: 'Hapus item inventaris?', danger: true, icon: 'trash-2', okText: 'Ya, Hapus',
+      text: `<b class="text-slate-200">${esc(i.name)}</b> (${i.qty} pallet, Zona ${i.zone}) akan dihapus dari stok.`,
+      onOk: () => { Data.inv = Data.inv.filter(x => x.id !== i.id); Toast.show(`${i.name} dihapus dari inventaris.`, 'success'); invChanged(); } });
+  },
+
+  simIncident: () => { UI.toggleDrawer(false); Sim.triggerIncident(); },
+  ackAlert: d => { const a = Data.alerts.find(x => x.id === d.id); if (a) { a.ack = true; Toast.show('Insiden ditandai selesai.', 'success'); UI.renderLogs(); UI.updateKPIs(); Store.save(); } },
+  ackAll: () => {
+    const open = Data.alerts.filter(a => !a.ack).length;
+    if (!open) return Toast.show('Tidak ada insiden terbuka.', 'info');
+    Modal.confirm({ title: 'Tandai semua selesai?', icon: 'check-check', okText: 'Ya, Tandai', text: `${open} log akan ditandai selesai.`,
+      onOk: () => { Data.alerts.forEach(a => a.ack = true); Toast.show(`${open} insiden ditandai selesai.`, 'success'); UI.renderLogs(); UI.updateKPIs(); Store.save(); } });
+  },
+  clearAlerts: () => {
+    if (!Data.alerts.length) return Toast.show('Log sudah kosong.', 'info');
+    Modal.confirm({ title: 'Hapus seluruh log?', danger: true, icon: 'trash-2', okText: 'Ya, Hapus Semua', text: 'Riwayat insiden dan peringatan akan dihapus permanen.',
+      onOk: () => { Data.alerts = []; Toast.show('Log insiden dibersihkan.', 'success'); UI.renderLogs(); UI.updateKPIs(); Store.save(); } });
+  }
+};
+
+/* =====================================================
+   9. EVENT WIRING
+===================================================== */
+function wire() {
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('[data-set]');
+    if (chip) {
+      State[chip.dataset.set] = chip.dataset.val; UI.syncChips();
+      const k = chip.dataset.set;
+      if (k === 'mapFilter') { MapView.sync(); if (State.selected) { const v = vehOf(State.selected); if (v && State.mapFilter !== 'all' && v.status !== State.mapFilter) UI.select(null); } }
+      if (k === 'logFilter' || k === 'incFilter') UI.renderLogs();
+      if (k === 'fleetFilter') UI.renderFleet(true);
+      return;
+    }
+    const el = e.target.closest('[data-act]');
+    if (!el) return;
+    const fn = Actions[el.dataset.act];
+    if (fn) fn(el.dataset, el, e);
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { Modal.close(); UI.toggleDrawer(false); } });
+  $('#fleetSearch').addEventListener('input', e => { State.fleetSearch = e.target.value; UI.renderFleet(false); });
+  $('#invSearch').addEventListener('input', e => { State.invSearch = e.target.value; UI.renderInventory(); });
+  $('#invCat').addEventListener('change', e => { State.invCat = e.target.value; UI.renderInventory(); });
+  $('#invZone').addEventListener('change', e => { State.invZone = e.target.value; UI.renderInventory(); });
+  window.addEventListener('beforeunload', () => { if (!Store.noSave) Store.save(); });
+  window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (NAV.some(n => n.id === id) && id !== State.tab) UI.switchTab(id); });
+}
+
+/* =====================================================
+   10. BOOT
+===================================================== */
+function boot() {
+  initData(); Modal.init();
+  UI.renderNav(); UI.renderZoneBars();
+  $('#invCat').innerHTML = '<option value="all">Semua Kategori</option>' + CATS.map(c => `<option>${c}</option>`).join('');
+  $('#invZone').innerHTML = '<option value="all">Semua Zona</option>' + ZONES.map(z => `<option value="${z}">Zona ${z}</option>`).join('');
+  MapView.init(); wire();
+  MapView.sync(); MapView.fitAll();
+  UI.renderLogs(); UI.updateWarehouse(); UI.updateKPIs(); UI.syncChips(); icons();
+
+  const initial = location.hash.slice(1);
+  UI.switchTab(NAV.some(n => n.id === initial) ? initial : 'dashboard');
+  window.scrollTo(0, 0);
+
+  const clock = () => { $('#clock').textContent = fmtTime(Date.now()); };
+  clock(); setInterval(clock, 1000);
+
+  const TICK = 0.5; let saveCt = 0;
+  setInterval(() => {
+    if (State.paused) return;
+    Sim.step(TICK * State.speed);
+    MapView.sync(); UI.updateKPIs(); UI.updateSel(); UI.updateFleetLive();
+    if (++saveCt >= 10) { saveCt = 0; Store.save(); }
+  }, TICK * 1000);
+
+  setTimeout(() => Toast.show('Telemetri live aktif — klik pin armada untuk detail.', 'success', 'FleetPulse Online'), 700);
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+</script>
+</body>
+</html>

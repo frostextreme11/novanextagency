@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kostify Pro - Sistem Manajemen Sewa Kosan & Kontrakan</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            primary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            },
+            emerald: {
+              50: '#ecfdf5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            amber: {
+              50: '#fffbeb',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            rose: {
+              50: '#fff1f2',
+              500: '#f43f5e',
+              600: '#e11d48',
+            }
+          },
+          animation: {
+            'pulse-subtle': 'pulseSubtle 2.5s infinite',
+            'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            'fade-in': 'fadeIn 0.2s ease-out',
+            'scale-in': 'scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+          },
+          keyframes: {
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.85', transform: 'scale(1.02)' },
+            },
+            slideInRight: {
+              '0%': { transform: 'translateX(100%)' },
+              '100%': { transform: 'translateX(0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.95)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* WhatsApp chat simulation bubble */
+    .wa-chat-bubble {
+      position: relative;
+      background: #dcf8c6;
+      border-radius: 7.5px 7.5px 7.5px 0;
+      box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+    }
+    .wa-chat-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 8px 8px 0;
+      border-color: transparent #dcf8c6 transparent transparent;
+    }
+
+    /* Architectural floor plan room styling */
+    .plan-room {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .plan-room:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 bg-slate-50">
+
+  <!-- ================= TOP HEADER & NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-18">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-700 to-primary-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <i data-lucide="building-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg font-bold tracking-tight text-slate-900">Kostify<span class="text-indigo-600">Pro</span></span>
+              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+                v2.4
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 hidden sm:block">Sistem Manajemen Sewa & Otomasi Tagihan Properti</p>
+          </div>
+        </div>
+
+        <!-- Center Badge: Required "Demo Prototype by NovaNext" -->
+        <div class="flex items-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-50 via-amber-100/70 to-orange-50 border border-amber-300/80 text-amber-900 shadow-xs">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            <span class="tracking-wide">Demo Prototype by <strong class="font-bold text-amber-950 underline decoration-amber-400 underline-offset-2">NovaNext</strong></span>
+          </div>
+        </div>
+
+        <!-- Actions / Header Controls -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          
+          <!-- Overdue Alert Bell Button -->
+          <button id="btn-open-overdue-center" onclick="App.openOverdueCenter()" title="Pusat Jatuh Tempo" class="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span id="badge-overdue-count" class="absolute top-1 right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-rose-500 rounded-full shadow-xs">3</span>
+          </button>
+
+          <!-- Settings / Rekening Owner Button -->
+          <button onclick="App.openSettingsModal()" title="Pengaturan Properti & Rekening" class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors focus:outline-none">
+            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Primary CTA: Check-in Penghuni Baru -->
+          <button onclick="App.openNewTenantModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white shadow-sm shadow-indigo-600/30 transition-all">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span class="hidden md:inline">Check-in</span> Penghuni Baru
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN DASHBOARD CONTENT ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Property Banner & Quick Selector -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
+          <i data-lucide="home" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 id="prop-name-display" class="text-lg sm:text-xl font-bold text-slate-900">Kost Griya Asri Harmoni</h1>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Operasional Aktif
+            </span>
+          </div>
+          <p id="prop-address-display" class="text-xs sm:text-sm text-slate-500 mt-0.5 flex items-center gap-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+            Jl. Sukamaju No. 42, Setiabudi, Jakarta Selatan • 12 Unit Kamar (3 Lantai)
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Shortcuts -->
+      <div class="flex flex-wrap items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+        <button onclick="App.openBulkReminderModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors">
+          <i data-lucide="message-square-more" class="w-3.5 h-3.5 text-emerald-600"></i>
+          Reminder WA Massal
+        </button>
+        <button onclick="App.exportDataCSV()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500"></i>
+          Export Data
+        </button>
+        <button onclick="App.resetToDefaultData()" title="Reset ke Dummy Bawaan" class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          Reset Demo
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= SUMMARY KPI STATS CARDS ================= -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      
+      <!-- Card 1: Okupansi Kamar -->
+      <div class="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tingkat Okupansi</span>
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="stat-occupancy-rate" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">75%</span>
+          <span id="stat-occupancy-ratio" class="text-xs font-medium text-slate-500">9 / 12 Kamar</span>
+        </div>
+        <!-- Progress Bar -->
+        <div class="mt-3 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+          <div id="stat-occupancy-bar" class="bg-indigo-600 h-1.5 rounded-full transition-all duration-500" style="width: 75%"></div>
+        </div>
+      </div>
+
+      <!-- Card 2: Kamar Siap Huni (Kosong) -->
+      <div class="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Kamar Siap Huni</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="door-open" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="stat-vacant-count" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">3</span>
+          <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Tersedia</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2 flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3 h-3 text-emerald-500"></i> Siap disewakan hari ini
+        </p>
+      </div>
+
+      <!-- Card 3: Tagihan Jatuh Tempo / Masa Tenggang -->
+      <div class="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jatuh Tempo / Tunggakan</span>
+          <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span id="stat-overdue-count" class="text-2xl sm:text-3xl font-extrabold text-rose-600 tracking-tight">3</span>
+          <span class="text-xs font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">Perlu Ditagih</span>
+        </div>
+        <p id="stat-overdue-amount" class="text-xs text-slate-500 mt-2 font-mono">
+          Total: Rp 5.550.000
+        </p>
+      </div>
+
+      <!-- Card 4: Estimasi Pendapatan Bulan Ini -->
+      <div class="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-xs relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pendapatan Masuk</span>
+          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="mt-2">
+          <span id="stat-income-paid" class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight font-mono">Rp 12.300.000</span>
+        </div>
+        <p id="stat-income-potential" class="text-xs text-slate-500 mt-1">
+          Potensi Total: <span class="font-mono text-slate-700 font-semibold">Rp 21.050.000</span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ================= NOTICE BANNER IF OVERDUE EXISTS ================= -->
+    <div id="overdue-banner" class="bg-gradient-to-r from-amber-500 to-rose-500 text-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-white shrink-0">
+          <i data-lucide="clock" class="w-5 h-5 animate-spin" style="animation-duration: 8s;"></i>
+        </div>
+        <div>
+          <h2 class="font-bold text-sm sm:text-base">Perhatian: Ada <span id="banner-overdue-count">3</span> Kamar Memerlukan Tindakan Penagihan</h2>
+          <p class="text-xs text-white/90">Gunakan generator link WhatsApp otomatis untuk mengirim reminder penagihan dalam 1-klik.</p>
+        </div>
+      </div>
+      <button onclick="App.openOverdueCenter()" class="shrink-0 px-4 py-2 bg-white text-rose-700 hover:bg-slate-50 font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-1.5">
+        <i data-lucide="zap" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+        Kelola Tagihan Sekarang
+      </button>
+    </div>
+
+    <!-- ================= INTERACTIVE TOOLBAR & CONTROLS ================= -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs space-y-4">
+      
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        
+        <!-- Floor Tabs -->
+        <div class="flex items-center overflow-x-auto pb-1 sm:pb-0 gap-1.5" id="floor-tabs-container">
+          <button onclick="App.setFloorFilter('all')" data-floor="all" class="floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-indigo-600 text-white shadow-xs transition-all">
+            Semua Lantai (<span id="count-floor-all">12</span>)
+          </button>
+          <button onclick="App.setFloorFilter(1)" data-floor="1" class="floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Lantai 1 (<span id="count-floor-1">4</span>)
+          </button>
+          <button onclick="App.setFloorFilter(2)" data-floor="2" class="floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Lantai 2 (<span id="count-floor-2">4</span>)
+          </button>
+          <button onclick="App.setFloorFilter(3)" data-floor="3" class="floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Lantai 3 (<span id="count-floor-3">3</span>)
+          </button>
+          <button onclick="App.setFloorFilter('paviliun')" data-floor="paviliun" class="floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+            Paviliun Kontrakan (<span id="count-floor-pav">1</span>)
+          </button>
+        </div>
+
+        <!-- View Mode Switcher: Card Grid vs Architectural Floor Plan -->
+        <div class="flex items-center self-end lg:self-auto gap-2">
+          <div class="inline-flex rounded-xl p-1 bg-slate-100 border border-slate-200/60 text-xs font-medium">
+            <button id="btn-view-grid" onclick="App.setViewMode('grid')" class="px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 bg-white text-indigo-700 shadow-xs transition-all">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              Kartu Kamar
+            </button>
+            <button id="btn-view-plan" onclick="App.setViewMode('plan')" class="px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-all">
+              <i data-lucide="map" class="w-3.5 h-3.5"></i>
+              Denah Visual 2D
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Secondary Filters & Search Bar -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
+        
+        <!-- Status Badges Filter -->
+        <div class="flex items-center flex-wrap gap-1.5">
+          <button onclick="App.setStatusFilter('all')" data-status="all" class="status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-white transition-all">
+            Semua Status
+          </button>
+          <button onclick="App.setStatusFilter('terisi')" data-status="terisi" class="status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Terisi (<span id="filter-count-terisi">6</span>)
+          </button>
+          <button onclick="App.setStatusFilter('kosong')" data-status="kosong" class="status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Kosong (<span id="filter-count-kosong">3</span>)
+          </button>
+          <button onclick="App.setStatusFilter('jatuh_tempo')" data-status="jatuh_tempo" class="status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> Masa Tenggang / Overdue (<span id="filter-count-overdue">3</span>)
+          </button>
+        </div>
+
+        <!-- Search Input -->
+        <div class="relative min-w-[240px]">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            id="search-input" 
+            oninput="App.handleSearch(this.value)"
+            placeholder="Cari kamar, nama, no HP..." 
+            class="w-full pl-9 pr-8 py-1.5 text-xs bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+          >
+          <button id="search-clear-btn" onclick="App.clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 1: INTERACTIVE CARD GRID ================= -->
+    <div id="view-grid-container" class="space-y-6">
+      <!-- Rooms will be injected here grouped by floors or as a responsive grid -->
+      <div id="rooms-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Dynamic Room Cards rendered by JS -->
+      </div>
+      
+      <!-- Empty state if search returns zero -->
+      <div id="grid-empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-3">
+          <i data-lucide="search-x" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-base font-bold text-slate-800">Tidak ada kamar ditemukan</h3>
+        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1">Coba sesuaikan kata kunci pencarian atau ubah filter lantai dan status di atas.</p>
+        <button onclick="App.resetFilters()" class="mt-4 px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors">
+          Reset Filter Pencarian
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 2: ARCHITECTURAL 2D FLOOR PLAN ================= -->
+    <div id="view-plan-container" class="hidden">
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-xs">
+        
+        <!-- Floor Plan Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="compass" class="w-4 h-4 text-indigo-600"></i>
+              Denah Arsitektur Interaktif
+            </h3>
+            <p class="text-xs text-slate-500">Klik pada kotak ruangan untuk membuka drawer informasi & penagihan WhatsApp.</p>
+          </div>
+          <!-- Legend -->
+          <div class="flex items-center flex-wrap gap-3 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-indigo-600"></span> Terisi Lunas</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-500 animate-pulse"></span> Jatuh Tempo / Overdue</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span> Kosong (Siap Huni)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-300"></span> Fasilitas Umum</span>
+          </div>
+        </div>
+
+        <!-- Floor Plan Render Stage -->
+        <div id="architectural-plan-stage" class="mt-6 space-y-8">
+          <!-- Dynamic floor layouts injected by JS -->
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= DRAWER DETAIL PENGHUNI & KAMAR ================= -->
+  <div id="tenant-drawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="drawer-title" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity duration-300" onclick="App.closeTenantDrawer()"></div>
+
+    <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+      <div class="pointer-events-auto w-screen max-w-md md:max-w-xl bg-white shadow-2xl flex flex-col h-full animate-slide-in-right">
+        
+        <!-- Drawer Header -->
+        <div class="p-5 bg-slate-900 text-white flex items-center justify-between relative overflow-hidden">
+          <div class="relative z-10 flex items-center gap-3">
+            <div id="drawer-room-badge" class="px-3 py-1 rounded-xl bg-white/20 backdrop-blur-xs font-mono font-bold text-lg text-white">
+              Kamar 101
+            </div>
+            <div>
+              <h3 id="drawer-room-type" class="text-sm font-bold text-slate-100">Deluxe AC + KM Dalam</h3>
+              <p id="drawer-room-floor" class="text-xs text-slate-400">Lantai 1 • Ukuran 4x4m</p>
+            </div>
+          </div>
+          <div class="relative z-10 flex items-center gap-2">
+            <span id="drawer-status-badge" class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+              Terisi
+            </span>
+            <button onclick="App.closeTenantDrawer()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+          <!-- Background accent glow -->
+          <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-600/30 rounded-full blur-2xl"></div>
+        </div>
+
+        <!-- Drawer Navigation Tabs -->
+        <div class="flex border-b border-slate-200 bg-slate-50 px-4 text-xs font-semibold">
+          <button onclick="App.switchDrawerTab('tab-profile')" id="tab-btn-profile" class="drawer-tab-btn py-3 px-3 text-indigo-600 border-b-2 border-indigo-600 font-bold flex items-center gap-1.5">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i> Penghuni
+          </button>
+          <button onclick="App.switchDrawerTab('tab-wa')" id="tab-btn-wa" class="drawer-tab-btn py-3 px-3 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-1.5">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-600"></i> Generator WhatsApp
+          </button>
+          <button onclick="App.switchDrawerTab('tab-billing')" id="tab-btn-billing" class="drawer-tab-btn py-3 px-3 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-1.5">
+            <i data-lucide="receipt" class="w-3.5 h-3.5"></i> Mutasi Tagihan
+          </button>
+          <button onclick="App.switchDrawerTab('tab-room')" id="tab-btn-room" class="drawer-tab-btn py-3 px-3 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-1.5">
+            <i data-lucide="info" class="w-3.5 h-3.5"></i> Info Kamar
+          </button>
+        </div>
+
+        <!-- Drawer Body (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-6">
+
+          <!-- ================= TAB 1: PROFIL PENGHUNI ================= -->
+          <div id="drawer-tab-profile" class="drawer-tab-content space-y-5">
+            
+            <!-- If room is occupied -->
+            <div id="drawer-occupied-view" class="space-y-5">
+              
+              <!-- Tenant Profile Card -->
+              <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-start gap-4">
+                <img id="drawer-tenant-avatar" src="" alt="Avatar" class="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-sm shrink-0">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <h4 id="drawer-tenant-name" class="text-base font-bold text-slate-900 truncate">Nama Penghuni</h4>
+                    <span id="drawer-contract-badge" class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">Bulanan</span>
+                  </div>
+                  <p id="drawer-tenant-job" class="text-xs text-slate-500 mt-0.5">Software Engineer</p>
+                  
+                  <div class="mt-3 flex flex-wrap gap-2">
+                    <a id="drawer-wa-link" href="#" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors">
+                      <i data-lucide="message-circle" class="w-3.5 h-3.5"></i> Chat WhatsApp
+                    </a>
+                    <a id="drawer-call-link" href="#" class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 transition-colors">
+                      <i data-lucide="phone" class="w-3.5 h-3.5"></i> Telepon
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Billing Status Highlight Card -->
+              <div id="drawer-due-banner" class="rounded-2xl p-4 border flex items-center justify-between">
+                <div>
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Status Tagihan Sewa</span>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span id="drawer-due-text" class="text-base font-extrabold text-slate-900">Jatuh Tempo: 18 Februari</span>
+                    <span id="drawer-days-badge" class="px-2 py-0.5 rounded-full text-xs font-bold">H-2</span>
+                  </div>
+                  <p id="drawer-nominal-due" class="text-xs font-mono font-semibold text-slate-600 mt-0.5">Rp 1.850.000 / bulan</p>
+                </div>
+                <button onclick="App.triggerQuickPayFromDrawer()" id="btn-drawer-quick-pay" class="px-3 py-2 text-xs font-bold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all shadow-xs flex items-center gap-1.5">
+                  <i data-lucide="check-check" class="w-3.5 h-3.5"></i> Catat Bayar
+                </button>
+              </div>
+
+              <!-- Tenant Details Grid -->
+              <div class="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100 text-xs">
+                <div class="p-3 flex justify-between items-center">
+                  <span class="text-slate-500 flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i> Tanggal Masuk (Check-in)</span>
+                  <span id="drawer-checkin-date" class="font-semibold text-slate-900">15 Jan 2024</span>
+                </div>
+                <div class="p-3 flex justify-between items-center">
+                  <span class="text-slate-500 flex items-center gap-2"><i data-lucide="credit-card" class="w-4 h-4 text-slate-400"></i> NIK Identitas</span>
+                  <span id="drawer-tenant-nik" class="font-mono text-slate-900">3271029384750001</span>
+                </div>
+                <div class="p-3 flex justify-between items-center">
+                  <span class="text-slate-500 flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i> Uang Jaminan / Deposit</span>
+                  <span id="drawer-tenant-deposit" class="font-mono font-semibold text-emerald-700">Rp 1.000.000</span>
+                </div>
+                <div class="p-3 flex justify-between items-center">
+                  <span class="text-slate-500 flex items-center gap-2"><i data-lucide="phone-call" class="w-4 h-4 text-slate-400"></i> Kontak Darurat</span>
+                  <span id="drawer-tenant-emergency" class="font-semibold text-slate-900">0812-9876-5432 (Ayah)</span>
+                </div>
+              </div>
+
+              <!-- Dummy KTP Card Preview Section -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <i data-lucide="id-card" class="w-4 h-4 text-indigo-600"></i>
+                    Foto Identitas / KTP Terverifikasi
+                  </span>
+                  <span class="text-[11px] font-medium text-emerald-600 flex items-center gap-1">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Validated
+                  </span>
+                </div>
+                
+                <div class="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm aspect-[1.58/1]">
+                  <img id="drawer-ktp-img" src="" alt="KTP Dummy" class="w-full h-full object-cover">
+                  <!-- Watermark overlay -->
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-3 text-white">
+                    <div class="flex items-center justify-between text-[10px]">
+                      <span class="font-mono bg-black/50 px-2 py-0.5 rounded text-amber-300 font-semibold tracking-wider">ARSIP RENTAL KOST</span>
+                      <span class="text-slate-300">Tersimpan Aman di Database</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="pt-2 flex flex-col sm:flex-row gap-2">
+                <button onclick="App.openExtendModal()" class="flex-1 py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+                  <i data-lucide="calendar-plus" class="w-4 h-4 text-indigo-600"></i>
+                  Perpanjang Sewa
+                </button>
+                <button onclick="App.confirmCheckoutRoom()" class="flex-1 py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+                  <i data-lucide="log-out" class="w-4 h-4 text-rose-600"></i>
+                  Check-out Penghuni
+                </button>
+              </div>
+
+            </div>
+
+            <!-- If room is vacant -->
+            <div id="drawer-vacant-view" class="hidden text-center py-8 space-y-4">
+              <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-100 shadow-sm">
+                <i data-lucide="door-open" class="w-8 h-8"></i>
+              </div>
+              <div>
+                <h4 class="text-base font-bold text-slate-900">Kamar Ini Sedang Kosong</h4>
+                <p class="text-xs text-slate-500 max-w-xs mx-auto mt-1">Kamar sudah dibersihkan dan siap ditempati oleh penyewa baru.</p>
+              </div>
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left text-xs space-y-2">
+                <div class="flex justify-between"><span class="text-slate-500">Tarif Standar:</span> <span id="drawer-vacant-price" class="font-mono font-bold text-slate-900">Rp 1.850.000 / bln</span></div>
+                <div class="flex justify-between"><span class="text-slate-500">Tipe Fasilitas:</span> <span id="drawer-vacant-type" class="font-semibold text-slate-900">Deluxe AC</span></div>
+              </div>
+              <button onclick="App.checkinFromDrawer()" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                Check-in Penghuni di Kamar Ini
+              </button>
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 2: WHATSAPP REMINDER GENERATOR ================= -->
+          <div id="drawer-tab-wa" class="drawer-tab-content hidden space-y-4">
+            
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <i data-lucide="bot" class="w-4 h-4"></i>
+              </div>
+              <div class="text-xs">
+                <h5 class="font-bold text-emerald-950">Otomasi Generator Tagihan WhatsApp</h5>
+                <p class="text-emerald-800 mt-0.5">Pesan terformat otomatis dengan nama penghuni, nomor kamar, rekening tujuan, dan jatuh tempo.</p>
+              </div>
+            </div>
+
+            <!-- Template Selector -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Pilih Template Pesan:</label>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <button type="button" onclick="App.setWATemplate('h-3')" id="tpl-btn-h-3" class="tpl-btn p-2 rounded-xl border text-left font-semibold border-indigo-600 bg-indigo-50/70 text-indigo-900">
+                  📅 Reminder H-3 (Sopan)
+                </button>
+                <button type="button" onclick="App.setWATemplate('today')" id="tpl-btn-today" class="tpl-btn p-2 rounded-xl border text-left font-semibold border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+                  ⚡ Hari Ini Jatuh Tempo
+                </button>
+                <button type="button" onclick="App.setWATemplate('overdue')" id="tpl-btn-overdue" class="tpl-btn p-2 rounded-xl border text-left font-semibold border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+                  🚨 Teguran Telat (Denda)
+                </button>
+                <button type="button" onclick="App.setWATemplate('receipt')" id="tpl-btn-receipt" class="tpl-btn p-2 rounded-xl border text-left font-semibold border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+                  🧾 Kwitansi Lunas (Terima Kasih)
+                </button>
+              </div>
+            </div>
+
+            <!-- WhatsApp Chat Preview Simulation Bubble -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-600"></i>
+                  Pratinjau Pesan yang Dikirim:
+                </span>
+                <span class="text-[10px] text-slate-400">Editable di bawah</span>
+              </div>
+              
+              <!-- Green WhatsApp Box -->
+              <div class="bg-[#efeae2] p-4 rounded-2xl border border-slate-200 relative">
+                <div class="wa-chat-bubble p-3 text-slate-800 text-xs leading-relaxed whitespace-pre-wrap font-sans" id="wa-preview-text">
+                  Memuat template...
+                </div>
+                <div class="flex justify-end items-center gap-1 mt-1 text-[10px] text-slate-500">
+                  <span>Hari ini, 09:41</span>
+                  <i data-lucide="check-check" class="w-3.5 h-3.5 text-blue-500"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Editable Textarea -->
+            <div>
+              <label for="wa-custom-textarea" class="block text-xs font-medium text-slate-600 mb-1">Kustomisasi Teks Sebelum Dikirim:</label>
+              <textarea 
+                id="wa-custom-textarea" 
+                rows="4" 
+                oninput="App.handleWACustomEdit(this.value)"
+                class="w-full text-xs p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 font-mono text-slate-800"
+              ></textarea>
+            </div>
+
+            <!-- WhatsApp Actions Buttons -->
+            <div class="space-y-2 pt-2">
+              <a 
+                id="btn-direct-wa-send" 
+                href="#" 
+                target="_blank" 
+                class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-emerald-600/30 transition-all"
+              >
+                <i data-lucide="send" class="w-4 h-4"></i>
+                Buka & Kirim di WhatsApp Langsung
+              </a>
+              
+              <button 
+                type="button" 
+                onclick="App.copyWAMessageToClipboard()" 
+                class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+              >
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                Salin Teks Pesan ke Clipboard
+              </button>
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 3: MUTASI TAGIHAN ================= -->
+          <div id="drawer-tab-billing" class="drawer-tab-content hidden space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-bold text-slate-800">Riwayat Pembayaran & Invoice</h5>
+              <button onclick="App.openRecordPaymentModal()" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors flex items-center gap-1">
+                <i data-lucide="plus" class="w-3 h-3"></i> Tambah Tagihan
+              </button>
+            </div>
+
+            <!-- Transaction History List -->
+            <div id="drawer-tx-list" class="space-y-2.5">
+              <!-- Dynamically populated -->
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 4: INFO KAMAR & FASILITAS ================= -->
+          <div id="drawer-tab-room" class="drawer-tab-content hidden space-y-4">
+            
+            <div class="rounded-2xl overflow-hidden border border-slate-200 relative aspect-video">
+              <img id="drawer-room-photo" src="" alt="Foto Kamar" class="w-full h-full object-cover">
+              <div class="absolute bottom-2 left-2 px-2 py-1 rounded bg-black/60 backdrop-blur-xs text-[10px] text-white font-semibold">
+                Foto Kamar Nyata
+              </div>
+            </div>
+
+            <div>
+              <h5 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Fasilitas Kamar</h5>
+              <div id="drawer-room-facilities" class="flex flex-wrap gap-1.5">
+                <!-- Dynamically populated tags -->
+              </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 text-xs space-y-1.5">
+              <div class="flex justify-between"><span class="text-slate-500">Tarif Bulanan:</span> <span id="drawer-info-price" class="font-mono font-bold text-slate-900">Rp 1.850.000</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Biaya Listrik:</span> <span class="text-slate-700">Token Listrik Mandiri (PLN)</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Iuran WiFi & Air:</span> <span class="text-emerald-700 font-semibold">Gratis / Termasuk</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Parkir:</span> <span class="text-slate-700">Motor Gratis, Mobil +Rp 150rb/bln</span></div>
+            </div>
+
+            <button onclick="App.openEditRoomModal()" class="w-full py-2.5 px-3 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Edit Spesifikasi Kamar
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CHECK-IN PENGHUNI BARU ================= -->
+  <div id="modal-new-tenant" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-modal="true">
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="App.closeNewTenantModal()"></div>
+
+      <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-slate-200">
+        
+        <!-- Modal Header -->
+        <div class="p-5 sm:p-6 bg-gradient-to-r from-indigo-700 to-indigo-900 text-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white">
+              <i data-lucide="user-plus" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold">Check-in Penghuni Baru</h3>
+              <p class="text-xs text-indigo-200">Daftarkan penyewa baru ke dalam kamar yang tersedia</p>
+            </div>
+          </div>
+          <button onclick="App.closeNewTenantModal()" class="text-white/70 hover:text-white p-1 rounded-lg">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Form Body -->
+        <form id="form-new-tenant" onsubmit="App.handleSaveNewTenant(event)" class="p-5 sm:p-6 space-y-4">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Pilih Kamar -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Pilih Kamar yang Tersedia *</label>
+              <select id="form-room-id" required onchange="App.handleRoomSelectChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-semibold text-slate-800">
+                <!-- Injected with available rooms -->
+              </select>
+            </div>
+
+            <!-- Nama Lengkap -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Penghuni *</label>
+              <input type="text" id="form-tenant-name" required placeholder="Contoh: Rian Pratama" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+            </div>
+
+            <!-- Nomor WhatsApp -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nomor WhatsApp Aktif *</label>
+              <input type="tel" id="form-tenant-phone" required placeholder="Contoh: 081234567890" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+              <span class="text-[10px] text-slate-400">Untuk otomasi pengiriman link reminder penagihan</span>
+            </div>
+
+            <!-- NIK KTP -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nomor NIK KTP *</label>
+              <input type="text" id="form-tenant-nik" required placeholder="16 digit nomor KTP" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-mono text-slate-800">
+            </div>
+
+            <!-- Pekerjaan / Kampus -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Pekerjaan / Mahasiswa</label>
+              <input type="text" id="form-tenant-job" placeholder="Contoh: Karyawan Swasta BCA" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+            </div>
+
+            <!-- Tanggal Check-in -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Mulai Masuk *</label>
+              <input type="date" id="form-checkin-date" required class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+            </div>
+
+            <!-- Tanggal Jatuh Tempo Pertama -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Jatuh Tempo Bayar Berikutnya *</label>
+              <input type="date" id="form-due-date" required class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+            </div>
+
+            <!-- Tarif Sewa Bulanan -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Tarif Sewa Kamar (Rp/bln) *</label>
+              <input type="number" id="form-monthly-rent" required class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-mono text-slate-800">
+            </div>
+
+            <!-- Deposit Jaminan -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Uang Deposit Jaminan (Rp)</label>
+              <input type="number" id="form-deposit" value="1000000" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-mono text-slate-800">
+            </div>
+
+            <!-- Kontak Darurat -->
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Kontak Darurat (Keluarga / Wali)</label>
+              <input type="text" id="form-emergency" placeholder="Contoh: Bpk. Santoso (Ayah) - 081399887766" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+            </div>
+
+            <!-- Upload Foto Identitas Dummy / Pilih Sample KTP -->
+            <div class="sm:col-span-2 space-y-2">
+              <label class="block text-xs font-bold text-slate-700">Upload / Pilih Foto KTP Dummy *</label>
+              
+              <div class="flex items-center gap-3">
+                <input type="file" id="form-ktp-file" accept="image/*" onchange="App.handleKtpFileChange(event)" class="hidden">
+                <button type="button" onclick="document.getElementById('form-ktp-file').click()" class="px-3 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-50 flex items-center gap-1.5 text-slate-700">
+                  <i data-lucide="upload" class="w-4 h-4 text-indigo-600"></i> Upload Foto KTP
+                </button>
+                <span class="text-xs text-slate-400">atau pilih sampel:</span>
+                <button type="button" onclick="App.usePresetKTP('ktp-1')" class="px-2.5 py-1 text-xs rounded-lg bg-indigo-50 text-indigo-700 font-medium">Sampel KTP 1</button>
+                <button type="button" onclick="App.usePresetKTP('ktp-2')" class="px-2.5 py-1 text-xs rounded-lg bg-indigo-50 text-indigo-700 font-medium">Sampel KTP 2</button>
+              </div>
+
+              <!-- Preview Box -->
+              <div class="w-full h-36 rounded-xl border border-slate-200 bg-slate-100 flex items-center justify-center overflow-hidden relative">
+                <img id="form-ktp-preview" src="" alt="Pratinjau KTP" class="w-full h-full object-cover">
+                <div id="form-ktp-placeholder" class="text-center text-slate-400">
+                  <i data-lucide="image" class="w-8 h-8 mx-auto mb-1"></i>
+                  <span class="text-xs">Foto KTP akan muncul di sini</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Total Ringkasan Bayar Awal -->
+          <div class="p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-100 flex items-center justify-between">
+            <span class="text-xs font-medium text-indigo-900">Total Pembayaran Pertama (Sewa + Deposit):</span>
+            <span id="form-total-initial-pay" class="text-sm font-extrabold font-mono text-indigo-950">Rp 2.850.000</span>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" onclick="App.closeNewTenantModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:bg-slate-100">
+              Batal
+            </button>
+            <button type="submit" class="px-5 py-2.5 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/30 transition-all flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4"></i> Simpan & Check-in Penghuni
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PUSAT JATUH TEMPO & OVERDUE ================= -->
+  <div id="modal-overdue-center" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-modal="true">
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="App.closeOverdueCenter()"></div>
+
+      <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-slate-200">
+        
+        <div class="p-5 bg-gradient-to-r from-rose-600 to-amber-600 text-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold">Pusat Penagihan Jatuh Tempo & Masa Tenggang</h3>
+              <p class="text-xs text-rose-100">Daftar penyewa yang jatuh tempo hari ini atau menunggak</p>
+            </div>
+          </div>
+          <button onclick="App.closeOverdueCenter()" class="text-white/70 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="p-5 space-y-4">
+          
+          <div class="flex items-center justify-between text-xs bg-rose-50 p-3 rounded-xl border border-rose-100">
+            <span class="text-rose-900 font-semibold">Total Tagihan Tertunda:</span>
+            <span id="overdue-modal-total-amt" class="text-sm font-extrabold text-rose-700 font-mono">Rp 5.550.000</span>
+          </div>
+
+          <!-- Overdue Items List -->
+          <div id="overdue-modal-list" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+            <!-- Dynamically populated -->
+          </div>
+
+        </div>
+
+        <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-xs text-slate-500">Kirim reminder otomatis secara sopan via WhatsApp</span>
+          <button onclick="App.closeOverdueCenter()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-200 text-slate-700 hover:bg-slate-300">
+            Tutup
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CATAT PEMBAYARAN CEPAT ================= -->
+  <div id="modal-quick-pay" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-modal="true">
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="App.closeQuickPayModal()"></div>
+
+      <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-slate-200">
+        
+        <div class="p-5 bg-indigo-700 text-white flex items-center justify-between">
+          <h3 class="text-base font-bold flex items-center gap-2">
+            <i data-lucide="receipt" class="w-5 h-5"></i>
+            Catat Pembayaran Sewa
+          </h3>
+          <button onclick="App.closeQuickPayModal()" class="text-white/70 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form id="form-quick-pay" onsubmit="App.handleSavePayment(event)" class="p-5 space-y-4">
+          <input type="hidden" id="pay-room-id">
+
+          <div class="bg-indigo-50/70 p-3 rounded-xl border border-indigo-100 text-xs">
+            <div class="flex justify-between"><span class="text-slate-500">Kamar:</span> <strong id="pay-room-label" class="text-slate-800">Kamar 101</strong></div>
+            <div class="flex justify-between mt-1"><span class="text-slate-500">Penghuni:</span> <strong id="pay-tenant-label" class="text-slate-800">Aditya</strong></div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nominal Pembayaran (Rp) *</label>
+            <input type="number" id="pay-amount" required class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 font-mono font-bold text-slate-900">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Periode Pembayaran *</label>
+            <input type="text" id="pay-period" required value="Februari 2025" class="w-full text-xs p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Metode Pembayaran</label>
+            <select id="pay-method" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-800">
+              <option value="Transfer BCA">Transfer BCA</option>
+              <option value="Transfer Mandiri">Transfer Mandiri</option>
+              <option value="QRIS">QRIS / E-Wallet</option>
+              <option value="Tunai / Cash">Tunai / Cash</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2">
+            <input type="checkbox" id="pay-advance-due" checked class="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+            <label for="pay-advance-due" class="text-xs text-slate-700">Perpanjang tanggal jatuh tempo otomatis +1 bulan</label>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3">
+            <button type="button" onclick="App.closeQuickPayModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:bg-slate-100">Batal</button>
+            <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs">
+              Simpan & Tandai Lunas
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: PENGATURAN PROPERTI & REKENING ================= -->
+  <div id="modal-settings" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-modal="true">
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity" onclick="App.closeSettingsModal()"></div>
+
+      <div class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-200">
+        
+        <div class="p-5 bg-slate-900 text-white flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-indigo-400"></i>
+            <h3 class="text-base font-bold">Pengaturan Properti & Rekening Owner</h3>
+          </div>
+          <button onclick="App.closeSettingsModal()" class="text-white/70 hover:text-white p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form onsubmit="App.handleSaveSettings(event)" class="p-5 space-y-4 text-xs">
+          
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nama Kos / Kontrakan</label>
+            <input type="text" id="set-prop-name" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Alamat Properti</label>
+            <input type="text" id="set-prop-address" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Bank Tujuan Transfer</label>
+              <select id="set-bank-name" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+                <option value="BCA">BCA</option>
+                <option value="Mandiri">Mandiri</option>
+                <option value="BRI">BRI</option>
+                <option value="BNI">BNI</option>
+                <option value="BSI">BSI</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nomor Rekening</label>
+              <input type="text" id="set-bank-account" class="w-full p-2.5 border border-slate-200 rounded-xl font-mono focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Atas Nama Rekening</label>
+            <input type="text" id="set-bank-owner" class="w-full p-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <button type="button" onclick="App.closeSettingsModal()" class="px-4 py-2 text-xs font-semibold rounded-xl text-slate-600 hover:bg-slate-100">Batal</button>
+            <button type="submit" class="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs">
+              Simpan Pengaturan
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
+    <!-- Dynamic Toasts injected here -->
+  </div>
+
+  <!-- ================= JAVASCRIPT STATE ENGINE & APPLICATION LOGIC ================= -->
+  <script>
+    /**
+     * Kostify Pro - Sistem Manajemen Sewa Kosan & Kontrakan
+     * Encapsulated Vanilla JS Module with localStorage Persistence
+     */
+
+    // Media assets fetched from Pexels for rooms and tenant avatars
+    const STOCK_MEDIA = {
+      rooms: [
+        'https://images.pexels.com/photos/6782426/pexels-photo-6782426.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+        'https://images.pexels.com/photos/7045991/pexels-photo-7045991.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+        'https://images.pexels.com/photos/7060828/pexels-photo-7060828.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+        'https://images.pexels.com/photos/6444976/pexels-photo-6444976.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+        'https://images.pexels.com/photos/7511695/pexels-photo-7511695.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200',
+        'https://images.pexels.com/photos/6444968/pexels-photo-6444968.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200'
+      ],
+      avatars: [
+        'https://images.pexels.com/photos/8101969/pexels-photo-8101969.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300',
+        'https://images.pexels.com/photos/8278883/pexels-photo-8278883.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300',
+        'https://images.pexels.com/photos/7845290/pexels-photo-7845290.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300',
+        'https://images.pexels.com/photos/7845034/pexels-photo-7845034.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300'
+      ],
+      ktpSamples: [
+        'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380"><rect width="600" height="380" rx="16" fill="%232b6cb0"/><rect x="15" y="15" width="570" height="350" rx="12" fill="%23ebf8ff"/><text x="300" y="55" font-family="sans-serif" font-size="18" font-weight="bold" fill="%232c5282" text-anchor="middle">REPUBLIK INDONESIA - PROVINSI DKI JAKARTA</text><text x="300" y="80" font-family="sans-serif" font-size="14" font-weight="bold" fill="%232b6cb0" text-anchor="middle">KOTA JAKARTA SELATAN</text><rect x="35" y="110" width="110" height="140" rx="8" fill="%23e2e8f0" stroke="%23cbd5e0"/><circle cx="90" cy="160" r="30" fill="%23a0aec0"/><path d="M50 240 C50 200, 130 200, 130 240 Z" fill="%23a0aec0"/><text x="170" y="130" font-family="monospace" font-size="16" font-weight="bold" fill="%231a202c">NIK : 3271029384750001</text><text x="170" y="160" font-family="sans-serif" font-size="13" fill="%232d3748">Nama : ADITYA PRATAMA</text><text x="170" y="185" font-family="sans-serif" font-size="13" fill="%232d3748">Tempat/Tgl Lahir : JAKARTA, 12-08-1996</text><text x="170" y="210" font-family="sans-serif" font-size="13" fill="%232d3748">Jenis Kelamin : LAKI-LAKI</text><text x="170" y="235" font-family="sans-serif" font-size="13" fill="%232d3748">Alamat : JL. CEMPAKA PUTIH NO 18</text><text x="170" y="260" font-family="sans-serif" font-size="13" fill="%232d3748">Pekerjaan : KARYAWAN SWASTA</text><text x="170" y="285" font-family="sans-serif" font-size="13" fill="%232d3748">Berlaku Hingga : SEUMUR HIDUP</text><rect x="420" y="270" width="140" height="60" rx="4" fill="%23bee3f8" opacity="0.6"/><text x="490" y="305" font-family="sans-serif" font-size="11" font-weight="bold" fill="%232b6cb0" text-anchor="middle">TERVERIFIKASI KOST</text></svg>',
+        'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380"><rect width="600" height="380" rx="16" fill="%232b6cb0"/><rect x="15" y="15" width="570" height="350" rx="12" fill="%23ebf8ff"/><text x="300" y="55" font-family="sans-serif" font-size="18" font-weight="bold" fill="%232c5282" text-anchor="middle">REPUBLIK INDONESIA - JAWA BARAT</text><text x="300" y="80" font-family="sans-serif" font-size="14" font-weight="bold" fill="%232b6cb0" text-anchor="middle">KOTA BANDUNG</text><rect x="35" y="110" width="110" height="140" rx="8" fill="%23e2e8f0" stroke="%23cbd5e0"/><circle cx="90" cy="160" r="30" fill="%23ed8936"/><path d="M50 240 C50 200, 130 200, 130 240 Z" fill="%23dd6b20"/><text x="170" y="130" font-family="monospace" font-size="16" font-weight="bold" fill="%231a202c">NIK : 3273018475920002</text><text x="170" y="160" font-family="sans-serif" font-size="13" fill="%232d3748">Nama : SITI NURHALIZA</text><text x="170" y="185" font-family="sans-serif" font-size="13" fill="%232d3748">Tempat/Tgl Lahir : BANDUNG, 24-04-1999</text><text x="170" y="210" font-family="sans-serif" font-size="13" fill="%232d3748">Jenis Kelamin : PEREMPUAN</text><text x="170" y="235" font-family="sans-serif" font-size="13" fill="%232d3748">Alamat : JL. DAGO TIMUR NO 88</text><text x="170" y="260" font-family="sans-serif" font-size="13" fill="%232d3748">Pekerjaan : MAHASISWA</text><text x="170" y="285" font-family="sans-serif" font-size="13" fill="%232d3748">Berlaku Hingga : SEUMUR HIDUP</text><rect x="420" y="270" width="140" height="60" rx="4" fill="%23feebc8" opacity="0.6"/><text x="490" y="305" font-family="sans-serif" font-size="11" font-weight="bold" fill="%23c05621" text-anchor="middle">TERVERIFIKASI KOST</text></svg>'
+      ]
+    };
+
+    // Calculate dates dynamically relative to "Today" so the demo never looks outdated!
+    const today = new Date();
+    const formatDate = (date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+
+    const addDays = (baseDate, days) => {
+      const result = new Date(baseDate);
+      result.setDate(result.getDate() + days);
+      return result;
+    };
+
+    // Default Seed Data
+    const DEFAULT_PROPERTIES = {
+      name: 'Kost Griya Asri Harmoni',
+      address: 'Jl. Sukamaju No. 42, Setiabudi, Jakarta Selatan',
+      bankName: 'BCA',
+      bankAccount: '8830-1928-37',
+      bankOwner: 'Bpk. H. Hendra Wijaya',
+      phone: '081288992233'
+    };
+
+    const DEFAULT_ROOMS = [
+      {
+        id: 'room-101',
+        number: '101',
+        floor: 1,
+        type: 'Deluxe AC + KM Dalam',
+        size: '4 x 4 m',
+        price: 1850000,
+        status: 'terisi', // 'terisi' | 'kosong' | 'jatuh_tempo' | 'perbaikan'
+        image: STOCK_MEDIA.rooms[0],
+        facilities: ['AC Sharp 1PK', 'Kamar Mandi Dalam', 'Kasur Springbed Queen', 'Lemari 2 Pintu', 'Meja Kerja & Kursi', 'Water Heater', 'Smart Doorlock'],
+        tenant: {
+          name: 'Aditya Pratama',
+          phone: '081298765432',
+          nik: '3271029384750001',
+          job: 'Senior Software Engineer di Tech Unicorn',
+          emergency: 'Bpk. Bambang (Ayah) - 081211223344',
+          checkinDate: '2024-02-01',
+          dueDate: formatDate(addDays(today, 18)), // due in 18 days (Lunas)
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[1],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-101-02', month: 'Bulan Ini', date: formatDate(addDays(today, -12)), amount: 1850000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-992019' },
+          { id: 'INV-101-01', month: 'Bulan Lalu', date: formatDate(addDays(today, -42)), amount: 1850000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-881920' }
+        ]
+      },
+      {
+        id: 'room-102',
+        number: '102',
+        floor: 1,
+        type: 'Standard AC + KM Dalam',
+        size: '3.5 x 4 m',
+        price: 1650000,
+        status: 'jatuh_tempo', // Near due (H-2)
+        image: STOCK_MEDIA.rooms[1],
+        facilities: ['AC Daikin 0.5PK', 'Kamar Mandi Dalam', 'Kasur Springbed Single', 'Lemari Pakaian', 'Meja Belajar', 'WiFi 100Mbps'],
+        tenant: {
+          name: 'Siti Nurhaliza',
+          phone: '081324567890',
+          nik: '3273018475920002',
+          job: 'Digital Marketing Specialist',
+          emergency: 'Ibu Rahma (Ibu) - 081399881122',
+          checkinDate: '2024-05-10',
+          dueDate: formatDate(addDays(today, 2)), // due in 2 days (Masa Reminder)
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[0],
+          ktpUrl: STOCK_MEDIA.ktpSamples[1]
+        },
+        transactions: [
+          { id: 'INV-102-02', month: 'Bulan Lalu', date: formatDate(addDays(today, -28)), amount: 1650000, status: 'Lunas', method: 'QRIS', ref: 'QRS-448102' }
+        ]
+      },
+      {
+        id: 'room-103',
+        number: '103',
+        floor: 1,
+        type: 'Deluxe AC + KM Dalam',
+        size: '4 x 4 m',
+        price: 1850000,
+        status: 'jatuh_tempo', // OVERDUE by 3 days!
+        image: STOCK_MEDIA.rooms[2],
+        facilities: ['AC Sharp 1PK', 'Kamar Mandi Dalam', 'Kasur Queen', 'Lemari Besar', 'Water Heater', 'Smart TV 32 Inch'],
+        tenant: {
+          name: 'Rizky Firmansyah',
+          phone: '085712345678',
+          nik: '3275081928370003',
+          job: 'Account Executive Perbankan',
+          emergency: 'Kak Dedi (Kakak) - 085788990011',
+          checkinDate: '2024-03-15',
+          dueDate: formatDate(addDays(today, -3)), // 3 days overdue!
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[2],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-103-02', month: 'Bulan Lalu', date: formatDate(addDays(today, -33)), amount: 1850000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-776211' }
+        ]
+      },
+      {
+        id: 'room-104',
+        number: '104',
+        floor: 1,
+        type: 'Standard AC + KM Luar',
+        size: '3 x 3.5 m',
+        price: 1400000,
+        status: 'kosong', // Kosong / Siap Huni
+        image: STOCK_MEDIA.rooms[3],
+        facilities: ['AC Panasonic 0.5PK', 'Kasur Busa Tebal', 'Lemari Single', 'Meja Belajar', 'Kamar Mandi Luar Bersih (Water Heater)'],
+        tenant: null,
+        transactions: []
+      },
+      {
+        id: 'room-201',
+        number: '201',
+        floor: 2,
+        type: 'VIP Balcony Suite',
+        size: '4.5 x 4.5 m',
+        price: 2200000,
+        status: 'terisi',
+        image: STOCK_MEDIA.rooms[4],
+        facilities: ['Balkon Pribadi', 'AC Daikin Inverter 1PK', 'Kamar Mandi Dalam + Bathtub', 'Kasur King Size', 'Kulkas Mini', 'Smart TV 43"'],
+        tenant: {
+          name: 'Jessica Widyawati',
+          phone: '081987654321',
+          nik: '3271049281720004',
+          job: 'Senior Consultant di Big 4',
+          emergency: 'Ibu Linda - 081922334455',
+          checkinDate: '2023-11-01',
+          dueDate: formatDate(addDays(today, 12)),
+          deposit: 1500000,
+          avatar: STOCK_MEDIA.avatars[3],
+          ktpUrl: STOCK_MEDIA.ktpSamples[1]
+        },
+        transactions: [
+          { id: 'INV-201-02', month: 'Bulan Ini', date: formatDate(addDays(today, -18)), amount: 2200000, status: 'Lunas', method: 'Transfer Mandiri', ref: 'MDR-554192' }
+        ]
+      },
+      {
+        id: 'room-202',
+        number: '202',
+        floor: 2,
+        type: 'Deluxe AC + KM Dalam',
+        size: '4 x 4 m',
+        price: 1850000,
+        status: 'terisi',
+        image: STOCK_MEDIA.rooms[5],
+        facilities: ['AC Sharp 1PK', 'Kamar Mandi Dalam', 'Kasur Springbed Queen', 'Lemari 2 Pintu', 'WiFi Mesh High-Speed'],
+        tenant: {
+          name: 'Dimas Wicaksono',
+          phone: '081233445566',
+          nik: '3272019384750005',
+          job: 'Product Designer',
+          emergency: 'Bpk. Tri (Paman) - 081244556677',
+          checkinDate: '2024-04-01',
+          dueDate: formatDate(addDays(today, 25)),
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[2],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-202-02', month: 'Bulan Ini', date: formatDate(addDays(today, -5)), amount: 1850000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-993812' }
+        ]
+      },
+      {
+        id: 'room-203',
+        number: '203',
+        floor: 2,
+        type: 'Standard AC + KM Dalam',
+        size: '3.5 x 4 m',
+        price: 1650000,
+        status: 'kosong', // Kosong
+        image: STOCK_MEDIA.rooms[0],
+        facilities: ['AC 0.5PK', 'KM Dalam', 'Kasur Single', 'Meja Kerja Minimalis', 'Jendela Hadap Taman'],
+        tenant: null,
+        transactions: []
+      },
+      {
+        id: 'room-204',
+        number: '204',
+        floor: 2,
+        type: 'Deluxe AC + KM Dalam',
+        size: '4 x 4 m',
+        price: 1850000,
+        status: 'jatuh_tempo', // Due TODAY!
+        image: STOCK_MEDIA.rooms[1],
+        facilities: ['AC Panasonic 1PK', 'Kamar Mandi Dalam', 'Kasur Springbed', 'Water Heater', 'Kulkas Bersama di Lorong'],
+        tenant: {
+          name: 'Bayu Nugroho',
+          phone: '081399887711',
+          nik: '3276019283740006',
+          job: 'Data Analyst E-Commerce',
+          emergency: 'Ibu Endang (Ibu) - 081322119900',
+          checkinDate: '2024-06-01',
+          dueDate: formatDate(today), // Jatuh tempo HARI INI!
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[1],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-204-01', month: 'Bulan Lalu', date: formatDate(addDays(today, -30)), amount: 1850000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-102938' }
+        ]
+      },
+      {
+        id: 'room-301',
+        number: '301',
+        floor: 3,
+        type: 'Deluxe AC View Rooftop',
+        size: '4 x 4 m',
+        price: 1900000,
+        status: 'terisi',
+        image: STOCK_MEDIA.rooms[2],
+        facilities: ['Akses Langsung Rooftop', 'AC Daikin 1PK', 'KM Dalam', 'Kasur Queen', 'View City Lights'],
+        tenant: {
+          name: 'Farhan Maulana',
+          phone: '081277665544',
+          nik: '3271038475920007',
+          job: 'Content Creator & Freelance Videographer',
+          emergency: 'Bpk. Irwan - 081266554433',
+          checkinDate: '2024-01-10',
+          dueDate: formatDate(addDays(today, 15)),
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[2],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-301-02', month: 'Bulan Ini', date: formatDate(addDays(today, -15)), amount: 1900000, status: 'Lunas', method: 'QRIS', ref: 'QRS-998822' }
+        ]
+      },
+      {
+        id: 'room-302',
+        number: '302',
+        floor: 3,
+        type: 'Standard AC View',
+        size: '3.5 x 4 m',
+        price: 1650000,
+        status: 'terisi',
+        image: STOCK_MEDIA.rooms[3],
+        facilities: ['AC Sharp 0.5PK', 'KM Dalam', 'Kasur Single Comfort', 'Meja Belajar'],
+        tenant: {
+          name: 'Nadia Putri',
+          phone: '081544332211',
+          nik: '3273029182730008',
+          job: 'Mahasiswi Kedokteran UI',
+          emergency: 'Dr. Haryanto (Ayah) - 081511223344',
+          checkinDate: '2024-07-01',
+          dueDate: formatDate(addDays(today, 21)),
+          deposit: 1000000,
+          avatar: STOCK_MEDIA.avatars[3],
+          ktpUrl: STOCK_MEDIA.ktpSamples[1]
+        },
+        transactions: [
+          { id: 'INV-302-01', month: 'Bulan Ini', date: formatDate(addDays(today, -9)), amount: 1650000, status: 'Lunas', method: 'Transfer BCA', ref: 'BCA-887711' }
+        ]
+      },
+      {
+        id: 'room-303',
+        number: '303',
+        floor: 3,
+        type: 'Standard Non-AC Luas',
+        size: '4 x 4 m',
+        price: 1250000,
+        status: 'kosong', // Kosong
+        image: STOCK_MEDIA.rooms[4],
+        facilities: ['Exhaust Fan + Kipas Angin Plafon', 'KM Dalam', 'Kasur Springbed', 'Jendela Sirkulasi Alami'],
+        tenant: null,
+        transactions: []
+      },
+      {
+        id: 'room-pav',
+        number: 'PAV-1',
+        floor: 'paviliun',
+        type: 'Kontrakan Paviliun 2 Kamar',
+        size: '6 x 7 m',
+        price: 3600000,
+        status: 'terisi',
+        image: STOCK_MEDIA.rooms[5],
+        facilities: ['Ruang Tamu & Dapur Pribadi', '2 Kamar Tidur Ber-AC', 'Kamar Mandi Pribadi', 'Meteran Listrik Sendiri 2200W', 'Carport Mobil'],
+        tenant: {
+          name: 'Keluarga Bpk. Hendra Kusuma',
+          phone: '08119876543',
+          nik: '3271018273940009',
+          job: 'Manajer Operasional Logistik',
+          emergency: 'Ibu Ratna (Istri) - 08112233445',
+          checkinDate: '2023-09-01',
+          dueDate: formatDate(addDays(today, 8)),
+          deposit: 3000000,
+          avatar: STOCK_MEDIA.avatars[1],
+          ktpUrl: STOCK_MEDIA.ktpSamples[0]
+        },
+        transactions: [
+          { id: 'INV-PAV-02', month: 'Bulan Ini', date: formatDate(addDays(today, -22)), amount: 3600000, status: 'Lunas', method: 'Transfer Mandiri', ref: 'MDR-990011' }
+        ]
+      }
+    ];
+
+    /**
+     * Application Core State & Logic Module
+     */
+    const App = (() => {
+      // Internal Reactive State
+      const state = {
+        properties: null,
+        rooms: [],
+        currentFloor: 'all',
+        currentStatus: 'all',
+        searchQuery: '',
+        viewMode: 'grid', // 'grid' | 'plan'
+        activeRoomId: null,
+        activeWATemplateKey: 'h-3',
+        selectedPresetKtp: null
+      };
+
+      const STORAGE_KEY_ROOMS = 'kostify_pro_rooms_v2';
+      const STORAGE_KEY_PROPS = 'kostify_pro_properties_v2';
+
+      // Load state from localStorage or initialize with seed
+      function init() {
+        try {
+          const storedProps = localStorage.getItem(STORAGE_KEY_PROPS);
+          state.properties = storedProps ? JSON.parse(storedProps) : { ...DEFAULT_PROPERTIES };
+
+          const storedRooms = localStorage.getItem(STORAGE_KEY_ROOMS);
+          state.rooms = storedRooms ? JSON.parse(storedRooms) : JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+        } catch (e) {
+          console.error('Error loading localStorage:', e);
+          state.properties = { ...DEFAULT_PROPERTIES };
+          state.rooms = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+        }
+
+        renderHeaderProperties();
+        recalculateAndRender();
+        initLucideIcons();
+      }
+
+      function saveToLocalStorage() {
+        try {
+          localStorage.setItem(STORAGE_KEY_ROOMS, JSON.stringify(state.rooms));
+          localStorage.setItem(STORAGE_KEY_PROPS, JSON.stringify(state.properties));
+        } catch (e) {
+          console.error('Failed to save to localStorage', e);
+        }
+      }
+
+      function initLucideIcons() {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      }
+
+      // UI Formatting Helpers
+      function formatRupiah(num) {
+        return new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          maximumFractionDigits: 0
+        }).format(num);
+      }
+
+      function formatIndonesianDate(dateStr) {
+        if (!dateStr) return '-';
+        const d = new Date(dateStr);
+        if (isNaN(d)) return dateStr;
+        return d.toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      function calculateDaysDiff(targetDateStr) {
+        if (!targetDateStr) return 0;
+        const target = new Date(targetDateStr);
+        const now = new Date();
+        // Reset time parts for accurate day calculations
+        target.setHours(0,0,0,0);
+        now.setHours(0,0,0,0);
+        const diffTime = target - now;
+        return Math.round(diffTime / (1000 * 60 * 60 * 24));
+      }
+
+      function renderHeaderProperties() {
+        const p = state.properties;
+        const nameEl = document.getElementById('prop-name-display');
+        const addrEl = document.getElementById('prop-address-display');
+        if (nameEl) nameEl.textContent = p.name;
+        if (addrEl) {
+          addrEl.innerHTML = `<i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> ${p.address} • ${state.rooms.length} Unit Kamar`;
+        }
+      }
+
+      // Recalculate KPIs, badges, and render current views
+      function recalculateAndRender() {
+        // Evaluate dynamic statuses based on due dates
+        state.rooms.forEach(room => {
+          if (room.tenant && room.tenant.dueDate) {
+            const diff = calculateDaysDiff(room.tenant.dueDate);
+            if (diff < 0) {
+              room.status = 'jatuh_tempo'; // Overdue
+            } else if (diff <= 3) {
+              room.status = 'jatuh_tempo'; // Grace period / H-3 to H-0
+            } else {
+              room.status = 'terisi';
+            }
+          } else if (!room.tenant) {
+            room.status = 'kosong';
+          }
+        });
+
+        // Compute KPIs
+        const totalRooms = state.rooms.length;
+        const occupiedRooms = state.rooms.filter(r => r.tenant !== null).length;
+        const vacantRooms = totalRooms - occupiedRooms;
+        const overdueRooms = state.rooms.filter(r => r.status === 'jatuh_tempo' && r.tenant !== null);
+        
+        const occupancyRate = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
+        
+        // Income computation
+        let totalPotential = 0;
+        let totalPaidThisMonth = 0;
+        let totalOverdueAmount = 0;
+
+        state.rooms.forEach(r => {
+          totalPotential += r.price;
+          if (r.tenant) {
+            if (r.status === 'jatuh_tempo') {
+              totalOverdueAmount += r.price;
+            } else {
+              totalPaidThisMonth += r.price;
+            }
+          }
+        });
+
+        // Update KPI elements
+        document.getElementById('stat-occupancy-rate').textContent = `${occupancyRate}%`;
+        document.getElementById('stat-occupancy-ratio').textContent = `${occupiedRooms} / ${totalRooms} Kamar`;
+        document.getElementById('stat-occupancy-bar').style.width = `${occupancyRate}%`;
+        document.getElementById('stat-vacant-count').textContent = vacantRooms;
+        document.getElementById('stat-overdue-count').textContent = overdueRooms.length;
+        document.getElementById('stat-overdue-amount').textContent = `Total: ${formatRupiah(totalOverdueAmount)}`;
+        document.getElementById('stat-income-paid').textContent = formatRupiah(totalPaidThisMonth);
+        document.getElementById('stat-income-potential').innerHTML = `Potensi Total: <span class="font-mono text-slate-700 font-semibold">${formatRupiah(totalPotential)}</span>`;
+
+        // Update Overdue Bell & Banner
+        const overdueBellBadge = document.getElementById('badge-overdue-count');
+        const overdueBanner = document.getElementById('overdue-banner');
+        const bannerCount = document.getElementById('banner-overdue-count');
+
+        if (overdueRooms.length > 0) {
+          overdueBellBadge.classList.remove('hidden');
+          overdueBellBadge.textContent = overdueRooms.length;
+          overdueBanner.classList.remove('hidden');
+          bannerCount.textContent = overdueRooms.length;
+        } else {
+          overdueBellBadge.classList.add('hidden');
+          overdueBanner.classList.add('hidden');
+        }
+
+        // Update Floor Tabs Count
+        document.getElementById('count-floor-all').textContent = totalRooms;
+        document.getElementById('count-floor-1').textContent = state.rooms.filter(r => r.floor === 1).length;
+        document.getElementById('count-floor-2').textContent = state.rooms.filter(r => r.floor === 2).length;
+        document.getElementById('count-floor-3').textContent = state.rooms.filter(r => r.floor === 3).length;
+        document.getElementById('count-floor-pav').textContent = state.rooms.filter(r => r.floor === 'paviliun').length;
+
+        // Update Filter Status Counts
+        document.getElementById('filter-count-terisi').textContent = state.rooms.filter(r => r.status === 'terisi').length;
+        document.getElementById('filter-count-kosong').textContent = vacantRooms;
+        document.getElementById('filter-count-overdue').textContent = overdueRooms.length;
+
+        // Render Views
+        renderRoomsGrid();
+        renderArchitecturalFloorPlan();
+        initLucideIcons();
+      }
+
+      // Filter Logic
+      function getFilteredRooms() {
+        return state.rooms.filter(room => {
+          // Floor Filter
+          if (state.currentFloor !== 'all' && String(room.floor) !== String(state.currentFloor)) {
+            return false;
+          }
+          // Status Filter
+          if (state.currentStatus !== 'all' && room.status !== state.currentStatus) {
+            return false;
+          }
+          // Search Query
+          if (state.searchQuery.trim() !== '') {
+            const q = state.searchQuery.toLowerCase().trim();
+            const matchRoom = room.number.toLowerCase().includes(q) || room.type.toLowerCase().includes(q);
+            const matchTenant = room.tenant && (
+              room.tenant.name.toLowerCase().includes(q) ||
+              room.tenant.phone.includes(q) ||
+              room.tenant.job.toLowerCase().includes(q)
+            );
+            return matchRoom || matchTenant;
+          }
+          return true;
+        });
+      }
+
+      // Render Grid Cards
+      function renderRoomsGrid() {
+        const container = document.getElementById('rooms-grid');
+        const emptyState = document.getElementById('grid-empty-state');
+        const filtered = getFilteredRooms();
+
+        if (filtered.length === 0) {
+          container.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+
+        let html = '';
+        filtered.forEach(room => {
+          const isOccupied = room.tenant !== null;
+          const isOverdue = room.status === 'jatuh_tempo';
+          const isVacant = room.status === 'kosong';
+
+          // Status Badge styling
+          let badgeHtml = '';
+          let borderGlow = 'border-slate-200/90';
+          let dueDateNotice = '';
+
+          if (isVacant) {
+            badgeHtml = `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Kosong
+              </span>`;
+          } else if (isOverdue) {
+            const diff = calculateDaysDiff(room.tenant.dueDate);
+            let diffLabel = '';
+            if (diff < 0) {
+              diffLabel = `Telat ${Math.abs(diff)} Hari`;
+            } else if (diff === 0) {
+              diffLabel = 'Jatuh Tempo Hari Ini!';
+            } else {
+              diffLabel = `H-${diff} Jatuh Tempo`;
+            }
+
+            badgeHtml = `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300 animate-pulse">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span> ${diffLabel}
+              </span>`;
+            borderGlow = 'border-rose-300 ring-2 ring-rose-500/20 shadow-md shadow-rose-500/10';
+            
+            dueDateNotice = `
+              <div class="mt-2.5 p-2 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-between text-xs">
+                <span class="text-rose-900 font-semibold flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3.5 h-3.5 text-rose-600"></i> ${formatIndonesianDate(room.tenant.dueDate)}
+                </span>
+                <button onclick="event.stopPropagation(); App.quickSendWA('${room.id}', 'overdue')" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-xs">
+                  <i data-lucide="send" class="w-3 h-3"></i> Tagih WA
+                </button>
+              </div>`;
+          } else {
+            badgeHtml = `
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span> Terisi
+              </span>`;
+            dueDateNotice = `
+              <div class="mt-2 flex items-center justify-between text-[11px] text-slate-500">
+                <span>Jatuh Tempo:</span>
+                <span class="font-semibold text-slate-700">${formatIndonesianDate(room.tenant.dueDate)}</span>
+              </div>`;
+          }
+
+          html += `
+            <div onclick="App.openTenantDrawer('${room.id}')" class="bg-white rounded-2xl border ${borderGlow} hover:border-indigo-400 p-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer flex flex-col justify-between group">
+              
+              <!-- Card Top -->
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-xl bg-slate-900 text-white font-mono font-bold text-sm tracking-tight shadow-xs">
+                      ${room.number}
+                    </span>
+                    <span class="text-xs font-semibold text-slate-500">
+                      ${room.floor === 'paviliun' ? 'Paviliun' : 'Lantai ' + room.floor}
+                    </span>
+                  </div>
+                  ${badgeHtml}
+                </div>
+
+                <div class="mt-3">
+                  <h4 class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">${room.type}</h4>
+                  <p class="text-xs text-slate-500 mt-0.5 font-mono font-semibold text-indigo-900">${formatRupiah(room.price)} <span class="text-[10px] text-slate-400 font-sans">/ bulan</span></p>
+                </div>
+
+                <!-- Tenant or Vacant Slot -->
+                <div class="mt-4 pt-3 border-t border-slate-100">
+                  ${isOccupied ? `
+                    <div class="flex items-center gap-3">
+                      <img src="${room.tenant.avatar}" alt="${room.tenant.name}" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0">
+                      <div class="min-w-0 flex-1">
+                        <h5 class="text-xs font-bold text-slate-900 truncate">${room.tenant.name}</h5>
+                        <p class="text-[11px] text-slate-500 truncate">${room.tenant.phone}</p>
+                      </div>
+                    </div>
+                    ${dueDateNotice}
+                  ` : `
+                    <div class="py-3 px-3 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center">
+                      <p class="text-xs font-medium text-slate-500">Kamar Kosong</p>
+                      <button onclick="event.stopPropagation(); App.openNewTenantModal('${room.id}')" class="mt-2 w-full py-1.5 px-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center gap-1 transition-colors">
+                        <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Check-in Sekarang
+                      </button>
+                    </div>
+                  `}
+                </div>
+              </div>
+
+              <!-- Card Bottom Actions -->
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                  <i data-lucide="maximize-2" class="w-3 h-3"></i> ${room.size}
+                </span>
+                <span class="text-indigo-600 font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  Detail <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </span>
+              </div>
+
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // Render 2D Architectural Denah Plan
+      function renderArchitecturalFloorPlan() {
+        const stage = document.getElementById('architectural-plan-stage');
+        if (!stage) return;
+
+        const floors = [1, 2, 3, 'paviliun'];
+        let html = '';
+
+        floors.forEach(fl => {
+          const roomsInFloor = state.rooms.filter(r => r.floor === fl);
+          if (roomsInFloor.length === 0) return;
+
+          const floorLabel = fl === 'paviliun' ? 'Paviliun Kontrakan Pribadi' : `Lantai ${fl}`;
+
+          html += `
+            <div class="border border-slate-200 rounded-2xl p-4 sm:p-5 bg-slate-50/70">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-indigo-600"></span>
+                  <h4 class="font-bold text-slate-900 text-sm sm:text-base">${floorLabel}</h4>
+                </div>
+                <span class="text-xs text-slate-500">${roomsInFloor.length} Ruangan</span>
+              </div>
+
+              <!-- Floor Plan Layout Grid -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 relative">
+                ${roomsInFloor.map(room => {
+                  let statusBg = 'bg-indigo-600 text-white';
+                  let statusDot = 'bg-emerald-300';
+                  let statusText = 'Terisi Lunas';
+
+                  if (room.status === 'kosong') {
+                    statusBg = 'bg-emerald-500 text-white';
+                    statusDot = 'bg-white';
+                    statusText = 'Kosong';
+                  } else if (room.status === 'jatuh_tempo') {
+                    statusBg = 'bg-rose-500 text-white ring-2 ring-rose-400 ring-offset-1 animate-pulse-subtle';
+                    statusDot = 'bg-amber-300';
+                    statusText = 'Jatuh Tempo!';
+                  }
+
+                  return `
+                    <div onclick="App.openTenantDrawer('${room.id}')" class="plan-room bg-white p-3.5 rounded-xl border border-slate-200 cursor-pointer shadow-xs relative flex flex-col justify-between min-h-[115px]">
+                      <div class="flex items-start justify-between">
+                        <div>
+                          <span class="text-xs font-mono font-extrabold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md">#${room.number}</span>
+                          <h5 class="text-xs font-bold text-slate-800 mt-1 line-clamp-1">${room.type}</h5>
+                        </div>
+                        <span class="w-2.5 h-2.5 rounded-full ${room.status === 'jatuh_tempo' ? 'bg-rose-500 animate-ping' : (room.status === 'kosong' ? 'bg-emerald-500' : 'bg-indigo-600')}"></span>
+                      </div>
+
+                      <div class="mt-2 pt-2 border-t border-slate-100 text-[11px]">
+                        ${room.tenant ? `
+                          <p class="font-bold text-slate-900 truncate">${room.tenant.name}</p>
+                          <p class="text-[10px] text-slate-500 font-mono mt-0.5">${formatIndonesianDate(room.tenant.dueDate)}</p>
+                        ` : `
+                          <p class="text-emerald-700 font-bold flex items-center gap-1">
+                            <i data-lucide="plus-circle" class="w-3 h-3"></i> Siap Dihuni
+                          </p>
+                        `}
+                      </div>
+
+                      <div class="mt-2 text-[10px] font-bold px-2 py-0.5 rounded text-center ${statusBg}">
+                        ${statusText}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+              <!-- Shared Corridor Representation -->
+              <div class="mt-3 p-2 bg-slate-200/70 rounded-xl text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest border border-slate-300/60">
+                Lorong Utama • Akses Tangga & Dispenser Bersama
+              </div>
+            </div>
+          `;
+        });
+
+        stage.innerHTML = html;
+      }
+
+      // Drawer Logic
+      function openTenantDrawer(roomId) {
+        const room = state.rooms.find(r => r.id === roomId);
+        if (!room) return;
+
+        state.activeRoomId = roomId;
+
+        // Fill drawer elements
+        document.getElementById('drawer-room-badge').textContent = `Kamar ${room.number}`;
+        document.getElementById('drawer-room-type').textContent = room.type;
+        document.getElementById('drawer-room-floor').textContent = `${room.floor === 'paviliun' ? 'Paviliun Kontrakan' : 'Lantai ' + room.floor} • Ukuran ${room.size}`;
+        
+        const statusBadge = document.getElementById('drawer-status-badge');
+        if (room.status === 'kosong') {
+          statusBadge.textContent = 'Kosong';
+          statusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-400/30';
+        } else if (room.status === 'jatuh_tempo') {
+          statusBadge.textContent = 'Masa Tenggang';
+          statusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-rose-500/30 text-rose-300 border border-rose-400/40 animate-pulse';
+        } else {
+          statusBadge.textContent = 'Terisi Lunas';
+          statusBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide bg-indigo-500/30 text-indigo-200 border border-indigo-400/30';
+        }
+
+        const occupiedView = document.getElementById('drawer-occupied-view');
+        const vacantView = document.getElementById('drawer-vacant-view');
+
+        if (room.tenant) {
+          occupiedView.classList.remove('hidden');
+          vacantView.classList.add('hidden');
+
+          document.getElementById('drawer-tenant-avatar').src = room.tenant.avatar;
+          document.getElementById('drawer-tenant-name').textContent = room.tenant.name;
+          document.getElementById('drawer-tenant-job').textContent = room.tenant.job;
+          document.getElementById('drawer-tenant-nik').textContent = room.tenant.nik;
+          document.getElementById('drawer-tenant-deposit').textContent = formatRupiah(room.tenant.deposit);
+          document.getElementById('drawer-tenant-emergency').textContent = room.tenant.emergency;
+          document.getElementById('drawer-checkin-date').textContent = formatIndonesianDate(room.tenant.checkinDate);
+          document.getElementById('drawer-nominal-due').textContent = `${formatRupiah(room.price)} / bulan`;
+
+          // Clean phone for wa
+          const cleanPhone = room.tenant.phone.replace(/[^0-9]/g, '');
+          const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+          document.getElementById('drawer-wa-link').href = `https://wa.me/${waPhone}`;
+          document.getElementById('drawer-call-link').href = `tel:${room.tenant.phone}`;
+
+          // Due banner calculation
+          const diff = calculateDaysDiff(room.tenant.dueDate);
+          const dueBanner = document.getElementById('drawer-due-banner');
+          const dueText = document.getElementById('drawer-due-text');
+          const daysBadge = document.getElementById('drawer-days-badge');
+
+          dueText.textContent = `Jatuh Tempo: ${formatIndonesianDate(room.tenant.dueDate)}`;
+
+          if (diff < 0) {
+            dueBanner.className = 'rounded-2xl p-4 border border-rose-300 bg-rose-50 text-rose-900 flex items-center justify-between';
+            daysBadge.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-rose-200 text-rose-900';
+            daysBadge.textContent = `Terlambat ${Math.abs(diff)} Hari`;
+          } else if (diff === 0) {
+            dueBanner.className = 'rounded-2xl p-4 border border-amber-300 bg-amber-50 text-amber-900 flex items-center justify-between';
+            daysBadge.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-amber-200 text-amber-900 animate-pulse';
+            daysBadge.textContent = 'HARI INI!';
+          } else {
+            dueBanner.className = 'rounded-2xl p-4 border border-emerald-200 bg-emerald-50 text-emerald-900 flex items-center justify-between';
+            daysBadge.className = 'px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-200 text-emerald-900';
+            daysBadge.textContent = `${diff} Hari Lagi`;
+          }
+
+          // Dummy KTP image preview
+          document.getElementById('drawer-ktp-img').src = room.tenant.ktpUrl || STOCK_MEDIA.ktpSamples[0];
+
+        } else {
+          occupiedView.classList.add('hidden');
+          vacantView.classList.remove('hidden');
+
+          document.getElementById('drawer-vacant-price').textContent = `${formatRupiah(room.price)} / bln`;
+          document.getElementById('drawer-vacant-type').textContent = room.type;
+        }
+
+        // Transactions list
+        renderDrawerTransactions(room);
+
+        // Room details tab
+        document.getElementById('drawer-room-photo').src = room.image;
+        document.getElementById('drawer-info-price').textContent = formatRupiah(room.price);
+
+        const facilitiesContainer = document.getElementById('drawer-room-facilities');
+        facilitiesContainer.innerHTML = room.facilities.map(f => `
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> ${f}
+          </span>
+        `).join('');
+
+        // Prepare WhatsApp message generator tab
+        updateWATemplateDisplay();
+
+        // Switch back to profile tab by default
+        switchDrawerTab('tab-profile');
+
+        // Show drawer modal
+        const drawerEl = document.getElementById('tenant-drawer');
+        drawerEl.classList.remove('hidden');
+        initLucideIcons();
+      }
+
+      function closeTenantDrawer() {
+        const drawerEl = document.getElementById('tenant-drawer');
+        drawerEl.classList.add('hidden');
+      }
+
+      function switchDrawerTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.drawer-tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.drawer-tab-btn').forEach(btn => {
+          btn.classList.remove('text-indigo-600', 'border-indigo-600', 'font-bold');
+          btn.classList.add('text-slate-500', 'border-transparent');
+        });
+
+        // Show selected tab
+        if (tabName === 'tab-profile') {
+          document.getElementById('drawer-tab-profile').classList.remove('hidden');
+          const btn = document.getElementById('tab-btn-profile');
+          btn.classList.add('text-indigo-600', 'border-indigo-600', 'font-bold');
+          btn.classList.remove('text-slate-500', 'border-transparent');
+        } else if (tabName === 'tab-wa') {
+          document.getElementById('drawer-tab-wa').classList.remove('hidden');
+          const btn = document.getElementById('tab-btn-wa');
+          btn.classList.add('text-indigo-600', 'border-indigo-600', 'font-bold');
+          btn.classList.remove('text-slate-500', 'border-transparent');
+          updateWATemplateDisplay();
+        } else if (tabName === 'tab-billing') {
+          document.getElementById('drawer-tab-billing').classList.remove('hidden');
+          const btn = document.getElementById('tab-btn-billing');
+          btn.classList.add('text-indigo-600', 'border-indigo-600', 'font-bold');
+          btn.classList.remove('text-slate-500', 'border-transparent');
+        } else if (tabName === 'tab-room') {
+          document.getElementById('drawer-tab-room').classList.remove('hidden');
+          const btn = document.getElementById('tab-btn-room');
+          btn.classList.add('text-indigo-600', 'border-indigo-600', 'font-bold');
+          btn.classList.remove('text-slate-500', 'border-transparent');
+        }
+        initLucideIcons();
+      }
+
+      function renderDrawerTransactions(room) {
+        const list = document.getElementById('drawer-tx-list');
+        if (!room.transactions || room.transactions.length === 0) {
+          list.innerHTML = `
+            <div class="p-6 text-center text-slate-400 text-xs border border-dashed rounded-xl">
+              Belum ada riwayat transaksi tercatat.
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = room.transactions.map(tx => `
+          <div class="p-3 bg-white rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-800">${tx.month}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${tx.status}</span>
+              </div>
+              <p class="text-slate-500 text-[11px] mt-0.5">${formatIndonesianDate(tx.date)} • ${tx.method} (${tx.ref})</p>
+            </div>
+            <div class="text-right">
+              <span class="font-mono font-bold text-slate-900">${formatRupiah(tx.amount)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // ================= WHATSAPP REMINDER GENERATOR LOGIC =================
+      function setWATemplate(key) {
+        state.activeWATemplateKey = key;
+        
+        // Update template button styles
+        ['h-3', 'today', 'overdue', 'receipt'].forEach(k => {
+          const btn = document.getElementById(`tpl-btn-${k}`);
+          if (btn) {
+            if (k === key) {
+              btn.className = 'tpl-btn p-2 rounded-xl border text-left font-semibold border-indigo-600 bg-indigo-50/70 text-indigo-900';
+            } else {
+              btn.className = 'tpl-btn p-2 rounded-xl border text-left font-semibold border-slate-200 bg-white text-slate-700 hover:bg-slate-50';
+            }
+          }
+        });
+
+        updateWATemplateDisplay();
+      }
+
+      function generateWhatsAppMessageText(room, templateKey) {
+        const prop = state.properties;
+        const tenant = room.tenant || {
+          name: 'Penghuni Kos',
+          phone: '081234567890',
+          dueDate: formatDate(today)
+        };
+
+        const nominal = formatRupiah(room.price);
+        const diff = calculateDaysDiff(tenant.dueDate);
+        const daysLate = Math.abs(diff);
+        const period = new Date(tenant.dueDate).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+
+        switch (templateKey) {
+          case 'h-3':
+            return `Halo Kak *${tenant.name}* (Kamar ${room.number}), selamat pagi/siang! Semoga selalu sehat dan lancar aktivitasnya. 🙏\n\nKami ingin mengingatkan bahwa sewa kamar untuk periode *${period}* sebesar *${nominal}* akan jatuh tempo pada *${formatIndonesianDate(tenant.dueDate)}*.\n\nPembayaran dapat ditransfer ke:\n🏦 *${prop.bankName}*: ${prop.bankAccount}\n👤 a.n: *${prop.bankOwner}*\n\nMohon kirimkan konfirmasi bukti transfer jika sudah melakukan pembayaran ya. Terima kasih banyak atas kerjasamanya! ✨\n- Manajemen *${prop.name}*`;
+
+          case 'today':
+            return `Pemberitahuan Tagihan Sewa 🔔\nHalo Kak *${tenant.name}* (Kamar ${room.number}),\n\nTagihan sewa kamar untuk periode *${period}* sebesar *${nominal}* jatuh tempo *HARI INI (${formatIndonesianDate(tenant.dueDate)})*.\n\nRekening Pembayaran:\n🏦 *${prop.bankName}*: ${prop.bankAccount}\n👤 a.n: *${prop.bankOwner}*\n\nMohon segera diselesaikan hari ini dan konfirmasi bukti transfer via chat ini ya Kak. Terima kasih! 🏡\n- Pengelola *${prop.name}*`;
+
+          case 'overdue':
+            return `⚠️ *PENTING: TEGURAN KETERLAMBATAN SEWA KOST*\n\nYth. Kak *${tenant.name}* (Kamar ${room.number}),\n\nTagihan sewa kamar per tanggal ${formatIndonesianDate(tenant.dueDate)} saat ini telah *melewati batas jatuh tempo (terlambat ${daysLate > 0 ? daysLate : 1} hari)* dengan total kewajiban *${nominal}*.\n\nSesuai tata tertib, mohon segera melakukan pelunasan hari ini ke rekening:\n🏦 *${prop.bankName}*: ${prop.bankAccount}\n👤 a.n: *${prop.bankOwner}*\n\nApabila ada kendala pembayaran, mohon segera berkomunikasi dengan pengelola. Terima kasih atas pengertiannya. 🙏\n- Pengelola *${prop.name}*`;
+
+          case 'receipt':
+            return `🧾 *BUKTI PEMBAYARAN KOST LUNAS*\n\nTerima kasih Kak *${tenant.name}* (Kamar ${room.number})! ✨\n\nPembayaran sewa kost periode *${period}* sebesar *${nominal}* telah kami terima dengan *LUNAS* pada hari ini.\n\nSemoga selalu betah dan nyaman tinggal di *${prop.name}*. Jika ada kendala fasilitas, jangan ragu hubungi kami ya Kak. Have a wonderful day! 🌟`;
+
+          default:
+            return '';
+        }
+      }
+
+      function updateWATemplateDisplay() {
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+        if (!room) return;
+
+        const text = generateWhatsAppMessageText(room, state.activeWATemplateKey);
+        
+        const previewEl = document.getElementById('wa-preview-text');
+        const textareaEl = document.getElementById('wa-custom-textarea');
+        const directBtn = document.getElementById('btn-direct-wa-send');
+
+        if (previewEl) previewEl.textContent = text;
+        if (textareaEl) textareaEl.value = text;
+
+        if (directBtn && room.tenant) {
+          const cleanPhone = room.tenant.phone.replace(/[^0-9]/g, '');
+          const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+          const encoded = encodeURIComponent(text);
+          directBtn.href = `https://wa.me/${waPhone}?text=${encoded}`;
+        }
+      }
+
+      function handleWACustomEdit(newText) {
+        const previewEl = document.getElementById('wa-preview-text');
+        const directBtn = document.getElementById('btn-direct-wa-send');
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+
+        if (previewEl) previewEl.textContent = newText;
+        if (directBtn && room && room.tenant) {
+          const cleanPhone = room.tenant.phone.replace(/[^0-9]/g, '');
+          const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+          directBtn.href = `https://wa.me/${waPhone}?text=${encodeURIComponent(newText)}`;
+        }
+      }
+
+      function copyWAMessageToClipboard() {
+        const textareaEl = document.getElementById('wa-custom-textarea');
+        if (!textareaEl) return;
+
+        navigator.clipboard.writeText(textareaEl.value).then(() => {
+          showToast('Teks Tersalin!', 'Pesan tagihan WhatsApp berhasil disalin ke clipboard.', 'success');
+        }).catch(err => {
+          showToast('Gagal Menyalin', 'Silakan pilih dan salin teks secara manual.', 'warning');
+        });
+      }
+
+      function quickSendWA(roomId, templateKey = 'overdue') {
+        const room = state.rooms.find(r => r.id === roomId);
+        if (!room || !room.tenant) return;
+
+        const text = generateWhatsAppMessageText(room, templateKey);
+        const cleanPhone = room.tenant.phone.replace(/[^0-9]/g, '');
+        const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+        const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(text)}`;
+
+        window.open(url, '_blank');
+        showToast('Membuka WhatsApp...', `Mengirim penagihan sewa ke ${room.tenant.name} (${room.number})`, 'info');
+      }
+
+      // ================= CHECK-IN NEW TENANT MODAL =================
+      function openNewTenantModal(preselectedRoomId = null) {
+        const select = document.getElementById('form-room-id');
+        select.innerHTML = '';
+
+        // Filter vacant rooms or currently active room
+        const availableRooms = state.rooms.filter(r => r.status === 'kosong' || r.id === preselectedRoomId);
+
+        if (availableRooms.length === 0) {
+          showToast('Kamar Penuh', 'Semua kamar sedang terisi! Silakan check-out penghuni terlebih dahulu atau tambah unit.', 'warning');
+          return;
+        }
+
+        availableRooms.forEach(room => {
+          const opt = document.createElement('option');
+          opt.value = room.id;
+          opt.textContent = `Kamar ${room.number} - ${room.type} (${formatRupiah(room.price)}/bln)`;
+          if (room.id === preselectedRoomId) opt.selected = true;
+          select.appendChild(opt);
+        });
+
+        // Trigger change to populate default prices
+        handleRoomSelectChange(select.value);
+
+        // Dates
+        document.getElementById('form-checkin-date').value = formatDate(today);
+        document.getElementById('form-due-date').value = formatDate(addDays(today, 30));
+
+        // Set default KTP preview
+        usePresetKTP('ktp-1');
+
+        document.getElementById('modal-new-tenant').classList.remove('hidden');
+        initLucideIcons();
+      }
+
+      function closeNewTenantModal() {
+        document.getElementById('modal-new-tenant').classList.add('hidden');
+      }
+
+      function handleRoomSelectChange(roomId) {
+        const room = state.rooms.find(r => r.id === roomId);
+        if (!room) return;
+
+        document.getElementById('form-monthly-rent').value = room.price;
+        updateTotalInitialPay();
+      }
+
+      function updateTotalInitialPay() {
+        const rent = parseFloat(document.getElementById('form-monthly-rent').value) || 0;
+        const deposit = parseFloat(document.getElementById('form-deposit').value) || 0;
+        document.getElementById('form-total-initial-pay').textContent = formatRupiah(rent + deposit);
+      }
+
+      function usePresetKTP(type) {
+        state.selectedPresetKtp = type === 'ktp-1' ? STOCK_MEDIA.ktpSamples[0] : STOCK_MEDIA.ktpSamples[1];
+        const preview = document.getElementById('form-ktp-preview');
+        const placeholder = document.getElementById('form-ktp-placeholder');
+        preview.src = state.selectedPresetKtp;
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      }
+
+      function handleKtpFileChange(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          state.selectedPresetKtp = e.target.result;
+          const preview = document.getElementById('form-ktp-preview');
+          const placeholder = document.getElementById('form-ktp-placeholder');
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+          showToast('Foto KTP Berhasil Diupload', 'Pratinjau KTP dummy siap disimpan.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handleSaveNewTenant(event) {
+        event.preventDefault();
+
+        const roomId = document.getElementById('form-room-id').value;
+        const room = state.rooms.find(r => r.id === roomId);
+        if (!room) return;
+
+        const name = document.getElementById('form-tenant-name').value.trim();
+        const phone = document.getElementById('form-tenant-phone').value.trim();
+        const nik = document.getElementById('form-tenant-nik').value.trim();
+        const job = document.getElementById('form-tenant-job').value.trim() || 'Karyawan';
+        const checkinDate = document.getElementById('form-checkin-date').value;
+        const dueDate = document.getElementById('form-due-date').value;
+        const rent = parseFloat(document.getElementById('form-monthly-rent').value);
+        const deposit = parseFloat(document.getElementById('form-deposit').value) || 0;
+        const emergency = document.getElementById('form-emergency').value.trim() || '-';
+
+        // Pick random avatar from stock
+        const randomAvatar = STOCK_MEDIA.avatars[Math.floor(Math.random() * STOCK_MEDIA.avatars.length)];
+
+        // Update room object
+        room.price = rent;
+        room.status = 'terisi';
+        room.tenant = {
+          name,
+          phone,
+          nik,
+          job,
+          emergency,
+          checkinDate,
+          dueDate,
+          deposit,
+          avatar: randomAvatar,
+          ktpUrl: state.selectedPresetKtp || STOCK_MEDIA.ktpSamples[0]
+        };
+
+        // Add first transaction
+        const firstTrx = {
+          id: `INV-${room.number}-01`,
+          month: new Date(checkinDate).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }),
+          date: checkinDate,
+          amount: rent + deposit,
+          status: 'Lunas',
+          method: 'Transfer Awal (Sewa + Deposit)',
+          ref: 'PAY-FIRST-' + Math.floor(1000 + Math.random() * 9000)
+        };
+        room.transactions = [firstTrx];
+
+        saveToLocalStorage();
+        recalculateAndRender();
+        closeNewTenantModal();
+
+        showToast('Check-in Berhasil! 🎉', `${name} resmi terdaftar di Kamar ${room.number}.`, 'success');
+
+        // Open newly created room in drawer for preview
+        openTenantDrawer(room.id);
+      }
+
+      function checkinFromDrawer() {
+        if (!state.activeRoomId) return;
+        closeTenantDrawer();
+        openNewTenantModal(state.activeRoomId);
+      }
+
+      // ================= CHECKOUT / KOSONGKAN KAMAR =================
+      function confirmCheckoutRoom() {
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+        if (!room || !room.tenant) return;
+
+        const confirmMsg = `Yakin ingin melakukan check-out untuk ${room.tenant.name} dari Kamar ${room.number}?\n\nKamar akan diubah menjadi status Kosong (Siap Huni).`;
+        if (confirm(confirmMsg)) {
+          room.tenant = null;
+          room.status = 'kosong';
+          
+          saveToLocalStorage();
+          recalculateAndRender();
+          closeTenantDrawer();
+
+          showToast('Check-out Selesai', `Kamar ${room.number} kini telah kosong dan siap disewakan kembali.`, 'info');
+        }
+      }
+
+      // ================= RECORD QUICK PAYMENT =================
+      function triggerQuickPayFromDrawer() {
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+        if (!room || !room.tenant) return;
+
+        document.getElementById('pay-room-id').value = room.id;
+        document.getElementById('pay-room-label').textContent = `Kamar ${room.number} (${room.type})`;
+        document.getElementById('pay-tenant-label').textContent = room.tenant.name;
+        document.getElementById('pay-amount').value = room.price;
+
+        const nextMonthDate = new Date(room.tenant.dueDate);
+        document.getElementById('pay-period').value = nextMonthDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+
+        document.getElementById('modal-quick-pay').classList.remove('hidden');
+        initLucideIcons();
+      }
+
+      function closeQuickPayModal() {
+        document.getElementById('modal-quick-pay').classList.add('hidden');
+      }
+
+      function handleSavePayment(event) {
+        event.preventDefault();
+
+        const roomId = document.getElementById('pay-room-id').value;
+        const room = state.rooms.find(r => r.id === roomId);
+        if (!room || !room.tenant) return;
+
+        const amount = parseFloat(document.getElementById('pay-amount').value);
+        const period = document.getElementById('pay-period').value;
+        const method = document.getElementById('pay-method').value;
+        const advanceDue = document.getElementById('pay-advance-due').checked;
+
+        // Add payment record
+        const newTrx = {
+          id: `INV-${room.number}-${Date.now().toString().slice(-4)}`,
+          month: period,
+          date: formatDate(today),
+          amount: amount,
+          status: 'Lunas',
+          method: method,
+          ref: 'PAY-' + Math.floor(100000 + Math.random() * 900000)
+        };
+
+        if (!room.transactions) room.transactions = [];
+        room.transactions.unshift(newTrx);
+
+        // Advance due date +1 month if checked
+        if (advanceDue) {
+          const currentDue = new Date(room.tenant.dueDate);
+          currentDue.setMonth(currentDue.getMonth() + 1);
+          room.tenant.dueDate = formatDate(currentDue);
+        }
+
+        saveToLocalStorage();
+        recalculateAndRender();
+        closeQuickPayModal();
+
+        showToast('Pembayaran Berhasil Dicatat! 💳', `Kamar ${room.number} telah ditandai Lunas untuk periode ${period}.`, 'success');
+
+        // Refresh drawer view
+        openTenantDrawer(room.id);
+      }
+
+      // ================= OVERDUE CENTER & BULK REMINDER =================
+      function openOverdueCenter() {
+        const list = document.getElementById('overdue-modal-list');
+        const overdueRooms = state.rooms.filter(r => r.status === 'jatuh_tempo' && r.tenant !== null);
+        
+        let totalAmt = 0;
+        overdueRooms.forEach(r => totalAmt += r.price);
+        document.getElementById('overdue-modal-total-amt').textContent = formatRupiah(totalAmt);
+
+        if (overdueRooms.length === 0) {
+          list.innerHTML = `
+            <div class="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <i data-lucide="check-circle-2" class="w-10 h-10 text-emerald-500 mx-auto mb-2"></i>
+              <h4 class="font-bold text-slate-800 text-sm">Semua Tagihan Aman!</h4>
+              <p class="text-xs text-slate-500 mt-1">Tidak ada penyewa yang menunggak atau dalam masa tenggang saat ini.</p>
+            </div>
+          `;
+        } else {
+          list.innerHTML = overdueRooms.map(room => {
+            const diff = calculateDaysDiff(room.tenant.dueDate);
+            let badgeText = '';
+            if (diff < 0) {
+              badgeText = `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-100 text-rose-800">Telat ${Math.abs(diff)} hari</span>`;
+            } else if (diff === 0) {
+              badgeText = `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-100 text-amber-800">Hari ini</span>`;
+            } else {
+              badgeText = `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-blue-800">H-${diff}</span>`;
+            }
+
+            return `
+              <div class="p-3.5 bg-slate-50 hover:bg-slate-100/80 rounded-2xl border border-slate-200 flex items-center justify-between gap-3 text-xs transition-colors">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-slate-900 text-white font-mono font-bold flex items-center justify-center shrink-0">
+                    ${room.number}
+                  </div>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <h5 class="font-bold text-slate-900 truncate">${room.tenant.name}</h5>
+                      ${badgeText}
+                    </div>
+                    <p class="text-slate-500 font-mono text-[11px] mt-0.5">${formatRupiah(room.price)} • Due: ${formatIndonesianDate(room.tenant.dueDate)}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button onclick="App.quickSendWA('${room.id}', 'overdue')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1 shadow-xs transition-colors">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i> Kirim WA
+                  </button>
+                  <button onclick="App.openTenantDrawer('${room.id}')" class="p-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-700 border border-slate-200" title="Buka Detail">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('modal-overdue-center').classList.remove('hidden');
+        initLucideIcons();
+      }
+
+      function closeOverdueCenter() {
+        document.getElementById('modal-overdue-center').classList.add('hidden');
+      }
+
+      function openBulkReminderModal() {
+        openOverdueCenter();
+      }
+
+      // ================= SETTINGS MODAL =================
+      function openSettingsModal() {
+        const p = state.properties;
+        document.getElementById('set-prop-name').value = p.name;
+        document.getElementById('set-prop-address').value = p.address;
+        document.getElementById('set-bank-name').value = p.bankName;
+        document.getElementById('set-bank-account').value = p.bankAccount;
+        document.getElementById('set-bank-owner').value = p.bankOwner;
+
+        document.getElementById('modal-settings').classList.remove('hidden');
+        initLucideIcons();
+      }
+
+      function closeSettingsModal() {
+        document.getElementById('modal-settings').classList.add('hidden');
+      }
+
+      function handleSaveSettings(event) {
+        event.preventDefault();
+
+        state.properties = {
+          name: document.getElementById('set-prop-name').value.trim(),
+          address: document.getElementById('set-prop-address').value.trim(),
+          bankName: document.getElementById('set-bank-name').value,
+          bankAccount: document.getElementById('set-bank-account').value.trim(),
+          bankOwner: document.getElementById('set-bank-owner').value.trim(),
+          phone: state.properties.phone
+        };
+
+        saveToLocalStorage();
+        renderHeaderProperties();
+        closeSettingsModal();
+
+        showToast('Pengaturan Disimpan', 'Data properti dan nomor rekening berhasil diperbarui.', 'success');
+      }
+
+      // ================= EXTEND CONTRACT HELPER =================
+      function openExtendModal() {
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+        if (!room || !room.tenant) return;
+
+        const currentDue = new Date(room.tenant.dueDate);
+        currentDue.setMonth(currentDue.getMonth() + 1);
+        room.tenant.dueDate = formatDate(currentDue);
+
+        saveToLocalStorage();
+        recalculateAndRender();
+        openTenantDrawer(room.id);
+
+        showToast('Kontrak Diperpanjang', `Jatuh tempo sewa Kamar ${room.number} berhasil dimajukan 1 bulan ke ${formatIndonesianDate(room.tenant.dueDate)}.`, 'success');
+      }
+
+      // ================= EDIT ROOM SPEC MODAL =================
+      function openEditRoomModal() {
+        const room = state.rooms.find(r => r.id === state.activeRoomId);
+        if (!room) return;
+
+        const newPrice = prompt(`Ubah Tarif Sewa Bulanan Kamar ${room.number}:`, room.price);
+        if (newPrice !== null && !isNaN(newPrice) && parseFloat(newPrice) > 0) {
+          room.price = parseFloat(newPrice);
+          saveToLocalStorage();
+          recalculateAndRender();
+          openTenantDrawer(room.id);
+          showToast('Tarif Diperbarui', `Harga sewa Kamar ${room.number} diubah menjadi ${formatRupiah(room.price)}/bln.`, 'success');
+        }
+      }
+
+      // ================= EXPORT DATA CSV =================
+      function exportDataCSV() {
+        const headers = ['Nomor Kamar', 'Lantai', 'Tipe Kamar', 'Tarif Bulanan', 'Status', 'Nama Penghuni', 'No WhatsApp', 'Jatuh Tempo', 'Deposit'];
+        const rows = state.rooms.map(r => [
+          r.number,
+          r.floor,
+          `"${r.type}"`,
+          r.price,
+          r.status,
+          r.tenant ? `"${r.tenant.name}"` : '-',
+          r.tenant ? `"${r.tenant.phone}"` : '-',
+          r.tenant ? r.tenant.dueDate : '-',
+          r.tenant ? r.tenant.deposit : 0
+        ]);
+
+        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `Kostify_Data_Kosan_${formatDate(today)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast('Export Berhasil!', 'Data kosan berhasil didownload dalam format CSV.', 'success');
+      }
+
+      // ================= RESET TO DEFAULT DUMMY DATA =================
+      function resetToDefaultData() {
+        if (confirm('Reset seluruh data demo ke kondisi bawaan awal? Aksi ini akan mengembalikan data kamar dan penghuni simulasi.')) {
+          localStorage.removeItem(STORAGE_KEY_ROOMS);
+          localStorage.removeItem(STORAGE_KEY_PROPS);
+          state.properties = { ...DEFAULT_PROPERTIES };
+          state.rooms = JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+          saveToLocalStorage();
+          renderHeaderProperties();
+          recalculateAndRender();
+          showToast('Data Direset', 'Semua data demo berhasil dikembalikan ke status awal.', 'info');
+        }
+      }
+
+      // ================= UI CONTROLS & FILTER HANDLERS =================
+      function setFloorFilter(floor) {
+        state.currentFloor = floor;
+        
+        // Update floor button classes
+        document.querySelectorAll('.floor-btn').forEach(btn => {
+          if (btn.dataset.floor === String(floor)) {
+            btn.className = 'floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-indigo-600 text-white shadow-xs transition-all';
+          } else {
+            btn.className = 'floor-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all';
+          }
+        });
+
+        renderRoomsGrid();
+        renderArchitecturalFloorPlan();
+        initLucideIcons();
+      }
+
+      function setStatusFilter(status) {
+        state.currentStatus = status;
+
+        document.querySelectorAll('.status-btn').forEach(btn => {
+          if (btn.dataset.status === status) {
+            btn.className = 'status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-800 text-white transition-all';
+          } else {
+            btn.className = 'status-btn px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all';
+          }
+        });
+
+        renderRoomsGrid();
+        renderArchitecturalFloorPlan();
+        initLucideIcons();
+      }
+
+      function handleSearch(query) {
+        state.searchQuery = query;
+        const clearBtn = document.getElementById('search-clear-btn');
+        if (query.trim() !== '') {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+        renderRoomsGrid();
+        initLucideIcons();
+      }
+
+      function clearSearch() {
+        const input = document.getElementById('search-input');
+        input.value = '';
+        state.searchQuery = '';
+        document.getElementById('search-clear-btn').classList.add('hidden');
+        renderRoomsGrid();
+        initLucideIcons();
+      }
+
+      function resetFilters() {
+        clearSearch();
+        setFloorFilter('all');
+        setStatusFilter('all');
+      }
+
+      function setViewMode(mode) {
+        state.viewMode = mode;
+        const gridContainer = document.getElementById('view-grid-container');
+        const planContainer = document.getElementById('view-plan-container');
+        const btnGrid = document.getElementById('btn-view-grid');
+        const btnPlan = document.getElementById('btn-view-plan');
+
+        if (mode === 'grid') {
+          gridContainer.classList.remove('hidden');
+          planContainer.classList.add('hidden');
+
+          btnGrid.className = 'px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 bg-white text-indigo-700 shadow-xs transition-all';
+          btnPlan.className = 'px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-all';
+        } else {
+          gridContainer.classList.add('hidden');
+          planContainer.classList.remove('hidden');
+
+          btnPlan.className = 'px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 bg-white text-indigo-700 shadow-xs transition-all';
+          btnGrid.className = 'px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-all';
+          renderArchitecturalFloorPlan();
+        }
+        initLucideIcons();
+      }
+
+      // ================= TOAST SYSTEM =================
+      function showToast(title, message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'pointer-events-auto bg-slate-900 text-white p-3.5 rounded-2xl shadow-xl border border-slate-700 flex items-start gap-3 transform translate-y-2 opacity-0 transition-all duration-300 animate-slide-in-right';
+
+        let iconColor = 'text-indigo-400';
+        let iconName = 'info';
+
+        if (type === 'success') {
+          iconColor = 'text-emerald-400';
+          iconName = 'check-circle';
+        } else if (type === 'warning') {
+          iconColor = 'text-amber-400';
+          iconName = 'alert-triangle';
+        } else if (type === 'danger') {
+          iconColor = 'text-rose-400';
+          iconName = 'x-circle';
+        }
+
+        toast.innerHTML = `
+          <div class="mt-0.5 ${iconColor} shrink-0">
+            <i data-lucide="${iconName}" class="w-5 h-5"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h5 class="text-xs font-bold text-slate-100">${title}</h5>
+            <p class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${message}</p>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-white p-0.5 shrink-0">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+
+        container.appendChild(toast);
+        initLucideIcons();
+
+        // Animate in
+        requestAnimationFrame(() => {
+          toast.classList.remove('translate-y-2', 'opacity-0');
+        });
+
+        // Auto remove after 4.5 seconds
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-2');
+          setTimeout(() => toast.remove(), 300);
+        }, 4500);
+      }
+
+      // Public API
+      return {
+        init,
+        openTenantDrawer,
+        closeTenantDrawer,
+        switchDrawerTab,
+        setFloorFilter,
+        setStatusFilter,
+        handleSearch,
+        clearSearch,
+        resetFilters,
+        setViewMode,
+        setWATemplate,
+        handleWACustomEdit,
+        copyWAMessageToClipboard,
+        quickSendWA,
+        openNewTenantModal,
+        closeNewTenantModal,
+        handleRoomSelectChange,
+        usePresetKTP,
+        handleKtpFileChange,
+        handleSaveNewTenant,
+        checkinFromDrawer,
+        confirmCheckoutRoom,
+        openOverdueCenter,
+        closeOverdueCenter,
+        openBulkReminderModal,
+        triggerQuickPayFromDrawer,
+        closeQuickPayModal,
+        handleSavePayment,
+        openSettingsModal,
+        closeSettingsModal,
+        handleSaveSettings,
+        openExtendModal,
+        openEditRoomModal,
+        exportDataCSV,
+        resetToDefaultData,
+        showToast
+      };
+    })();
+
+    // Initialize application when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+  </script>
+
+</body>
+</html>

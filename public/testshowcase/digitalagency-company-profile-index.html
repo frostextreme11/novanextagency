@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaNext — Modern IT Agency & Software House</title>
+<meta name="description" content="NovaNext — Digital product studio. We build SaaS, E-Commerce, Mobile & Enterprise systems.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        inter: ['Inter', 'sans-serif']
+      },
+      colors: {
+        ink: { 900:'#05060f', 800:'#0a0c1b', 700:'#101428', 600:'#161b33' },
+        nova: { 50:'#eef4ff',100:'#dbe6ff',200:'#bdd1ff',300:'#90b0ff',400:'#5c84ff',500:'#3659ff',600:'#2037f5',700:'#1a28e1',800:'#1c25b6',900:'#1d278f' },
+        glow: { cyan:'#22d3ee', violet:'#a855f7', lime:'#a3e635' }
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
+        'spin-slow': 'spin 18s linear infinite',
+        'marquee': 'marquee 28s linear infinite',
+        'pulse-ring': 'pulseRing 2.4s cubic-bezier(0.4,0,0.6,1) infinite',
+        'gradient-x': 'gradientX 8s ease infinite',
+        'fade-up': 'fadeUp .6s cubic-bezier(.16,1,.3,1) both'
+      },
+      keyframes: {
+        float: { '0%,100%':{transform:'translateY(0px)'}, '50%':{transform:'translateY(-18px)'} },
+        marquee: { '0%':{transform:'translateX(0)'}, '100%':{transform:'translateX(-50%)'} },
+        pulseRing: { '0%,100%':{opacity:'.5',transform:'scale(1)'}, '50%':{opacity:'0',transform:'scale(1.6)'} },
+        gradientX: { '0%,100%':{backgroundPosition:'0% 50%'}, '50%':{backgroundPosition:'100% 50%'} },
+        fadeUp: { '0%':{opacity:'0',transform:'translateY(28px)'}, '100%':{opacity:'1',transform:'translateY(0)'} }
+      }
+    }
+  }
+}
+</script>
+<style>
+  html,body{background:#05060f}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#05060f}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3659ff,#a855f7);border-radius:99px}
+  .mesh{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+  .mesh span{position:absolute;border-radius:9999px;filter:blur(90px);opacity:.45}
+  .glass{background:rgba(255,255,255,.04);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08)}
+  .glass-strong{background:rgba(10,12,27,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.09)}
+  .grad-text{background:linear-gradient(92deg,#5c84ff,#a855f7 45%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradientX 8s ease infinite}
+  .grid-lines{background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%)}
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  .card-hov{transition:transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s,border-color .45s}
+  .card-hov:hover{transform:translateY(-8px);box-shadow:0 24px 60px -18px rgba(54,89,255,.45);border-color:rgba(92,132,255,.5)}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:linear-gradient(90deg,#3659ff var(--p,50%),rgba(255,255,255,.1) var(--p,50%))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:22px;width:22px;border-radius:99px;background:#fff;border:4px solid #3659ff;cursor:pointer;box-shadow:0 0 0 6px rgba(54,89,255,.18);transition:.2s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.12)}
+  input[type=range]::-moz-range-thumb{height:18px;width:18px;border-radius:99px;background:#fff;border:4px solid #3659ff;cursor:pointer}
+  .noise:before{content:'';position:absolute;inset:0;opacity:.035;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .tilt{transform-style:preserve-3d}
+  .marq{mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+  details[open] .chev{transform:rotate(180deg)}
+  .chev{transition:transform .3s}
+</style>
+</head>
+<body class="bg-ink-900 text-slate-200 font-sans antialiased selection:bg-nova-500/40 overflow-x-hidden">
+
+<!-- ================= NAVBAR ================= -->
+<header id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div id="navInner" class="mt-3 rounded-2xl px-4 sm:px-5 py-3 flex items-center gap-4 transition-all duration-500">
+      <a href="#home" class="flex items-center gap-2.5 shrink-0 group">
+        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-br from-nova-500 via-glow-violet to-glow-cyan grid place-items-center shadow-lg shadow-nova-600/40">
+          <i data-lucide="hexagon" class="w-5 h-5 text-white"></i>
+          <span class="absolute inset-0 rounded-xl bg-nova-500 animate-pulse-ring"></span>
+        </div>
+        <div class="leading-none">
+          <p class="font-extrabold tracking-tight text-white text-lg">Nova<span class="grad-text">Next</span></p>
+          <p class="text-[10px] text-slate-400 tracking-widest uppercase">Digital Studio</p>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-1 mx-auto text-sm font-medium">
+        <a href="#services" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">Layanan</a>
+        <a href="#portfolio" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">Portfolio</a>
+        <a href="#estimator" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">Estimator</a>
+        <a href="#process" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">Proses</a>
+        <a href="#testimoni" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">Klien</a>
+        <a href="#faq" class="nav-link px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition">FAQ</a>
+      </nav>
+
+      <div class="hidden sm:flex items-center gap-2 ml-auto lg:ml-0">
+        <span class="hidden xl:inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-glow-lime/10 text-glow-lime border border-glow-lime/25">
+          <span class="w-1.5 h-1.5 rounded-full bg-glow-lime animate-pulse"></span> Demo Prototype by NovaNext
+        </span>
+        <button onclick="App.openBooking()" class="group relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-lg shadow-nova-600/30 hover:shadow-nova-600/60 hover:scale-[1.03] active:scale-95 transition">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i> Discovery Call
+        </button>
+      </div>
+
+      <button onclick="App.toggleDrawer()" class="lg:hidden ml-auto sm:ml-0 w-10 h-10 grid place-items-center rounded-xl glass text-white active:scale-90 transition">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= DRAWER ================= -->
+<div id="drawerWrap" class="fixed inset-0 z-[60] hidden">
+  <div onclick="App.toggleDrawer()" class="absolute inset-0 bg-black/70 backdrop-blur-sm opacity-0 transition-opacity duration-300" id="drawerBd"></div>
+  <aside id="drawer" class="absolute right-0 top-0 h-full w-[86%] max-w-sm glass-strong p-6 translate-x-full transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] overflow-y-auto">
+    <div class="flex items-center justify-between mb-8">
+      <p class="font-extrabold text-xl text-white">Nova<span class="grad-text">Next</span></p>
+      <button onclick="App.toggleDrawer()" class="w-9 h-9 grid place-items-center rounded-lg bg-white/5 hover:bg-white/10 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="space-y-1.5" id="drawerLinks"></div>
+    <div class="mt-8 p-4 rounded-2xl bg-gradient-to-br from-nova-600/25 to-glow-violet/20 border border-nova-500/30">
+      <p class="text-sm font-bold text-white mb-1">Butuh estimasi cepat?</p>
+      <p class="text-xs text-slate-300 mb-3">Hitung kisaran biaya proyek Anda dalam 30 detik.</p>
+      <a href="#estimator" onclick="App.toggleDrawer()" class="block text-center text-sm font-bold py-2.5 rounded-xl bg-white text-ink-900 active:scale-95 transition">Buka Estimator</a>
+    </div>
+    <div class="mt-6 flex gap-2">
+      <a href="#" class="flex-1 grid place-items-center py-3 rounded-xl glass hover:bg-white/10 transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+      <a href="#" class="flex-1 grid place-items-center py-3 rounded-xl glass hover:bg-white/10 transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+      <a href="#" class="flex-1 grid place-items-center py-3 rounded-xl glass hover:bg-white/10 transition"><i data-lucide="github" class="w-4 h-4"></i></a>
+    </div>
+  </aside>
+</div>
+
+<!-- ================= HERO ================= -->
+<section id="home" class="relative min-h-screen flex items-center pt-28 pb-16 noise overflow-hidden">
+  <div class="mesh">
+    <span class="w-[520px] h-[520px] bg-nova-600 -top-28 -left-24 animate-float"></span>
+    <span class="w-[460px] h-[460px] bg-glow-violet top-10 right-[-80px] animate-float-slow"></span>
+    <span class="w-[380px] h-[380px] bg-glow-cyan bottom-[-120px] left-1/3 animate-float" style="animation-delay:-3s"></span>
+  </div>
+  <div class="absolute inset-0 grid-lines"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-10 items-center w-full">
+    <div class="lg:col-span-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs font-semibold text-nova-200 mb-6 animate-fade-up">
+        <span class="w-2 h-2 rounded-full bg-glow-lime animate-pulse"></span>
+        Slot proyek Q1 2026 — 3 tersisa
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-glow-cyan"></i>
+      </div>
+      <h1 class="text-4xl sm:text-5xl xl:text-[4.1rem] font-extrabold leading-[1.05] tracking-tight text-white animate-fade-up" style="animation-delay:.08s">
+        Kami bangun <span class="grad-text">produk digital</span> yang benar-benar dipakai orang.
+      </h1>
+      <p class="mt-6 text-base sm:text-lg text-slate-400 max-w-xl leading-relaxed animate-fade-up" style="animation-delay:.16s">
+        NovaNext adalah software house end-to-end: strategi, desain, engineering, hingga scale-up. Dari MVP SaaS sampai sistem enterprise — dikirim tepat waktu, terukur, dan siap tumbuh.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 animate-fade-up" style="animation-delay:.24s">
+        <button onclick="App.openBooking()" class="group inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 via-nova-500 to-glow-violet shadow-xl shadow-nova-600/35 hover:shadow-nova-500/60 hover:-translate-y-0.5 active:scale-95 transition">
+          <i data-lucide="phone-call" class="w-5 h-5"></i> Konsultasi Gratis 30 Menit
+          <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+        </button>
+        <a href="#estimator" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold glass text-white hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition">
+          <i data-lucide="calculator" class="w-5 h-5 text-glow-cyan"></i> Hitung Estimasi Biaya
+        </a>
+      </div>
+
+      <div class="mt-10 grid grid-cols-3 gap-3 max-w-lg animate-fade-up" style="animation-delay:.32s">
+        <div class="glass rounded-2xl p-4"><p class="text-2xl sm:text-3xl font-extrabold text-white" data-count="148">0</p><p class="text-[11px] text-slate-400 mt-1">Proyek Delivered</p></div>
+        <div class="glass rounded-2xl p-4"><p class="text-2xl sm:text-3xl font-extrabold text-white"><span data-count="98">0</span>%</p><p class="text-[11px] text-slate-400 mt-1">Client Retention</p></div>
+        <div class="glass rounded-2xl p-4"><p class="text-2xl sm:text-3xl font-extrabold text-white"><span data-count="12">0</span>+</p><p class="text-[11px] text-slate-400 mt-1">Tahun Pengalaman</p></div>
+      </div>
+    </div>
+
+    <!-- Mock showcase -->
+    <div class="lg:col-span-6 relative animate-fade-up" style="animation-delay:.3s">
+      <div class="relative mx-auto max-w-xl">
+        <div class="absolute -inset-6 bg-gradient-to-tr from-nova-600/30 via-glow-violet/20 to-glow-cyan/25 blur-3xl rounded-[3rem]"></div>
+        <div id="mockWindow" class="relative glass-strong rounded-3xl p-3 shadow-2xl shadow-black/60 animate-float-slow">
+          <div class="flex items-center gap-2 px-2 py-2">
+            <span class="w-3 h-3 rounded-full bg-red-400/80"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+            <span class="w-3 h-3 rounded-full bg-green-400/80"></span>
+            <div class="ml-3 flex-1 h-6 rounded-md bg-white/5 flex items-center px-3 gap-2">
+              <i data-lucide="lock" class="w-3 h-3 text-glow-lime"></i>
+              <span class="text-[10px] text-slate-400 font-inter">app.novanext.studio/dashboard</span>
+            </div>
+          </div>
+          <div class="rounded-2xl bg-ink-800/90 p-4 border border-white/5">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <p class="text-xs text-slate-400">Live Revenue</p>
+                <p class="text-2xl font-extrabold text-white" id="mockRev">Rp 0</p>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-glow-lime/15 text-glow-lime border border-glow-lime/25 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> +24.8%</span>
+            </div>
+            <div class="h-28 flex items-end gap-1.5" id="mockChart"></div>
+            <div class="grid grid-cols-3 gap-2 mt-4">
+              <div class="rounded-xl bg-white/5 p-2.5"><p class="text-[10px] text-slate-400">Users</p><p class="text-sm font-bold text-white">24.1k</p></div>
+              <div class="rounded-xl bg-white/5 p-2.5"><p class="text-[10px] text-slate-400">Uptime</p><p class="text-sm font-bold text-glow-cyan">99.98%</p></div>
+              <div class="rounded-xl bg-white/5 p-2.5"><p class="text-[10px] text-slate-400">NPS</p><p class="text-sm font-bold text-glow-violet">72</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -left-4 sm:-left-10 bottom-8 glass-strong rounded-2xl px-4 py-3 flex items-center gap-3 shadow-xl animate-float" style="animation-delay:-2s">
+          <div class="w-9 h-9 rounded-xl bg-glow-lime/15 grid place-items-center"><i data-lucide="rocket" class="w-4.5 h-4.5 text-glow-lime"></i></div>
+          <div><p class="text-xs font-bold text-white">Deploy sukses</p><p class="text-[10px] text-slate-400">build #2184 · 42s</p></div>
+        </div>
+        <div class="absolute -right-2 sm:-right-8 top-6 glass-strong rounded-2xl px-4 py-3 shadow-xl animate-float-slow">
+          <p class="text-[10px] text-slate-400 mb-1">Core Web Vitals</p>
+          <div class="flex items-center gap-2"><div class="w-16 h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[96%] bg-gradient-to-r from-glow-lime to-glow-cyan"></div></div><span class="text-xs font-bold text-white">96</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOGO MARQUEE ================= -->
+<section class="relative py-10 border-y border-white/5 bg-ink-800/40">
+  <p class="text-center text-xs uppercase tracking-[0.3em] text-slate-500 mb-6">Dipercaya oleh tim produk di</p>
+  <div class="marq overflow-hidden">
+    <div class="flex gap-12 w-max animate-marquee" id="logoTrack"></div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="services" class="relative py-24 overflow-hidden">
+  <div class="mesh"><span class="w-[420px] h-[420px] bg-nova-700 top-20 -right-40"></span></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl reveal">
+      <span class="text-xs font-bold tracking-[0.25em] uppercase text-nova-300">// Layanan</span>
+      <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Satu tim, <span class="grad-text">seluruh siklus produk</span></h2>
+      <p class="mt-4 text-slate-400">Tidak perlu 5 vendor. Kami tangani discovery, UI/UX, engineering, QA, hingga maintenance dalam satu squad terintegrasi.</p>
+    </div>
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- ================= PORTFOLIO ================= -->
+<section id="portfolio" class="relative py-24 bg-ink-800/30 border-y border-white/5 overflow-hidden">
+  <div class="mesh"><span class="w-[500px] h-[500px] bg-glow-violet -left-48 top-1/3 opacity-30"></span></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 reveal">
+      <div class="max-w-2xl">
+        <span class="text-xs font-bold tracking-[0.25em] uppercase text-glow-violet">// Portfolio</span>
+        <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Karya yang <span class="grad-text">berdampak nyata</span></h2>
+        <p class="mt-4 text-slate-400">Filter berdasarkan kategori untuk melihat studi kasus terdekat dengan kebutuhan Anda.</p>
+      </div>
+      <div class="flex items-center gap-2 text-sm text-slate-400"><i data-lucide="layers" class="w-4 h-4"></i><span id="projCount">0</span> proyek ditampilkan</div>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-2" id="filterBar"></div>
+    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="portfolioGrid"></div>
+    <div id="emptyState" class="hidden text-center py-16">
+      <i data-lucide="search-x" class="w-12 h-12 mx-auto text-slate-600"></i>
+      <p class="mt-4 text-slate-400">Belum ada proyek di kategori ini.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COST ESTIMATOR ================= -->
+<section id="estimator" class="relative py-24 overflow-hidden">
+  <div class="mesh">
+    <span class="w-[480px] h-[480px] bg-nova-600 -left-32 bottom-0"></span>
+    <span class="w-[380px] h-[380px] bg-glow-cyan right-0 top-10 opacity-30"></span>
+  </div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="text-xs font-bold tracking-[0.25em] uppercase text-glow-cyan">// Interactive Cost Estimator</span>
+      <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Berapa biaya <span class="grad-text">proyek Anda?</span></h2>
+      <p class="mt-4 text-slate-400">Susun scope proyek Anda di bawah ini dan dapatkan kisaran harga instan — tanpa perlu menunggu email.</p>
+    </div>
+
+    <div class="mt-12 grid lg:grid-cols-12 gap-6 items-start">
+      <!-- Config -->
+      <div class="lg:col-span-7 space-y-5 reveal">
+        <!-- Platform -->
+        <div class="glass rounded-3xl p-6">
+          <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-lg bg-nova-500/15 grid place-items-center"><i data-lucide="monitor-smartphone" class="w-4 h-4 text-nova-300"></i></div><h3 class="font-bold text-white">1. Pilih Platform</h3></div>
+          <div class="grid sm:grid-cols-2 gap-3" id="platformGrid"></div>
+        </div>
+        <!-- Pages -->
+        <div class="glass rounded-3xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-glow-violet/15 grid place-items-center"><i data-lucide="file-stack" class="w-4 h-4 text-glow-violet"></i></div><h3 class="font-bold text-white">2. Jumlah Halaman / Screen</h3></div>
+            <span class="text-lg font-extrabold text-white px-3 py-1 rounded-lg bg-white/5" id="pagesVal">10</span>
+          </div>
+          <input type="range" id="pagesRange" min="3" max="60" value="10" class="w-full cursor-pointer">
+          <div class="flex justify-between text-[11px] text-slate-500 mt-2"><span>3 (Landing)</span><span>30 (Mid app)</span><span>60+ (Enterprise)</span></div>
+          <div class="mt-5 grid grid-cols-3 gap-3">
+            <div><label class="text-xs text-slate-400 block mb-2">Kompleksitas Desain</label>
+              <select id="designSel" class="w-full bg-ink-700 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:ring-2 focus:ring-nova-500 outline-none">
+                <option value="1">Template-based</option><option value="1.25" selected>Custom UI</option><option value="1.55">Premium + Motion</option>
+              </select></div>
+            <div><label class="text-xs text-slate-400 block mb-2">Timeline</label>
+              <select id="timeSel" class="w-full bg-ink-700 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:ring-2 focus:ring-nova-500 outline-none">
+                <option value="0.92">Fleksibel (-8%)</option><option value="1" selected>Normal</option><option value="1.3">Fast-track (+30%)</option>
+              </select></div>
+            <div><label class="text-xs text-slate-400 block mb-2">Support</label>
+              <select id="maintSel" class="w-full bg-ink-700 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:ring-2 focus:ring-nova-500 outline-none">
+                <option value="0">Tanpa retainer</option><option value="0.1" selected>3 bulan (+10%)</option><option value="0.18">12 bulan (+18%)</option>
+              </select></div>
+          </div>
+        </div>
+        <!-- Features -->
+        <div class="glass rounded-3xl p-6">
+          <div class="flex items-center gap-2 mb-4"><div class="w-8 h-8 rounded-lg bg-glow-cyan/15 grid place-items-center"><i data-lucide="puzzle" class="w-4 h-4 text-glow-cyan"></i></div><h3 class="font-bold text-white">3. Fitur Khusus</h3></div>
+          <div class="grid sm:grid-cols-2 gap-2.5" id="featureGrid"></div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="lg:col-span-5 lg:sticky lg:top-28 reveal">
+        <div class="relative rounded-3xl p-[1px] bg-gradient-to-br from-nova-500/60 via-glow-violet/40 to-glow-cyan/50">
+          <div class="rounded-[calc(1.5rem-1px)] bg-ink-800/95 backdrop-blur-xl p-6 sm:p-7">
+            <div class="flex items-center justify-between mb-5">
+              <p class="text-xs uppercase tracking-widest text-slate-400 font-bold">Estimasi Investasi</p>
+              <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-nova-500/15 text-nova-300 border border-nova-500/25">Live</span>
+            </div>
+            <p class="text-3xl sm:text-[2.6rem] font-extrabold text-white leading-tight tracking-tight" id="estLow">Rp 0</p>
+            <p class="text-sm text-slate-400 mt-1">s/d <span class="font-bold text-nova-300" id="estHigh">Rp 0</span></p>
+
+            <div class="mt-5 h-2 rounded-full bg-white/8 overflow-hidden">
+              <div id="estBar" class="h-full w-0 bg-gradient-to-r from-nova-500 via-glow-violet to-glow-cyan transition-all duration-700 ease-out"></div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-2 gap-3">
+              <div class="rounded-2xl bg-white/5 p-3.5"><p class="text-[11px] text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Durasi</p><p class="text-base font-bold text-white mt-1" id="estWeeks">— minggu</p></div>
+              <div class="rounded-2xl bg-white/5 p-3.5"><p class="text-[11px] text-slate-400 flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> Tim</p><p class="text-base font-bold text-white mt-1" id="estTeam">— orang</p></div>
+            </div>
+
+            <div class="mt-5 space-y-2 max-h-48 overflow-y-auto pr-1" id="estBreakdown"></div>
+
+            <div class="mt-6 space-y-2.5">
+              <button onclick="App.saveQuote()" class="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-lg shadow-nova-600/30 hover:shadow-nova-500/50 hover:-translate-y-0.5 active:scale-95 transition">
+                <i data-lucide="bookmark-plus" class="w-4 h-4"></i> Simpan & Minta Proposal
+              </button>
+              <button onclick="App.resetEstimator()" class="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-slate-300 glass hover:bg-white/10 active:scale-95 transition text-sm">
+                <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Konfigurasi
+              </button>
+            </div>
+            <p class="mt-4 text-[11px] text-slate-500 text-center leading-relaxed">*Estimasi indikatif. Harga final ditentukan setelah sesi discovery & technical scoping.</p>
+          </div>
+        </div>
+
+        <div id="savedQuotes" class="mt-5 space-y-2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section id="process" class="relative py-24 bg-ink-800/30 border-y border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="max-w-2xl reveal">
+      <span class="text-xs font-bold tracking-[0.25em] uppercase text-glow-lime">// Proses</span>
+      <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Alur kerja yang <span class="grad-text">transparan</span></h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5" id="processGrid"></div>
+  </div>
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+<section id="testimoni" class="relative py-24 overflow-hidden">
+  <div class="mesh"><span class="w-[420px] h-[420px] bg-glow-violet right-0 bottom-0 opacity-30"></span></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center max-w-2xl mx-auto reveal">
+      <span class="text-xs font-bold tracking-[0.25em] uppercase text-nova-300">// Testimoni</span>
+      <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Kata <span class="grad-text">para klien</span></h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-3 gap-5" id="testiGrid"></div>
+  </div>
+</section>
+
+<!-- ================= FAQ + CTA ================= -->
+<section id="faq" class="relative py-24 bg-ink-800/30 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-10">
+    <div class="lg:col-span-5 reveal">
+      <span class="text-xs font-bold tracking-[0.25em] uppercase text-glow-cyan">// FAQ</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Pertanyaan yang sering diajukan</h2>
+      <p class="mt-4 text-slate-400">Tidak menemukan jawaban? Jadwalkan discovery call gratis dan tanyakan langsung ke tim kami.</p>
+      <button onclick="App.openBooking()" class="mt-6 inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-lg shadow-nova-600/30 hover:-translate-y-0.5 active:scale-95 transition">
+        <i data-lucide="message-square-text" class="w-4 h-4"></i> Tanya Tim NovaNext
+      </button>
+    </div>
+    <div class="lg:col-span-7 space-y-3 reveal" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="relative pt-20 pb-10 overflow-hidden noise">
+  <div class="mesh"><span class="w-[600px] h-[300px] bg-nova-700 left-1/4 -bottom-40 opacity-40"></span></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="rounded-[2rem] p-[1px] bg-gradient-to-r from-nova-500/50 via-glow-violet/40 to-glow-cyan/50">
+      <div class="rounded-[calc(2rem-1px)] bg-ink-800/95 backdrop-blur p-8 sm:p-12 text-center">
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Siap mulai proyek Anda?</h3>
+        <p class="mt-3 text-slate-400 max-w-lg mx-auto">Discovery call 30 menit, gratis, tanpa komitmen. Kami bantu petakan scope, risiko, dan prioritas rilis.</p>
+        <div class="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+          <button onclick="App.openBooking()" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-xl shadow-nova-600/35 hover:-translate-y-0.5 active:scale-95 transition"><i data-lucide="calendar-check" class="w-5 h-5"></i> Booking Discovery Call</button>
+          <a href="#estimator" class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold glass text-white hover:bg-white/10 active:scale-95 transition"><i data-lucide="calculator" class="w-5 h-5"></i> Coba Estimator</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14 grid md:grid-cols-4 gap-8 text-sm">
+      <div class="md:col-span-2">
+        <p class="font-extrabold text-xl text-white">Nova<span class="grad-text">Next</span></p>
+        <p class="mt-3 text-slate-400 max-w-sm">Digital product studio berbasis di Jakarta & Yogyakarta. Membangun software yang cepat, aman, dan indah sejak 2014.</p>
+        <div class="mt-5 flex gap-2">
+          <a href="#" class="w-10 h-10 grid place-items-center rounded-xl glass hover:bg-white/10 hover:-translate-y-1 transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+          <a href="#" class="w-10 h-10 grid place-items-center rounded-xl glass hover:bg-white/10 hover:-translate-y-1 transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+          <a href="#" class="w-10 h-10 grid place-items-center rounded-xl glass hover:bg-white/10 hover:-translate-y-1 transition"><i data-lucide="github" class="w-4 h-4"></i></a>
+          <a href="#" class="w-10 h-10 grid place-items-center rounded-xl glass hover:bg-white/10 hover:-translate-y-1 transition"><i data-lucide="dribbble" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+      <div><p class="font-bold text-white mb-3">Layanan</p><ul class="space-y-2 text-slate-400"><li><a href="#services" class="hover:text-nova-300 transition">Product Discovery</a></li><li><a href="#services" class="hover:text-nova-300 transition">UI/UX Design</a></li><li><a href="#services" class="hover:text-nova-300 transition">Web & SaaS</a></li><li><a href="#services" class="hover:text-nova-300 transition">Mobile Apps</a></li><li><a href="#services" class="hover:text-nova-300 transition">Cloud & DevOps</a></li></ul></div>
+      <div><p class="font-bold text-white mb-3">Kontak</p><ul class="space-y-2 text-slate-400">
+        <li class="flex items-start gap-2"><i data-lucide="mail" class="w-4 h-4 mt-0.5 text-nova-400"></i> hello@novanext.studio</li>
+        <li class="flex items-start gap-2"><i data-lucide="phone" class="w-4 h-4 mt-0.5 text-nova-400"></i> +62 811-2000-900</li>
+        <li class="flex items-start gap-2"><i data-lucide="map-pin" class="w-4 h-4 mt-0.5 text-nova-400"></i> SCBD Lot 9, Jakarta Selatan</li></ul></div>
+    </div>
+
+    <div class="mt-12 pt-6 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <p>© 2026 NovaNext Studio. All rights reserved.</p>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-glow-lime/10 text-glow-lime border border-glow-lime/25 font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-glow-lime animate-pulse"></span> Demo Prototype by NovaNext</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp floating -->
+<button onclick="App.openBooking()" class="fixed bottom-5 right-5 z-40 group flex items-center gap-2 pl-4 pr-5 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-emerald-500 to-green-600 shadow-2xl shadow-emerald-600/40 hover:scale-105 active:scale-95 transition">
+  <i data-lucide="message-circle" class="w-5 h-5"></i><span class="hidden sm:inline text-sm">Chat Kami</span>
+  <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-red-500 border-2 border-ink-900 animate-pulse"></span>
+</button>
+
+<!-- ================= MODALS ================= -->
+<div id="modalWrap" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+  <div onclick="App.closeModal()" id="modalBd" class="absolute inset-0 bg-black/80 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
+  <div id="modalBox" class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto glass-strong rounded-3xl p-6 sm:p-7 scale-95 opacity-0 transition-all duration-300"></div>
+</div>
+
+<!-- Toast -->
+<div id="toastHost" class="fixed top-20 right-4 z-[90] space-y-2.5 w-[calc(100%-2rem)] max-w-sm pointer-events-none"></div>
+
+<script>
+/* =========================================================
+   NovaNext Showcase — Vanilla ES6 State Engine
+   ========================================================= */
+const DB = {
+  logos: ['Tokonova','FinPeak','Medika+','LogiX','AgriFlow','EduVerse','Nusabank','Swiftly'],
+  services: [
+    {i:'compass', t:'Product Discovery', d:'Workshop, user research, dan roadmap teknis sebelum satu baris kode ditulis.', c:'from-nova-500/20 to-nova-700/10', ic:'text-nova-300', tags:['Workshop','Roadmap']},
+    {i:'palette', t:'UI/UX Design System', d:'Design system scalable, prototype interaktif, dan usability testing.', c:'from-glow-violet/20 to-purple-900/10', ic:'text-glow-violet', tags:['Figma','Design Ops']},
+    {i:'code-2', t:'Web & SaaS Engineering', d:'Next.js, Laravel, Go. Arsitektur multi-tenant siap skala jutaan request.', c:'from-glow-cyan/20 to-cyan-900/10', ic:'text-glow-cyan', tags:['Next.js','Go']},
+    {i:'smartphone', t:'Mobile Development', d:'Flutter & React Native dengan offline-first dan push notification.', c:'from-glow-lime/20 to-lime-900/10', ic:'text-glow-lime', tags:['Flutter','RN']},
+    {i:'server-cog', t:'Cloud & DevOps', d:'CI/CD, Kubernetes, observability, dan cost optimization AWS/GCP.', c:'from-orange-500/20 to-orange-900/10', ic:'text-orange-400', tags:['K8s','Terraform']},
+    {i:'brain-circuit', t:'AI & Data Integration', d:'RAG chatbot, rekomendasi, dashboard analitik real-time.', c:'from-pink-500/20 to-pink-900/10', ic:'text-pink-400', tags:['LLM','BI']}
+  ],
+  projects: [
+    {t:'Tokonova Commerce OS', cat:'ecommerce', y:'2025', d:'Headless commerce multi-store dengan 1.2 juta SKU dan checkout 1-klik.', metric:'+312% GMV', stack:['Next.js','Medusa','Postgres'], em:'🛍️', g:'from-nova-600 to-blue-800'},
+    {t:'FinPeak Wealth SaaS', cat:'saas', y:'2025', d:'Platform manajemen portofolio B2B dengan multi-tenant & RBAC granular.', metric:'24k MAU', stack:['React','Go','Redis'], em:'📈', g:'from-glow-violet to-indigo-900'},
+    {t:'Medika+ Patient App', cat:'mobile', y:'2024', d:'Telemedicine app dengan antrian real-time dan e-resep terintegrasi.', metric:'4.8★ Store', stack:['Flutter','Firebase'], em:'🩺', g:'from-glow-cyan to-teal-800'},
+    {t:'LogiX Fleet Enterprise', cat:'enterprise', y:'2025', d:'ERP logistik: tracking GPS, dispatch otomatis, dan rekonsiliasi biaya.', metric:'-38% idle time', stack:['Laravel','Vue','K8s'], em:'🚚', g:'from-orange-500 to-red-900'},
+    {t:'AgriFlow Supply Chain', cat:'enterprise', y:'2024', d:'Traceability hasil tani dari petani ke ritel dengan QR verification.', metric:'9 provinsi', stack:['NestJS','Postgres'], em:'🌾', g:'from-glow-lime to-emerald-900'},
+    {t:'EduVerse LMS', cat:'saas', y:'2026', d:'LMS adaptif dengan AI tutor, live class, dan sertifikasi otomatis.', metric:'112k siswa', stack:['Next.js','LLM','AWS'], em:'🎓', g:'from-pink-500 to-fuchsia-900'},
+    {t:'Swiftly Food Delivery', cat:'mobile', y:'2024', d:'Super-app pesan antar dengan live tracking dan dynamic pricing.', metric:'<2s order', stack:['React Native','Go'], em:'🛵', g:'from-amber-400 to-orange-800'},
+    {t:'Nusabank Mobile Banking', cat:'enterprise', y:'2026', d:'Core banking channel dengan biometric auth & fraud scoring realtime.', metric:'ISO 27001', stack:['Kotlin','Swift','Java'], em:'🏦', g:'from-sky-500 to-blue-900'},
+    {t:'Pulse Analytics Cloud', cat:'saas', y:'2025', d:'Product analytics self-serve dengan event pipeline 50k/detik.', metric:'50k ev/s', stack:['ClickHouse','Go'], em:'⚡', g:'from-violet-500 to-purple-900'},
+    {t:'Vogue Market Storefront', cat:'ecommerce', y:'2026', d:'Fashion marketplace dengan AR try-on dan rekomendasi personal.', metric:'+67% AOV', stack:['Shopify Hydrogen'], em:'👗', g:'from-rose-500 to-pink-900'},
+    {t:'BuildIt Contractor Hub', cat:'ecommerce', y:'2024', d:'B2B procurement material bangunan dengan harga kontrak dinamis.', metric:'820 vendor', stack:['Laravel','Livewire'], em:'🏗️', g:'from-stone-400 to-stone-800'},
+    {t:'Zen Habit Tracker', cat:'mobile', y:'2026', d:'Habit app dengan gamifikasi, widget iOS, dan sinkronisasi wearable.', metric:'Featured App', stack:['Swift','HealthKit'], em:'🧘', g:'from-teal-400 to-cyan-900'}
+  ],
+  filters: [
+    {k:'all', l:'Semua Proyek', i:'grid-3x3'},
+    {k:'saas', l:'SaaS', i:'cloud'},
+    {k:'ecommerce', l:'E-Commerce', i:'shopping-bag'},
+    {k:'mobile', l:'Mobile', i:'smartphone'},
+    {k:'enterprise', l:'Enterprise', i:'building-2'}
+  ],
+  platforms: [
+    {k:'landing', l:'Landing Page / Company Profile', i:'layout-template', base:18, per:2.2, wk:3, team:3},
+    {k:'web', l:'Web App / SaaS Platform', i:'cloud', base:65, per:6.5, wk:10, team:5},
+    {k:'mobile', l:'Mobile App (iOS + Android)', i:'smartphone', base:85, per:7.5, wk:12, team:5},
+    {k:'enterprise', l:'Enterprise System / ERP', i:'building-2', base:150, per:11, wk:20, team:8}
+  ],
+  features: [
+    {k:'auth', l:'Auth & Role Management', i:'shield-check', p:12, w:1},
+    {k:'pay', l:'Payment Gateway', i:'credit-card', p:18, w:1.5},
+    {k:'dash', l:'Admin Dashboard & Report', i:'layout-dashboard', p:22, w:2},
+    {k:'chat', l:'Realtime Chat / Notif', i:'message-circle', p:16, w:1.5},
+    {k:'ai', l:'AI / Chatbot Integration', i:'brain-circuit', p:35, w:3},
+    {k:'api', l:'3rd-party API Integration', i:'plug-zap', p:14, w:1},
+    {k:'multi', l:'Multi-language & Currency', i:'languages', p:10, w:1},
+    {k:'cms', l:'Custom CMS Headless', i:'file-cog', p:20, w:2},
+    {k:'map', l:'Maps & Geolocation', i:'map-pinned', p:13, w:1},
+    {k:'bi', l:'Analytics & BI Pipeline', i:'bar-chart-3', p:28, w:2.5}
+  ],
+  process: [
+    {n:'01', t:'Discovery & Scoping', d:'Workshop 2-3 hari untuk memetakan masalah bisnis, user, dan batasan teknis.', i:'search', c:'nova-400'},
+    {n:'02', t:'Design & Prototype', d:'Wireframe → hi-fi → prototype clickable yang diuji ke user nyata.', i:'pen-tool', c:'glow-violet'},
+    {n:'03', t:'Build & Iterate', d:'Sprint 2 mingguan, demo rutin, akses staging kapan pun.', i:'code-2', c:'glow-cyan'},
+    {n:'04', t:'Launch & Scale', d:'Go-live, monitoring 24/7, dan optimasi berkelanjutan pasca rilis.', i:'rocket', c:'glow-lime'}
+  ],
+  testi: [
+    {n:'Andhika Prasetyo', r:'CTO, FinPeak', q:'Tim NovaNext bukan sekadar vendor — mereka challenge asumsi produk kami. MVP rilis 6 minggu lebih cepat dari rencana.', a:'AP', g:'from-nova-500 to-blue-700'},
+    {n:'Larasati Wibowo', r:'Head of Product, Tokonova', q:'Migrasi ke headless commerce berjalan tanpa downtime. GMV naik 3x dalam dua kuartal. Komunikasi mereka sangat rapi.', a:'LW', g:'from-glow-violet to-purple-800'},
+    {n:'Reza Mahendra', r:'CEO, Medika+', q:'Dari sketsa di whiteboard sampai app rating 4.8 di store. Kualitas engineering dan desainnya kelas dunia.', a:'RM', g:'from-glow-cyan to-teal-800'}
+  ],
+  faq: [
+    {q:'Berapa lama proyek biasanya selesai?', a:'Landing page 2–4 minggu, web app/SaaS 8–16 minggu, sistem enterprise 20–36 minggu. Timeline presisi diberikan setelah sesi discovery.'},
+    {q:'Apakah estimasi di kalkulator sudah final?', a:'Belum. Angka tersebut adalah rentang indikatif berdasarkan ribuan data proyek sebelumnya. Penawaran final keluar setelah technical scoping (gratis).'},
+    {q:'Bagaimana skema pembayarannya?', a:'Umumnya milestone-based: 30% kickoff, 40% mid-development, 30% saat go-live. Untuk retainer bulanan tersedia skema subscription.'},
+    {q:'Apakah source code menjadi milik kami?', a:'Ya. 100% IP dan source code diserahkan ke klien saat proyek selesai, lengkap dengan dokumentasi dan handover session.'},
+    {q:'Apakah menyediakan maintenance setelah rilis?', a:'Tersedia paket retainer 3 atau 12 bulan mencakup bug fixing, security patch, monitoring uptime, dan jatah jam pengembangan fitur.'},
+    {q:'Bisakah bekerja dengan tim internal kami?', a:'Tentu. Kami biasa beroperasi sebagai staff augmentation maupun squad mandiri yang terintegrasi dengan sprint ritual tim Anda.'}
+  ]
+};
+
+const App = {
+  LS: 'novanext_state_v1',
+  state: {
+    filter: 'all',
+    est: { platform:'web', pages:10, features:['auth','dash'], design:1.25, time:1, maint:0.1 },
+    quotes: [],
+    drawer: false
+  },
+
+  /* ---------- Persistence ---------- */
+  load(){
+    try{ const s = JSON.parse(localStorage.getItem(this.LS)); if(s){ this.state = {...this.state, ...s, drawer:false}; } }catch(e){}
+  },
+  save(){
+    const {filter, est, quotes} = this.state;
+    localStorage.setItem(this.LS, JSON.stringify({filter, est, quotes}));
+  },
+
+  /* ---------- Toast ---------- */
+  toast(msg, type='success'){
+    const map = {success:['check-circle-2','text-glow-lime','border-glow-lime/30','bg-glow-lime/10'],
+                 info:['info','text-nova-300','border-nova-500/30','bg-nova-500/10'],
+                 warn:['alert-triangle','text-amber-400','border-amber-400/30','bg-amber-400/10']};
+    const [ic,tc,bc,bg] = map[type]||map.success;
+    const el = document.createElement('div');
+    el.className = `pointer-events-auto glass-strong ${bc} ${bg} rounded-2xl px-4 py-3.5 flex items-start gap-3 shadow-2xl translate-x-[120%] opacity-0 transition-all duration-500`;
+    el.innerHTML = `<i data-lucide="${ic}" class="w-5 h-5 ${tc} shrink-0 mt-0.5"></i><p class="text-sm text-white font-medium leading-snug flex-1">${msg}</p>`;
+    document.getElementById('toastHost').appendChild(el);
+    lucide.createIcons();
+    requestAnimationFrame(()=>{ el.classList.remove('translate-x-[120%]','opacity-0'); });
+    setTimeout(()=>{ el.classList.add('translate-x-[120%]','opacity-0'); setTimeout(()=>el.remove(),500); }, 3600);
+  },
+
+  /* ---------- Drawer ---------- */
+  toggleDrawer(){
+    const w = document.getElementById('drawerWrap'), d = document.getElementById('drawer'), b = document.getElementById('drawerBd');
+    this.state.drawer = !this.state.drawer;
+    if(this.state.drawer){
+      w.classList.remove('hidden'); document.body.style.overflow='hidden';
+      requestAnimationFrame(()=>{ b.classList.add('opacity-100'); d.classList.remove('translate-x-full'); });
+    } else {
+      b.classList.remove('opacity-100'); d.classList.add('translate-x-full'); document.body.style.overflow='';
+      setTimeout(()=>w.classList.add('hidden'),450);
+    }
+  },
+
+  /* ---------- Modal ---------- */
+  modal(html){
+    const w=document.getElementById('modalWrap'), b=document.getElementById('modalBd'), x=document.getElementById('modalBox');
+    x.innerHTML = html; w.classList.remove('hidden'); w.classList.add('flex'); document.body.style.overflow='hidden';
+    lucide.createIcons();
+    requestAnimationFrame(()=>{ b.classList.add('opacity-100'); x.classList.remove('scale-95','opacity-0'); x.classList.add('scale-100','opacity-100'); });
+  },
+  closeModal(){
+    const w=document.getElementById('modalWrap'), b=document.getElementById('modalBd'), x=document.getElementById('modalBox');
+    b.classList.remove('opacity-100'); x.classList.add('scale-95','opacity-0'); x.classList.remove('scale-100','opacity-100');
+    document.body.style.overflow='';
+    setTimeout(()=>{ w.classList.add('hidden'); w.classList.remove('flex'); }, 300);
+  },
+
+  /* ---------- Renderers ---------- */
+  renderStatic(){
+    // drawer links
+    const links=[['Layanan','services','layers'],['Portfolio','portfolio','folder-open'],['Estimator','estimator','calculator'],['Proses','process','git-branch'],['Klien','testimoni','quote'],['FAQ','faq','help-circle']];
+    document.getElementById('drawerLinks').innerHTML = links.map(([l,h,i])=>
+      `<a href="#${h}" onclick="App.toggleDrawer()" class="flex items-center gap-3 px-4 py-3.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/8 transition font-medium"><i data-lucide="${i}" class="w-4.5 h-4.5 text-nova-400"></i>${l}</a>`).join('');
+
+    // logos
+    const logoHTML = [...DB.logos, ...DB.logos].map(l=>
+      `<div class="flex items-center gap-2 text-xl font-extrabold text-slate-600 hover:text-slate-300 transition whitespace-nowrap"><i data-lucide="box" class="w-5 h-5"></i>${l}</div>`).join('');
+    document.getElementById('logoTrack').innerHTML = logoHTML;
+
+    // services
+    document.getElementById('servicesGrid').innerHTML = DB.services.map((s,n)=>`
+      <article class="reveal card-hov glass rounded-3xl p-6 relative overflow-hidden group" style="transition-delay:${n*60}ms">
+        <div class="absolute inset-0 bg-gradient-to-br ${s.c} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div class="relative">
+          <div class="w-12 h-12 rounded-2xl glass grid place-items-center mb-4 group-hover:scale-110 transition-transform duration-500"><i data-lucide="${s.i}" class="w-6 h-6 ${s.ic}"></i></div>
+          <h3 class="font-bold text-lg text-white">${s.t}</h3>
+          <p class="mt-2 text-sm text-slate-400 leading-relaxed">${s.d}</p>
+          <div class="mt-4 flex flex-wrap gap-1.5">${s.tags.map(t=>`<span class="text-[10px] font-semibold px-2 py-1 rounded-md bg-white/5 text-slate-300 border border-white/8">${t}</span>`).join('')}</div>
+        </div>
+      </article>`).join('');
+
+    // filters
+    document.getElementById('filterBar').innerHTML = DB.filters.map(f=>{
+      const c = DB.projects.filter(p=>f.k==='all'||p.cat===f.k).length;
+      return `<button data-f="${f.k}" onclick="App.setFilter('${f.k}')" class="filter-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95">
+        <i data-lucide="${f.i}" class="w-4 h-4"></i>${f.l}<span class="text-[10px] px-1.5 py-0.5 rounded-md bg-black/25">${c}</span></button>`;
+    }).join('');
+
+    // process
+    document.getElementById('processGrid').innerHTML = DB.process.map((p,n)=>`
+      <div class="reveal relative glass rounded-3xl p-6 card-hov" style="transition-delay:${n*80}ms">
+        <span class="absolute top-5 right-5 text-4xl font-extrabold text-white/5">${p.n}</span>
+        <div class="w-11 h-11 rounded-2xl bg-${p.c}/15 grid place-items-center mb-4"><i data-lucide="${p.i}" class="w-5 h-5 text-${p.c}"></i></div>
+        <h3 class="font-bold text-white">${p.t}</h3>
+        <p class="mt-2 text-sm text-slate-400 leading-relaxed">${p.d}</p>
+      </div>`).join('');
+
+    // testimonials
+    document.getElementById('testiGrid').innerHTML = DB.testi.map((t,n)=>`
+      <figure class="reveal glass rounded-3xl p-6 card-hov flex flex-col" style="transition-delay:${n*80}ms">
+        <div class="flex gap-1 mb-4">${'<i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i>'.repeat(5)}</div>
+        <blockquote class="text-slate-300 leading-relaxed flex-1">"${t.q}"</blockquote>
+        <figcaption class="mt-5 flex items-center gap-3 pt-5 border-t border-white/8">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-br ${t.g} grid place-items-center font-bold text-white text-sm">${t.a}</div>
+          <div><p class="font-bold text-white text-sm">${t.n}</p><p class="text-xs text-slate-400">${t.r}</p></div>
+        </figcaption>
+      </figure>`).join('');
+
+    // faq
+    document.getElementById('faqList').innerHTML = DB.faq.map(f=>`
+      <details class="group glass rounded-2xl overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none hover:bg-white/5 transition">
+          <span class="font-semibold text-white text-sm sm:text-base">${f.q}</span>
+          <i data-lucide="chevron-down" class="chev w-5 h-5 text-nova-400 shrink-0"></i>
+        </summary>
+        <div class="px-5 pb-5 text-sm text-slate-400 leading-relaxed">${f.a}</div>
+      </details>`).join('');
+
+    // estimator: platforms
+    document.getElementById('platformGrid').innerHTML = DB.platforms.map(p=>`
+      <button data-p="${p.k}" onclick="App.setPlatform('${p.k}')" class="plat-btn text-left p-4 rounded-2xl border transition active:scale-[.98]">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl grid place-items-center shrink-0 plat-ic"><i data-lucide="${p.i}" class="w-5 h-5"></i></div>
+          <div><p class="font-bold text-sm text-white leading-snug">${p.l}</p><p class="text-[11px] text-slate-400 mt-1">Mulai Rp ${p.base} jt · ${p.wk}+ minggu</p></div>
+        </div>
+      </button>`).join('');
+
+    // estimator: features
+    document.getElementById('featureGrid').innerHTML = DB.features.map(f=>`
+      <button data-k="${f.k}" onclick="App.toggleFeature('${f.k}')" class="feat-btn flex items-center gap-3 p-3 rounded-xl border text-left transition active:scale-[.98]">
+        <span class="feat-box w-5 h-5 rounded-md border-2 grid place-items-center shrink-0 transition"><i data-lucide="check" class="w-3 h-3 opacity-0 feat-chk"></i></span>
+        <i data-lucide="${f.i}" class="w-4 h-4 shrink-0 feat-ic"></i>
+        <span class="text-xs font-semibold flex-1 leading-tight">${f.l}</span>
+        <span class="text-[10px] font-bold text-slate-500">+${f.p}jt</span>
+      </button>`).join('');
+
+    lucide.createIcons();
+  },
+
+  renderPortfolio(){
+    const list = DB.projects.filter(p=>this.state.filter==='all'||p.cat===this.state.filter);
+    const g = document.getElementById('portfolioGrid');
+    document.getElementById('projCount').textContent = list.length;
+    document.getElementById('emptyState').classList.toggle('hidden', list.length>0);
+    g.innerHTML = list.map((p,n)=>`
+      <article class="group glass rounded-3xl overflow-hidden card-hov cursor-pointer opacity-0" style="animation:fadeUp .55s cubic-bezier(.16,1,.3,1) ${n*55}ms both" onclick='App.openProject(${JSON.stringify(JSON.stringify(p))})'>
+        <div class="relative h-44 bg-gradient-to-br ${p.g} overflow-hidden">
+          <div class="absolute inset-0 opacity-30" style="background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.5),transparent 45%)"></div>
+          <div class="absolute inset-0 grid place-items-center text-6xl group-hover:scale-125 group-hover:rotate-6 transition-transform duration-700">${p.em}</div>
+          <span class="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/45 backdrop-blur text-white uppercase tracking-wide">${p.cat}</span>
+          <span class="absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/45 backdrop-blur text-white">${p.y}</span>
+          <div class="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <span class="absolute bottom-3 left-3 text-xs font-bold text-white flex items-center gap-1.5"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-glow-lime"></i>${p.metric}</span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-bold text-white group-hover:text-nova-300 transition">${p.t}</h3>
+          <p class="mt-2 text-sm text-slate-400 leading-relaxed line-clamp-2">${p.d}</p>
+          <div class="mt-4 flex items-center justify-between">
+            <div class="flex flex-wrap gap-1.5">${p.stack.slice(0,2).map(s=>`<span class="text-[10px] font-semibold px-2 py-1 rounded-md bg-white/5 border border-white/8 text-slate-300">${s}</span>`).join('')}</div>
+            <span class="text-xs font-bold text-nova-300 flex items-center gap-1 group-hover:gap-2 transition-all">Detail <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
+          </div>
+        </div>
+      </article>`).join('');
+    document.querySelectorAll('.filter-btn').forEach(b=>{
+      const on = b.dataset.f===this.state.filter;
+      b.className = `filter-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95 ${on?'bg-gradient-to-r from-nova-600 to-glow-violet text-white shadow-lg shadow-nova-600/30':'glass text-slate-300 hover:bg-white/10 hover:text-white'}`;
+    });
+    lucide.createIcons();
+  },
+
+  setFilter(k){
+    this.state.filter=k; this.save(); this.renderPortfolio();
+    const lbl = DB.filters.find(f=>f.k===k).l;
+    this.toast(`Filter diterapkan: <b>${lbl}</b>`, 'info');
+  },
+
+  openProject(json){
+    const p = JSON.parse(json);
+    this.modal(`
+      <button onclick="App.closeModal()" class="absolute top-4 right-4 w-9 h-9 grid place-items-center rounded-xl bg-white/5 hover:bg-white/10 transition z-10"><i data-lucide="x" class="w-4 h-4"></i></button>
+      <div class="h-36 -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-5 bg-gradient-to-br ${p.g} grid place-items-center text-6xl rounded-t-3xl">${p.em}</div>
+      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-nova-500/15 text-nova-300 border border-nova-500/25 uppercase tracking-wide">${p.cat} · ${p.y}</span>
+      <h3 class="mt-3 text-2xl font-extrabold text-white">${p.t}</h3>
+      <p class="mt-3 text-slate-400 leading-relaxed">${p.d}</p>
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div class="glass rounded-2xl p-4"><p class="text-[11px] text-slate-400">Hasil Utama</p><p class="font-bold text-glow-lime mt-1">${p.metric}</p></div>
+        <div class="glass rounded-2xl p-4"><p class="text-[11px] text-slate-400">Durasi</p><p class="font-bold text-white mt-1">${8+Math.floor(Math.random()*14)} minggu</p></div>
+      </div>
+      <p class="mt-5 text-xs font-bold text-slate-400 uppercase tracking-widest">Tech Stack</p>
+      <div class="mt-2 flex flex-wrap gap-2">${p.stack.map(s=>`<span class="text-xs font-semibold px-3 py-1.5 rounded-lg glass text-slate-200">${s}</span>`).join('')}</div>
+      <button onclick="App.closeModal();App.openBooking('${p.t}')" class="mt-6 w-full py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-lg shadow-nova-600/30 hover:-translate-y-0.5 active:scale-95 transition inline-flex items-center justify-center gap-2">
+        <i data-lucide="sparkles" class="w-4 h-4"></i> Saya mau yang seperti ini</button>`);
+  },
+
+  /* ---------- Estimator ---------- */
+  setPlatform(k){ this.state.est.platform=k; this.save(); this.renderEstimator(); this.toast('Platform diperbarui.', 'info'); },
+  toggleFeature(k){
+    const f=this.state.est.features, i=f.indexOf(k);
+    if(i>-1) f.splice(i,1); else f.push(k);
+    this.save(); this.renderEstimator();
+  },
+  calc(){
+    const e=this.state.est;
+    const p=DB.platforms.find(x=>x.k===e.platform)||DB.platforms[1];
+    let base = p.base + Math.max(0, e.pages - 3) * p.per;
+    const feats = DB.features.filter(f=>e.features.includes(f.k));
+    const featCost = feats.reduce((s,f)=>s+f.p,0);
+    let sub = (base + featCost) * e.design * e.time;
+    const total = sub * (1 + e.maint);
+    const weeks = Math.round((p.wk + e.pages*0.22 + feats.reduce((s,f)=>s+f.w,0)) * (e.time===1.3?0.78:e.time===0.92?1.12:1));
+    return { low: total*0.88, high: total*1.22, weeks, team: p.team, base, featCost, feats, sub, p };
+  },
+  renderEstimator(){
+    const e=this.state.est, r=this.calc();
+    document.getElementById('pagesVal').textContent = e.pages + (e.pages>=60?'+':'');
+    const rg=document.getElementById('pagesRange'); rg.value=e.pages;
+    rg.style.setProperty('--p', ((e.pages-3)/57*100)+'%');
+    document.getElementById('designSel').value=e.design;
+    document.getElementById('timeSel').value=e.time;
+    document.getElementById('maintSel').value=e.maint;
+
+    document.querySelectorAll('.plat-btn').forEach(b=>{
+      const on=b.dataset.p===e.platform;
+      b.className=`plat-btn text-left p-4 rounded-2xl border transition active:scale-[.98] ${on?'bg-gradient-to-br from-nova-600/25 to-glow-violet/15 border-nova-500/60 shadow-lg shadow-nova-600/20':'glass border-white/8 hover:border-white/20 hover:bg-white/8'}`;
+      b.querySelector('.plat-ic').className=`w-10 h-10 rounded-xl grid place-items-center shrink-0 plat-ic ${on?'bg-nova-500 text-white':'bg-white/5 text-slate-400'}`;
+    });
+    document.querySelectorAll('.feat-btn').forEach(b=>{
+      const on=e.features.includes(b.dataset.k);
+      b.className=`feat-btn flex items-center gap-3 p-3 rounded-xl border text-left transition active:scale-[.98] ${on?'bg-nova-600/15 border-nova-500/50 text-white':'glass border-white/8 text-slate-400 hover:bg-white/8'}`;
+      b.querySelector('.feat-box').className=`feat-box w-5 h-5 rounded-md border-2 grid place-items-center shrink-0 transition ${on?'bg-nova-500 border-nova-500':'border-white/20'}`;
+      b.querySelector('.feat-chk').style.opacity = on?'1':'0';
+      b.querySelector('.feat-ic').className=`w-4 h-4 shrink-0 feat-ic ${on?'text-glow-cyan':'text-slate-500'}`;
+    });
+
+    this.animNum('estLow', r.low); this.animNum('estHigh', r.high);
+    document.getElementById('estWeeks').textContent = r.weeks+' minggu';
+    document.getElementById('estTeam').textContent = r.team+' orang';
+    document.getElementById('estBar').style.width = Math.min(100, (r.high/900)*100)+'%';
+
+    const rows=[['Base '+r.p.l.split(' / ')[0], r.base],['Fitur tambahan ('+r.feats.length+')', r.featCost]];
+    document.getElementById('estBreakdown').innerHTML = rows.map(([l,v])=>`
+      <div class="flex items-center justify-between text-xs py-2 border-b border-white/5"><span class="text-slate-400">${l}</span><span class="font-bold text-slate-200">Rp ${v.toFixed(1)} jt</span></div>`).join('')
+      + `<div class="flex items-center justify-between text-xs py-2 border-b border-white/5"><span class="text-slate-400">Multiplier desain & timeline</span><span class="font-bold text-slate-200">×${(e.design*e.time).toFixed(2)}</span></div>`
+      + `<div class="flex items-center justify-between text-xs py-2"><span class="text-slate-400">Maintenance</span><span class="font-bold text-slate-200">+${Math.round(e.maint*100)}%</span></div>`;
+
+    this.renderQuotes();
+  },
+  animNum(id, target){
+    const el=document.getElementById(id); const from=parseFloat(el.dataset.v||0); const t0=performance.now(); const dur=600;
+    const step=(t)=>{ const k=Math.min(1,(t-t0)/dur); const ease=1-Math.pow(1-k,3); const v=from+(target-from)*ease;
+      el.textContent='Rp '+v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' jt'; if(k<1) requestAnimationFrame(step); else el.dataset.v=target; };
+    requestAnimationFrame(step);
+  },
+  resetEstimator(){
+    this.state.est={platform:'web',pages:10,features:['auth','dash'],design:1.25,time:1,maint:0.1};
+    this.save(); this.renderEstimator(); this.toast('Konfigurasi estimator direset.','warn');
+  },
+  saveQuote(){
+    const r=this.calc(), e=this.state.est;
+    const q={ id:'NX-'+Date.now().toString().slice(-6), plat:r.p.l, pages:e.pages, feats:r.feats.length,
+      low:Math.round(r.low), high:Math.round(r.high), weeks:r.weeks, date:new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) };
+    this.state.quotes.unshift(q); this.state.quotes=this.state.quotes.slice(0,4); this.save(); this.renderQuotes();
+    this.toast(`Quotation <b>${q.id}</b> tersimpan di perangkat Anda.`);
+    setTimeout(()=>this.openBooking(null, q), 450);
+  },
+  renderQuotes(){
+    const h=document.getElementById('savedQuotes');
+    if(!this.state.quotes.length){ h.innerHTML=''; return; }
+    h.innerHTML = `<p class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 flex items-center gap-2"><i data-lucide="history" class="w-3.5 h-3.5"></i> Quotation Tersimpan</p>` +
+      this.state.quotes.map(q=>`
+      <div class="glass rounded-2xl p-3.5 flex items-center gap-3 hover:bg-white/8 transition">
+        <div class="w-9 h-9 rounded-xl bg-nova-500/15 grid place-items-center shrink-0"><i data-lucide="receipt" class="w-4 h-4 text-nova-300"></i></div>
+        <div class="flex-1 min-w-0"><p class="text-xs font-bold text-white truncate">${q.id} · ${q.plat.split(' / ')[0]}</p>
+          <p class="text-[11px] text-slate-400">Rp ${q.low}–${q.high} jt · ${q.weeks} mg · ${q.date}</p></div>
+        <button onclick="App.delQuote('${q.id}')" class="w-8 h-8 grid place-items-center rounded-lg hover:bg-red-500/15 text-slate-500 hover:text-red-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>`).join('');
+    lucide.createIcons();
+  },
+  delQuote(id){
+    this.state.quotes=this.state.quotes.filter(q=>q.id!==id); this.save(); this.renderQuotes(); this.toast('Quotation dihapus.','warn');
+  },
+
+  /* ---------- Booking ---------- */
+  openBooking(prefill=null, quote=null){
+    const r=this.calc();
+    const ctx = quote ? `Referensi quotation ${quote.id} (Rp ${quote.low}–${quote.high} jt)` : prefill ? `Terinspirasi proyek: ${prefill}` : '';
+    const slots=['Senin, 09:00','Senin, 13:00','Selasa, 10:00','Rabu, 14:00','Kamis, 11:00','Jumat, 15:00'];
+    this.modal(`
+      <button onclick="App.closeModal()" class="absolute top-4 right-4 w-9 h-9 grid place-items-center rounded-xl bg-white/5 hover:bg-white/10 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-nova-500 to-glow-violet grid place-items-center mb-4"><i data-lucide="calendar-check" class="w-6 h-6 text-white"></i></div>
+      <h3 class="text-2xl font-extrabold text-white">Booking Discovery Call</h3>
+      <p class="mt-1.5 text-sm text-slate-400">Gratis 30 menit via Google Meet. Kami balas maksimal 2 jam kerja.</p>
+      ${ctx?`<div class="mt-4 px-3.5 py-2.5 rounded-xl bg-nova-500/10 border border-nova-500/25 text-xs text-nova-200 flex items-center gap-2"><i data-lucide="link" class="w-3.5 h-3.5"></i>${ctx}</div>`:''}
+      <form id="bookForm" class="mt-5 space-y-3.5" onsubmit="return App.submitBooking(event)">
+        <div class="grid sm:grid-cols-2 gap-3.5">
+          <div><label class="text-xs font-semibold text-slate-400">Nama Lengkap *</label>
+            <input name="nama" required placeholder="Budi Santoso" class="mt-1.5 w-full bg-ink-700 border border-white/10 rounded-xl px-3.5 py-3 text-sm text-white placeholder-slate-600 focus:ring-2 focus:ring-nova-500 outline-none transition"></div>
+          <div><label class="text-xs font-semibold text-slate-400">Perusahaan</label>
+            <input name="pt" placeholder="PT Maju Jaya" class="mt-1.5 w-full bg-ink-700 border border-white/10 rounded-xl px-3.5 py-3 text-sm text-white placeholder-slate-600 focus:ring-2 focus:ring-nova-500 outline-none transition"></div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3.5">
+          <div><label class="text-xs font-semibold text-slate-400">Email *</label>
+            <input name="email" type="email" required placeholder="budi@email.com" class="mt-1.5 w-full bg-ink-700 border border-white/10 rounded-xl px-3.5 py-3 text-sm text-white placeholder-slate-600 focus:ring-2 focus:ring-nova-500 outline-none transition"></div>
+          <div><label class="text-xs font-semibold text-slate-400">WhatsApp *</label>
+            <input name="wa" required placeholder="0812xxxxxxx" class="mt-1.5 w-full bg-ink-700 border border-white/10 rounded-xl px-3.5 py-3 text-sm text-white placeholder-slate-600 focus:ring-2 focus:ring-nova-500 outline-none transition"></div>
+        </div>
+        <div><label class="text-xs font-semibold text-slate-400">Pilih Slot Waktu</label>
+          <div class="mt-1.5 grid grid-cols-3 gap-2">${slots.map((s,i)=>`
+            <label class="cursor-pointer"><input type="radio" name="slot" value="${s}" ${i===0?'checked':''} class="peer sr-only">
+            <span class="block text-center text-[11px] font-semibold py-2.5 rounded-xl glass text-slate-400 peer-checked:bg-nova-600 peer-checked:text-white peer-checked:border-nova-500 transition">${s}</span></label>`).join('')}</div>
+        </div>
+        <div><label class="text-xs font-semibold text-slate-400">Ceritakan proyek Anda</label>
+          <textarea name="msg" rows="3" placeholder="Kami butuh platform..." class="mt-1.5 w-full bg-ink-700 border border-white/10 rounded-xl px-3.5 py-3 text-sm text-white placeholder-slate-600 focus:ring-2 focus:ring-nova-500 outline-none transition resize-none">${ctx?ctx+'. ':''}Estimasi awal: Rp ${Math.round(r.low)}–${Math.round(r.high)} jt.</textarea></div>
+        <div class="grid sm:grid-cols-2 gap-2.5 pt-1">
+          <button type="submit" name="ch" value="wa" class="inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-emerald-500 to-green-600 shadow-lg shadow-emerald-600/25 hover:-translate-y-0.5 active:scale-95 transition"><i data-lucide="message-circle" class="w-4 h-4"></i> Kirim via WhatsApp</button>
+          <button type="button" onclick="App.submitBooking(event,'email')" class="inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet shadow-lg shadow-nova-600/25 hover:-translate-y-0.5 active:scale-95 transition"><i data-lucide="mail" class="w-4 h-4"></i> Kirim via Email</button>
+        </div>
+      </form>`);
+  },
+  submitBooking(ev, channel='wa'){
+    ev.preventDefault();
+    const f=document.getElementById('bookForm');
+    if(!f.reportValidity()) return false;
+    const d=Object.fromEntries(new FormData(f).entries());
+    const text=`Halo NovaNext! 👋%0A%0ANama: ${d.nama}%0APerusahaan: ${d.pt||'-'}%0AEmail: ${d.email}%0AWhatsApp: ${d.wa}%0ASlot: ${d.slot}%0A%0ABrief:%0A${encodeURIComponent(d.msg||'-')}`;
+    const url = channel==='email'
+      ? `mailto:hello@novanext.studio?subject=${encodeURIComponent('Discovery Call — '+d.nama)}&body=${text.replace(/%0A/g,'%0D%0A')}`
+      : `https://wa.me/628112000900?text=${text}`;
+    const bookings=JSON.parse(localStorage.getItem('novanext_bookings')||'[]');
+    bookings.unshift({...d, channel, at:new Date().toISOString()});
+    localStorage.setItem('novanext_bookings', JSON.stringify(bookings.slice(0,20)));
+    this.closeModal();
+    setTimeout(()=>{
+      this.modal(`
+        <div class="text-center py-4">
+          <div class="w-20 h-20 mx-auto rounded-full bg-glow-lime/15 grid place-items-center mb-5 relative">
+            <span class="absolute inset-0 rounded-full bg-glow-lime/30 animate-pulse-ring"></span>
+            <i data-lucide="check" class="w-10 h-10 text-glow-lime"></i>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white">Permintaan Terkirim!</h3>
+          <p class="mt-2 text-slate-400 text-sm max-w-sm mx-auto">Terima kasih <b class="text-white">${d.nama}</b>. Slot <b class="text-nova-300">${d.slot}</b> telah kami catat. Tim kami akan menghubungi Anda via ${channel==='email'?'email':'WhatsApp'}.</p>
+          <div class="mt-5 glass rounded-2xl p-4 text-left text-xs space-y-1.5">
+            <div class="flex justify-between"><span class="text-slate-400">ID Booking</span><span class="font-bold text-white">NX-${Date.now().toString().slice(-6)}</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Channel</span><span class="font-bold text-white capitalize">${channel==='wa'?'WhatsApp':'Email'}</span></div>
+            <div class="flex justify-between"><span class="text-slate-400">Status</span><span class="font-bold text-glow-lime">Menunggu konfirmasi</span></div>
+          </div>
+          <div class="mt-5 flex gap-2.5">
+            <a href="${url}" target="_blank" class="flex-1 inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-nova-600 to-glow-violet active:scale-95 transition"><i data-lucide="external-link" class="w-4 h-4"></i> Buka ${channel==='email'?'Email':'WhatsApp'}</a>
+            <button onclick="App.closeModal()" class="px-5 py-3.5 rounded-2xl font-bold glass text-slate-300 hover:bg-white/10 active:scale-95 transition">Tutup</button>
+          </div>
+        </div>`);
+      this.toast('Booking discovery call berhasil dibuat 🎉');
+    }, 320);
+    return false;
+  },
+
+  /* ---------- Effects ---------- */
+  initObservers(){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    const co=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){ const el=e.target, tgt=+el.dataset.count, t0=performance.now();
+        const step=t=>{ const k=Math.min(1,(t-t0)/1400); el.textContent=Math.floor(tgt*(1-Math.pow(1-k,3))); if(k<1)requestAnimationFrame(step); };
+        requestAnimationFrame(step); co.unobserve(el); }
+    }),{threshold:.5});
+    document.querySelectorAll('[data-count]').forEach(el=>co.observe(el));
+  },
+  initNav(){
+    const inner=document.getElementById('navInner');
+    const onScroll=()=>{
+      if(scrollY>24) inner.classList.add('glass-strong','shadow-2xl','shadow-black/40');
+      else inner.classList.remove('glass-strong','shadow-2xl','shadow-black/40');
+      const secs=['services','portfolio','estimator','process','testimoni','faq'];
+      let cur='';
+      secs.forEach(id=>{ const s=document.getElementById(id); if(s && s.getBoundingClientRect().top<=160) cur=id; });
+      document.querySelectorAll('.nav-link').forEach(a=>{
+        const on=a.getAttribute('href')==='#'+cur;
+        a.classList.toggle('text-white',on); a.classList.toggle('bg-white/8',on);
+      });
+    };
+    addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  },
+  initMock(){
+    const chart=document.getElementById('mockChart');
+    const bars=14;
+    chart.innerHTML=Array.from({length:bars},(_,i)=>`<div class="flex-1 rounded-t-md bg-gradient-to-t from-nova-600/40 to-glow-cyan transition-all duration-700" style="height:10%" data-b="${i}"></div>`).join('');
+    const refresh=()=>{
+      chart.querySelectorAll('[data-b]').forEach((b,i)=>{ setTimeout(()=>{ b.style.height=(22+Math.random()*78)+'%'; }, i*40); });
+      const v=(180+Math.random()*120); const el=document.getElementById('mockRev');
+      el.textContent='Rp '+v.toFixed(1)+' jt';
+    };
+    refresh(); setInterval(refresh, 3200);
+  },
+
+  init(){
+    this.load();
+    this.renderStatic();
+    this.renderPortfolio();
+    this.renderEstimator();
+    this.initObservers();
+    this.initNav();
+    this.initMock();
+
+    const rg=document.getElementById('pagesRange');
+    rg.addEventListener('input', e=>{ this.state.est.pages=+e.target.value; this.renderEstimator(); });
+    rg.addEventListener('change', ()=>{ this.save(); });
+    ['designSel','timeSel','maintSel'].forEach(id=>{
+      document.getElementById(id).addEventListener('change', e=>{
+        const key = id==='designSel'?'design':id==='timeSel'?'time':'maint';
+        this.state.est[key]=parseFloat(e.target.value); this.save(); this.renderEstimator();
+      });
+    });
+    addEventListener('keydown', e=>{ if(e.key==='Escape'){ this.closeModal(); if(this.state.drawer) this.toggleDrawer(); } });
+
+    setTimeout(()=>this.toast('Selamat datang di <b>NovaNext Showcase</b> — demo prototype interaktif.','info'), 1100);
+    lucide.createIcons();
+  }
+};
+document.addEventListener('DOMContentLoaded',()=>App.init());
+</script>
+</body>
+</html>

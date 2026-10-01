@@ -43,13 +43,14 @@ export default function Navbar() {
                         { label: "Layanan", href: "/#services" },
                         { label: "Harga", href: "/#pricing" },
                         { label: "Showcase", href: "/showcase" },
+                        { label: "Test Showcase", href: "/test-showcase" },
                         { label: "Blog", href: "/blog" },
                         { label: "About Us", href: "/about-us" },
                     ].map((item) => (
                         <Link
                             key={item.label}
                             href={item.href}
-                            className="text-sm font-medium px-5 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
+                            className="text-sm font-medium px-4 py-2 rounded-full text-slate-300 hover:text-white hover:bg-white/5 transition-all"
                         >
                             {item.label}
                         </Link>
@@ -93,6 +94,7 @@ export default function Navbar() {
                                 { label: "Layanan", href: "/#services" },
                                 { label: "Harga", href: "/#pricing" },
                                 { label: "Showcase", href: "/showcase" },
+                                { label: "Test Showcase", href: "/test-showcase" },
                                 { label: "Blog", href: "/blog" },
                                 { label: "About Us", href: "/about-us" },
                             ].map((item) => (

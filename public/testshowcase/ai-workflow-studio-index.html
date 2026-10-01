@@ -1,0 +1,2657 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaNext AI Studio — Content & Workflow Engine</title>
+  
+  <!-- Google Fonts: Inter, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Inter"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              950: '#1e1b4b',
+            },
+            dark: {
+              bg: '#090d16',
+              surface: '#0f172a',
+              card: '#131d36',
+              cardHover: '#182442',
+              border: '#1e293b',
+              borderLight: '#334155'
+            },
+            accent: {
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              purple: '#a855f7',
+              amber: '#f59e0b',
+              rose: '#f43f5e'
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 2.5s infinite',
+            'gradient-x': 'gradientX 15s ease infinite',
+            'typing-cursor': 'blink 0.8s infinite',
+            'shimmer': 'shimmer 2s infinite',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+              '50%': { opacity: '1', transform: 'scale(1.05)' },
+            },
+            gradientX: {
+              '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+              '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+            },
+            blink: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0' },
+            },
+            shimmer: {
+              '100%': { transform: 'translateX(100%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars & Utilities */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6366f1;
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-input {
+      background: rgba(10, 15, 29, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+    .glass-input:focus {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+      outline: none;
+    }
+
+    .ai-gradient-text {
+      background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 40%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .ai-border-glow {
+      position: relative;
+    }
+    .ai-border-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.6), rgba(56, 189, 248, 0.4), rgba(168, 85, 247, 0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Markdown Styling in Live Preview */
+    .prose-ai h1 { font-size: 1.6rem; font-weight: 800; color: #f8fafc; margin-top: 1.25rem; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 0.5rem; }
+    .prose-ai h2 { font-size: 1.3rem; font-weight: 700; color: #e2e8f0; margin-top: 1.1rem; margin-bottom: 0.5rem; }
+    .prose-ai h3 { font-size: 1.1rem; font-weight: 600; color: #cbd5e1; margin-top: 0.9rem; margin-bottom: 0.4rem; }
+    .prose-ai p { line-height: 1.7; color: #cbd5e1; margin-bottom: 0.85rem; }
+    .prose-ai ul { list-style-type: disc; padding-left: 1.4rem; margin-bottom: 0.85rem; color: #cbd5e1; }
+    .prose-ai ol { list-style-type: decimal; padding-left: 1.4rem; margin-bottom: 0.85rem; color: #cbd5e1; }
+    .prose-ai li { margin-bottom: 0.35rem; line-height: 1.6; }
+    .prose-ai strong { color: #ffffff; font-weight: 600; }
+    .prose-ai em { color: #93c5fd; font-style: italic; }
+    .prose-ai blockquote { border-left: 3px solid #6366f1; padding-left: 1rem; color: #94a3b8; margin: 1rem 0; background: rgba(99, 102, 241, 0.05); padding: 0.75rem 1rem; border-radius: 0 0.5rem 0.5rem 0; }
+    .prose-ai code { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; background: rgba(0, 0, 0, 0.4); padding: 0.2rem 0.45rem; border-radius: 0.375rem; color: #38bdf8; border: 1px solid rgba(255, 255, 255, 0.06); }
+    .prose-ai pre { background: #070b14; border: 1px solid #1e293b; border-radius: 0.5rem; padding: 1rem; overflow-x: auto; margin: 1rem 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e2e8f0; }
+
+    /* Typing cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.15em;
+      background-color: #6366f1;
+      margin-left: 3px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s infinite;
+      box-shadow: 0 0 8px #6366f1;
+    }
+  </style>
+</head>
+
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500/30 selection:text-white">
+
+  <!-- ================= MASTER HEADER / NAVBAR ================= -->
+  <header class="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Indicator Badge -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-cyan-400 p-0.5 shadow-lg shadow-brand-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400 animate-pulse"></i>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+              Nova<span class="ai-gradient-text">Next</span>
+              <span class="text-xs px-2 py-0.5 font-semibold bg-brand-500/10 text-brand-400 border border-brand-500/20 rounded-md uppercase tracking-wider">AI Studio</span>
+            </span>
+            
+            <!-- MANDATORY PROTOTYPE BADGE -->
+            <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Demo Prototype by NovaNext</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">AI Content & Prompt Workflow Engineering Suite</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Center Desktop) -->
+      <nav class="hidden md:flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-inner">
+        <button id="nav-btn-generator" onclick="App.switchMainTab('generator')" class="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-white bg-brand-600 shadow-sm shadow-brand-600/30">
+          <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+          <span>Prompt Studio</span>
+        </button>
+        <button id="nav-btn-workflow" onclick="App.switchMainTab('workflow')" class="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
+          <span>Workflow Chain</span>
+          <span class="px-1.5 py-0.2 text-[10px] bg-brand-500/20 text-brand-300 rounded">v2</span>
+        </button>
+        <button id="nav-btn-comparator" onclick="App.switchMainTab('comparator')" class="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="split" class="w-3.5 h-3.5"></i>
+          <span>Model Arena</span>
+        </button>
+        <button id="nav-btn-history" onclick="App.switchMainTab('history')" class="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+          <span>History & Vault</span>
+          <span id="history-counter-badge" class="px-1.5 py-0.2 text-[10px] bg-slate-800 text-slate-300 rounded font-mono">0</span>
+        </button>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Quick Audio / Sound Toggle -->
+        <button onclick="App.toggleSound()" id="sound-toggle-btn" title="Toggle AI Sound FX" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition">
+          <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400" id="sound-icon"></i>
+        </button>
+
+        <!-- Command Palette Trigger -->
+        <button onclick="App.openCommandPalette()" class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-lg text-xs text-slate-400 hover:text-slate-200 transition">
+          <i data-lucide="search" class="w-3.5 h-3.5"></i>
+          <span>Quick Find</span>
+          <kbd class="px-1.5 py-0.5 bg-slate-800 text-[10px] font-mono rounded text-slate-400 border border-slate-700">⌘K</kbd>
+        </button>
+
+        <!-- Templates Drawer Trigger -->
+        <button onclick="App.openTemplateModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-500/10 border border-brand-500/30 text-brand-300 hover:bg-brand-500/20 text-xs font-medium transition">
+          <i data-lucide="layout-template" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Presets Library</span>
+        </button>
+
+        <!-- Mobile Menu Trigger -->
+        <button onclick="App.toggleMobileDrawer()" class="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Bar -->
+    <div id="mobile-nav" class="md:hidden hidden border-t border-slate-800 bg-slate-950 px-4 py-3 space-y-2">
+      <!-- Mobile Mandatory Badge -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800/60">
+        <span class="text-xs text-slate-400">Status</span>
+        <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>Demo Prototype by NovaNext</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="App.switchMainTab('generator'); App.toggleMobileDrawer();" class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-900 border border-slate-800 text-left text-white">
+          <i data-lucide="wand-2" class="w-4 h-4 text-brand-400"></i> Prompt Studio
+        </button>
+        <button onclick="App.switchMainTab('workflow'); App.toggleMobileDrawer();" class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-900 border border-slate-800 text-left text-slate-300">
+          <i data-lucide="git-merge" class="w-4 h-4 text-cyan-400"></i> Workflow Chain
+        </button>
+        <button onclick="App.switchMainTab('comparator'); App.toggleMobileDrawer();" class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-900 border border-slate-800 text-left text-slate-300">
+          <i data-lucide="split" class="w-4 h-4 text-purple-400"></i> Model Arena
+        </button>
+        <button onclick="App.switchMainTab('history'); App.toggleMobileDrawer();" class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-900 border border-slate-800 text-left text-slate-300">
+          <i data-lucide="archive" class="w-4 h-4 text-amber-400"></i> Prompt Vault
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- ================= TAB 1: PROMPT STUDIO (MAIN WORKSPACE) ================= -->
+    <section id="tab-generator" class="block animate-fadeIn">
+      
+      <!-- Studio Subheader with Quick Status & Preset Chips -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-800/60">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <span>AI Content Generator</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-cyan-950/80 text-cyan-400 border border-cyan-800/50">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+              Streaming Engine
+            </span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Craft high-converting content with multi-model prompt orchestration & live streaming.</p>
+        </div>
+
+        <!-- Quick Template Pill Selectors -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+          <span class="text-xs text-slate-500 whitespace-nowrap flex items-center gap-1 mr-1">
+            <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i> Quick:
+          </span>
+          <button onclick="App.applyPreset('twitter_viral')" class="whitespace-nowrap text-xs px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-brand-500/50 text-slate-300 transition">
+            𝕏 Viral Thread
+          </button>
+          <button onclick="App.applyPreset('seo_blog')" class="whitespace-nowrap text-xs px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-cyan-500/50 text-slate-300 transition">
+            ✍️ SEO Blog Post
+          </button>
+          <button onclick="App.applyPreset('ad_copy')" class="whitespace-nowrap text-xs px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 text-slate-300 transition">
+            🚀 High-Conv Ads
+          </button>
+          <button onclick="App.applyPreset('linkedin_post')" class="whitespace-nowrap text-xs px-2.5 py-1 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-purple-500/50 text-slate-300 transition">
+            💼 LinkedIn Lead
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Two-Column Layout: Sidebar Parameter + Live Interactive Editor -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- ================= LEFT COLUMN: PARAMETER SIDEBAR (5 cols on lg) ================= -->
+        <aside class="lg:col-span-5 space-y-4">
+          <div class="glass-panel rounded-2xl p-4 sm:p-5 shadow-xl relative overflow-hidden ai-border-glow">
+            
+            <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <div class="p-1.5 rounded-lg bg-brand-500/10 text-brand-400">
+                  <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                </div>
+                <h2 class="text-sm font-bold text-white tracking-wide uppercase">Prompt Parameters</h2>
+              </div>
+              <button onclick="App.resetForm()" title="Reset to defaults" class="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 hover:underline">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Reset
+              </button>
+            </div>
+
+            <form id="generator-form" onsubmit="App.handleGenerate(event)" class="space-y-4">
+              
+              <!-- 1. Topic / Core Prompt Area -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label for="prompt-topic" class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                    <span>1. Topic / Core Prompt</span>
+                    <span class="text-rose-400">*</span>
+                  </label>
+                  <span id="topic-char-count" class="text-[10px] font-mono text-slate-400">0 / 500 chars</span>
+                </div>
+                <div class="relative">
+                  <textarea 
+                    id="prompt-topic" 
+                    rows="3" 
+                    required 
+                    placeholder="Contoh: Strategi AI Agent Autonomous untuk efisiensi bisnis retail di 2026..." 
+                    class="glass-input w-full rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 resize-none focus:ring-0 leading-relaxed"
+                    oninput="App.updateCharCount(this.value)"
+                  ></textarea>
+                  <!-- Suggestion chips trigger inside -->
+                  <div class="mt-1 flex flex-wrap gap-1.5 text-[11px]">
+                    <span class="text-[10px] text-slate-500 self-center">Cepat:</span>
+                    <button type="button" onclick="App.insertPromptChip('B2B SaaS Onboarding Optimization')" class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] transition">B2B SaaS</button>
+                    <button type="button" onclick="App.insertPromptChip('Peluncuran Produk Fashion Ramah Lingkungan')" class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] transition">Eco Launch</button>
+                    <button type="button" onclick="App.insertPromptChip('Panduan Prompt Engineering untuk Pemula')" class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] transition">Prompt Guide</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Content Format & Tone Selectors Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Content Format -->
+                <div>
+                  <label for="prompt-format" class="block text-xs font-semibold text-slate-200 mb-1.5">
+                    2. Output Format
+                  </label>
+                  <div class="relative">
+                    <select id="prompt-format" class="glass-input w-full rounded-xl px-3 py-2 text-xs text-white bg-slate-900 appearance-none cursor-pointer pr-8">
+                      <option value="twitter_thread">𝕏 Twitter / X Thread (5-7 Tweets)</option>
+                      <option value="blog_post">📝 Long-Form SEO Blog Post</option>
+                      <option value="ad_copy">🎯 High-Converting Ad Copy (FB/Google)</option>
+                      <option value="linkedin_article">💼 LinkedIn Thought Leadership</option>
+                      <option value="youtube_script">🎬 YouTube Video Outline & Script</option>
+                      <option value="email_newsletter">📧 Email Newsletter Broadcast</option>
+                      <option value="press_release">📰 PR & Product Launch News</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none"></i>
+                  </div>
+                </div>
+
+                <!-- Tone of Voice -->
+                <div>
+                  <label for="prompt-tone" class="block text-xs font-semibold text-slate-200 mb-1.5">
+                    3. Tone of Voice
+                  </label>
+                  <div class="relative">
+                    <select id="prompt-tone" class="glass-input w-full rounded-xl px-3 py-2 text-xs text-white bg-slate-900 appearance-none cursor-pointer pr-8">
+                      <option value="Persuasive & Engaging">🔥 Persuasive & Action-Driven</option>
+                      <option value="Professional & Authoritative">👔 Professional & Executive</option>
+                      <option value="Casual & Conversational">☕ Casual & Friendly</option>
+                      <option value="Witty & Punchy">⚡ Witty & Punchy</option>
+                      <option value="Academic & Detailed">🎓 Deep-Dive & Academic</option>
+                      <option value="Gen-Z Energetic">✨ Gen-Z Energetic & Bold</option>
+                      <option value="Empathetic & Supportive">🌱 Empathetic & Story-driven</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Target Audience & Language -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Target Audience -->
+                <div>
+                  <label for="prompt-audience" class="block text-xs font-semibold text-slate-200 mb-1.5">
+                    4. Target Audience
+                  </label>
+                  <div class="relative">
+                    <select id="prompt-audience" class="glass-input w-full rounded-xl px-3 py-2 text-xs text-white bg-slate-900 appearance-none cursor-pointer pr-8">
+                      <option value="Tech Founders & Startups">🚀 Founders & Tech Leaders</option>
+                      <option value="Digital Marketers & Growth Hackers">📈 Digital Marketers & CMOs</option>
+                      <option value="Software Engineers & Devs">💻 Software Developers</option>
+                      <option value="E-Commerce & Retail Sellers">🛍️ E-Commerce & Retailers</option>
+                      <option value="General Consumers (B2C)">👥 General Consumers</option>
+                      <option value="C-Suite B2B Executives">🏢 C-Suite & Enterprise</option>
+                      <option value="Students & Young Professionals">🎒 Students & Job Seekers</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none"></i>
+                  </div>
+                </div>
+
+                <!-- Language Selector -->
+                <div>
+                  <label for="prompt-language" class="block text-xs font-semibold text-slate-200 mb-1.5">
+                    5. Output Language
+                  </label>
+                  <div class="relative">
+                    <select id="prompt-language" class="glass-input w-full rounded-xl px-3 py-2 text-xs text-white bg-slate-900 appearance-none cursor-pointer pr-8">
+                      <option value="Bahasa Indonesia">🇮🇩 Bahasa Indonesia (Natural)</option>
+                      <option value="English (US)">🇺🇸 English (US International)</option>
+                      <option value="English (UK)">🇬🇧 English (UK Professional)</option>
+                      <option value="Bilingual (ID + EN)">🌐 Bilingual Mix (Modern Startup)</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Collapsible Advanced Settings (Model, Temperature, Custom System Prompt) -->
+              <div class="border border-slate-800/80 rounded-xl bg-slate-900/60 p-3 space-y-3">
+                <button type="button" onclick="App.toggleAdvanced()" class="w-full flex items-center justify-between text-xs font-semibold text-slate-300 hover:text-white">
+                  <span class="flex items-center gap-1.5">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-brand-400"></i>
+                    <span>AI Model & Hyperparameters</span>
+                  </span>
+                  <div class="flex items-center gap-1 text-[11px] text-brand-400 font-mono">
+                    <span id="selected-model-tag">Nova-4 Omni</span>
+                    <i data-lucide="chevron-down" id="adv-chevron" class="w-3.5 h-3.5 transform transition-transform"></i>
+                  </div>
+                </button>
+
+                <div id="advanced-settings-panel" class="space-y-3 pt-2 border-t border-slate-800">
+                  <!-- AI Model Selection -->
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-300 mb-1">Select Engine:</label>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                      <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950 border border-brand-500/40 cursor-pointer hover:border-brand-500 transition">
+                        <input type="radio" name="model_choice" value="Nova-4 Turbo (High Speed)" checked onchange="App.onModelChange('Nova-4 Turbo')" class="text-brand-500 focus:ring-0">
+                        <div>
+                          <p class="font-bold text-white text-[11px]">Nova-4 Turbo</p>
+                          <p class="text-[9px] text-emerald-400 font-mono">140 tok/s • Ultra Fast</p>
+                        </div>
+                      </label>
+                      <label class="flex items-center gap-2 p-2 rounded-lg bg-slate-950 border border-slate-800 cursor-pointer hover:border-brand-500 transition">
+                        <input type="radio" name="model_choice" value="GPT-4o Reasoning" onchange="App.onModelChange('GPT-4o Reasoning')" class="text-brand-500 focus:ring-0">
+                        <div>
+                          <p class="font-bold text-white text-[11px]">GPT-4o Reasoning</p>
+                          <p class="text-[9px] text-indigo-400 font-mono">Deep Logic • High Quality</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Temperature Slider -->
+                  <div>
+                    <div class="flex items-center justify-between text-[11px] mb-1">
+                      <span class="text-slate-300 font-medium">Temperature (Creativity):</span>
+                      <span id="temp-val" class="font-mono text-brand-400 font-bold">0.7</span>
+                    </div>
+                    <input type="range" id="param-temp" min="0" max="1" step="0.1" value="0.7" 
+                           oninput="document.getElementById('temp-val').textContent = this.value"
+                           class="w-full accent-brand-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                    <div class="flex justify-between text-[9px] text-slate-500 font-mono mt-0.5">
+                      <span>0.0 (Precise/Fact)</span>
+                      <span>0.7 (Balanced)</span>
+                      <span>1.0 (Creative)</span>
+                    </div>
+                  </div>
+
+                  <!-- Custom System Instructions -->
+                  <div>
+                    <label for="param-system" class="block text-[11px] font-medium text-slate-300 mb-1">
+                      System Persona / Custom Constraint (Optional):
+                    </label>
+                    <input type="text" id="param-system" placeholder="Contoh: Selalu sertakan 3 actionable takeaways dan emoji..." class="glass-input w-full rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder-slate-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Generate & Stream Button Actions -->
+              <div class="pt-2 flex flex-col sm:flex-row gap-2">
+                <button 
+                  type="submit" 
+                  id="btn-generate"
+                  class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 shadow-lg shadow-brand-500/25 active:scale-[0.98] transition-all"
+                >
+                  <i data-lucide="sparkles" class="w-4 h-4 text-cyan-200 animate-spin-slow"></i>
+                  <span id="generate-btn-text">Generate with AI Stream</span>
+                </button>
+
+                <button 
+                  type="button" 
+                  id="btn-stop-stream" 
+                  onclick="App.stopStreaming()" 
+                  class="hidden py-3 px-4 rounded-xl font-bold text-xs text-rose-300 bg-rose-950/60 border border-rose-800 hover:bg-rose-900/60 transition flex items-center justify-center gap-1.5"
+                >
+                  <i data-lucide="square" class="w-3.5 h-3.5 fill-current"></i>
+                  <span>Stop Stream</span>
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Quick Preset Cards under form -->
+          <div class="glass-panel rounded-2xl p-4 text-xs space-y-2 border border-slate-800/80">
+            <div class="flex items-center justify-between text-slate-400 font-medium">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="bookmark" class="w-3.5 h-3.5 text-brand-400"></i> Prompt Frameworks
+              </span>
+              <span class="text-[10px] text-slate-500">Ready-to-use</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="App.applyFramework('AIDA')" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/90 border border-slate-800 text-left transition group">
+                <div class="font-bold text-slate-200 group-hover:text-brand-300">AIDA Framework</div>
+                <div class="text-[10px] text-slate-400">Attention, Interest, Desire, Action</div>
+              </button>
+              <button onclick="App.applyFramework('PAS')" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/90 border border-slate-800 text-left transition group">
+                <div class="font-bold text-slate-200 group-hover:text-cyan-300">PAS Formula</div>
+                <div class="text-[10px] text-slate-400">Problem, Agitation, Solution</div>
+              </button>
+              <button onclick="App.applyFramework('BAB')" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/90 border border-slate-800 text-left transition group">
+                <div class="font-bold text-slate-200 group-hover:text-emerald-300">Before-After-Bridge</div>
+                <div class="text-[10px] text-slate-400">Transformation narrative</div>
+              </button>
+              <button onclick="App.applyFramework('STORY')" class="p-2 rounded-lg bg-slate-900 hover:bg-slate-800/90 border border-slate-800 text-left transition group">
+                <div class="font-bold text-slate-200 group-hover:text-purple-300">Hero Story Hook</div>
+                <div class="text-[10px] text-slate-400">Viral storytelling cadence</div>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ================= RIGHT COLUMN: INTERACTIVE WORKSPACE EDITOR (7 cols on lg) ================= -->
+        <main class="lg:col-span-7 space-y-3">
+          
+          <div class="glass-panel rounded-2xl shadow-2xl border border-slate-800 overflow-hidden flex flex-col min-h-[580px]">
+            
+            <!-- Editor Top Toolbar -->
+            <div class="bg-slate-950/90 px-4 py-3 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+              
+              <!-- View Mode Tabs -->
+              <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                <button id="view-tab-preview" onclick="App.setEditorView('preview')" class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded bg-brand-600 text-white shadow">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>Live Render</span>
+                </button>
+                <button id="view-tab-raw" onclick="App.setEditorView('raw')" class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition">
+                  <i data-lucide="code" class="w-3.5 h-3.5"></i>
+                  <span>Markdown Edit</span>
+                </button>
+                <button id="view-tab-cards" onclick="App.setEditorView('cards')" class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition">
+                  <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                  <span>Thread Cards</span>
+                </button>
+              </div>
+
+              <!-- Output Action Buttons: Copy, Export, Save -->
+              <div class="flex items-center gap-1.5">
+                
+                <!-- One-Click Copy -->
+                <button 
+                  id="btn-copy-output" 
+                  onclick="App.copyToClipboard()" 
+                  title="Copy current content"
+                  class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium border border-slate-700 transition active:scale-95"
+                >
+                  <i data-lucide="copy" class="w-3.5 h-3.5" id="copy-icon"></i>
+                  <span id="copy-text">Copy</span>
+                </button>
+
+                <!-- Export Dropdown Trigger -->
+                <div class="relative group">
+                  <button 
+                    onclick="App.toggleExportMenu()" 
+                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-medium border border-slate-700 transition"
+                  >
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Export</span>
+                    <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+                  </button>
+
+                  <!-- Export Options Dropdown -->
+                  <div id="export-dropdown" class="hidden absolute right-0 mt-1.5 w-44 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl py-1.5 z-30">
+                    <button onclick="App.exportFile('txt')" class="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-brand-600 hover:text-white flex items-center gap-2">
+                      <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-400"></i> Export Plain (.txt)
+                    </button>
+                    <button onclick="App.exportFile('md')" class="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-brand-600 hover:text-white flex items-center gap-2">
+                      <i data-lucide="file-code" class="w-3.5 h-3.5 text-cyan-400"></i> Export Markdown (.md)
+                    </button>
+                    <button onclick="App.exportFile('json')" class="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-brand-600 hover:text-white flex items-center gap-2">
+                      <i data-lucide="code-2" class="w-3.5 h-3.5 text-emerald-400"></i> Export Data (.json)
+                    </button>
+                    <button onclick="App.exportFile('html')" class="w-full text-left px-3 py-1.5 text-xs text-slate-300 hover:bg-brand-600 hover:text-white flex items-center gap-2">
+                      <i data-lucide="globe" class="w-3.5 h-3.5 text-amber-400"></i> Export HTML (.html)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Save to History manually -->
+                <button 
+                  onclick="App.saveCurrentToVault()" 
+                  title="Save snapshot to Vault"
+                  class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 text-brand-300 text-xs font-medium border border-brand-500/30 transition"
+                >
+                  <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                  <span class="hidden sm:inline">Save</span>
+                </button>
+
+                <!-- Clear workspace -->
+                <button 
+                  onclick="App.clearWorkspace()" 
+                  title="Clear editor"
+                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                >
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- AI Quick Refinements Toolbar (Chips) -->
+            <div class="px-4 py-2 bg-slate-900/60 border-b border-slate-800/70 flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
+              <span class="text-slate-500 text-[11px] whitespace-nowrap flex items-center gap-1">
+                <i data-lucide="sparkle" class="w-3 h-3 text-brand-400"></i> AI Polish:
+              </span>
+              <button onclick="App.quickRefine('punchier')" class="px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-300 text-[11px] transition whitespace-nowrap">
+                ⚡ Make Punchier
+              </button>
+              <button onclick="App.quickRefine('expand')" class="px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-300 text-[11px] transition whitespace-nowrap">
+                🔍 Expand Depth
+              </button>
+              <button onclick="App.quickRefine('emoji')" class="px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-300 text-[11px] transition whitespace-nowrap">
+                ✨ Add Emojis & Formatting
+              </button>
+              <button onclick="App.quickRefine('cta')" class="px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-300 text-[11px] transition whitespace-nowrap">
+                🎯 Stronger Call-to-Action
+              </button>
+              <button onclick="App.quickRefine('translate_en_id')" class="px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white text-slate-300 text-[11px] transition whitespace-nowrap">
+                🌐 Translate / Localize
+              </button>
+            </div>
+
+            <!-- Workspace Content Viewports (Preview / Raw / Thread Cards) -->
+            <div class="flex-1 p-4 sm:p-6 relative bg-slate-950/40 overflow-y-auto max-h-[560px]">
+              
+              <!-- 1. Formatted Live Render View -->
+              <div id="editor-view-preview" class="block">
+                <div id="output-rendered" class="prose-ai text-slate-200 text-sm leading-relaxed">
+                  <!-- Default state placeholder before first run -->
+                  <div class="py-12 flex flex-col items-center justify-center text-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400 shadow-inner">
+                      <i data-lucide="bot" class="w-7 h-7"></i>
+                    </div>
+                    <div class="max-w-md">
+                      <h3 class="text-base font-bold text-white">Interactive AI Workspace is Ready</h3>
+                      <p class="text-xs text-slate-400 mt-1">
+                        Pilih prompt parameter di sidebar kiri lalu klik <span class="text-brand-300 font-semibold">"Generate with AI Stream"</span> untuk menyaksikan streaming token generator secara langsung.
+                      </p>
+                    </div>
+                    <div class="pt-2 flex flex-wrap justify-center gap-2">
+                      <button onclick="App.applyPreset('twitter_viral'); App.triggerDemoGenerate();" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-brand-300 border border-slate-700 transition flex items-center gap-1.5">
+                        <i data-lucide="play" class="w-3 h-3"></i> Run 1-Click Viral Demo
+                      </button>
+                      <button onclick="App.applyPreset('ad_copy'); App.triggerDemoGenerate();" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition flex items-center gap-1.5">
+                        <i data-lucide="play" class="w-3 h-3"></i> Run Ad Copy Demo
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <span id="streaming-cursor" class="typing-cursor hidden"></span>
+              </div>
+
+              <!-- 2. Raw Markdown Editor View -->
+              <div id="editor-view-raw" class="hidden h-full">
+                <textarea 
+                  id="output-raw-textarea" 
+                  rows="18"
+                  oninput="App.onManualEditorChange(this.value)"
+                  placeholder="Markdown content will appear here..."
+                  class="w-full h-full bg-slate-900/90 font-mono text-xs text-slate-200 rounded-xl p-4 border border-slate-800 focus:outline-none focus:border-brand-500 resize-none leading-relaxed"
+                ></textarea>
+              </div>
+
+              <!-- 3. Thread / Step Cards View -->
+              <div id="editor-view-cards" class="hidden space-y-3">
+                <div id="thread-cards-container" class="space-y-3">
+                  <!-- Dynamically populated if content is tweet thread or outline -->
+                  <div class="text-center py-8 text-xs text-slate-400">
+                    Generate content to view segregated thread cards here.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ================= STATUS BAR & TOKEN COUNTER ================= -->
+            <footer class="bg-slate-950 px-4 py-2.5 border-t border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-3">
+              
+              <!-- Left side metrics: Model & Status -->
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5">
+                  <span id="status-indicator-dot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span id="status-indicator-text" class="font-mono text-[11px] text-slate-300">Ready</span>
+                </div>
+                <span class="text-slate-700">|</span>
+                <div class="flex items-center gap-1 font-mono text-[11px] text-slate-400">
+                  <i data-lucide="cpu" class="w-3 h-3 text-brand-400"></i>
+                  <span id="status-active-model">Nova-4 Turbo</span>
+                </div>
+              </div>
+
+              <!-- Center/Right Token & Performance Counters -->
+              <div class="flex items-center flex-wrap gap-4 font-mono text-[11px]">
+                
+                <!-- Words & Chars -->
+                <div class="flex items-center gap-1 text-slate-300" title="Word count">
+                  <i data-lucide="align-left" class="w-3 h-3 text-slate-500"></i>
+                  <span id="counter-words" class="text-white font-bold">0</span> <span class="text-slate-500">words</span>
+                </div>
+
+                <!-- Prompt Tokens & Completion Tokens -->
+                <div class="flex items-center gap-1.5 bg-slate-900 px-2 py-0.5 rounded border border-slate-800" title="Token metrics">
+                  <span class="text-slate-500">Tokens:</span>
+                  <span id="counter-prompt-tokens" class="text-indigo-400 font-semibold">0</span>
+                  <span class="text-slate-600">+</span>
+                  <span id="counter-completion-tokens" class="text-cyan-400 font-semibold">0</span>
+                  <span class="text-slate-600">=</span>
+                  <span id="counter-total-tokens" class="text-white font-bold">0</span>
+                </div>
+
+                <!-- Estimated Cost -->
+                <div class="flex items-center gap-1 text-emerald-400" title="Simulated API Cost">
+                  <span class="text-slate-500">$</span>
+                  <span id="counter-cost" class="font-bold">0.0000</span>
+                </div>
+
+                <!-- Latency / Speed -->
+                <div class="hidden sm:flex items-center gap-1 text-slate-400" title="Stream Speed">
+                  <i data-lucide="gauge" class="w-3 h-3 text-amber-400"></i>
+                  <span id="counter-speed" class="text-slate-200">0</span> <span class="text-slate-500">t/s</span>
+                </div>
+
+                <!-- Reading time -->
+                <div class="hidden sm:flex items-center gap-1 text-slate-400" title="Estimated Reading Time">
+                  <i data-lucide="clock" class="w-3 h-3 text-purple-400"></i>
+                  <span id="counter-readtime">0 min</span>
+                </div>
+
+              </div>
+
+            </footer>
+
+          </div>
+
+        </main>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: WORKFLOW CHAIN PIPELINE (SAAS STUDIO) ================= -->
+    <section id="tab-workflow" class="hidden animate-fadeIn space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/60">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <span>Automated AI Workflow Chain</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-purple-950/80 text-purple-400 border border-purple-800/50">Multi-Step Pipeline</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Otomatisasi rantai kreasi: Ideation → Outline → Full Drafting → Multi-Channel Repurposing.</p>
+        </div>
+
+        <button onclick="App.runFullWorkflow()" id="btn-run-workflow" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/25 transition">
+          <i data-lucide="play-circle" class="w-4 h-4"></i>
+          <span>Execute All Pipeline Steps</span>
+        </button>
+      </div>
+
+      <!-- Pipeline Steps Interactive Stepper -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <!-- Step 1 -->
+        <div class="glass-panel p-4 rounded-xl border border-slate-800 relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-6 h-6 rounded-full bg-brand-500 text-white text-xs font-bold flex items-center justify-center">1</span>
+            <span id="step-1-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">Ready</span>
+          </div>
+          <h3 class="font-bold text-sm text-white">Ideation & Angles</h3>
+          <p class="text-xs text-slate-400 mt-1">Brainstorm 3 viral angles & unique value proposition.</p>
+          <div id="step-1-result" class="mt-3 p-2.5 rounded-lg bg-slate-900/90 text-[11px] text-slate-300 border border-slate-800 min-h-[90px] max-h-[140px] overflow-y-auto">
+            Belum dieksekusi. Klik "Execute All Pipeline Steps".
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="glass-panel p-4 rounded-xl border border-slate-800 relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-6 h-6 rounded-full bg-indigo-500 text-white text-xs font-bold flex items-center justify-center">2</span>
+            <span id="step-2-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">Pending</span>
+          </div>
+          <h3 class="font-bold text-sm text-white">Structural Outline</h3>
+          <p class="text-xs text-slate-400 mt-1">Generate H2, H3 hierarchy, hooks & key takeaways.</p>
+          <div id="step-2-result" class="mt-3 p-2.5 rounded-lg bg-slate-900/90 text-[11px] text-slate-300 border border-slate-800 min-h-[90px] max-h-[140px] overflow-y-auto">
+            Menunggu langkah 1...
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="glass-panel p-4 rounded-xl border border-slate-800 relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-6 h-6 rounded-full bg-cyan-500 text-white text-xs font-bold flex items-center justify-center">3</span>
+            <span id="step-3-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">Pending</span>
+          </div>
+          <h3 class="font-bold text-sm text-white">Draft Generation</h3>
+          <p class="text-xs text-slate-400 mt-1">Draft full long-form content with high retention.</p>
+          <div id="step-3-result" class="mt-3 p-2.5 rounded-lg bg-slate-900/90 text-[11px] text-slate-300 border border-slate-800 min-h-[90px] max-h-[140px] overflow-y-auto">
+            Menunggu langkah 2...
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="glass-panel p-4 rounded-xl border border-slate-800 relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center">4</span>
+            <span id="step-4-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">Pending</span>
+          </div>
+          <h3 class="font-bold text-sm text-white">Repurposing Suite</h3>
+          <p class="text-xs text-slate-400 mt-1">Transform draft into Tweet, LinkedIn & Email CTA.</p>
+          <div id="step-4-result" class="mt-3 p-2.5 rounded-lg bg-slate-900/90 text-[11px] text-slate-300 border border-slate-800 min-h-[90px] max-h-[140px] overflow-y-auto">
+            Menunggu langkah 3...
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Workflow Output Inspection & Transfer to Studio -->
+      <div class="glass-panel rounded-2xl p-5 border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i>
+            <span>Aggregated Workflow Master Output</span>
+          </h3>
+          <button onclick="App.transferWorkflowToEditor()" id="btn-transfer-workflow" class="text-xs px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5"></i>
+            <span>Send to Studio Editor</span>
+          </button>
+        </div>
+        <div id="workflow-master-preview" class="p-4 rounded-xl bg-slate-950 font-mono text-xs text-slate-300 border border-slate-800/80 min-h-[180px] max-h-[300px] overflow-y-auto whitespace-pre-wrap leading-relaxed">
+          Klik tombol "Execute All Pipeline Steps" untuk menguji simulasi workflow chaining multi-tahap secara berurutan.
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 3: MODEL ARENA / COMPARATOR ================= -->
+    <section id="tab-comparator" class="hidden animate-fadeIn space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/60">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <span>AI Model Arena (A/B Test)</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-amber-950/80 text-amber-400 border border-amber-800/50">Side-by-Side</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Bandingkan performa kecepatan, kreativitas, dan struktur jawaban dari dua LLM berbeda.</p>
+        </div>
+
+        <button onclick="App.runModelComparison()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-brand-600 hover:from-cyan-500 hover:to-brand-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/25 transition">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span>Benchmark Both Models</span>
+        </button>
+      </div>
+
+      <!-- Comparative Dual Stream Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Model A: Nova-4 Turbo -->
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 border border-brand-500/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-brand-400"></span>
+                <span class="font-bold text-white text-sm">Model A: Nova-4 Turbo</span>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                142 tok/sec
+              </span>
+            </div>
+            <div id="arena-output-a" class="p-3.5 rounded-xl bg-slate-950 text-xs text-slate-300 font-mono min-h-[300px] max-h-[400px] overflow-y-auto leading-relaxed border border-slate-800 whitespace-pre-wrap">
+              Siap membandingkan output prompt dengan Model B...
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Latency: <strong class="text-white" id="arena-lat-a">0.24s</strong></span>
+            <span>Cost: <strong class="text-emerald-400">$0.0004</strong></span>
+            <button onclick="App.copyArenaOutput('a')" class="text-brand-300 hover:underline">Copy A</button>
+          </div>
+        </div>
+
+        <!-- Model B: GPT-4o Omni -->
+        <div class="glass-panel rounded-2xl p-4 sm:p-5 border border-purple-500/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-purple-400"></span>
+                <span class="font-bold text-white text-sm">Model B: GPT-4o Reasoning</span>
+              </div>
+              <span class="text-[10px] font-mono text-indigo-400 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-800">
+                85 tok/sec
+              </span>
+            </div>
+            <div id="arena-output-b" class="p-3.5 rounded-xl bg-slate-950 text-xs text-slate-300 font-mono min-h-[300px] max-h-[400px] overflow-y-auto leading-relaxed border border-slate-800 whitespace-pre-wrap">
+              Siap membandingkan output prompt dengan Model A...
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Latency: <strong class="text-white" id="arena-lat-b">0.68s</strong></span>
+            <span>Cost: <strong class="text-indigo-400">$0.0018</strong></span>
+            <button onclick="App.copyArenaOutput('b')" class="text-purple-300 hover:underline">Copy B</button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================= TAB 4: HISTORY & VAULT (PERSISTED IN LOCALSTORAGE) ================= -->
+    <section id="tab-history" class="hidden animate-fadeIn space-y-5">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/60">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+            <span>Prompt Vault & History</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">localStorage Sync</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Semua riwayat generasi tersimpan otomatis di browser tanpa hilang saat reload.</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Search input -->
+          <div class="relative">
+            <input 
+              type="text" 
+              id="history-search" 
+              placeholder="Search history..." 
+              oninput="App.filterHistory(this.value)"
+              class="glass-input pl-8 pr-3 py-1.5 rounded-xl text-xs text-white placeholder-slate-500 w-44 sm:w-60"
+            >
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+          </div>
+
+          <!-- Clear All Button -->
+          <button onclick="App.clearAllHistoryConfirm()" class="p-2 rounded-xl bg-slate-900 hover:bg-rose-950/50 border border-slate-800 hover:border-rose-800 text-slate-400 hover:text-rose-400 text-xs transition flex items-center gap-1">
+            <i data-lucide="trash" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Clear All</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- History Filter Chips -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <span class="text-slate-500 text-[11px]">Filter:</span>
+        <button onclick="App.setHistoryFilter('all')" id="hist-filter-all" class="px-3 py-1 rounded-lg bg-brand-600 text-white font-medium">All</button>
+        <button onclick="App.setHistoryFilter('favorite')" id="hist-filter-favorite" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white">⭐ Favorites</button>
+        <button onclick="App.setHistoryFilter('twitter_thread')" id="hist-filter-twitter" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white">𝕏 Threads</button>
+        <button onclick="App.setHistoryFilter('blog_post')" id="hist-filter-blog" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white">📝 Blogs</button>
+        <button onclick="App.setHistoryFilter('ad_copy')" id="hist-filter-ad" class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white">🎯 Ads</button>
+      </div>
+
+      <!-- History Cards Container -->
+      <div id="history-items-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Empty State for History -->
+      <div id="history-empty-state" class="hidden py-16 text-center space-y-3 glass-panel rounded-2xl border border-slate-800">
+        <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 mx-auto flex items-center justify-center text-slate-500">
+          <i data-lucide="inbox" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-sm font-bold text-white">Belum Ada Riwayat Tersimpan</h3>
+        <p class="text-xs text-slate-400 max-w-sm mx-auto">Generate prompt baru di Prompt Studio, dan riwayat akan otomatis tercatat di sini.</p>
+        <button onclick="App.switchMainTab('generator')" class="mt-2 text-xs px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-lg shadow transition">
+          Mulai Buat Prompt
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= PRESET TEMPLATES MODAL ================= -->
+  <div id="template-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-950 border border-slate-800 rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="p-1.5 rounded-lg bg-brand-500/10 text-brand-400">
+            <i data-lucide="layout-template" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-bold text-white">Curated AI Prompt Presets</h2>
+            <p class="text-xs text-slate-400">Pilih template teruji untuk mempercepat workflow pembuatan konten.</p>
+          </div>
+        </div>
+        <button onclick="App.closeTemplateModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3" id="template-list-container">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="px-5 py-3 border-t border-slate-800 bg-slate-900/60 flex justify-end">
+        <button onclick="App.closeTemplateModal()" class="px-4 py-1.5 text-xs text-slate-300 hover:text-white rounded-lg bg-slate-800 hover:bg-slate-700">Close</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= COMMAND PALETTE MODAL (CMD + K) ================= -->
+  <div id="command-palette-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-start justify-center pt-20 p-4">
+    <div class="glass-panel bg-slate-950 border border-slate-700 rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden animate-fadeIn">
+      <div class="p-3 border-b border-slate-800 flex items-center gap-2">
+        <i data-lucide="search" class="w-4 h-4 text-brand-400"></i>
+        <input 
+          type="text" 
+          id="cmd-input" 
+          placeholder="Type a command or search action (e.g. Generate, Viral Thread, Export)..." 
+          class="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
+          oninput="App.filterCommands(this.value)"
+        >
+        <kbd class="px-1.5 py-0.5 bg-slate-800 text-[10px] font-mono text-slate-400 rounded border border-slate-700">ESC</kbd>
+      </div>
+      <div id="cmd-results" class="p-2 max-h-64 overflow-y-auto space-y-1 text-xs">
+        <!-- Rendered items -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
+
+  <!-- ================= MASTER CONFIRMATION MODAL ================= -->
+  <div id="confirm-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-950 border border-slate-800 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center border border-rose-500/20">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 id="confirm-title" class="text-sm font-bold text-white">Konfirmasi Aksi</h3>
+          <p id="confirm-desc" class="text-xs text-slate-400 mt-0.5">Apakah Anda yakin ingin melanjutkan?</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+        <button onclick="App.closeConfirmModal(false)" class="px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded-lg bg-slate-900 border border-slate-800">Batal</button>
+        <button id="confirm-action-btn" onclick="App.closeConfirmModal(true)" class="px-3.5 py-1.5 text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 rounded-lg shadow">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT STATE ENGINE & LOGIC ================= -->
+  <script>
+    /**
+     * NovaNext AI Studio — State Management & Interaction Module
+     * Fully vanilla ES6+ with localStorage persistence, Web Audio synthesis, and dynamic AI streaming simulation.
+     */
+    const App = (function() {
+      // Internal State
+      const state = {
+        activeTab: 'generator', // 'generator' | 'workflow' | 'comparator' | 'history'
+        editorView: 'preview', // 'preview' | 'raw' | 'cards'
+        isStreaming: false,
+        streamInterval: null,
+        soundEnabled: true,
+        currentOutputText: '',
+        currentPromptDetails: {
+          topic: '',
+          format: 'twitter_thread',
+          tone: 'Persuasive & Engaging',
+          audience: 'Tech Founders & Startups',
+          language: 'Bahasa Indonesia',
+          model: 'Nova-4 Turbo',
+          temperature: 0.7,
+          systemPersona: ''
+        },
+        metrics: {
+          promptTokens: 0,
+          completionTokens: 0,
+          totalTokens: 0,
+          cost: 0.0,
+          speed: 0,
+          words: 0,
+          readingTime: '0 min'
+        },
+        history: [],
+        historyFilter: 'all',
+        presets: [
+          {
+            id: 'twitter_viral',
+            title: 'Viral 𝕏 Thread Breakdown',
+            category: 'Social Media',
+            format: 'twitter_thread',
+            tone: 'Persuasive & Engaging',
+            audience: 'Tech Founders & Startups',
+            topic: '7 Framework AI Automation yang Menghemat 20 Jam Kerja Setiap Minggu untuk Solopreneur',
+            desc: 'Thread bertingkat dengan hook provokatif, analogi, tips bernomor, dan CTA follow.'
+          },
+          {
+            id: 'seo_blog',
+            title: 'In-Depth SEO Pillar Article',
+            category: 'Content Marketing',
+            format: 'blog_post',
+            tone: 'Professional & Authoritative',
+            audience: 'Digital Marketers & Growth Hackers',
+            topic: 'Panduan Lengkap Autonomous AI Agents di Era 2026: Arsitektur, Implementasi, & ROI',
+            desc: 'Artikel berbobot dengan H2/H3, tabel komparasi, key takeaways, dan FAQ schema ready.'
+          },
+          {
+            id: 'ad_copy',
+            title: 'High-Converting Multi-Angle Ad Copy',
+            category: 'Advertising',
+            format: 'ad_copy',
+            tone: 'Witty & Punchy',
+            audience: 'E-Commerce & Retail Sellers',
+            topic: 'Aplikasi AI Inventory Management yang Mencegah Stockout hingga 98% untuk Brand D2C',
+            desc: 'Varian iklan Google Ads headline, Meta Ads feed copy, hook video TikTok, dan benefit bullets.'
+          },
+          {
+            id: 'linkedin_post',
+            title: 'B2B Thought Leadership Post',
+            category: 'Social Media',
+            format: 'linkedin_article',
+            tone: 'Professional & Authoritative',
+            audience: 'C-Suite B2B Executives',
+            topic: 'Mengapa 70% Implementasi AI Enterprise Gagal: Bukan Masalah Model, Tapi Data Workflow',
+            desc: 'Postingan LinkedIn berjarak baris rapi, cerita pengalaman nyata, dan open-ended question hook.'
+          },
+          {
+            id: 'youtube_script',
+            title: 'Engaging YouTube Video Script',
+            category: 'Video Script',
+            format: 'youtube_script',
+            tone: 'Gen-Z Energetic',
+            audience: 'Software Engineers & Devs',
+            topic: 'Saya Menguji 10 AI Coding Tools Selama 30 Hari: Inilah Pemenang Mutlaknya!',
+            desc: 'Struktur video: 3-second hook, opening animation cue, 3 chapter breakdown, dan outro CTA.'
+          },
+          {
+            id: 'email_newsletter',
+            title: 'High-Open-Rate Email Broadcast',
+            category: 'Email Marketing',
+            format: 'email_newsletter',
+            tone: 'Casual & Conversational',
+            audience: 'Students & Young Professionals',
+            topic: '3 Skill Prompt Engineering yang Akan Membuat Kamu Tak Tergantikan di Era Generative AI',
+            desc: '3 Pilihan Subject line, preview text, personal storytelling opening, 3 bullet poin inti, dan P.S. note.'
+          }
+        ],
+        confirmCallback: null
+      };
+
+      // Web Audio API Synthesis for Cyber/Typing sound effect (optional toggle)
+      let audioCtx = null;
+      function playClickSound() {
+        if (!state.soundEnabled) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(600 + Math.random() * 200, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.04);
+        } catch(e) {}
+      }
+
+      function playSuccessChime() {
+        if (!state.soundEnabled) return;
+        try {
+          if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const now = audioCtx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.03, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.25);
+          });
+        } catch(e) {}
+      }
+
+      // Initial dummy history mock if empty in localStorage
+      const defaultInitialHistory = [
+        {
+          id: 'hist_001',
+          timestamp: Date.now() - 3600000 * 2,
+          topic: '7 Framework AI Automation yang Menghemat 20 Jam Kerja Setiap Minggu',
+          format: 'twitter_thread',
+          tone: 'Persuasive & Engaging',
+          audience: 'Tech Founders & Startups',
+          model: 'Nova-4 Turbo',
+          favorite: true,
+          words: 420,
+          tokens: 610,
+          content: `🧵 THREAD: 7 Framework AI Automation yang Menghemat 20+ Jam Kerja Solopreneur Setiap Minggu.
+
+Jika Anda masih mengetik email manual, menyalin data spreadsheet, dan memformat postingan satu per satu... Anda tertinggal di 2024.
+
+Berikut blueprint 7 sistem otomatisasi AI siap pakai: 👇
+
+1/7 ⚡ The Autonomous Inbound Triage
+Gunakan webhook parser untuk membaca email masuk, mengkategorikan lead berdasar urgensi, dan membuat draft balasan otomatis dalam 10 detik.
+
+2/7 ✍️ Semantic Content Repurposing Engine
+Ubah 1 rekaman video podcast atau audio meeting menjadi: 
+• 3 Utas Twitter (X)
+• 1 Artikel LinkedIn mendalam
+• 1 Newsletter berkonversi tinggi
+
+3/7 📊 Real-time Competitor Intelligence
+Atur web scraper cerdas yang merangkum perubahan harga & fitur kompetitor setiap Senin pukul 08:00 WIB langsung ke Slack channel tim.
+
+4/7 🎯 Cold Outreach Hyper-Personalizer
+AI membaca bio LinkedIn calon klien dan membuat kalimat pembuka (icebreaker) unik yang relevan 100%.
+
+5/7 📁 Smart File Classifier & Summarizer
+Setiap invoice atau PDF otomatis diekstrak nominalnya ke Notion Database tanpa entri manual.
+
+6/7 🔄 Multi-Model QA & Code Review
+Skrip Python Anda diverifikasi oleh dua model AI independen untuk menangkap edge-case bugs.
+
+7/7 🚀 Daily Standup & Priority Synthesizer
+Ketik coretan kasar ide harian Anda, biarkan AI menyusun task backlog dengan prioritas MoSCoW.
+
+---
+💡 Kunci otomatisasi bukan menggantikan manusia, tapi mempercepat feedback loop bisnis Anda 10x lipat.
+
+Suka konten ini? 
+1. RT tweet pertama untuk berbagi wawasan
+2. Follow @NovaNextAI untuk blueprint prompt masa depan!`
+        },
+        {
+          id: 'hist_002',
+          timestamp: Date.now() - 3600000 * 24,
+          topic: 'High-Converting Ad Copy for AI Inventory SaaS',
+          format: 'ad_copy',
+          tone: 'Witty & Punchy',
+          audience: 'E-Commerce & Retail Sellers',
+          model: 'GPT-4o Reasoning',
+          favorite: false,
+          words: 280,
+          tokens: 415,
+          content: `🎯 MULTI-ANGLE AD COPY SUITE (E-Commerce Brands)
+
+Angle 1: The Pain of Stockout (Meta/Facebook Feed Ad)
+==================================================
+Headline: Kehilangan Rp 50 Juta Hanya Karena Barang Habis Saat Harbolnas? Jangan Terulang Lagi.
+Primary Text: 
+Gudang kosong saat pesanan banjir adalah mimpi buruk pebisnis online. NovaNext Inventory AI memprediksi tren permintaan 14 hari sebelum lonjakan terjadi.
+✅ Akurasi prediksi stok hingga 98.4%
+✅ Terintegrasi otomatis ke Shopee, Tokopedia, & Shopify
+✅ Setup cuma butuh 5 menit tanpa coding!
+CTA: Coba Gratis 14 Hari — Tanpa Kartu Kredit 🚀
+
+Angle 2: The Direct Search Hook (Google Ads Text)
+==================================================
+Headline 1: AI Inventory Management Software
+Headline 2: Stop Stockouts & Overstocking
+Headline 3: Real-Time Multi-Channel Sync
+Description: Prediksi stok pintar dengan algoritma machine learning. Hubungkan toko Anda & hemat jutaan rupiah per bulan. Uji coba gratis hari ini!
+
+Angle 3: Short Video Script (TikTok & Reels Hook)
+==================================================
+[Visual]: Notifikasi orderan Shopee masuk bertubi-tubi tapi stok gudang 0.
+[Audio/Voiceover]: "Stop tebak-tebak stok barang! Kenapa brand besar jarang kehabisan produk viral? Karena mereka pakai AI Inventory NovaNext yang otomatis order ke supplier sebelum stok kritis."
+[On-screen CTA]: Link di bio untuk trial eksklusif!`
+        }
+      ];
+
+      // LocalStorage Key
+      const STORAGE_KEY = 'novanext_ai_studio_vault_v1';
+
+      // Load History from LocalStorage
+      function loadHistory() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            state.history = JSON.parse(raw);
+          } else {
+            state.history = defaultInitialHistory;
+            saveHistoryToDisk();
+          }
+        } catch (e) {
+          state.history = defaultInitialHistory;
+        }
+        updateHistoryCountBadge();
+      }
+
+      function saveHistoryToDisk() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history));
+        } catch (e) {
+          console.error("Storage save failed", e);
+        }
+        updateHistoryCountBadge();
+      }
+
+      function updateHistoryCountBadge() {
+        const badge = document.getElementById('history-counter-badge');
+        if (badge) badge.textContent = state.history.length;
+      }
+
+      // Toast Notification System
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs font-medium text-white transition-all transform duration-300 translate-y-2 opacity-0 ${
+          type === 'success' ? 'bg-slate-900 border-emerald-500/40 text-emerald-200' :
+          type === 'error' ? 'bg-slate-900 border-rose-500/40 text-rose-200' :
+          'bg-slate-900 border-indigo-500/40 text-indigo-200'
+        }`;
+
+        const icon = type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info';
+        toast.innerHTML = `
+          <i data-lucide="${icon}" class="w-4 h-4 shrink-0 ${type === 'success' ? 'text-emerald-400' : type === 'error' ? 'text-rose-400' : 'text-indigo-400'}"></i>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+          toast.classList.remove('translate-y-2', 'opacity-0');
+        });
+
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-x-4');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      // Tab Switcher
+      function switchMainTab(tabName) {
+        state.activeTab = tabName;
+        ['generator', 'workflow', 'comparator', 'history'].forEach(tab => {
+          const section = document.getElementById(`tab-${tab}`);
+          const navBtn = document.getElementById(`nav-btn-${tab}`);
+          if (section) {
+            if (tab === tabName) {
+              section.classList.remove('hidden');
+              section.classList.add('block');
+            } else {
+              section.classList.add('hidden');
+              section.classList.remove('block');
+            }
+          }
+          if (navBtn) {
+            if (tab === tabName) {
+              navBtn.className = "flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-white bg-brand-600 shadow-sm shadow-brand-600/30";
+            } else {
+              navBtn.className = "flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800";
+            }
+          }
+        });
+
+        if (tabName === 'history') {
+          renderHistoryGrid();
+        }
+        lucide.createIcons();
+      }
+
+      function toggleMobileDrawer() {
+        const mob = document.getElementById('mobile-nav');
+        if (mob) mob.classList.toggle('hidden');
+      }
+
+      // Advanced Settings Accordion
+      function toggleAdvanced() {
+        const panel = document.getElementById('advanced-settings-panel');
+        const chevron = document.getElementById('adv-chevron');
+        if (panel) {
+          panel.classList.toggle('hidden');
+          if (chevron) {
+            chevron.classList.toggle('rotate-180');
+          }
+        }
+      }
+
+      function onModelChange(modelName) {
+        state.currentPromptDetails.model = modelName;
+        const tag = document.getElementById('selected-model-tag');
+        const activeModelStatus = document.getElementById('status-active-model');
+        if (tag) tag.textContent = modelName;
+        if (activeModelStatus) activeModelStatus.textContent = modelName;
+      }
+
+      function updateCharCount(val) {
+        const el = document.getElementById('topic-char-count');
+        if (el) el.textContent = `${val.length} / 500 chars`;
+      }
+
+      function insertPromptChip(text) {
+        const topicInput = document.getElementById('prompt-topic');
+        if (topicInput) {
+          topicInput.value = text;
+          updateCharCount(text);
+          showToast(`Applied topic chip: "${text}"`, 'info');
+        }
+      }
+
+      function applyFramework(fw) {
+        const topicInput = document.getElementById('prompt-topic');
+        const current = topicInput.value.trim() || 'Strategi Scaling Bisnis Digital';
+        let prefix = '';
+        if (fw === 'AIDA') prefix = `[Framework: AIDA (Attention, Interest, Desire, Action)] — `;
+        if (fw === 'PAS') prefix = `[Framework: PAS (Problem, Agitate, Solution)] — `;
+        if (fw === 'BAB') prefix = `[Framework: Before-After-Bridge] — `;
+        if (fw === 'STORY') prefix = `[Framework: Hero Story Arc Hook] — `;
+        
+        topicInput.value = `${prefix}${current}`;
+        updateCharCount(topicInput.value);
+        showToast(`Framework ${fw} added to prompt!`, 'success');
+      }
+
+      // Generator Logic with Realistic Token Streaming
+      function handleGenerate(event) {
+        if (event) event.preventDefault();
+        
+        const topic = document.getElementById('prompt-topic').value.trim();
+        if (!topic) {
+          showToast('Silakan masukkan topik atau prompt terlebih dahulu!', 'error');
+          document.getElementById('prompt-topic').focus();
+          return;
+        }
+
+        const format = document.getElementById('prompt-format').value;
+        const tone = document.getElementById('prompt-tone').value;
+        const audience = document.getElementById('prompt-audience').value;
+        const language = document.getElementById('prompt-language').value;
+        const temp = parseFloat(document.getElementById('param-temp').value) || 0.7;
+        const system = document.getElementById('param-system').value.trim();
+
+        state.currentPromptDetails = {
+          topic, format, tone, audience, language, 
+          model: state.currentPromptDetails.model || 'Nova-4 Turbo',
+          temperature: temp,
+          systemPersona: system
+        };
+
+        const generatedContent = buildRichMockResponse(state.currentPromptDetails);
+        startStreamingSimulation(generatedContent);
+      }
+
+      // Content generation templates builder
+      function buildRichMockResponse(details) {
+        const { topic, format, tone, audience, language, model } = details;
+        const isIndo = language.includes('Indonesia') || language.includes('Bilingual');
+
+        if (format === 'twitter_thread') {
+          return `🧵 THREAD: ${topic}
+
+💡 Diadaptasi khusus untuk audiens: **${audience}**
+🎯 Tone: *${tone}* | Engine: \`${model}\`
+
+---
+
+1/6 🚀 **The Core Shift:**
+Banyak orang mengira kunci sukses adalah bekerja lebih keras. Faktanya, efisiensi eksponensial terjadi saat Anda mendesain arsitektur otomasi yang berjalan 24/7 tanpa henti.
+
+2/6 🔍 **Tahap Analisis & Bottleneck:**
+Identifikasi 3 tugas repetitif harian Anda:
+• Penyusunan draf pesan & komunikasi rutin
+• Pembersihan & formatting data mentah
+• Monitoring metrik performa manual
+
+3/6 ⚙️ **The Solution Architecture:**
+Integrasikan prompt pipeline bertingkat. Jangan gunakan 1 prompt raksasa, tapi bagi menjadi:
+1️⃣ *Parser:* Ekstraksi fakta inti
+2️⃣ *Synthesizer:* Format ke tone ${tone}
+3️⃣ *Validator:* Cek kualitas output
+
+4/6 📈 **Hasil Nyata (Case Study):**
+Pengguna sistem ini mencatatkan penghematan waktu hingga 18 jam/minggu dengan akurasi pengerjaan di atas 96%.
+
+5/6 🛠️ **Pro-Tip Eksekusi:**
+Simpan setiap prompt pemenang di **NovaNext Vault** agar tim dapat me-reuse standard operating procedure (SOP) secara instan.
+
+6/6 🎯 **Actionable Summary:**
+Jika Anda ingin mendominasi di 2026, jadikan AI sebagai multiplier kapasitas kognitif Anda.
+
+---
+🔁 *RT tweet pertama untuk membagikan wawasan ini ke jaringan Anda.*
+💬 *Tulis pertanyaan Anda di reply untuk diskusi teknis!*`;
+        }
+
+        if (format === 'blog_post') {
+          return `# ${topic}
+
+> **Ringkasan Eksekutif:** Panduan komprehensif yang dirancang untuk ${audience} dengan fokus pada implementasi taktis, efisiensi, dan dampak jangka panjang.
+
+---
+
+## 1. Pendahuluan & Latar Belakang
+
+Dalam lanskap industri modern yang bergerak dengan kecepatan tinggi, pendekatan konvensional tidak lagi memadai. Melalui pendekatan berbasis **${tone}**, artikel ini membedah bagaimana strategi terukur dapat menciptakan keunggulan kompetitif yang berkelanjutan.
+
+\`\`\`json
+{
+  "target_audience": "${audience}",
+  "confidence_score": 0.985,
+  "optimization_status": "Production-Ready"
+}
+\`\`\`
+
+## 2. Tiga Pilar Strategis
+
+Untuk mencapai hasil maksimal, terdapat 3 pilar yang wajib dieksekusi secara berurutan:
+
+1. **Struktur Fondasi Data:** Memastikan input data bersih, terstruktur, dan memiliki integritas tinggi.
+2. **Orkestrasi AI Workflow:** Menerapkan prompt chaining dengan parameter temperature yang terkalibrasi.
+3. **Continuous Feedback Loop:** Mengukur metriks output secara kuantitatif setiap siklus rilis.
+
+> *"Otomatisasi tanpa arah strategis hanyalah mempercepat terjadinya kekeliruan. Presisi adalah mata uang utama di era modern."*
+
+## 3. Matriks Komparasi Pendekatan
+
+| Parameter Evaluasi | Metode Tradisional | AI Workflow NovaNext |
+| :--- | :--- | :--- |
+| **Kecepatan Delivery** | 3-5 Hari Kerja | < 15 Menit |
+| **Konsistensi Tone** | Bervariasi (Subjektif) | 100% Sesuai Brand Guidelines |
+| **Skalabilitas Konten** | Terbatas Tenaga Kerja | Fleksibel & Tak Terbatas |
+
+## 4. Rekomendasi Aksi & Kesimpulan
+
+Bagi para **${audience}**, langkah pertama yang paling krusial adalah mendokumentasikan SOP dan mengujinya melalui lingkungan simulator sebelum meluncurkannya ke skala penuh.
+
+---
+*Dibuat otomatis oleh NovaNext Studio • Output Language: ${language}*`;
+        }
+
+        if (format === 'ad_copy') {
+          return `🎯 **HIGH-CONVERTING AD COPY MATRIX**
+**Produk / Penawaran:** ${topic}
+**Target Segment:** ${audience} | **Tone:** ${tone}
+
+---
+
+### 🟢 VARIAN 1: The Problem-Agitate-Solve (Meta / IG Ads)
+**Headline:** Capek Membuang Puluhan Jam untuk Pekerjaan Repetitif?
+**Primary Text:**
+Setiap hari ada ribuan jam kerja terbuang sia-sia hanya untuk hal manual. Saat kompetitor Anda sudah mengotomatisasi segalanya dengan AI, Anda masih berkutat di spreadsheet usang.
+
+Saatnya beralih ke solusi cerdas yang dirancang khusus untuk **${audience}**:
+✨ Tingkatkan output tim hingga 500%
+⚡ Setup instan dalam 3 menit tanpa ribet
+🔒 Keamanan data tingkat enterprise
+
+**CTA Button:** Coba Demo Gratis Sekarang 🚀
+
+---
+
+### 🔵 VARIAN 2: Direct Search Intent (Google Search Ads)
+- **Headline 1:** Solusi AI Terbaik untuk ${topic.slice(0, 25)}
+- **Headline 2:** Hemat Waktu & Biaya Operasional
+- **Headline 3:** Akurasi Tinggi & Hasil Instan
+- **Description:** Platform modern yang dipercaya ribuan profesional. Coba versi gratis hari ini dan rasakan perbedaannya.
+
+---
+
+### 🟣 VARIAN 3: Short Video Ad Hook (TikTok / Reels)
+- **Visual:** Split screen perbandingan stres manual vs santai dengan otomatisasi AI.
+- **Hook Voiceover (0-3 detik):** *"Trik rahasia yang tidak pernah diceritakan agensi besar kepada Anda..."*
+- **Body:** *"Gunakan sistem ini untuk mengotomatisasi alur konten Anda dalam hitungan detik."*
+- **Call-to-Action:** Tap tautan di bio untuk akses eksklusif hari ini!`;
+        }
+
+        if (format === 'linkedin_article') {
+          return `Saya mengamati pola yang sama di antara ratusan ${audience} selama 12 bulan terakhir.
+
+Hampir semuanya terjebak dalam perangkap yang sama ketika membicarakan: "${topic}".
+
+Berikut 3 realitas yang jarang dibicarakan di panggung konferensi:
+
+1. **Tools bukan solusi ajaib.**
+Memiliki AI tercanggih tidak ada gunanya jika alur kerja dasar Anda masih berantakan. AI hanya melipatgandakan sistem yang sudah ada.
+
+2. **Konsistensi mengalahkan intensitas sporadis.**
+Menerapkan sistem otomasi kecil yang berjalan setiap hari jauh lebih bernilai dibanding proyek raksasa yang tidak pernah tuntas.
+
+3. **Human-in-the-loop adalah keunggulan pamungkas.**
+Gunakan AI untuk draft dan struktur, gunakan intuisi manusia untuk empati, rasa, dan keputusan strategis.
+
+Bagaimana pandangan Anda mengenai implementasi ini di tim Anda? Mari berdiskusi di kolom komentar. 👇
+
+#Leadership #Productivity #AIInnovation #${format.replace('_', '')}`;
+        }
+
+        // Default generic high-quality output
+        return `## 🚀 Solusi Komprehensif: ${topic}
+
+**Target Persona:** ${audience}
+**Format:** ${format} | **Gaya Bahasa:** ${tone}
+
+---
+
+### Ringkasan Poin Kunci
+- **Strategi Inti:** Membangun fondasi yang kokoh dengan memanfaatkan kecerdasan generatif terstruktur.
+- **Tindakan Taktis:** Mengeksekusi secara bertahap mulai dari validasi konsep hingga distribusi multi-kanal.
+- **Dampak Kuantitatif:** Mengurangi beban waktu hingga 75% sekaligus meningkatkan retensi audiens.
+
+### Langkah-Langkah Eksekusi
+1. Definisikan tujuan bisnis secara spesifik (KPI jelas).
+2. Lakukan iterasi cepat menggunakan NovaNext AI Studio.
+3. Simpan parameter terbaik ke dalam Vault untuk standarisasi tim.
+
+---
+*Generated by NovaNext AI Engine • Ready to Copy & Export.*`;
+      }
+
+      // Streaming Text Animation Engine (Simulated Token-by-Token)
+      function startStreamingSimulation(fullText) {
+        if (state.isStreaming) stopStreaming();
+
+        state.isStreaming = true;
+        state.currentOutputText = '';
+
+        // UI Updates: Button state
+        const genBtn = document.getElementById('btn-generate');
+        const genText = document.getElementById('generate-btn-text');
+        const stopBtn = document.getElementById('btn-stop-stream');
+        const statusDot = document.getElementById('status-indicator-dot');
+        const statusText = document.getElementById('status-indicator-text');
+        const cursor = document.getElementById('streaming-cursor');
+        const renderedEl = document.getElementById('output-rendered');
+        const rawEl = document.getElementById('output-raw-textarea');
+
+        if (genBtn) genBtn.classList.add('opacity-75');
+        if (genText) genText.textContent = 'Streaming Generation...';
+        if (stopBtn) stopBtn.classList.remove('hidden');
+        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-cyan-400 animate-ping';
+        if (statusText) statusText.textContent = 'Generating Tokens...';
+        if (cursor) cursor.classList.remove('hidden');
+
+        // Split by words or small chunks for high realistic flow
+        const chunks = fullText.split(/(\s+|\n+)/);
+        let chunkIndex = 0;
+        const totalChunks = chunks.length;
+
+        // Metrics calculation initialization
+        state.metrics.promptTokens = Math.floor(state.currentPromptDetails.topic.length / 3.5) + 35;
+        state.metrics.completionTokens = 0;
+        const startTime = Date.now();
+
+        state.streamInterval = setInterval(() => {
+          if (chunkIndex >= totalChunks || !state.isStreaming) {
+            finishStreaming();
+            return;
+          }
+
+          // Append chunk
+          const currentChunk = chunks[chunkIndex];
+          state.currentOutputText += currentChunk;
+          chunkIndex++;
+
+          // Sound effect occasionally
+          if (chunkIndex % 6 === 0) playClickSound();
+
+          // Render updated text
+          renderedEl.innerHTML = parseMarkdownToHTML(state.currentOutputText);
+          if (rawEl) rawEl.value = state.currentOutputText;
+
+          // Update metrics on the fly
+          state.metrics.completionTokens = Math.floor(state.currentOutputText.length / 3.8);
+          state.metrics.totalTokens = state.metrics.promptTokens + state.metrics.completionTokens;
+          state.metrics.cost = (state.metrics.promptTokens * 0.0000015 + state.metrics.completionTokens * 0.000002).toFixed(5);
+          
+          const elapsedSec = (Date.now() - startTime) / 1000;
+          state.metrics.speed = elapsedSec > 0 ? Math.round(state.metrics.completionTokens / elapsedSec) : 120;
+          
+          updateStatusBarMetrics();
+
+          // Keep scrolling down in preview
+          renderedEl.parentElement.scrollTop = renderedEl.parentElement.scrollHeight;
+
+        }, 32); // fast responsive 32ms cadence
+      }
+
+      function stopStreaming() {
+        if (state.streamInterval) {
+          clearInterval(state.streamInterval);
+          state.streamInterval = null;
+        }
+        state.isStreaming = false;
+        finishStreaming(true);
+      }
+
+      function finishStreaming(wasStopped = false) {
+        if (state.streamInterval) {
+          clearInterval(state.streamInterval);
+          state.streamInterval = null;
+        }
+        state.isStreaming = false;
+
+        const genBtn = document.getElementById('btn-generate');
+        const genText = document.getElementById('generate-btn-text');
+        const stopBtn = document.getElementById('btn-stop-stream');
+        const statusDot = document.getElementById('status-indicator-dot');
+        const statusText = document.getElementById('status-indicator-text');
+        const cursor = document.getElementById('streaming-cursor');
+        const renderedEl = document.getElementById('output-rendered');
+
+        if (genBtn) genBtn.classList.remove('opacity-75');
+        if (genText) genText.textContent = 'Generate with AI Stream';
+        if (stopBtn) stopBtn.classList.add('hidden');
+        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+        if (statusText) statusText.textContent = wasStopped ? 'Stream Interrupted' : 'Stream Completed';
+        if (cursor) cursor.classList.add('hidden');
+
+        // Ensure final render
+        if (renderedEl) {
+          renderedEl.innerHTML = parseMarkdownToHTML(state.currentOutputText);
+        }
+        
+        populateThreadCards(state.currentOutputText);
+        updateStatusBarMetrics();
+
+        if (!wasStopped && state.currentOutputText.length > 50) {
+          playSuccessChime();
+          // Auto record to history
+          autoSaveToHistory();
+          showToast('Generasi AI selesai dan tersimpan ke Vault!', 'success');
+        }
+      }
+
+      // Auto-save generation to history
+      function autoSaveToHistory() {
+        const newItem = {
+          id: 'hist_' + Date.now(),
+          timestamp: Date.now(),
+          topic: state.currentPromptDetails.topic,
+          format: state.currentPromptDetails.format,
+          tone: state.currentPromptDetails.tone,
+          audience: state.currentPromptDetails.audience,
+          model: state.currentPromptDetails.model,
+          favorite: false,
+          words: state.metrics.words,
+          tokens: state.metrics.totalTokens,
+          content: state.currentOutputText
+        };
+
+        // Add to front of history
+        state.history.unshift(newItem);
+        if (state.history.length > 50) state.history.pop(); // Cap at 50
+        saveHistoryToDisk();
+      }
+
+      function saveCurrentToVault() {
+        if (!state.currentOutputText.trim()) {
+          showToast('Editor masih kosong untuk disimpan!', 'error');
+          return;
+        }
+        autoSaveToHistory();
+        showToast('Snapshot berhasil disimpan ke Vault!', 'success');
+      }
+
+      // Live Markdown Parser for rich formatted preview
+      function parseMarkdownToHTML(md) {
+        if (!md) return '';
+        let html = md
+          // Escape html basics
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+
+        // Code blocks ```code```
+        html = html.replace(/```([a-z]*)\n([\s\S]*?)```/gm, (match, lang, code) => {
+          return `<pre class="bg-slate-950 p-3 rounded-lg border border-slate-800 my-2 overflow-x-auto"><div class="text-[10px] text-brand-400 font-mono pb-1 border-b border-slate-800/80 mb-2">${lang || 'code'}</div><code class="text-xs text-cyan-300 font-mono">${code.trim()}</code></pre>`;
+        });
+
+        // Inline code `code`
+        html = html.replace(/`([^`]+)`/g, '<code class="bg-slate-900 text-cyan-300 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-800">$1</code>');
+
+        // Headers
+        html = html.replace(/^### (.*$)/gim, '<h3 class="text-sm font-bold text-slate-100 mt-4 mb-2 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2 class="text-base font-bold text-white mt-5 mb-2 pb-1 border-b border-slate-800">$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h1 class="text-lg font-extrabold text-white mt-2 mb-3 pb-2 border-b border-slate-800">$1</h1>');
+
+        // Blockquotes
+        html = html.replace(/^\> (.*$)/gim, '<blockquote class="border-l-4 border-brand-500 bg-brand-500/5 px-3 py-2 rounded-r-lg text-slate-300 my-2 text-xs italic">$1</blockquote>');
+
+        // Bold & Italic
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+        html = html.replace(/\*([^*]+)\*/g, '<em class="italic text-slate-300">$1</em>');
+
+        // Horizontal rules
+        html = html.replace(/^---$/gim, '<hr class="my-4 border-slate-800" />');
+
+        // Unordered lists
+        html = html.replace(/^\• (.*$)/gim, '<li class="ml-4 list-disc text-slate-300 my-1">$1</li>');
+        html = html.replace(/^- (.*$)/gim, '<li class="ml-4 list-disc text-slate-300 my-1">$1</li>');
+
+        // Tables simple parser
+        if (html.includes('|')) {
+          const lines = html.split('\n');
+          let inTable = false;
+          let tableHtml = '<div class="overflow-x-auto my-3"><table class="w-full text-xs text-left border-collapse border border-slate-800 rounded-lg">';
+          let newLines = [];
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('|') && line.endsWith('|')) {
+              if (line.includes('---')) continue; // skip separator
+              const cols = line.split('|').filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+              if (!inTable) {
+                inTable = true;
+                tableHtml += '<thead class="bg-slate-900 text-white font-bold"><tr>' + cols.map(c => `<th class="p-2 border border-slate-800">${c.trim()}</th>`).join('') + '</tr></thead><tbody>';
+              } else {
+                tableHtml += '<tr class="border-b border-slate-800/60 hover:bg-slate-900/40">' + cols.map(c => `<td class="p-2 border border-slate-800 text-slate-300">${c.trim()}</td>`).join('') + '</tr>';
+              }
+            } else {
+              if (inTable) {
+                inTable = false;
+                tableHtml += '</tbody></table></div>';
+                newLines.push(tableHtml);
+                tableHtml = '';
+              }
+              newLines.push(line);
+            }
+          }
+          if (inTable) {
+            tableHtml += '</tbody></table></div>';
+            newLines.push(tableHtml);
+          }
+          html = newLines.join('\n');
+        }
+
+        // Paragraph breaks
+        html = html.split('\n\n').map(p => {
+          if (p.trim().startsWith('<h') || p.trim().startsWith('<pre') || p.trim().startsWith('<block') || p.trim().startsWith('<div') || p.trim().startsWith('<hr') || p.trim().startsWith('<li')) {
+            return p;
+          }
+          return `<p class="my-2 leading-relaxed text-slate-200">${p.replace(/\n/g, '<br/>')}</p>`;
+        }).join('');
+
+        return html;
+      }
+
+      // Populate separate visual cards if output is broken down
+      function populateThreadCards(text) {
+        const container = document.getElementById('thread-cards-container');
+        if (!container) return;
+
+        // Split by numbered tweets like 1/6 or sections
+        const parts = text.split(/(?=\b\d+\/\d+)/g).filter(p => p.trim().length > 0);
+        if (parts.length > 1) {
+          container.innerHTML = parts.map((part, index) => {
+            return `
+              <div class="glass-panel p-4 rounded-xl border border-slate-800/80 hover:border-brand-500/40 transition">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/60">
+                  <span class="text-xs font-mono font-bold text-brand-400">Card #${index + 1}</span>
+                  <button onclick="App.copySingleCard(this)" class="text-[11px] text-slate-400 hover:text-white flex items-center gap-1">
+                    <i data-lucide="copy" class="w-3 h-3"></i> Copy
+                  </button>
+                </div>
+                <div class="prose-ai text-xs text-slate-200 leading-relaxed">${parseMarkdownToHTML(part.trim())}</div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          container.innerHTML = `
+            <div class="glass-panel p-5 rounded-xl border border-slate-800">
+              <div class="prose-ai text-xs text-slate-200 leading-relaxed">${parseMarkdownToHTML(text)}</div>
+            </div>
+          `;
+        }
+        lucide.createIcons();
+      }
+
+      function copySingleCard(btn) {
+        const text = btn.parentElement.nextElementSibling.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Card copied to clipboard!', 'success');
+        });
+      }
+
+      // Update Live Status Bar Metrics
+      function updateStatusBarMetrics() {
+        const text = state.currentOutputText || '';
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        state.metrics.words = words;
+        
+        // Reading time approx 200 wpm
+        const mins = Math.ceil(words / 200);
+        state.metrics.readingTime = `${mins} min${mins > 1 ? 's' : ''}`;
+
+        document.getElementById('counter-words').textContent = words;
+        document.getElementById('counter-prompt-tokens').textContent = state.metrics.promptTokens;
+        document.getElementById('counter-completion-tokens').textContent = state.metrics.completionTokens;
+        document.getElementById('counter-total-tokens').textContent = state.metrics.totalTokens;
+        document.getElementById('counter-cost').textContent = state.metrics.cost || '0.0000';
+        document.getElementById('counter-speed').textContent = state.metrics.speed;
+        document.getElementById('counter-readtime').textContent = state.metrics.readingTime;
+      }
+
+      // Switch View in Live Editor: Preview / Raw / Cards
+      function setEditorView(view) {
+        state.editorView = view;
+        ['preview', 'raw', 'cards'].forEach(v => {
+          const el = document.getElementById(`editor-view-${v}`);
+          const tabBtn = document.getElementById(`view-tab-${v}`);
+          if (el) {
+            if (v === view) {
+              el.classList.remove('hidden');
+              el.classList.add('block');
+            } else {
+              el.classList.add('hidden');
+              el.classList.remove('block');
+            }
+          }
+          if (tabBtn) {
+            if (v === view) {
+              tabBtn.className = "flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded bg-brand-600 text-white shadow";
+            } else {
+              tabBtn.className = "flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded text-slate-400 hover:text-white transition";
+            }
+          }
+        });
+
+        if (view === 'raw') {
+          const rawTextarea = document.getElementById('output-raw-textarea');
+          if (rawTextarea) rawTextarea.value = state.currentOutputText;
+        } else if (view === 'cards') {
+          populateThreadCards(state.currentOutputText);
+        } else {
+          const renderedEl = document.getElementById('output-rendered');
+          if (renderedEl) renderedEl.innerHTML = parseMarkdownToHTML(state.currentOutputText);
+        }
+        lucide.createIcons();
+      }
+
+      function onManualEditorChange(val) {
+        state.currentOutputText = val;
+        updateStatusBarMetrics();
+        const renderedEl = document.getElementById('output-rendered');
+        if (renderedEl) renderedEl.innerHTML = parseMarkdownToHTML(val);
+      }
+
+      // Quick AI Refinement Actions
+      function quickRefine(action) {
+        if (!state.currentOutputText.trim()) {
+          showToast('Buat konten terlebih dahulu sebelum melakukan polish!', 'error');
+          return;
+        }
+
+        showToast(`Applying AI Polish: "${action}"...`, 'info');
+        let refined = state.currentOutputText;
+
+        if (action === 'punchier') {
+          refined = `⚡ [PUNCHIER & HIGH RETENTION VERSION]\n\n` + refined
+            .replace(/\b(sangat|amat|cukup|mungkin)\b/gi, '')
+            .replace(/Banyak orang mengira/gi, '99% Founders Keliru:')
+            .replace(/Identifikasi 3/gi, 'Eksekusi 3 Hack Ini:');
+        } else if (action === 'expand') {
+          refined = refined + `\n\n### 🔍 Deep-Dive Implementation Breakdown:\n- **Teknis:** Konfigurasikan retry logic dengan exponential backoff.\n- **Risk Mitigation:** Batasi max token generation di level API Gateway.\n- **Metrik Evaluasi:** Evaluasi CSAT score mingguan pasca peluncuran.`;
+        } else if (action === 'emoji') {
+          refined = refined
+            .replace(/1\./g, '1️⃣ 🚀')
+            .replace(/2\./g, '2️⃣ 💡')
+            .replace(/3\./g, '3️⃣ ⚡')
+            .replace(/Kesimpulan/g, '🏁 **Key Takeaways & Kesimpulan**');
+        } else if (action === 'cta') {
+          refined = refined + `\n\n---\n🔥 **LIMITED ACTION TRIGGER:** Ingin implementasi sistem ini tanpa trial-error? Klik tombol di bawah & dapatkan template gratis hari ini juga!`;
+        } else if (action === 'translate_en_id') {
+          refined = `🌐 [BILINGUAL / LOCALIZED EXPANSION]\n\n` + refined + `\n\n---\n*English Summary:* This framework accelerates automated output while preserving enterprise-grade consistency.`;
+        }
+
+        startStreamingSimulation(refined);
+      }
+
+      // One-Click Copy to Clipboard with Visual Checkmark
+      function copyToClipboard() {
+        if (!state.currentOutputText.trim()) {
+          showToast('Tidak ada teks untuk disalin!', 'error');
+          return;
+        }
+
+        navigator.clipboard.writeText(state.currentOutputText).then(() => {
+          const btn = document.getElementById('btn-copy-output');
+          const icon = document.getElementById('copy-icon');
+          const text = document.getElementById('copy-text');
+
+          if (text) text.textContent = 'Copied!';
+          if (icon) icon.setAttribute('data-lucide', 'check');
+          if (btn) btn.classList.add('bg-emerald-600', 'text-white');
+          lucide.createIcons();
+
+          showToast('Berhasil disalin ke clipboard! (One-Click Copy)', 'success');
+
+          setTimeout(() => {
+            if (text) text.textContent = 'Copy';
+            if (icon) icon.setAttribute('data-lucide', 'copy');
+            if (btn) btn.classList.remove('bg-emerald-600', 'text-white');
+            lucide.createIcons();
+          }, 2000);
+        }).catch(() => {
+          showToast('Gagal menyalin teks.', 'error');
+        });
+      }
+
+      // Export file (.txt, .md, .json, .html)
+      function toggleExportMenu() {
+        const drop = document.getElementById('export-dropdown');
+        if (drop) drop.classList.toggle('hidden');
+      }
+
+      window.addEventListener('click', (e) => {
+        const drop = document.getElementById('export-dropdown');
+        if (drop && !drop.contains(e.target) && !e.target.closest('button[onclick="App.toggleExportMenu()"]')) {
+          drop.classList.add('hidden');
+        }
+      });
+
+      function exportFile(format) {
+        toggleExportMenu();
+        if (!state.currentOutputText.trim()) {
+          showToast('Konten masih kosong untuk diekspor!', 'error');
+          return;
+        }
+
+        let mimeType = 'text/plain';
+        let filename = `novanext_content_${Date.now()}.${format}`;
+        let fileContent = state.currentOutputText;
+
+        if (format === 'json') {
+          mimeType = 'application/json';
+          fileContent = JSON.stringify({
+            generated_at: new Date().toISOString(),
+            engine: state.currentPromptDetails.model,
+            parameters: state.currentPromptDetails,
+            metrics: state.metrics,
+            content: state.currentOutputText
+          }, null, 2);
+        } else if (format === 'html') {
+          mimeType = 'text/html';
+          fileContent = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>NovaNext Export</title><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.6;color:#1e293b;}</style></head><body>${parseMarkdownToHTML(state.currentOutputText)}</body></html>`;
+        }
+
+        const blob = new Blob([fileContent], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showToast(`Dokumen .${format} berhasil didownload!`, 'success');
+      }
+
+      function clearWorkspace() {
+        if (!state.currentOutputText.trim()) return;
+        state.currentOutputText = '';
+        document.getElementById('output-rendered').innerHTML = `
+          <div class="py-12 flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+              <i data-lucide="edit-3" class="w-6 h-6"></i>
+            </div>
+            <p class="text-xs text-slate-400">Workspace telah dibersihkan. Buat prompt baru di sisi kiri.</p>
+          </div>
+        `;
+        if (document.getElementById('output-raw-textarea')) {
+          document.getElementById('output-raw-textarea').value = '';
+        }
+        updateStatusBarMetrics();
+        lucide.createIcons();
+        showToast('Workspace editor dibersihkan.', 'info');
+      }
+
+      function resetForm() {
+        document.getElementById('generator-form').reset();
+        document.getElementById('prompt-format').value = 'twitter_thread';
+        document.getElementById('prompt-tone').value = 'Persuasive & Engaging';
+        document.getElementById('prompt-audience').value = 'Tech Founders & Startups';
+        document.getElementById('prompt-language').value = 'Bahasa Indonesia';
+        document.getElementById('param-temp').value = '0.7';
+        document.getElementById('temp-val').textContent = '0.7';
+        updateCharCount('');
+        showToast('Formulir parameter direset ke default.', 'info');
+      }
+
+      // Presets & Templates Modal
+      function openTemplateModal() {
+        renderPresetModal();
+        document.getElementById('template-modal').classList.remove('hidden');
+      }
+
+      function closeTemplateModal() {
+        document.getElementById('template-modal').classList.add('hidden');
+      }
+
+      function renderPresetModal() {
+        const container = document.getElementById('template-list-container');
+        if (!container) return;
+
+        container.innerHTML = state.presets.map(p => `
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-brand-500/50 transition flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">${p.category}</span>
+                <span class="text-[10px] text-slate-500">${p.format.replace('_', ' ')}</span>
+              </div>
+              <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-brand-300 transition">${p.title}</h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">${p.desc}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+              <span class="text-[10px] text-slate-500 italic truncate max-w-[150px]">${p.audience}</span>
+              <button onclick="App.applyPreset('${p.id}'); App.closeTemplateModal();" class="px-3 py-1 text-xs font-semibold rounded-lg bg-brand-600 hover:bg-brand-500 text-white shadow transition flex items-center gap-1">
+                <span>Use Preset</span>
+                <i data-lucide="arrow-right" class="w-3 h-3"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+        lucide.createIcons();
+      }
+
+      function applyPreset(presetId) {
+        const p = state.presets.find(x => x.id === presetId);
+        if (!p) return;
+
+        document.getElementById('prompt-topic').value = p.topic;
+        document.getElementById('prompt-format').value = p.format;
+        document.getElementById('prompt-tone').value = p.tone;
+        document.getElementById('prompt-audience').value = p.audience;
+        updateCharCount(p.topic);
+
+        showToast(`Preset "${p.title}" dimuat!`, 'success');
+      }
+
+      function triggerDemoGenerate() {
+        setTimeout(() => {
+          handleGenerate();
+        }, 100);
+      }
+
+      // History Vault Render & Management
+      function renderHistoryGrid() {
+        const grid = document.getElementById('history-items-grid');
+        const emptyState = document.getElementById('history-empty-state');
+        if (!grid) return;
+
+        let filtered = state.history;
+        if (state.historyFilter === 'favorite') {
+          filtered = filtered.filter(item => item.favorite);
+        } else if (state.historyFilter !== 'all') {
+          filtered = filtered.filter(item => item.format === state.historyFilter);
+        }
+
+        const searchQuery = (document.getElementById('history-search')?.value || '').toLowerCase();
+        if (searchQuery) {
+          filtered = filtered.filter(item => 
+            item.topic.toLowerCase().includes(searchQuery) ||
+            item.content.toLowerCase().includes(searchQuery) ||
+            item.format.toLowerCase().includes(searchQuery)
+          );
+        }
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          if (emptyState) emptyState.classList.remove('hidden');
+          return;
+        }
+
+        if (emptyState) emptyState.classList.add('hidden');
+
+        grid.innerHTML = filtered.map(item => {
+          const dateStr = new Date(item.timestamp).toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+
+          return `
+            <div class="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 flex flex-col justify-between transition shadow-lg">
+              <div>
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80">
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-brand-300 uppercase">${item.format.replace('_', ' ')}</span>
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="App.toggleFavorite('${item.id}')" title="Toggle Favorite" class="p-1 rounded text-slate-400 hover:text-amber-400">
+                      <i data-lucide="star" class="w-3.5 h-3.5 ${item.favorite ? 'text-amber-400 fill-amber-400' : ''}"></i>
+                    </button>
+                    <button onclick="App.deleteHistoryItem('${item.id}')" title="Delete snapshot" class="p-1 rounded text-slate-400 hover:text-rose-400">
+                      <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <h3 class="font-bold text-xs sm:text-sm text-white line-clamp-2">${item.topic}</h3>
+                <div class="text-[11px] text-slate-400 mt-2 bg-slate-950 p-2.5 rounded-lg line-clamp-3 font-mono border border-slate-900">
+                  ${item.content.replace(/[#*`]/g, '')}
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-[10px] text-slate-500 font-mono">${dateStr}</span>
+                <div class="flex items-center gap-2">
+                  <button onclick="App.copyHistoryContent('${item.id}')" class="px-2.5 py-1 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-300">
+                    Copy
+                  </button>
+                  <button onclick="App.restoreToEditor('${item.id}')" class="px-2.5 py-1 text-[11px] font-semibold rounded bg-brand-600 hover:bg-brand-500 text-white">
+                    Load in Studio
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        lucide.createIcons();
+      }
+
+      function filterHistory(val) {
+        renderHistoryGrid();
+      }
+
+      function setHistoryFilter(f) {
+        state.historyFilter = f;
+        ['all', 'favorite', 'twitter', 'blog', 'ad'].forEach(btnKey => {
+          const btn = document.getElementById(`hist-filter-${btnKey}`);
+          if (btn) {
+            if ((f === 'all' && btnKey === 'all') ||
+                (f === 'favorite' && btnKey === 'favorite') ||
+                (f === 'twitter_thread' && btnKey === 'twitter') ||
+                (f === 'blog_post' && btnKey === 'blog') ||
+                (f === 'ad_copy' && btnKey === 'ad')) {
+              btn.className = "px-3 py-1 rounded-lg bg-brand-600 text-white font-medium";
+            } else {
+              btn.className = "px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white";
+            }
+          }
+        });
+        renderHistoryGrid();
+      }
+
+      function toggleFavorite(id) {
+        const item = state.history.find(h => h.id === id);
+        if (item) {
+          item.favorite = !item.favorite;
+          saveHistoryToDisk();
+          renderHistoryGrid();
+          showToast(item.favorite ? 'Ditambahkan ke favorit ⭐' : 'Dihapus dari favorit', 'info');
+        }
+      }
+
+      function deleteHistoryItem(id) {
+        state.history = state.history.filter(h => h.id !== id);
+        saveHistoryToDisk();
+        renderHistoryGrid();
+        showToast('Riwayat prompt berhasil dihapus.', 'info');
+      }
+
+      function clearAllHistoryConfirm() {
+        openConfirmModal('Hapus Semua Riwayat Vault?', 'Semua prompt yang tersimpan di localStorage akan dihapus permanen.', (confirmed) => {
+          if (confirmed) {
+            state.history = [];
+            saveHistoryToDisk();
+            renderHistoryGrid();
+            showToast('Semua riwayat telah dihapus.', 'info');
+          }
+        });
+      }
+
+      function restoreToEditor(id) {
+        const item = state.history.find(h => h.id === id);
+        if (!item) return;
+
+        state.currentOutputText = item.content;
+        state.currentPromptDetails = {
+          topic: item.topic,
+          format: item.format || 'twitter_thread',
+          tone: item.tone || 'Persuasive & Engaging',
+          audience: item.audience || 'Tech Founders & Startups',
+          language: 'Bahasa Indonesia',
+          model: item.model || 'Nova-4 Turbo'
+        };
+
+        // Populate fields
+        document.getElementById('prompt-topic').value = item.topic;
+        document.getElementById('prompt-format').value = item.format;
+        updateCharCount(item.topic);
+
+        switchMainTab('generator');
+        const renderedEl = document.getElementById('output-rendered');
+        if (renderedEl) renderedEl.innerHTML = parseMarkdownToHTML(item.content);
+        if (document.getElementById('output-raw-textarea')) {
+          document.getElementById('output-raw-textarea').value = item.content;
+        }
+
+        updateStatusBarMetrics();
+        showToast('Riwayat berhasil dimuat ke workspace editor!', 'success');
+      }
+
+      function copyHistoryContent(id) {
+        const item = state.history.find(h => h.id === id);
+        if (item) {
+          navigator.clipboard.writeText(item.content).then(() => {
+            showToast('Riwayat berhasil disalin!', 'success');
+          });
+        }
+      }
+
+      // Automated Workflow Chain Engine
+      function runFullWorkflow() {
+        const topic = document.getElementById('prompt-topic').value.trim() || 'AI Multi-Agent Workflow Engine for Modern SaaS';
+        showToast('Memulai eksekusi pipeline rantai otomatis (4 Steps)...', 'info');
+        
+        const btn = document.getElementById('btn-run-workflow');
+        if (btn) btn.disabled = true;
+
+        // Step 1
+        document.getElementById('step-1-status').textContent = 'Executing...';
+        document.getElementById('step-1-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-brand-500/20 text-brand-300 animate-pulse';
+        document.getElementById('step-1-result').innerHTML = '<span class="text-brand-400">Synthesizing 3 high-impact angles...</span>';
+
+        setTimeout(() => {
+          document.getElementById('step-1-status').textContent = 'Completed';
+          document.getElementById('step-1-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+          document.getElementById('step-1-result').innerHTML = `✅ <strong>Angle Terpilih:</strong> Solusi Autonomous Pipeline yang memangkas latensi delivery 10x untuk B2B SaaS.`;
+          playClickSound();
+
+          // Step 2
+          document.getElementById('step-2-status').textContent = 'Structuring...';
+          document.getElementById('step-2-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 animate-pulse';
+          document.getElementById('step-2-result').innerHTML = '<span class="text-indigo-400">Drafting H2/H3 outline tree...</span>';
+
+          setTimeout(() => {
+            document.getElementById('step-2-status').textContent = 'Completed';
+            document.getElementById('step-2-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+            document.getElementById('step-2-result').innerHTML = `✅ <strong>Outline Selesai:</strong><br/>1. The SaaS Scaling Bottleneck<br/>2. Agentic Chaining Deep-Dive<br/>3. Benchmark ROI & Takeaways`;
+            playClickSound();
+
+            // Step 3
+            document.getElementById('step-3-status').textContent = 'Drafting...';
+            document.getElementById('step-3-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 animate-pulse';
+            document.getElementById('step-3-result').innerHTML = '<span class="text-cyan-400">Generating comprehensive prose draft...</span>';
+
+            setTimeout(() => {
+              document.getElementById('step-3-status').textContent = 'Completed';
+              document.getElementById('step-3-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+              document.getElementById('step-3-result').innerHTML = `✅ <strong>Master Draft Generated:</strong> 1,240 words of technical copy ready.`;
+              playClickSound();
+
+              // Step 4
+              document.getElementById('step-4-status').textContent = 'Repurposing...';
+              document.getElementById('step-4-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 animate-pulse';
+              document.getElementById('step-4-result').innerHTML = '<span class="text-purple-400">Generating Tweet Thread + LinkedIn + Email Broadcast...</span>';
+
+              setTimeout(() => {
+                document.getElementById('step-4-status').textContent = 'Completed';
+                document.getElementById('step-4-status').className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300';
+                document.getElementById('step-4-result').innerHTML = `✅ <strong>Repurposed Suite Ready:</strong> 1 𝕏 Thread + 1 LinkedIn Post + 1 Email CTA.`;
+                playSuccessChime();
+
+                // Aggregate Preview
+                const master = `🚀 MASTER WORKFLOW CHAIN DELIVERABLE
+Topik: ${topic}
+Eksekusi Selesai dalam 4.2 Detik (Otomasi Terpadu)
+
+=== STAGE 1: ANGLE & VALUE PROP ===
+Angle: Autonomous AI Pipeline untuk B2B SaaS Founders.
+
+=== STAGE 2 & 3: LONG FORM PILLAR POST ===
+# Membangun Autonomous Workflow di 2026: Blueprint Tanpa Hambatan
+Otomatisasi sejati bukanlah sekadar memanggil API, melainkan merancang sistem feedback loop yang memvalidasi setiap tahapan generasi sebelum dipublikasikan.
+
+=== STAGE 4: DISTRIBUTION REPURPOSING ===
+[Twitter / X Thread Hook]:
+🧵 Bagaimana kami memangkas 80% jam kerja tim konten menggunakan rantai 4-tahap NovaNext AI Studio. (Buka tweet untuk blueprint lengkap 👇)
+
+[Email Newsletter Subject]:
+[Exclusive] Blueprint Otomatisasi AI 2026 untuk Tim Anda ⚡`;
+
+                document.getElementById('workflow-master-preview').textContent = master;
+                if (btn) btn.disabled = false;
+                showToast('Rantai pipeline berhasil dieksekusi 100%!', 'success');
+              }, 900);
+            }, 900);
+          }, 900);
+        }, 800);
+      }
+
+      function transferWorkflowToEditor() {
+        const text = document.getElementById('workflow-master-preview').textContent;
+        if (!text || text.includes('Klik tombol')) {
+          showToast('Jalankan pipeline terlebih dahulu!', 'error');
+          return;
+        }
+
+        state.currentOutputText = text;
+        switchMainTab('generator');
+        const renderedEl = document.getElementById('output-rendered');
+        if (renderedEl) renderedEl.innerHTML = parseMarkdownToHTML(text);
+        updateStatusBarMetrics();
+        showToast('Hasil workflow berhasil ditransfer ke studio editor!', 'success');
+      }
+
+      // Model Arena / Benchmark Comparator
+      function runModelComparison() {
+        const topic = document.getElementById('prompt-topic').value.trim() || 'Jelaskan perbedaan Machine Learning vs Deep Learning dalam 3 analogi sederhana';
+        showToast('Menjalankan benchmark model komparatif side-by-side...', 'info');
+
+        const elA = document.getElementById('arena-output-a');
+        const elB = document.getElementById('arena-output-b');
+
+        elA.textContent = 'Streaming Model A (Nova-4 Turbo)...\n';
+        elB.textContent = 'Streaming Model B (GPT-4o Reasoning)...\n';
+
+        let outA = `⚡ [NOVA-4 TURBO OUTPUT] — Topik: ${topic}\n\n1. Analogi Memasak:\n• ML: Resep manual dengan bumbu yang disesuaikan takarannya.\n• DL: AI Chef yang mencicipi 10.000 masakan dan menciptakan resep sendiri.\n\n2. Analogi Berkendara:\n• ML: Mobil dengan cruise control berbasis aturan sensor.\n• DL: Mobil autopilot yang memprediksi perilaku pejalan kaki.\n\n3. Analogi Diagnostik:\n• ML: Cek suhu & tekanan darah dengan aturan ambang batas.\n• DL: Pemindaian MRI neural network mengenali pola piksel mikroskopis.\n\n✨ Keunggulan: Kecepatan tinggi (140 tok/s), biaya 70% lebih terjangkau.`;
+        let outB = `🧠 [GPT-4O REASONING OUTPUT] — Topik: ${topic}\n\nAnalisis Komparatif Mendalam:\n\n1. Level Ekstraksi Fitur (Feature Engineering):\nPada Classical ML, insinyur manusia harus mengekstraksi fitur manual. Sedangkan Deep Learning memanfaatkan representasi hierarkis berlapis (deep neural networks).\n\n2. Kebutuhan Volume Data:\nML bekerja efektif pada ribuan baris tabular data, sedangkan DL membutuhkan jutaan titik data tidak terstruktur (gambar, audio, teks bebas).\n\n3. Kejelasan Inferensi (Interpretability):\nModel ML tradisional (seperti Random Forest) lebih mudah diaudit dibanding arsitektur black-box DL yang kompleks.`;
+
+        let idxA = 0, idxB = 0;
+        const intA = setInterval(() => {
+          if (idxA >= outA.length) {
+            clearInterval(intA);
+          } else {
+            elA.textContent = outA.slice(0, idxA + 4);
+            idxA += 4;
+          }
+        }, 20);
+
+        const intB = setInterval(() => {
+          if (idxB >= outB.length) {
+            clearInterval(intB);
+            playSuccessChime();
+            showToast('Benchmark Model Arena selesai!', 'success');
+          } else {
+            elB.textContent = outB.slice(0, idxB + 2);
+            idxB += 2;
+          }
+        }, 30);
+      }
+
+      function copyArenaOutput(which) {
+        const text = which === 'a' ? document.getElementById('arena-output-a').innerText : document.getElementById('arena-output-b').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`Output Model ${which.toUpperCase()} berhasil disalin!`, 'success');
+        });
+      }
+
+      // Command Palette (CMD+K / Quick Search)
+      function openCommandPalette() {
+        const modal = document.getElementById('command-palette-modal');
+        const input = document.getElementById('cmd-input');
+        if (modal) {
+          modal.classList.remove('hidden');
+          if (input) {
+            input.value = '';
+            input.focus();
+            filterCommands('');
+          }
+        }
+      }
+
+      function closeCommandPalette() {
+        const modal = document.getElementById('command-palette-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      const availableCommands = [
+        { label: '🚀 Generate Content (AI Stream)', action: () => { App.switchMainTab('generator'); App.handleGenerate(); }, icon: 'sparkles' },
+        { label: '𝕏 Load Viral Twitter Thread Preset', action: () => { App.switchMainTab('generator'); App.applyPreset('twitter_viral'); }, icon: 'twitter' },
+        { label: '📝 Load SEO Blog Article Preset', action: () => { App.switchMainTab('generator'); App.applyPreset('seo_blog'); }, icon: 'file-text' },
+        { label: '🎯 Load High-Converting Ad Copy Preset', action: () => { App.switchMainTab('generator'); App.applyPreset('ad_copy'); }, icon: 'target' },
+        { label: '📋 One-Click Copy Current Content', action: () => App.copyToClipboard(), icon: 'copy' },
+        { label: '💾 Save Snapshot to Vault', action: () => App.saveCurrentToVault(), icon: 'save' },
+        { label: '⬇️ Export as Plain Text (.txt)', action: () => App.exportFile('txt'), icon: 'download' },
+        { label: '⬇️ Export as Markdown (.md)', action: () => App.exportFile('md'), icon: 'download' },
+        { label: '⬇️ Export as JSON (.json)', action: () => App.exportFile('json'), icon: 'code' },
+        { label: '⚡ Run Model Arena Benchmark', action: () => { App.switchMainTab('comparator'); App.runModelComparison(); }, icon: 'split' },
+        { label: '🔄 Run 4-Step Workflow Pipeline', action: () => { App.switchMainTab('workflow'); App.runFullWorkflow(); }, icon: 'git-merge' },
+        { label: '📂 Open Presets Library Modal', action: () => App.openTemplateModal(), icon: 'layout-template' },
+        { label: '🧹 Clear Workspace Editor', action: () => App.clearWorkspace(), icon: 'trash-2' }
+      ];
+
+      function filterCommands(query) {
+        const container = document.getElementById('cmd-results');
+        if (!container) return;
+        const q = query.toLowerCase();
+        const matches = availableCommands.filter(c => c.label.toLowerCase().includes(q));
+
+        if (matches.length === 0) {
+          container.innerHTML = '<div class="p-3 text-center text-slate-500 text-xs">No matching commands found</div>';
+          return;
+        }
+
+        container.innerHTML = matches.map((cmd, i) => `
+          <button onclick="App.runCommand(${availableCommands.indexOf(cmd)})" class="w-full text-left p-2.5 rounded-lg hover:bg-brand-600 hover:text-white text-slate-200 text-xs flex items-center justify-between group transition">
+            <span class="flex items-center gap-2">
+              <i data-lucide="${cmd.icon}" class="w-4 h-4 text-brand-400 group-hover:text-white"></i>
+              <span>${cmd.label}</span>
+            </span>
+            <span class="text-[10px] text-slate-500 group-hover:text-brand-200">Select ↵</span>
+          </button>
+        `).join('');
+        lucide.createIcons();
+      }
+
+      function runCommand(index) {
+        closeCommandPalette();
+        if (availableCommands[index]) {
+          availableCommands[index].action();
+        }
+      }
+
+      // Confirmation Modal
+      function openConfirmModal(title, desc, callback) {
+        state.confirmCallback = callback;
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-desc').textContent = desc;
+        document.getElementById('confirm-modal').classList.remove('hidden');
+      }
+
+      function closeConfirmModal(confirmed) {
+        document.getElementById('confirm-modal').classList.add('hidden');
+        if (typeof state.confirmCallback === 'function') {
+          state.confirmCallback(confirmed);
+          state.confirmCallback = null;
+        }
+      }
+
+      function toggleSound() {
+        state.soundEnabled = !state.soundEnabled;
+        const icon = document.getElementById('sound-icon');
+        if (icon) {
+          if (state.soundEnabled) {
+            icon.className = 'w-4 h-4 text-emerald-400';
+            showToast('AI Sound Synthesis: AKTIF 🔊', 'info');
+          } else {
+            icon.className = 'w-4 h-4 text-slate-500';
+            showToast('AI Sound Synthesis: MUTE 🔇', 'info');
+          }
+        }
+      }
+
+      // Keyboard Shortcuts Listener (Cmd+K / Ctrl+K, Escape)
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          openCommandPalette();
+        }
+        if (e.key === 'Escape') {
+          closeCommandPalette();
+          closeTemplateModal();
+          closeConfirmModal(false);
+        }
+      });
+
+      // Initialization Lifecycle
+      function init() {
+        loadHistory();
+        lucide.createIcons();
+        console.log("%cNovaNext AI Studio Initialized Successfully", "color:#6366f1; font-weight:bold; font-size:14px;");
+      }
+
+      return {
+        init,
+        switchMainTab,
+        toggleMobileDrawer,
+        toggleAdvanced,
+        onModelChange,
+        updateCharCount,
+        insertPromptChip,
+        applyFramework,
+        handleGenerate,
+        stopStreaming,
+        setEditorView,
+        onManualEditorChange,
+        quickRefine,
+        copyToClipboard,
+        toggleExportMenu,
+        exportFile,
+        saveCurrentToVault,
+        clearWorkspace,
+        resetForm,
+        openTemplateModal,
+        closeTemplateModal,
+        applyPreset,
+        triggerDemoGenerate,
+        filterHistory,
+        setHistoryFilter,
+        toggleFavorite,
+        deleteHistoryItem,
+        clearAllHistoryConfirm,
+        restoreToEditor,
+        copyHistoryContent,
+        runFullWorkflow,
+        transferWorkflowToEditor,
+        runModelComparison,
+        copyArenaOutput,
+        openCommandPalette,
+        closeCommandPalette,
+        filterCommands,
+        runCommand,
+        openConfirmModal,
+        closeConfirmModal,
+        toggleSound,
+        copySingleCard
+      };
+    })();
+
+    // Initialize application when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+  </script>
+</body>
+</html>

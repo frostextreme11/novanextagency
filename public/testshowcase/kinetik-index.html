@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINETIK // Experiential Creative Agency & Event Production</title>
+  
+  <!-- Fonts: Syne (Ultra-bold display) & Plus Jakarta Sans / Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            neon: {
+              lime: '#D4FF00',
+              violet: '#A855F7',
+              cyan: '#00F0FF',
+              pink: '#FF007A'
+            },
+            dark: {
+              950: '#060709',
+              900: '#0B0D12',
+              850: '#11141B',
+              800: '#171B24',
+              700: '#232936'
+            }
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace']
+          },
+          animation: {
+            'marquee': 'marquee 22s linear infinite',
+            'marquee-reverse': 'marquee-rev 22s linear infinite',
+            'pulse-glow': 'pulseGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'spin-slow': 'spin 18s linear infinite'
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' }
+            },
+            'marquee-rev': {
+              '0%': { transform: 'translateX(-50%)' },
+              '100%': { transform: 'translateX(0%)' }
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4', filter: 'drop-shadow(0 0 15px rgba(212,255,0,0.4))' },
+              '50%': { opacity: '0.8', filter: 'drop-shadow(0 0 35px rgba(168,85,247,0.7))' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti for Interactive Brief Completion -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Custom Brutalist & Cyber aesthetic overrides */
+    ::selection {
+      background-color: #D4FF00;
+      color: #060709;
+    }
+    
+    /* Noise texture overlay */
+    .bg-noise {
+      background-image: radial-gradient(rgba(212, 255, 0, 0.05) 1px, transparent 0);
+      background-size: 28px 28px;
+    }
+
+    .brutalist-border {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .brutalist-border-neon {
+      border: 1px solid #D4FF00;
+    }
+    .brutalist-shadow {
+      box-shadow: 4px 4px 0px 0px #D4FF00;
+    }
+    .brutalist-shadow-violet {
+      box-shadow: 5px 5px 0px 0px #A855F7;
+    }
+    .brutalist-shadow-white {
+      box-shadow: 4px 4px 0px 0px #ffffff;
+    }
+    .brutalist-shadow-sm {
+      box-shadow: 2px 2px 0px 0px #D4FF00;
+    }
+
+    /* Custom Cursor */
+    @media (pointer: fine) {
+      body {
+        cursor: none;
+      }
+      a, button, input, select, textarea, [role="button"], label {
+        cursor: none;
+      }
+    }
+
+    #custom-cursor-dot, #custom-cursor-ring {
+      pointer-events: none;
+      position: fixed;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s, transform 0.08s ease-out;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060709;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #232936;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D4FF00;
+    }
+
+    /* Glitch text effect on hover */
+    .glitch-hover:hover {
+      text-shadow: 2px 0 #D4FF00, -2px 0 #A855F7;
+    }
+
+    /* Glass brutalism */
+    .glass-panel {
+      background: rgba(11, 13, 18, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-white font-sans antialiased overflow-x-hidden relative selection:bg-neon-lime selection:text-dark-950">
+
+  <!-- Custom Cursor Elements -->
+  <div id="custom-cursor-dot" class="w-3 h-3 bg-neon-lime rounded-full hidden md:block"></div>
+  <div id="custom-cursor-ring" class="w-9 h-9 border-2 border-neon-lime/60 rounded-full hidden md:block"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none max-w-sm w-full"></div>
+
+  <!-- Sticky Top Prototype Announcement Badge (Global Standard) -->
+  <div class="bg-dark-900 brutalist-border border-b border-neon-lime/30 text-xs py-1.5 px-4 font-mono z-50 relative flex items-center justify-between text-neutral-300">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-neon-lime/10 text-neon-lime border border-neon-lime/30 font-bold uppercase tracking-wider text-[10px]">
+        <span class="w-1.5 h-1.5 rounded-full bg-neon-lime animate-ping"></span>
+        Demo Prototype by NovaNext
+      </span>
+      <span class="hidden sm:inline text-neutral-400">| Project 17: Experiential Creative Agency & Festival Production</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="hidden md:flex items-center gap-1.5 text-neutral-400">
+        <i data-lucide="cpu" class="w-3.5 h-3.5 text-neon-violet"></i>
+        <span>Engine: <span class="text-white">v3.8 HyperLive</span></span>
+      </span>
+      <button onclick="BriefEngine.quickDemoBrief()" class="hover:text-neon-lime underline transition-colors cursor-pointer text-[11px] font-bold text-neon-lime flex items-center gap-1">
+        <i data-lucide="sparkles" class="w-3 h-3"></i> Auto-Fill Brief
+      </button>
+    </div>
+  </div>
+
+  <!-- Master Navigation Header -->
+  <header class="sticky top-0 z-40 glass-panel border-b border-white/10 transition-all duration-300" id="main-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 bg-neon-lime flex items-center justify-center font-display font-black text-2xl text-dark-950 transition-transform group-hover:scale-105 group-hover:rotate-3 shadow-[2px_2px_0px_0px_#A855F7]">
+          K
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-black text-xl tracking-tighter leading-none text-white flex items-center gap-1">
+            KINETIK <span class="text-neon-lime">.</span><span class="text-xs tracking-widest text-neon-violet font-mono font-normal">AGENCY</span>
+          </span>
+          <span class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase">Experiential & World Building</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
+        <a href="#cases" class="text-neutral-300 hover:text-neon-lime transition-colors uppercase tracking-wider text-xs font-mono">Case Studies</a>
+        <a href="#reel" class="text-neutral-300 hover:text-neon-lime transition-colors uppercase tracking-wider text-xs font-mono flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-neon-pink animate-pulse"></span> Experience Reel
+        </a>
+        <a href="#services" class="text-neutral-300 hover:text-neon-lime transition-colors uppercase tracking-wider text-xs font-mono">Capabilities</a>
+        <a href="#brief-builder" class="text-neutral-300 hover:text-neon-lime transition-colors uppercase tracking-wider text-xs font-mono">Brief Builder</a>
+        <a href="#reviews" class="text-neutral-300 hover:text-neon-lime transition-colors uppercase tracking-wider text-xs font-mono">Reviews</a>
+      </nav>
+
+      <!-- Action Buttons & Drawer Toggle -->
+      <div class="flex items-center gap-3">
+        <!-- Interactive Brief Trigger CTA -->
+        <a href="#brief-builder" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-neon-lime text-dark-950 font-display font-extrabold text-sm brutalist-shadow hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase tracking-wider">
+          <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
+          <span>Launch Project Brief</span>
+        </a>
+
+        <!-- Stored Saved Briefs Counter Indicator -->
+        <button onclick="BriefEngine.openBriefReviewModal()" class="relative p-2.5 bg-dark-850 hover:bg-dark-800 border border-white/10 hover:border-neon-lime text-white transition-all flex items-center justify-center">
+          <i data-lucide="clipboard-list" class="w-5 h-5 text-neon-lime"></i>
+          <span id="nav-brief-badge" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-neon-violet text-white text-[10px] font-mono font-bold rounded-full flex items-center justify-center brutalist-border">0</span>
+        </button>
+
+        <!-- Mobile Drawer Hamburger -->
+        <button id="mobile-menu-btn" onclick="UIEngine.toggleDrawer()" class="lg:hidden p-2.5 bg-dark-850 border border-white/10 text-white hover:text-neon-lime focus:outline-none">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Off-canvas Navigation Drawer -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 transform translate-x-full transition-transform duration-300 ease-in-out lg:hidden flex">
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" onclick="UIEngine.toggleDrawer()"></div>
+    <div class="relative ml-auto w-full max-w-xs bg-dark-900 border-l border-white/10 p-6 flex flex-col justify-between h-full z-10">
+      <div>
+        <div class="flex items-center justify-between pb-6 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 bg-neon-lime"></span>
+            <span class="font-display font-black tracking-tight text-lg">KINETIK LABS</span>
+          </div>
+          <button onclick="UIEngine.toggleDrawer()" class="text-neutral-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-4 font-mono text-sm">
+          <a href="#hero" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors">01 // HOME</a>
+          <a href="#cases" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors">02 // CASE METRICS</a>
+          <a href="#reel" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors flex items-center justify-between">
+            <span>03 // EXPERIENCE REEL</span>
+            <span class="text-[10px] px-1.5 py-0.5 bg-neon-pink/20 text-neon-pink border border-neon-pink/40">LIVE</span>
+          </a>
+          <a href="#services" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors">04 // CAPABILITIES</a>
+          <a href="#brief-builder" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors">05 // BRIEF BUILDER</a>
+          <a href="#reviews" onclick="UIEngine.toggleDrawer()" class="py-2 text-neutral-300 hover:text-neon-lime transition-colors">06 // TESTIMONIALS</a>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-white/10">
+        <a href="#brief-builder" onclick="UIEngine.toggleDrawer()" class="w-full py-3 bg-neon-lime text-dark-950 text-center font-display font-extrabold uppercase text-sm block brutalist-shadow">
+          Start Interactive Brief
+        </a>
+        <div class="mt-4 text-center font-mono text-[11px] text-neutral-500">
+          Demo Prototype by NovaNext
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION: Brutalist & Cyber Neon Impact -->
+    <section id="hero" class="relative pt-12 pb-20 md:py-28 overflow-hidden border-b border-white/10 bg-noise">
+      <!-- Glow Gradients -->
+      <div class="absolute -top-32 -left-32 w-96 h-96 bg-neon-lime/15 rounded-full blur-[130px] pointer-events-none"></div>
+      <div class="absolute top-1/2 -right-32 w-[30rem] h-[30rem] bg-neon-violet/20 rounded-full blur-[150px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Top Status Tag -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-dark-900 brutalist-border border-neon-lime text-xs font-mono mb-8 text-neutral-300 brutalist-shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-neon-lime animate-ping"></span>
+          <span>WE ARE ACCEPTING ACTIVATIONS FOR Q3/Q4 2026</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-neon-lime"></i>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <!-- Left: Hero Headline & CTA -->
+          <div class="lg:col-span-8 space-y-6">
+            <h1 class="font-display font-black text-5xl sm:text-7xl lg:text-8xl tracking-tighter leading-[0.92] uppercase text-white">
+              WE ENGINEER <br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-lime via-white to-neon-violet underline decoration-neon-lime/40">SENSORY</span> <br>
+              ANOMALIES.
+            </h1>
+            
+            <p class="font-sans text-lg sm:text-xl text-neutral-400 max-w-2xl leading-relaxed">
+              We design non-standard physical & virtual environments: cutting-edge festival mainstages, rogue brand takeovers, and hyper-sensory activation domes that convert passive crowds into die-hard evangelists.
+            </p>
+
+            <!-- Action cluster -->
+            <div class="flex flex-wrap items-center gap-4 pt-4">
+              <a href="#brief-builder" class="px-8 py-4 bg-neon-lime text-dark-950 font-display font-extrabold text-base brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-3 group">
+                <span>BUILD EVENT BRIEF</span>
+                <i data-lucide="sparkles" class="w-5 h-5 fill-current transition-transform group-hover:rotate-45"></i>
+              </a>
+
+              <a href="#reel" class="px-7 py-4 bg-dark-900 border border-white/20 hover:border-neon-violet text-white font-mono text-sm uppercase tracking-wider flex items-center gap-2.5 transition-all hover:bg-dark-850">
+                <i data-lucide="play-circle" class="w-5 h-5 text-neon-violet"></i>
+                <span>Explore Live Reel (6)</span>
+              </a>
+            </div>
+
+            <!-- Client logos mini ticker -->
+            <div class="pt-8 border-t border-white/10 flex flex-wrap items-center gap-8 text-neutral-500 font-mono text-xs uppercase">
+              <span class="text-neutral-400 font-bold">Trusted by Mavericks:</span>
+              <span class="hover:text-neon-lime transition-colors">RED BULL MUSIC</span>
+              <span class="hover:text-neon-lime transition-colors">BOILER ROOM</span>
+              <span class="hover:text-neon-lime transition-colors">RIOT GAMES</span>
+              <span class="hover:text-neon-lime transition-colors">SPOTIFY LIVE</span>
+              <span class="hover:text-neon-lime transition-colors">BALENCIAGA SOUND</span>
+            </div>
+          </div>
+
+          <!-- Right: Interactive Cyber Hologram Widget -->
+          <div class="lg:col-span-4">
+            <div class="relative bg-dark-900 brutalist-border p-6 brutalist-shadow-violet">
+              <!-- Hologram Header -->
+              <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 bg-neon-pink rounded-full animate-ping"></span>
+                  <span class="font-mono text-xs text-neutral-300 font-bold">LIVE RADAR SYSTEM</span>
+                </div>
+                <span class="text-[10px] font-mono text-neon-lime bg-neon-lime/10 px-2 py-0.5 border border-neon-lime/30">ONLINE 99.8%</span>
+              </div>
+
+              <!-- Animated Visual Node -->
+              <div class="relative h-56 bg-dark-950 border border-white/5 rounded flex items-center justify-center overflow-hidden mb-5 group">
+                <!-- Grid background -->
+                <div class="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px]"></div>
+                <!-- Concentric spinning circles -->
+                <div class="w-40 h-40 border border-dashed border-neon-lime/40 rounded-full animate-spin-slow flex items-center justify-center">
+                  <div class="w-28 h-28 border border-neon-violet/50 rounded-full flex items-center justify-center">
+                    <div class="w-16 h-16 bg-neon-lime/20 border border-neon-lime rounded-full flex items-center justify-center animate-pulse">
+                      <i data-lucide="radio" class="w-8 h-8 text-neon-lime"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Floating tags -->
+                <div class="absolute top-3 left-3 bg-dark-900/90 text-[10px] font-mono px-2 py-1 text-neon-cyan border border-neon-cyan/30">
+                  FREQ: 432Hz SENSORY
+                </div>
+                <div class="absolute bottom-3 right-3 bg-dark-900/90 text-[10px] font-mono px-2 py-1 text-neon-pink border border-neon-pink/30">
+                  DECIBELS: 118dB
+                </div>
+              </div>
+
+              <!-- Live Stat ticker inside hero box -->
+              <div class="space-y-2.5 text-xs font-mono">
+                <div class="flex justify-between items-center text-neutral-400 pb-1.5 border-b border-white/5">
+                  <span>Current Active Projects:</span>
+                  <span class="text-neon-lime font-bold">14 Live Stages</span>
+                </div>
+                <div class="flex justify-between items-center text-neutral-400 pb-1.5 border-b border-white/5">
+                  <span>Global Footprint:</span>
+                  <span class="text-white font-bold">19 Cities (Tokyo, Berlin, LA)</span>
+                </div>
+                <div class="flex justify-between items-center text-neutral-400">
+                  <span>Immersion Score:</span>
+                  <span class="text-neon-violet font-bold">99.4% Virality</span>
+                </div>
+              </div>
+
+              <button onclick="UIEngine.triggerSampleSound()" class="mt-5 w-full py-2.5 bg-dark-800 hover:bg-neon-lime hover:text-dark-950 text-neutral-300 font-mono text-xs uppercase transition-colors brutalist-border flex items-center justify-center gap-2">
+                <i data-lucide="volume-2" class="w-4 h-4"></i>
+                <span id="sound-btn-text">Test Spatial Acoustic Simulation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRUTALIST MARQUEE TICKER (Fitur Utama 1) -->
+    <div class="bg-neon-lime text-dark-950 font-display font-black text-2xl md:text-3xl tracking-tight py-3 overflow-hidden border-y-2 border-dark-950 selection:bg-dark-950 selection:text-neon-lime">
+      <div class="flex whitespace-nowrap animate-marquee">
+        <span class="mx-6 flex items-center gap-4">★ IMMERSIVE STAGE DESIGN</span>
+        <span class="mx-6 flex items-center gap-4">⚡ 360° HYPER-PROJECTION MAPPING</span>
+        <span class="mx-6 flex items-center gap-4">✦ GUERRILLA BRAND ACTIVATIONS</span>
+        <span class="mx-6 flex items-center gap-4">★ AUDIO-REACTIVE LIGHT ARCHITECTURE</span>
+        <span class="mx-6 flex items-center gap-4">⚡ FESTIVAL CURATION & EXECUTION</span>
+        <span class="mx-6 flex items-center gap-4">✦ UNCONVENTIONAL POP-UP EXPERIENCES</span>
+        <!-- Duplicate for continuous loop -->
+        <span class="mx-6 flex items-center gap-4">★ IMMERSIVE STAGE DESIGN</span>
+        <span class="mx-6 flex items-center gap-4">⚡ 360° HYPER-PROJECTION MAPPING</span>
+        <span class="mx-6 flex items-center gap-4">✦ GUERRILLA BRAND ACTIVATIONS</span>
+        <span class="mx-6 flex items-center gap-4">★ AUDIO-REACTIVE LIGHT ARCHITECTURE</span>
+        <span class="mx-6 flex items-center gap-4">⚡ FESTIVAL CURATION & EXECUTION</span>
+        <span class="mx-6 flex items-center gap-4">✦ UNCONVENTIONAL POP-UP EXPERIENCES</span>
+      </div>
+    </div>
+
+    <!-- CASE STUDY METRICS COUNTER (Fitur Utama 2) -->
+    <section id="cases" class="py-20 md:py-28 bg-dark-900 border-b border-white/10 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Title with cyber badge -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="font-mono text-xs uppercase tracking-widest text-neon-lime mb-2 flex items-center gap-2">
+              <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+              <span>VALIDATED IMPACT METRICS</span>
+            </div>
+            <h2 class="font-display font-black text-4xl sm:text-5xl lg:text-6xl uppercase tracking-tighter">
+              HARD DATA. ZERO FLUFF.
+            </h2>
+          </div>
+          <p class="font-sans text-neutral-400 max-w-md text-sm sm:text-base leading-relaxed">
+            Real impact measured across international stadium tours, confidential tech keynotes, and autonomous pop-up ecosystems.
+          </p>
+        </div>
+
+        <!-- 4 Key Stat Metric Boxes with Animated Counters -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          
+          <!-- Metric 1 -->
+          <div class="bg-dark-950 p-8 brutalist-border hover:border-neon-lime transition-all duration-300 relative group overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-neon-lime/5 group-hover:bg-neon-lime/20 transition-all rounded-bl-full pointer-events-none"></div>
+            <span class="font-mono text-xs text-neutral-500 uppercase tracking-widest block mb-4">// FOOTPRINT_01</span>
+            
+            <div class="font-display font-black text-5xl sm:text-6xl text-neon-lime tracking-tight mb-2">
+              <span class="counter" data-target="1200000" data-format="millions">0</span><span class="text-white">+</span>
+            </div>
+            <h3 class="font-display font-bold text-lg text-white mb-2 uppercase">Festival Attendees</h3>
+            <p class="text-xs text-neutral-400 font-sans leading-relaxed">
+              Real human bodies moved through physical gates across 45 festival stages globally.
+            </p>
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+              <span>Avg Dwell Time</span>
+              <span class="text-neon-lime font-bold">5.8 Hours</span>
+            </div>
+          </div>
+
+          <!-- Metric 2 -->
+          <div class="bg-dark-950 p-8 brutalist-border hover:border-neon-violet transition-all duration-300 relative group overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-neon-violet/5 group-hover:bg-neon-violet/20 transition-all rounded-bl-full pointer-events-none"></div>
+            <span class="font-mono text-xs text-neutral-500 uppercase tracking-widest block mb-4">// ACTIVATIONS_02</span>
+            
+            <div class="font-display font-black text-5xl sm:text-6xl text-neon-violet tracking-tight mb-2">
+              <span class="counter" data-target="320" data-format="integer">0</span><span class="text-white">+</span>
+            </div>
+            <h3 class="font-display font-bold text-lg text-white mb-2 uppercase">Brand Takeovers</h3>
+            <p class="text-xs text-neutral-400 font-sans leading-relaxed">
+              Bespoke pop-ups, subterranean warehouse raves, and VIP sensory lounges executed.
+            </p>
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+              <span>Client Retention</span>
+              <span class="text-neon-violet font-bold">94.2%</span>
+            </div>
+          </div>
+
+          <!-- Metric 3 -->
+          <div class="bg-dark-950 p-8 brutalist-border hover:border-neon-cyan transition-all duration-300 relative group overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-neon-cyan/5 group-hover:bg-neon-cyan/20 transition-all rounded-bl-full pointer-events-none"></div>
+            <span class="font-mono text-xs text-neutral-500 uppercase tracking-widest block mb-4">// EARNED_MEDIA_03</span>
+            
+            <div class="font-display font-black text-5xl sm:text-6xl text-neon-cyan tracking-tight mb-2">
+              <span class="counter" data-target="48000000" data-format="millions">0</span><span class="text-white">+</span>
+            </div>
+            <h3 class="font-display font-bold text-lg text-white mb-2 uppercase">Organic UGC Impressions</h3>
+            <p class="text-xs text-neutral-400 font-sans leading-relaxed">
+              TikToks, Reels, and stories posted with zero paid influencer seeding quotas.
+            </p>
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+              <span>Virality Ratio</span>
+              <span class="text-neon-cyan font-bold">1:4.8 Organic</span>
+            </div>
+          </div>
+
+          <!-- Metric 4 -->
+          <div class="bg-dark-950 p-8 brutalist-border hover:border-neon-pink transition-all duration-300 relative group overflow-hidden">
+            <div class="absolute top-0 right-0 w-16 h-16 bg-neon-pink/5 group-hover:bg-neon-pink/20 transition-all rounded-bl-full pointer-events-none"></div>
+            <span class="font-mono text-xs text-neutral-500 uppercase tracking-widest block mb-4">// SATISFACTION_04</span>
+            
+            <div class="font-display font-black text-5xl sm:text-6xl text-neon-pink tracking-tight mb-2">
+              <span class="counter" data-target="99" data-format="integer">0</span><span class="text-white">%</span>
+            </div>
+            <h3 class="font-display font-bold text-lg text-white mb-2 uppercase">Safety & Flawless Run</h3>
+            <p class="text-xs text-neutral-400 font-sans leading-relaxed">
+              Zero safety incidents recorded with rapid response stage engineering squads.
+            </p>
+            <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+              <span>NPS Rating</span>
+              <span class="text-neon-pink font-bold">+89 Score</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Metric Refresh / Trigger button -->
+        <div class="mt-8 flex justify-center">
+          <button onclick="MetricEngine.restartCounters()" class="px-5 py-2.5 bg-dark-850 hover:bg-dark-800 border border-white/10 hover:border-neon-lime text-xs font-mono text-neutral-300 flex items-center gap-2 transition-all">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-neon-lime"></i>
+            <span>Replay Dynamic Telemetry Counter Animation</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EVENT EXPERIENCE REEL / VIDEO MOCK WITH CATEGORY FILTERS (Fitur Utama 3) -->
+    <section id="reel" class="py-20 md:py-28 bg-dark-950 border-b border-white/10 relative">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header & Category Switcher -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+          <div>
+            <div class="font-mono text-xs uppercase tracking-widest text-neon-violet mb-2 flex items-center gap-2">
+              <i data-lucide="clapperboard" class="w-4 h-4"></i>
+              <span>ARCHIVE & EXPERIENCE SHOWCASE</span>
+            </div>
+            <h2 class="font-display font-black text-4xl sm:text-5xl lg:text-6xl uppercase tracking-tighter">
+              EXPERIENCE REEL <span class="text-neon-lime">.</span>
+            </h2>
+            <p class="text-neutral-400 font-sans text-sm sm:text-base mt-2 max-w-lg">
+              Explore past experiential architectures. Click any card to launch interactive media view, breakdown sheets, and technical production riders.
+            </p>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="flex flex-wrap items-center gap-2 p-1.5 bg-dark-900 brutalist-border" id="reel-filter-tabs">
+            <button onclick="ReelEngine.setFilter('ALL')" data-category="ALL" class="reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all bg-neon-lime text-dark-950 brutalist-shadow-sm">
+              All Showcases (6)
+            </button>
+            <button onclick="ReelEngine.setFilter('MUSIC')" data-category="MUSIC" class="reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all text-neutral-300 hover:text-white hover:bg-dark-800">
+              Music Festivals
+            </button>
+            <button onclick="ReelEngine.setFilter('BRAND')" data-category="BRAND" class="reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all text-neutral-300 hover:text-white hover:bg-dark-800">
+              Brand Launch
+            </button>
+            <button onclick="ReelEngine.setFilter('POPUP')" data-category="POPUP" class="reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all text-neutral-300 hover:text-white hover:bg-dark-800">
+              Immersive Pop-Up
+            </button>
+          </div>
+        </div>
+
+        <!-- Reel Grid Container -->
+        <div id="reel-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Populated dynamically via ReelEngine -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CORE CAPABILITIES / SERVICES SECTION -->
+    <section id="services" class="py-20 md:py-28 bg-dark-900 border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="max-w-3xl mb-16">
+          <span class="font-mono text-xs uppercase tracking-widest text-neon-lime mb-2 block">// DISCIPLINARY STACK</span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl uppercase tracking-tighter text-white">
+            FULL-CYCLE PRODUCTION & SPATIAL ARCHITECTURE
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Cap 1 -->
+          <div class="bg-dark-950 p-8 brutalist-border relative group hover:border-neon-lime transition-all">
+            <div class="w-12 h-12 bg-dark-900 text-neon-lime flex items-center justify-center font-mono text-xl font-bold mb-6 brutalist-border">
+              01
+            </div>
+            <h3 class="font-display font-bold text-2xl uppercase mb-3 text-white group-hover:text-neon-lime transition-colors">
+              Stage Architecture & Laser Sculpting
+            </h3>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-6 font-sans">
+              Structural truss design, kinetics, high-powered programmable 40W laser arrays, pyrotechnics, and full crowd-safety civil engineering blueprints.
+            </p>
+            <ul class="space-y-2 text-xs font-mono text-neutral-400 border-t border-white/10 pt-4">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-lime"></i> GrandMA3 Timecode Showfiles</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-lime"></i> Custom CNC & Kinetic Rigging</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-lime"></i> 3D Pre-vis in Unreal Engine 5</li>
+            </ul>
+          </div>
+
+          <!-- Cap 2 -->
+          <div class="bg-dark-950 p-8 brutalist-border relative group hover:border-neon-violet transition-all">
+            <div class="w-12 h-12 bg-dark-900 text-neon-violet flex items-center justify-center font-mono text-xl font-bold mb-6 brutalist-border">
+              02
+            </div>
+            <h3 class="font-display font-bold text-2xl uppercase mb-3 text-white group-hover:text-neon-violet transition-colors">
+              Real-time Generative Visuals (CGI)
+            </h3>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-6 font-sans">
+              Interactive Notch, TouchDesigner, and TouchOSC pipelines where audio frequencies, dancer motion, and biometric sensors sculpt the stage visuals live.
+            </p>
+            <ul class="space-y-2 text-xs font-mono text-neutral-400 border-t border-white/10 pt-4">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-violet"></i> LiDAR Crowd Depth Scanning</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-violet"></i> 8K Uncompressed Disguise D3</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-violet"></i> Reactive Spatial Audio Mix</li>
+            </ul>
+          </div>
+
+          <!-- Cap 3 -->
+          <div class="bg-dark-950 p-8 brutalist-border relative group hover:border-neon-pink transition-all">
+            <div class="w-12 h-12 bg-dark-900 text-neon-pink flex items-center justify-center font-mono text-xl font-bold mb-6 brutalist-border">
+              03
+            </div>
+            <h3 class="font-display font-bold text-2xl uppercase mb-3 text-white group-hover:text-neon-pink transition-colors">
+              Guerilla & Stealth Activations
+            </h3>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-6 font-sans">
+              High-impact rogue pop-ups, subterranean speakeasy takeovers, autonomous RFID wristband ecosystems, and viral streetwear drops with zero leak.
+            </p>
+            <ul class="space-y-2 text-xs font-mono text-neutral-400 border-t border-white/10 pt-4">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-pink"></i> NFC/RFID Gamified Quests</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-pink"></i> Autonomous Mobile Power Hubs</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-neon-pink"></i> Rapid Deployment < 4 Hours</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE BRIEF BUILDER (Fitur Utama 4 - Gamified Client Estimator) -->
+    <section id="brief-builder" class="py-20 md:py-28 bg-dark-950 border-b border-white/10 relative overflow-hidden">
+      <!-- Glow ambient background -->
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-80 bg-neon-lime/10 blur-[150px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-neon-lime/10 text-neon-lime border border-neon-lime/30 font-mono text-xs mb-3">
+            <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+            <span>GAMIFIED CLIENT SIMULATOR</span>
+          </div>
+          <h2 class="font-display font-black text-4xl sm:text-6xl uppercase tracking-tighter text-white">
+            INTERACTIVE BRIEF BUILDER
+          </h2>
+          <p class="font-sans text-neutral-400 text-sm sm:text-base mt-3">
+            Calibrate your dream experiential campaign. Select your atmosphere vibes, audience capacity, custom tech stacks, and budget tiers to generate an instant estimate & proposal blueprint.
+          </p>
+        </div>
+
+        <!-- The Brief Engine Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left: 4-Step Gamified Configuration Form -->
+          <div class="lg:col-span-8 bg-dark-900 brutalist-border p-6 sm:p-8 brutalist-shadow">
+            
+            <form id="brief-form" onsubmit="BriefEngine.handleSubmit(event)" class="space-y-10">
+              
+              <!-- STEP 1: Experience Archetype -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="font-display font-bold text-lg uppercase flex items-center gap-2.5 text-white">
+                    <span class="w-6 h-6 rounded bg-neon-lime text-dark-950 text-xs font-mono flex items-center justify-center font-black">1</span>
+                    Event Archetype & Concept
+                  </label>
+                  <span class="text-xs font-mono text-neutral-400">Select 1 Concept</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="archetype-options">
+                  <button type="button" onclick="BriefEngine.selectArchetype('festival')" data-archetype="festival" class="archetype-btn p-4 bg-dark-950 brutalist-border text-left hover:border-neon-lime transition-all border-neon-lime bg-neon-lime/5">
+                    <i data-lucide="flame" class="w-6 h-6 text-neon-lime mb-2"></i>
+                    <div class="font-display font-bold text-sm uppercase">Electronic Festival</div>
+                    <div class="text-[11px] text-neutral-400 font-mono mt-1">Multi-stage rave, kinetic truss, laser grids</div>
+                  </button>
+
+                  <button type="button" onclick="BriefEngine.selectArchetype('product')" data-archetype="product" class="archetype-btn p-4 bg-dark-950 brutalist-border text-left hover:border-neon-lime transition-all">
+                    <i data-lucide="box" class="w-6 h-6 text-neon-violet mb-2"></i>
+                    <div class="font-display font-bold text-sm uppercase">Cyber Brand Launch</div>
+                    <div class="text-[11px] text-neutral-400 font-mono mt-1">Holographic unveil, VIP lounge, press storm</div>
+                  </button>
+
+                  <button type="button" onclick="BriefEngine.selectArchetype('popup')" data-archetype="popup" class="archetype-btn p-4 bg-dark-950 brutalist-border text-left hover:border-neon-lime transition-all">
+                    <i data-lucide="eye" class="w-6 h-6 text-neon-pink mb-2"></i>
+                    <div class="font-display font-bold text-sm uppercase">Sensory Pop-up Dome</div>
+                    <div class="text-[11px] text-neutral-400 font-mono mt-1">360° projection dome, reactive scent/haptics</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 2: Audience Scale & Expected Footfall -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="font-display font-bold text-lg uppercase flex items-center gap-2.5 text-white">
+                    <span class="w-6 h-6 rounded bg-neon-lime text-dark-950 text-xs font-mono flex items-center justify-center font-black">2</span>
+                    Expected Audience Attendance
+                  </label>
+                  <span id="audience-label-live" class="text-sm font-mono text-neon-lime font-bold">15,000 Spectators</span>
+                </div>
+
+                <div class="space-y-3">
+                  <input type="range" id="brief-audience" min="500" max="100000" step="500" value="15000" oninput="BriefEngine.updateAudience(this.value)" class="w-full accent-neon-lime bg-dark-950 h-3 cursor-pointer">
+                  
+                  <div class="flex justify-between text-[11px] font-mono text-neutral-500">
+                    <span>Intimate Pop-up (500)</span>
+                    <span>Arena Level (15,000)</span>
+                    <span>Mega Stadium (100,000+)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- STEP 3: Vibe & Aesthetic Filters (Multi-select) -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="font-display font-bold text-lg uppercase flex items-center gap-2.5 text-white">
+                    <span class="w-6 h-6 rounded bg-neon-lime text-dark-950 text-xs font-mono flex items-center justify-center font-black">3</span>
+                    Sensory Atmosphere & Vibe (Pick multiple)
+                  </label>
+                  <span class="text-xs font-mono text-neutral-400">Select all that apply</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="vibe-tags-container">
+                  <!-- Tag elements toggled by JS -->
+                </div>
+              </div>
+
+              <!-- STEP 4: Budget Tier Calibrator -->
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <label class="font-display font-bold text-lg uppercase flex items-center gap-2.5 text-white">
+                    <span class="w-6 h-6 rounded bg-neon-lime text-dark-950 text-xs font-mono flex items-center justify-center font-black">4</span>
+                    Budget Allocation Tier
+                  </label>
+                  <span id="budget-desc-tag" class="text-xs font-mono text-neon-violet">Tier II: Arena Spec</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <label class="cursor-pointer">
+                    <input type="radio" name="budget_tier" value="tier1" class="sr-only peer" onchange="BriefEngine.setBudgetTier('tier1')">
+                    <div class="p-4 bg-dark-950 brutalist-border peer-checked:border-neon-lime peer-checked:bg-neon-lime/10 transition-all">
+                      <div class="font-mono text-xs text-neutral-400 uppercase">Tier I // Underground</div>
+                      <div class="font-display font-bold text-xl text-white mt-1">$45k - $90k</div>
+                      <div class="text-[10px] text-neutral-400 mt-1">Single stage, custom lasers, stereo hi-res rig</div>
+                    </div>
+                  </label>
+
+                  <label class="cursor-pointer">
+                    <input type="radio" name="budget_tier" value="tier2" checked class="sr-only peer" onchange="BriefEngine.setBudgetTier('tier2')">
+                    <div class="p-4 bg-dark-950 brutalist-border peer-checked:border-neon-lime peer-checked:bg-neon-lime/10 transition-all">
+                      <div class="font-mono text-xs text-neon-lime uppercase">Tier II // Arena Spec</div>
+                      <div class="font-display font-bold text-xl text-white mt-1">$120k - $300k</div>
+                      <div class="text-[10px] text-neutral-400 mt-1">Full kinetic truss, TouchDesigner visuals, multi-zone</div>
+                    </div>
+                  </label>
+
+                  <label class="cursor-pointer">
+                    <input type="radio" name="budget_tier" value="tier3" class="sr-only peer" onchange="BriefEngine.setBudgetTier('tier3')">
+                    <div class="p-4 bg-dark-950 brutalist-border peer-checked:border-neon-lime peer-checked:bg-neon-lime/10 transition-all">
+                      <div class="font-mono text-xs text-neon-pink uppercase">Tier III // Mega Production</div>
+                      <div class="font-display font-bold text-xl text-white mt-1">$500k+ Godmode</div>
+                      <div class="text-[10px] text-neutral-400 mt-1">Stadium scale, autonomous pyros, drone choreography</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Contact & Organization input -->
+              <div class="pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-mono text-xs uppercase text-neutral-300 mb-1.5">Project / Brand Name *</label>
+                  <input type="text" id="brief-client-name" required placeholder="e.g. NeoTokyo Music Festival or Nike Lab" class="w-full bg-dark-950 brutalist-border px-4 py-3 text-sm focus:border-neon-lime focus:outline-none text-white">
+                </div>
+                <div>
+                  <label class="block font-mono text-xs uppercase text-neutral-300 mb-1.5">Production Lead Email *</label>
+                  <input type="email" id="brief-client-email" required placeholder="director@agency.xyz" class="w-full bg-dark-950 brutalist-border px-4 py-3 text-sm focus:border-neon-lime focus:outline-none text-white">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block font-mono text-xs uppercase text-neutral-300 mb-1.5">Special Anomalies / Desired Shenanigans (Optional)</label>
+                  <textarea id="brief-client-notes" rows="2" placeholder="Tell us your craziest dream (e.g. 50-foot inflatable chrome sculpture that breathes laser mist)" class="w-full bg-dark-950 brutalist-border px-4 py-2.5 text-sm focus:border-neon-lime focus:outline-none text-white"></textarea>
+                </div>
+              </div>
+
+              <!-- Submit Form Button -->
+              <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-neon-lime text-dark-950 font-display font-black text-base uppercase tracking-wider brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center gap-2">
+                  <i data-lucide="zap" class="w-5 h-5 fill-current"></i>
+                  <span>Submit & Save Project Blueprint</span>
+                </button>
+                <span class="text-xs font-mono text-neutral-400">⚡ Stored locally via Browser LocalStorage</span>
+              </div>
+
+            </form>
+
+          </div>
+
+          <!-- Right: Live Blueprint Telemetry Terminal Preview -->
+          <div class="lg:col-span-4 bg-dark-900 brutalist-border p-6 relative lg:sticky lg:top-28 brutalist-shadow-violet">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-neon-lime rounded-full animate-ping"></span>
+                <span class="font-mono text-xs font-bold text-white uppercase tracking-wider">LIVE TELEMETRY CALC</span>
+              </div>
+              <span class="text-[10px] font-mono text-neutral-400">ID: #KTK-2026</span>
+            </div>
+
+            <div class="space-y-4 font-mono text-xs">
+              <div class="bg-dark-950 p-3.5 brutalist-border space-y-1.5">
+                <div class="text-neutral-400 uppercase text-[10px]">Estimated Production Timeline</div>
+                <div id="telemetry-timeline" class="font-display font-bold text-lg text-white">6 - 8 Weeks</div>
+                <div class="text-[11px] text-neon-lime">3D CAD Pre-vis ready in 72 hours</div>
+              </div>
+
+              <div class="bg-dark-950 p-3.5 brutalist-border space-y-1.5">
+                <div class="text-neutral-400 uppercase text-[10px]">Estimated Power Grid Demand</div>
+                <div id="telemetry-power" class="font-display font-bold text-lg text-neon-cyan">280 kVA Three-Phase</div>
+                <div class="text-[11px] text-neutral-400">Zero-emission biofuel generator match</div>
+              </div>
+
+              <div class="bg-dark-950 p-3.5 brutalist-border space-y-1.5">
+                <div class="text-neutral-400 uppercase text-[10px]">Crew & Technical Deployment</div>
+                <div id="telemetry-crew" class="font-display font-bold text-lg text-neon-pink">24 Specialists</div>
+                <div class="text-[11px] text-neutral-400">Lighting LD, rigger squad & visual coder</div>
+              </div>
+
+              <div class="bg-dark-950 p-3.5 brutalist-border space-y-1.5">
+                <div class="text-neutral-400 uppercase text-[10px]">Selected Sensory Vibes</div>
+                <div id="telemetry-vibes-list" class="flex flex-wrap gap-1 mt-1">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Stored brief history shortcut -->
+            <div class="mt-6 pt-4 border-t border-white/10">
+              <button onclick="BriefEngine.openBriefReviewModal()" class="w-full py-2.5 bg-dark-800 hover:bg-dark-750 text-white font-mono text-xs uppercase flex items-center justify-center gap-2 border border-white/10 transition-colors">
+                <i data-lucide="folder-check" class="w-4 h-4 text-neon-lime"></i>
+                <span>View Stored Briefs (<span id="telemetry-saved-count">0</span>)</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS & CRITICAL ACCLAIM -->
+    <section id="reviews" class="py-20 bg-dark-900 border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-12">
+          <div>
+            <span class="font-mono text-xs uppercase tracking-widest text-neon-lime mb-1 block">// TESTIMONIALS</span>
+            <h2 class="font-display font-black text-3xl sm:text-4xl uppercase tracking-tighter">WHAT THEY SAY</h2>
+          </div>
+          <span class="font-mono text-xs text-neutral-400">Verified Festival Directors & CMOs</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-dark-950 p-6 brutalist-border space-y-4">
+            <div class="flex items-center gap-1 text-neon-lime">
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            </div>
+            <p class="text-neutral-300 text-sm italic font-sans leading-relaxed">
+              "KINETIK didn't just build a stage; they built an alternate gravitational field. Our headline act refused to leave the deck. 70,000 people were screaming."
+            </p>
+            <div class="pt-4 border-t border-white/10 font-mono text-xs">
+              <div class="font-bold text-white">Soren Lindqvist</div>
+              <div class="text-neutral-500">Creative Director, SubSonik Festival Berlin</div>
+            </div>
+          </div>
+
+          <div class="bg-dark-950 p-6 brutalist-border space-y-4">
+            <div class="flex items-center gap-1 text-neon-violet">
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            </div>
+            <p class="text-neutral-300 text-sm italic font-sans leading-relaxed">
+              "Our sneaker drop line wrapped around 8 blocks in Manhattan. Their laser tunnel was the #1 trending audio on TikTok for 4 straight days."
+            </p>
+            <div class="pt-4 border-t border-white/10 font-mono text-xs">
+              <div class="font-bold text-white">Maya K. Reynolds</div>
+              <div class="text-neutral-500">VP Brand Experience, Apex Gear NY</div>
+            </div>
+          </div>
+
+          <div class="bg-dark-950 p-6 brutalist-border space-y-4">
+            <div class="flex items-center gap-1 text-neon-pink">
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+            </div>
+            <p class="text-neutral-300 text-sm italic font-sans leading-relaxed">
+              "Zero safety anomalies, delivered 4 hours ahead of schedule, and the generative visual engine synchronized with our orchestra without a single hitch."
+            </p>
+            <div class="pt-4 border-t border-white/10 font-mono text-xs">
+              <div class="font-bold text-white">Kenji Takahashi</div>
+              <div class="text-neutral-500">Executive Producer, Tokyo Neon Horizon</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark-950 py-16 text-neutral-400 font-mono text-xs border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+          
+          <div class="space-y-4 md:col-span-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 bg-neon-lime text-dark-950 font-display font-black flex items-center justify-center">K</span>
+              <span class="font-display font-bold text-xl text-white tracking-tight">KINETIK EXPERIENTIAL</span>
+            </div>
+            <p class="text-neutral-400 max-w-sm font-sans text-sm">
+              We operate at the volatile intersection of architecture, sound design, reactive lighting, and cultural spectacle.
+            </p>
+            <div class="flex items-center gap-3 text-white">
+              <span class="px-2.5 py-1 bg-dark-900 brutalist-border text-[11px] text-neon-lime">BERLIN HQ</span>
+              <span class="px-2.5 py-1 bg-dark-900 brutalist-border text-[11px] text-neon-violet">TOKYO LAB</span>
+              <span class="px-2.5 py-1 bg-dark-900 brutalist-border text-[11px] text-neon-cyan">LOS ANGELES</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="font-bold uppercase tracking-wider text-white mb-4">Tactical Fast Links</div>
+            <ul class="space-y-2">
+              <li><a href="#cases" class="hover:text-neon-lime transition-colors">Telemetry & Data</a></li>
+              <li><a href="#reel" class="hover:text-neon-lime transition-colors">Experience Showcase Reel</a></li>
+              <li><a href="#brief-builder" class="hover:text-neon-lime transition-colors">Interactive Brief Form</a></li>
+              <li><a href="#services" class="hover:text-neon-lime transition-colors">Technical Capabilities</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="font-bold uppercase tracking-wider text-white mb-4">Transmission Protocol</div>
+            <p class="text-neutral-400 mb-3 font-sans">
+              Encrypted channel for festival headliners and brand leaders:
+            </p>
+            <a href="mailto:ops@kinetik-agency.mock" class="text-neon-lime font-bold hover:underline block mb-2">ops@kinetik.live</a>
+            <div class="text-neutral-500 text-[10px]">PGP Key: 0x98F4 821B 2C40 B78E</div>
+          </div>
+
+        </div>
+
+        <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-neon-lime"></span>
+            <span>Demo Prototype by NovaNext • Experiential Creative Agency & Event Production</span>
+          </div>
+          <div>
+            <span>© 2026 KINETIK EXPERIENTIAL GROUP. ALL RIGHTS RESERVED.</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- MODAL: Case Study / Experience Reel Detail View -->
+  <div id="reel-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="bg-dark-900 brutalist-border max-w-3xl w-full p-6 sm:p-8 brutalist-shadow-violet relative max-h-[90vh] overflow-y-auto" id="reel-modal-content">
+      <!-- Populated dynamically via JS -->
+    </div>
+  </div>
+
+  <!-- MODAL: Stored Briefs List (CRUD Management via LocalStorage) -->
+  <div id="brief-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="bg-dark-900 brutalist-border max-w-3xl w-full p-6 sm:p-8 brutalist-shadow relative max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-neon-lime text-dark-950 font-bold flex items-center justify-center">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-xl uppercase tracking-tight text-white">Stored Client Briefs</h3>
+            <p class="font-mono text-xs text-neutral-400">Locally saved proposals in Browser LocalStorage</p>
+          </div>
+        </div>
+        <button onclick="BriefEngine.closeBriefReviewModal()" class="text-neutral-400 hover:text-white p-2">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Briefs Table or Empty Message -->
+      <div id="saved-briefs-list" class="space-y-4">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+        <button onclick="BriefEngine.clearAllBriefs()" class="text-xs font-mono text-rose-400 hover:text-rose-300 underline flex items-center gap-1.5">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Clear Storage
+        </button>
+        <button onclick="BriefEngine.closeBriefReviewModal()" class="px-6 py-2.5 bg-dark-800 hover:bg-dark-750 text-white font-mono text-xs uppercase brutalist-border">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION CODE -->
+  <script>
+    /**
+     * STATE MANAGEMENT & MOCK DATA GENERATOR
+     * Global Standard Implementation: Fully encapsulated Vanilla ES6+ State Engine
+     */
+
+    // 1. Mock Data Generator for Experience Showcases
+    const MOCK_EXPERIENCES = [
+      {
+        id: 'exp-01',
+        title: 'HYPERION: Sub-bass Monolith Stage',
+        category: 'MUSIC',
+        categoryLabel: 'Music Festival',
+        client: 'SubSonik Electronica Berlin',
+        year: '2025',
+        spectators: '85,000 Attendance',
+        duration: '3-Day Festival',
+        accentColor: '#D4FF00',
+        image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: 'Simulated 32-Channel Ambisonics + 40W RGB Lasers',
+        summary: 'A 24-meter brutalist monolithic pyramid rigged with automated 180° rotation trusses and 40-watt beam arrays tuned to synchronize with 135BPM techno.',
+        specs: [
+          { label: 'Audio Rig', val: 'L-Acoustics K1 System (140dB continuous)' },
+          { label: 'Lasers', val: '24x Kvant Spectrum 40W High-Speed Scanners' },
+          { label: 'Visual Engine', val: 'TouchDesigner realtime generative GLSL shaders' },
+          { label: 'Safety Rating', val: 'TÜV Rheinland Structural Certification A+' }
+        ]
+      },
+      {
+        id: 'exp-02',
+        title: 'CYBER-GENESIS: Autonomous Sneaker Unveil',
+        category: 'BRAND',
+        categoryLabel: 'Brand Launch',
+        client: 'Apex Voidwear Tokyo',
+        year: '2025',
+        spectators: '12,000 Live + 4.2M Stream',
+        duration: 'Guerrilla 24H Drop',
+        accentColor: '#A855F7',
+        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: 'Simulated Hologram Fog Screen & Spatial Audio',
+        summary: 'An abandoned rail yard transformed into a high-security cyberpunk laboratory with water-mist projection screens floating the shoe in mid-air.',
+        specs: [
+          { label: 'Projection', val: '4x Barco 40,000 Lumens 4K Laser' },
+          { label: 'Audience Trigger', val: 'RFID NFC Ring-tap for secret locker unlock' },
+          { label: 'Earned Reach', val: 'Over 14.8M TikTok views in 48 hours' },
+          { label: 'Soundtrack', val: 'Custom spatial drone score by KINETIK Sound Lab' }
+        ]
+      },
+      {
+        id: 'exp-03',
+        title: 'NEURA-DOME: Sensory Biometric Chamber',
+        category: 'POPUP',
+        categoryLabel: 'Immersive Pop-Up',
+        client: 'Solara Bio-Tech / Art Basel Miami',
+        year: '2026',
+        spectators: '24,000 Immersion Seekers',
+        duration: '7 Days Run',
+        accentColor: '#00F0FF',
+        image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: '360° Fulldome Projection + Biometric Haptic Floor',
+        summary: 'A 20-meter geodesic dome where guests wore wireless pulse sensors that altered the dome lighting color gradients and frequency based on collective calmness.',
+        specs: [
+          { label: 'Dome Rig', val: 'Negative-pressure Negative Seam Geodesic Sphere' },
+          { label: 'Biometrics', val: '500 Simultaneous wearable heart-rate telemetry' },
+          { label: 'Olfactory', val: 'Atomized ozone and cedarwood ambient dispersion' },
+          { label: 'NPS Score', val: '+94% Attendee satisfaction' }
+        ]
+      },
+      {
+        id: 'exp-04',
+        title: 'VOID REVERB: 360° Industrial Arena',
+        category: 'MUSIC',
+        categoryLabel: 'Music Festival',
+        client: 'Resonance Underground LA',
+        year: '2025',
+        spectators: '35,000 Dancers',
+        duration: 'Overnight Rave',
+        accentColor: '#FF007A',
+        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: 'Kinetic Winch Matrix with 120 Floating Light Bars',
+        summary: 'Overhead grid of 120 DMX motorized LED bars lowering to within 2 meters of the dancefloor, mimicking a crushing industrial ceiling in sync with bass drops.',
+        specs: [
+          { label: 'Kinetic Winches', val: '120x High-speed DMX Servos with zero-fail braking' },
+          { label: 'Lighting Grid', val: 'Custom frosted diffuse RGBW neon tubes' },
+          { label: 'Control Protocol', val: 'Art-Net over fiber optic backbone' },
+          { label: 'Zero Heat', val: 'Cold-spark pyro fixtures safe for indoor crowds' }
+        ]
+      },
+      {
+        id: 'exp-05',
+        title: 'AURA: Holographic Supercar Reveal',
+        category: 'BRAND',
+        categoryLabel: 'Brand Launch',
+        client: 'Veloce Hypercars Geneva',
+        year: '2026',
+        spectators: '1,500 VIPs + Global Broadcast',
+        duration: 'Keynote & Gala',
+        accentColor: '#D4FF00',
+        image: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: 'Transparent OLED Blades & Pyro-Spark Arrays',
+        summary: 'A completely transparent glass stage surrounded by 60 motorized transparent OLED panels creating a parallax hologram envelope before the real vehicle exploded through.',
+        specs: [
+          { label: 'Glass Deck', val: 'Armor-grade laminated load-bearing glass deck' },
+          { label: 'Displays', val: '60x LG Transparent OLED 55" synced in canvas' },
+          { label: 'Keynote Audio', val: 'Beamforming spatial microphones for the CEO' },
+          { label: 'Pre-Orders', val: 'All 99 vehicle allocations sold in 12 minutes' }
+        ]
+      },
+      {
+        id: 'exp-06',
+        title: 'CHROMA CAVE: Subterranean Pop-Up Lounge',
+        category: 'POPUP',
+        categoryLabel: 'Immersive Pop-Up',
+        client: 'Ghost Distillery London',
+        year: '2025',
+        spectators: '8,000 Secret Guests',
+        duration: '3 Weekend Secret Run',
+        accentColor: '#A855F7',
+        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
+        videoSimulation: 'Sound-Reactive Cavity Projection & Smoke Mapping',
+        summary: 'A decommissioned 19th-century brick vault mapped with audio-reactive UV light grids and liquid nitrogen smoke wells, serving reactive luminescent cocktails.',
+        specs: [
+          { label: 'Environment', val: 'Subterranean 300m cavern with climate stabilization' },
+          { label: 'Bar Tech', val: 'Inductive wireless charging coaster counters' },
+          { label: 'Reservations', val: 'Password-only cryptographic secret invite system' },
+          { label: 'Viral Lift', val: 'Featured across Vogue, Dazed, and Hypebeast' }
+        ]
+      }
+    ];
+
+    // Vibe tags available in Brief Builder
+    const VIBE_OPTIONS = [
+      { id: 'cyberpunk', name: 'Cyberpunk Neon', selected: true },
+      { id: 'brutalist', name: 'Raw Industrial Brutalism', selected: true },
+      { id: 'darktechno', name: 'Sub-bass Techno Pulse', selected: true },
+      { id: 'biophilic', name: 'Bio-luminescent Organic', selected: false },
+      { id: 'holographic', name: 'Holographic & Ethereal', selected: true },
+      { id: 'guerrilla', name: 'Rogue Guerrilla Street', selected: false },
+      { id: 'hyperluxury', name: 'Hyper-minimal Luxury', selected: false },
+      { id: 'laserstorm', name: '40W Laser Storm', selected: true }
+    ];
+
+    /**
+     * UI STATE ENGINE
+     */
+    const AppState = {
+      activeReelFilter: 'ALL',
+      selectedArchetype: 'festival',
+      audienceCount: 15000,
+      budgetTier: 'tier2',
+      vibeTags: [...VIBE_OPTIONS],
+      savedBriefs: [],
+      audioPlaying: false
+    };
+
+    /**
+     * PERSISTENCE ENGINE (LocalStorage)
+     */
+    const StorageEngine = {
+      STORAGE_KEY: 'kinetik_briefs_v1',
+      
+      init() {
+        try {
+          const data = localStorage.getItem(this.STORAGE_KEY);
+          if (data) {
+            AppState.savedBriefs = JSON.parse(data);
+          } else {
+            // Seed dummy brief for immediate delight
+            AppState.savedBriefs = [
+              {
+                id: 'KTK-DEMO-01',
+                client: 'RED BULL HYPERSTAGE',
+                email: 'activation@redbull.mock',
+                archetype: 'Electronic Festival',
+                audience: 35000,
+                budgetTier: 'Tier III // Mega Production ($500k+)',
+                vibes: ['Cyberpunk Neon', 'Raw Industrial Brutalism', '40W Laser Storm'],
+                notes: 'Require twin 30m kinetic LED towers with cold-spark igniters.',
+                date: new Date(Date.now() - 86400000 * 2).toLocaleDateString()
+              }
+            ];
+            this.save();
+          }
+        } catch (e) {
+          console.warn('LocalStorage error:', e);
+          AppState.savedBriefs = [];
+        }
+        BriefEngine.updateBadgeCount();
+      },
+
+      save() {
+        try {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(AppState.savedBriefs));
+        } catch (e) {
+          console.warn('LocalStorage write failed:', e);
+        }
+        BriefEngine.updateBadgeCount();
+      }
+    };
+
+    /**
+     * UI & NOTIFICATION ENGINE (Toasts, Sound, Drawer)
+     */
+    const UIEngine = {
+      showToast(title, message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        let borderColor = 'border-neon-lime';
+        let iconName = 'check-circle-2';
+        let accentColor = 'text-neon-lime';
+
+        if (type === 'info') {
+          borderColor = 'border-neon-violet';
+          iconName = 'info';
+          accentColor = 'text-neon-violet';
+        } else if (type === 'danger') {
+          borderColor = 'border-rose-500';
+          iconName = 'alert-triangle';
+          accentColor = 'text-rose-400';
+        }
+
+        toast.className = `pointer-events-auto bg-dark-900 brutalist-border ${borderColor} p-4 text-white brutalist-shadow transition-all duration-300 transform translate-y-3 opacity-0`;
+        toast.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="${accentColor} mt-0.5">
+              <i data-lucide="${iconName}" class="w-5 h-5"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-display font-bold text-sm uppercase">${title}</div>
+              <div class="text-xs text-neutral-400 font-sans mt-0.5">${message}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="text-neutral-500 hover:text-white">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+
+        container.appendChild(toast);
+        lucide.createIcons({ root: toast });
+
+        // Animate entrance
+        requestAnimationFrame(() => {
+          toast.classList.remove('translate-y-3', 'opacity-0');
+        });
+
+        // Auto remove
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-x-4');
+          setTimeout(() => toast.remove(), 300);
+        }, 4000);
+      },
+
+      toggleDrawer() {
+        const drawer = document.getElementById('mobile-drawer');
+        const isOpen = !drawer.classList.contains('translate-x-full');
+        if (isOpen) {
+          drawer.classList.add('translate-x-full');
+        } else {
+          drawer.classList.remove('translate-x-full');
+        }
+      },
+
+      triggerSampleSound() {
+        const btnText = document.getElementById('sound-btn-text');
+        
+        // Web Audio API Synthesizer (Generative Cyber Bass Drone & Sub drop)
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) throw new Error('No audio');
+          
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+
+          // Sub-bass sweep
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(38, ctx.currentTime + 1.2);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(800, ctx.currentTime);
+          filter.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 1.2);
+
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start();
+          osc.stop(ctx.currentTime + 1.5);
+
+          btnText.innerText = "Simulating Sub-bass (432Hz Ambient Drop)...";
+          UIEngine.showToast("ACOUSTIC TELEMETRY", "Synthesized 38Hz sub-bass pressure wave into sound engine.", "info");
+
+          setTimeout(() => {
+            btnText.innerText = "Test Spatial Acoustic Simulation";
+          }, 2000);
+
+        } catch (e) {
+          btnText.innerText = "Simulation Complete (Muted)";
+          setTimeout(() => {
+            btnText.innerText = "Test Spatial Acoustic Simulation";
+          }, 1500);
+        }
+      }
+    };
+
+    /**
+     * DYNAMIC COUNTERS ENGINE (Animated Metric Spinners)
+     */
+    const MetricEngine = {
+      animated: false,
+
+      init() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !this.animated) {
+              this.startCounters();
+              this.animated = true;
+            }
+          });
+        }, { threshold: 0.3 });
+
+        const caseSection = document.getElementById('cases');
+        if (caseSection) observer.observe(caseSection);
+      },
+
+      startCounters() {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+          const target = parseInt(counter.getAttribute('data-target'), 10);
+          const format = counter.getAttribute('data-format');
+          const duration = 2000; // ms
+          const startTime = performance.now();
+
+          function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Ease-out cubic
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const currentVal = Math.floor(easeOut * target);
+
+            if (format === 'millions') {
+              if (currentVal >= 1000000) {
+                counter.textContent = (currentVal / 1000000).toFixed(1) + 'M';
+              } else {
+                counter.textContent = currentVal.toLocaleString();
+              }
+            } else {
+              counter.textContent = currentVal.toLocaleString();
+            }
+
+            if (progress < 1) {
+              requestAnimationFrame(updateCounter);
+            } else {
+              if (format === 'millions') {
+                counter.textContent = (target / 1000000).toFixed(1) + 'M';
+              } else {
+                counter.textContent = target.toLocaleString();
+              }
+            }
+          }
+
+          requestAnimationFrame(updateCounter);
+        });
+      },
+
+      restartCounters() {
+        this.startCounters();
+        UIEngine.showToast("TELEMETRY RESYNC", "Metrics data recalculated and refreshed.", "info");
+      }
+    };
+
+    /**
+     * EXPERIENCE REEL ENGINE (Category filtering & modal trigger)
+     */
+    const ReelEngine = {
+      init() {
+        this.render();
+      },
+
+      setFilter(category) {
+        AppState.activeReelFilter = category;
+        
+        // Update tab styling
+        const buttons = document.querySelectorAll('.reel-tab-btn');
+        buttons.forEach(btn => {
+          const cat = btn.getAttribute('data-category');
+          if (cat === category) {
+            btn.className = 'reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all bg-neon-lime text-dark-950 brutalist-shadow-sm';
+          } else {
+            btn.className = 'reel-tab-btn px-4 py-2 text-xs font-mono font-bold uppercase transition-all text-neutral-300 hover:text-white hover:bg-dark-800';
+          }
+        });
+
+        this.render();
+        UIEngine.showToast("FILTER APPLIED", `Displaying category: ${category}`, 'info');
+      },
+
+      render() {
+        const grid = document.getElementById('reel-grid');
+        grid.innerHTML = '';
+
+        const filtered = AppState.activeReelFilter === 'ALL'
+          ? MOCK_EXPERIENCES
+          : MOCK_EXPERIENCES.filter(item => item.category === AppState.activeReelFilter);
+
+        filtered.forEach(exp => {
+          const card = document.createElement('div');
+          card.className = 'group bg-dark-900 brutalist-border flex flex-col justify-between hover:border-neon-lime transition-all duration-300 overflow-hidden';
+          
+          card.innerHTML = `
+            <div>
+              <!-- Image / Mock Video Banner with overlay badge -->
+              <div class="relative h-56 overflow-hidden bg-dark-950">
+                <img src="${exp.image}" alt="${exp.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale contrast-125 group-hover:filter-none">
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-80"></div>
+                
+                <div class="absolute top-3 left-3 flex items-center gap-2">
+                  <span class="px-2.5 py-1 bg-dark-950/90 text-white font-mono text-[10px] uppercase tracking-wider brutalist-border">
+                    ${exp.categoryLabel}
+                  </span>
+                  <span class="px-2 py-0.5 bg-neon-lime/20 text-neon-lime border border-neon-lime/40 text-[9px] font-mono">
+                    ${exp.year}
+                  </span>
+                </div>
+
+                <div class="absolute bottom-3 right-3">
+                  <div class="w-10 h-10 rounded-full bg-neon-lime text-dark-950 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 brutalist-shadow-sm">
+                    <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content details -->
+              <div class="p-6">
+                <div class="text-[11px] font-mono text-neon-violet uppercase mb-1">${exp.client}</div>
+                <h3 class="font-display font-bold text-xl uppercase tracking-tight text-white group-hover:text-neon-lime transition-colors">
+                  ${exp.title}
+                </h3>
+                <p class="mt-3 text-neutral-400 text-xs font-sans line-clamp-2 leading-relaxed">
+                  ${exp.summary}
+                </p>
+
+                <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-neutral-400">
+                  <span>${exp.spectators}</span>
+                  <span class="text-white">${exp.duration}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 pt-0">
+              <button onclick="ReelEngine.openModal('${exp.id}')" class="w-full py-2.5 bg-dark-950 hover:bg-neon-lime hover:text-dark-950 text-white text-xs font-mono uppercase brutalist-border transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                <span>Inspect Technical Rider</span>
+              </button>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+
+        lucide.createIcons({ root: grid });
+      },
+
+      openModal(id) {
+        const item = MOCK_EXPERIENCES.find(x => x.id === id);
+        if (!item) return;
+
+        const modal = document.getElementById('reel-modal');
+        const content = document.getElementById('reel-modal-content');
+
+        content.innerHTML = `
+          <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+            <div class="flex items-center gap-3">
+              <span class="w-3 h-3 bg-neon-lime"></span>
+              <div>
+                <span class="font-mono text-xs text-neon-lime uppercase">${item.categoryLabel} // ${item.client}</span>
+                <h2 class="font-display font-black text-2xl uppercase tracking-tight text-white">${item.title}</h2>
+              </div>
+            </div>
+            <button onclick="ReelEngine.closeModal()" class="text-neutral-400 hover:text-white p-2">
+              <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+          </div>
+
+          <!-- Video / Audio Simulation Mock Screen -->
+          <div class="relative bg-dark-950 border border-white/10 h-72 rounded overflow-hidden mb-6 flex items-center justify-center group">
+            <img src="${item.image}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover opacity-40">
+            <div class="absolute inset-0 bg-dark-950/60 backdrop-blur-[2px]"></div>
+
+            <div class="relative z-10 text-center space-y-3 p-4">
+              <div class="w-16 h-16 rounded-full bg-neon-lime text-dark-950 mx-auto flex items-center justify-center brutalist-shadow animate-pulse cursor-pointer" onclick="UIEngine.showToast('MOCK FEED LOADED', 'Simulating 4K 60FPS Ambisonic Render Stream.', 'success')">
+                <i data-lucide="play" class="w-8 h-8 fill-current translate-x-0.5"></i>
+              </div>
+              <div class="font-display font-bold text-sm tracking-wide text-white uppercase">${item.videoSimulation}</div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-dark-900/90 text-neon-cyan border border-neon-cyan/40 text-[10px] font-mono">
+                <span class="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-ping"></span>
+                SIMULATED PRODUCTION MULTICAM REEL
+              </div>
+            </div>
+          </div>
+
+          <!-- Description and Specs -->
+          <div class="space-y-6">
+            <div>
+              <h4 class="font-display font-bold text-sm uppercase text-neutral-300 mb-2">Narrative & Spatial Conception</h4>
+              <p class="text-sm font-sans text-neutral-300 leading-relaxed">${item.summary}</p>
+            </div>
+
+            <div>
+              <h4 class="font-display font-bold text-sm uppercase text-white mb-3">Hard Engineering Specifications:</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                ${item.specs.map(spec => `
+                  <div class="p-3 bg-dark-950 brutalist-border font-mono text-xs">
+                    <span class="text-neutral-400 block text-[10px] uppercase">${spec.label}</span>
+                    <span class="text-white font-bold mt-0.5 block">${spec.val}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+              <div class="font-mono text-xs text-neutral-400">
+                <span>Direct Inquiry ID: <code class="text-neon-lime font-bold">#PROD-${item.id}</code></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <a href="#brief-builder" onclick="ReelEngine.closeModal()" class="px-5 py-2 bg-neon-lime text-dark-950 font-display font-black text-xs uppercase tracking-wider brutalist-shadow">
+                  Request Similar Stage Build
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        lucide.createIcons({ root: content });
+        modal.classList.remove('hidden');
+      },
+
+      closeModal() {
+        document.getElementById('reel-modal').classList.add('hidden');
+      }
+    };
+
+    /**
+     * INTERACTIVE BRIEF BUILDER ENGINE (Fitur 4)
+     */
+    const BriefEngine = {
+      init() {
+        this.renderVibes();
+        this.updateTelemetry();
+        StorageEngine.init();
+      },
+
+      selectArchetype(type) {
+        AppState.selectedArchetype = type;
+        
+        const buttons = document.querySelectorAll('.archetype-btn');
+        buttons.forEach(btn => {
+          if (btn.getAttribute('data-archetype') === type) {
+            btn.classList.add('border-neon-lime', 'bg-neon-lime/5');
+          } else {
+            btn.classList.remove('border-neon-lime', 'bg-neon-lime/5');
+          }
+        });
+
+        this.updateTelemetry();
+      },
+
+      updateAudience(val) {
+        AppState.audienceCount = parseInt(val, 10);
+        document.getElementById('audience-label-live').innerText = Number(val).toLocaleString() + ' Spectators';
+        this.updateTelemetry();
+      },
+
+      renderVibes() {
+        const container = document.getElementById('vibe-tags-container');
+        container.innerHTML = '';
+
+        AppState.vibeTags.forEach(vibe => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.onclick = () => this.toggleVibe(vibe.id);
+          
+          if (vibe.selected) {
+            btn.className = 'p-2.5 text-xs font-mono text-left bg-neon-lime/10 border border-neon-lime text-white flex items-center justify-between';
+            btn.innerHTML = `<span>${vibe.name}</span><i data-lucide="check" class="w-3.5 h-3.5 text-neon-lime"></i>`;
+          } else {
+            btn.className = 'p-2.5 text-xs font-mono text-left bg-dark-950 brutalist-border text-neutral-400 hover:text-white flex items-center justify-between';
+            btn.innerHTML = `<span>${vibe.name}</span><i data-lucide="plus" class="w-3.5 h-3.5 text-neutral-600"></i>`;
+          }
+
+          container.appendChild(btn);
+        });
+
+        lucide.createIcons({ root: container });
+      },
+
+      toggleVibe(id) {
+        const item = AppState.vibeTags.find(v => v.id === id);
+        if (item) {
+          item.selected = !item.selected;
+          this.renderVibes();
+          this.updateTelemetry();
+        }
+      },
+
+      setBudgetTier(tier) {
+        AppState.budgetTier = tier;
+        const tag = document.getElementById('budget-desc-tag');
+        if (tier === 'tier1') tag.innerText = 'Tier I: Underground ($45k-$90k)';
+        if (tier === 'tier2') tag.innerText = 'Tier II: Arena Spec ($120k-$300k)';
+        if (tier === 'tier3') tag.innerText = 'Tier III: Mega Godmode ($500k+)';
+        this.updateTelemetry();
+      },
+
+      updateTelemetry() {
+        // Calculate dynamic values
+        const aud = AppState.audienceCount;
+        const tier = AppState.budgetTier;
+
+        // Timeline
+        let weeks = '4 - 6 Weeks';
+        if (aud > 50000 || tier === 'tier3') weeks = '12 - 16 Weeks';
+        else if (aud > 15000 || tier === 'tier2') weeks = '6 - 9 Weeks';
+        document.getElementById('telemetry-timeline').innerText = weeks;
+
+        // Power
+        let kva = Math.round(aud * 0.02 + 80);
+        document.getElementById('telemetry-power').innerText = `${kva} kVA Three-Phase`;
+
+        // Crew
+        let crew = Math.round(aud / 800) + 12;
+        if (crew > 90) crew = 90;
+        document.getElementById('telemetry-crew').innerText = `${crew} Specialists`;
+
+        // Selected Vibes list in terminal
+        const list = document.getElementById('telemetry-vibes-list');
+        list.innerHTML = '';
+        const selected = AppState.vibeTags.filter(v => v.selected);
+        if (selected.length === 0) {
+          list.innerHTML = `<span class="text-neutral-500 italic">No vibe selected yet</span>`;
+        } else {
+          selected.forEach(v => {
+            const span = document.createElement('span');
+            span.className = 'px-1.5 py-0.5 bg-dark-800 text-neon-lime border border-neon-lime/30 text-[9px]';
+            span.innerText = v.name;
+            list.appendChild(span);
+          });
+        }
+      },
+
+      handleSubmit(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('brief-client-name').value.trim();
+        const email = document.getElementById('brief-client-email').value.trim();
+        const notes = document.getElementById('brief-client-notes').value.trim();
+
+        if (!name || !email) {
+          UIEngine.showToast("INCOMPLETE FIELDS", "Please provide project brand name & lead email.", "danger");
+          return;
+        }
+
+        const selectedVibes = AppState.vibeTags.filter(v => v.selected).map(v => v.name);
+
+        const newBrief = {
+          id: 'KTK-' + Math.floor(1000 + Math.random() * 9000),
+          client: name,
+          email: email,
+          archetype: AppState.selectedArchetype,
+          audience: AppState.audienceCount,
+          budgetTier: AppState.budgetTier,
+          vibes: selectedVibes,
+          notes: notes || 'No custom notes provided.',
+          date: new Date().toLocaleDateString()
+        };
+
+        AppState.savedBriefs.unshift(newBrief);
+        StorageEngine.save();
+
+        // Canvas Confetti Celebration!
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#D4FF00', '#A855F7', '#00F0FF', '#FF007A']
+          });
+        } catch (err) {}
+
+        UIEngine.showToast("BLUEPRINT GENERATED", `Project brief for "${name}" safely saved to local storage!`, "success");
+        
+        // Clear notes, keep inputs tidy
+        document.getElementById('brief-client-notes').value = '';
+      },
+
+      quickDemoBrief() {
+        document.getElementById('brief-client-name').value = 'CYBERDOME 2026 FESTIVAL';
+        document.getElementById('brief-client-email').value = 'director@cyberdome.mock';
+        document.getElementById('brief-client-notes').value = 'Need a 360 degree immersive cylindrical LED wall with live interactive generative shaders.';
+        this.updateAudience(45000);
+        document.getElementById('brief-audience').value = 45000;
+        this.selectArchetype('festival');
+        this.setBudgetTier('tier3');
+        document.querySelector('input[value="tier3"]').checked = true;
+
+        UIEngine.showToast("AUTO-FILL READY", "Pre-populated sample festival parameters.", "info");
+
+        // Scroll smoothly to form
+        document.getElementById('brief-builder').scrollIntoView({ behavior: 'smooth' });
+      },
+
+      updateBadgeCount() {
+        const count = AppState.savedBriefs.length;
+        const navBadge = document.getElementById('nav-brief-badge');
+        const telemetryCount = document.getElementById('telemetry-saved-count');
+        if (navBadge) navBadge.innerText = count;
+        if (telemetryCount) telemetryCount.innerText = count;
+      },
+
+      openBriefReviewModal() {
+        this.renderSavedList();
+        document.getElementById('brief-modal').classList.remove('hidden');
+      },
+
+      closeBriefReviewModal() {
+        document.getElementById('brief-modal').classList.add('hidden');
+      },
+
+      deleteBrief(id) {
+        AppState.savedBriefs = AppState.savedBriefs.filter(b => b.id !== id);
+        StorageEngine.save();
+        this.renderSavedList();
+        UIEngine.showToast("BRIEF REMOVED", `Blueprint ID ${id} deleted.`, "info");
+      },
+
+      clearAllBriefs() {
+        if (confirm("Are you sure you want to clear all locally saved briefs?")) {
+          AppState.savedBriefs = [];
+          StorageEngine.save();
+          this.renderSavedList();
+          UIEngine.showToast("STORAGE CLEARED", "All client briefs cleared from localStorage.", "info");
+        }
+      },
+
+      renderSavedList() {
+        const container = document.getElementById('saved-briefs-list');
+        container.innerHTML = '';
+
+        if (AppState.savedBriefs.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 text-center bg-dark-950 brutalist-border text-neutral-400 font-mono text-sm">
+              <i data-lucide="inbox" class="w-8 h-8 text-neutral-600 mx-auto mb-2"></i>
+              No saved briefs currently in LocalStorage.<br>
+              <span class="text-xs text-neutral-500">Fill the interactive builder above to generate a new blueprint.</span>
+            </div>
+          `;
+          lucide.createIcons({ root: container });
+          return;
+        }
+
+        AppState.savedBriefs.forEach(b => {
+          const card = document.createElement('div');
+          card.className = 'p-4 bg-dark-950 brutalist-border relative';
+          
+          card.innerHTML = `
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-3 border-b border-white/5">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-neon-lime/10 text-neon-lime text-[10px] font-mono border border-neon-lime/30 font-bold">${b.id}</span>
+                  <span class="text-xs font-mono text-neutral-500">${b.date}</span>
+                </div>
+                <h4 class="font-display font-bold text-lg text-white mt-1">${b.client}</h4>
+                <div class="text-xs font-mono text-neon-violet">${b.email}</div>
+              </div>
+              <button onclick="BriefEngine.deleteBrief('${b.id}')" class="text-neutral-500 hover:text-rose-400 p-1.5 self-start">
+                <i data-lucide="trash" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 text-xs font-mono text-neutral-400">
+              <div>
+                <span class="text-[10px] text-neutral-500 block">EST. AUDIENCE</span>
+                <span class="text-white font-bold">${Number(b.audience).toLocaleString()}</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-neutral-500 block">BUDGET ALLOCATION</span>
+                <span class="text-neon-lime font-bold uppercase">${b.budgetTier}</span>
+              </div>
+              <div>
+                <span class="text-[10px] text-neutral-500 block">ARCHETYPE</span>
+                <span class="text-white uppercase font-bold">${b.archetype}</span>
+              </div>
+            </div>
+
+            <div class="mt-3 pt-2 text-xs font-sans text-neutral-300">
+              <span class="font-mono text-[10px] text-neutral-500 block mb-1">SPEC NOTES:</span>
+              <p class="italic bg-dark-900 p-2.5 brutalist-border">${b.notes}</p>
+            </div>
+
+            <div class="mt-3 flex flex-wrap gap-1">
+              ${(b.vibes || []).map(v => `
+                <span class="px-2 py-0.5 bg-dark-850 text-neutral-300 text-[10px] font-mono">${v}</span>
+              `).join('')}
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        lucide.createIcons({ root: container });
+      }
+    };
+
+    /**
+     * CUSTOM CURSOR ENGINE (Cyber Brutalist Glow Cursor)
+     */
+    const CursorEngine = {
+      init() {
+        const dot = document.getElementById('custom-cursor-dot');
+        const ring = document.getElementById('custom-cursor-ring');
+        
+        if (!dot || !ring) return;
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          dot.style.left = mouseX + 'px';
+          dot.style.top = mouseY + 'px';
+        });
+
+        // Smooth follow loop for ring
+        function render() {
+          ringX += (mouseX - ringX) * 0.15;
+          ringY += (mouseY - ringY) * 0.15;
+          ring.style.left = ringX + 'px';
+          ring.style.top = ringY + 'px';
+          requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+
+        // Hover enlarger
+        const interactables = document.querySelectorAll('a, button, input, textarea, select');
+        interactables.forEach(el => {
+          el.addEventListener('mouseenter', () => {
+            ring.style.width = '55px';
+            ring.style.height = '55px';
+            ring.style.borderColor = '#D4FF00';
+            dot.style.transform = 'translate(-50%, -50%) scale(1.8)';
+          });
+          el.addEventListener('mouseleave', () => {
+            ring.style.width = '36px';
+            ring.style.height = '36px';
+            ring.style.borderColor = 'rgba(212, 255, 0, 0.6)';
+            dot.style.transform = 'translate(-50%, -50%) scale(1)';
+          });
+        });
+      }
+    };
+
+    // Global Initialization on DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      MetricEngine.init();
+      ReelEngine.init();
+      BriefEngine.init();
+      CursorEngine.init();
+    });
+  </script>
+</body>
+</html>

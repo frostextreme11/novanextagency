@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NOVA RIDE - Demo prototype car rental and fleet booking system.">
+  <title>NOVA RIDE | Fleet Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --ink: #12211e;
+      --forest: #183c34;
+      --moss: #7f9962;
+      --linen: #f4f3ee;
+      --sand: #e9e4d8;
+      --orange: #f36635;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: var(--linen);
+      color: var(--ink);
+    }
+    .font-display { font-family: "Playfair Display", Georgia, serif; }
+    .hero-scene {
+      background-image: linear-gradient(90deg, rgba(10, 27, 24, .91) 0%, rgba(10, 27, 24, .64) 47%, rgba(10, 27, 24, .22) 100%), url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=85");
+      background-size: cover;
+      background-position: center;
+    }
+    .hero-scene::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 38%;
+      background: linear-gradient(transparent, rgba(10, 27, 24, .45));
+      pointer-events: none;
+    }
+    .hero-content { animation: rise-in .75s cubic-bezier(.22, 1, .36, 1) both; }
+    .search-shell { animation: rise-in .8s .14s cubic-bezier(.22, 1, .36, 1) both; }
+    .vehicle-item { animation: rise-in .55s cubic-bezier(.22, 1, .36, 1) both; }
+    .vehicle-item:hover .vehicle-photo { transform: scale(1.045); }
+    .vehicle-photo { transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
+    .filter-button, .addon-button, .mode-label { transition: all .2s ease; }
+    .drawer-panel { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
+    .modal-shell { animation: modal-in .28s cubic-bezier(.22, 1, .36, 1) both; }
+    .toast-item { animation: toast-in .35s cubic-bezier(.22, 1, .36, 1) both; }
+    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
+    .summary-total { animation: total-flash .35s ease both; }
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(12px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .55; transform: scale(.78); }
+    }
+    @keyframes total-flash {
+      0% { color: var(--forest); transform: translateY(3px); }
+      100% { color: var(--ink); transform: translateY(0); }
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator { opacity: .62; cursor: pointer; }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <header class="sticky top-0 z-40 border-b border-stone-200/80 bg-[#f4f3ee]/95 backdrop-blur">
+    <div class="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-10">
+      <a href="#top" class="flex items-center gap-3" aria-label="NOVA RIDE beranda">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#183c34] text-white"><i data-lucide="route" class="h-[18px] w-[18px]"></i></span>
+        <span class="text-sm font-extrabold tracking-[0.16em] text-[#12211e]">NOVA RIDE</span>
+      </a>
+
+      <nav class="hidden items-center gap-7 text-xs font-bold tracking-wide text-stone-600 md:flex" aria-label="Navigasi utama">
+        <a href="#fleet" class="transition hover:text-[#183c34]">Armada</a>
+        <a href="#booking" class="transition hover:text-[#183c34]">Reservasi</a>
+        <a href="#documents" class="transition hover:text-[#183c34]">Dokumen</a>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="hidden items-center gap-1.5 rounded-full border border-[#b7c4ad] bg-[#e6eddf] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#315242] sm:flex"><span class="pulse-dot h-1.5 w-1.5 rounded-full bg-[#5c8147]"></span>Demo Prototype by NovaNext</span>
+        <button id="openDrawer" type="button" class="inline-flex h-10 items-center gap-2 rounded-full border border-stone-300 bg-white px-3 text-xs font-bold text-[#183c34] transition hover:border-[#183c34] hover:bg-[#183c34] hover:text-white" aria-controls="navDrawer" aria-expanded="false">
+          <i data-lucide="menu" class="h-4 w-4"></i><span class="hidden sm:inline">Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <aside id="navDrawer" class="pointer-events-none fixed inset-0 z-50" aria-hidden="true">
+    <div id="drawerBackdrop" class="absolute inset-0 bg-[#0c211c]/45 opacity-0 transition-opacity duration-300"></div>
+    <div id="drawerPanel" class="drawer-panel absolute right-0 top-0 flex h-full w-[min(88vw,360px)] translate-x-full flex-col bg-[#183c34] p-6 text-white shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/15 pb-5">
+        <div><p class="text-[10px] font-bold uppercase tracking-[0.18em] text-[#b9d09f]">Navigation</p><p class="mt-1 text-lg font-extrabold tracking-[0.12em]">NOVA RIDE</p></div>
+        <button id="closeDrawer" type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 transition hover:bg-white hover:text-[#183c34]" aria-label="Tutup menu"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+      <nav class="mt-8 flex flex-col text-sm font-bold" aria-label="Menu panel">
+        <a class="drawer-link border-b border-white/10 py-5 transition hover:pl-2 hover:text-[#c9dea9]" href="#fleet"><span class="mr-3 text-[#a5c178]">01</span>Jelajahi Armada</a>
+        <a class="drawer-link border-b border-white/10 py-5 transition hover:pl-2 hover:text-[#c9dea9]" href="#booking"><span class="mr-3 text-[#a5c178]">02</span>Ringkasan Booking</a>
+        <a class="drawer-link border-b border-white/10 py-5 transition hover:pl-2 hover:text-[#c9dea9]" href="#documents"><span class="mr-3 text-[#a5c178]">03</span>Unggah Dokumen</a>
+      </nav>
+      <div class="mt-auto border-t border-white/15 pt-5 text-xs leading-6 text-white/65">Pilih kendaraan, lengkapi kebutuhan perjalanan, lalu konfirmasi reservasi Anda.</div>
+    </div>
+  </aside>
+
+  <main id="top">
+    <section class="hero-scene relative min-h-[460px] overflow-hidden text-white sm:min-h-[490px]">
+      <div class="relative z-10 mx-auto flex min-h-[460px] max-w-[1440px] flex-col justify-between px-4 pb-7 pt-16 sm:min-h-[490px] sm:px-6 sm:pb-9 sm:pt-20 lg:px-10">
+        <div class="hero-content max-w-2xl">
+          <p class="mb-4 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#d3e3bf]"><span class="h-px w-8 bg-[#d3e3bf]"></span>Indonesia fleet booking</p>
+          <h1 class="font-display text-[clamp(3.3rem,10vw,7.2rem)] font-semibold leading-[.78] tracking-[-0.055em]">NOVA<br><em class="text-[#cfe0b5]">RIDE.</em></h1>
+          <p class="mt-7 max-w-md text-sm leading-7 text-white/80 sm:text-base">Temukan kendaraan yang tepat untuk perjalanan harian, keluarga, atau bisnis, dengan pilihan lepas kunci maupun sopir profesional.</p>
+        </div>
+
+        <form id="searchForm" class="search-shell grid gap-0 overflow-hidden rounded-2xl bg-[#f9f8f4] text-[#12211e] shadow-[0_22px_40px_rgba(0,0,0,.18)] md:grid-cols-[1.2fr_1fr_1fr_auto]" aria-label="Cari kendaraan">
+          <label class="group border-b border-stone-200 px-5 py-4 transition hover:bg-white md:border-b-0 md:border-r">
+            <span class="mb-1.5 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-stone-500"><i data-lucide="map-pin" class="h-3.5 w-3.5 text-[#5e7a51]"></i>Lokasi penjemputan</span>
+            <select id="locationInput" class="w-full cursor-pointer appearance-none bg-transparent text-sm font-bold outline-none">
+              <option>Jakarta Selatan</option>
+              <option>Jakarta Pusat</option>
+              <option>Bandung Kota</option>
+              <option>Surabaya Kota</option>
+              <option>Bali - Denpasar</option>
+            </select>
+          </label>
+          <label class="group border-b border-stone-200 px-5 py-4 transition hover:bg-white md:border-b-0 md:border-r">
+            <span class="mb-1.5 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-stone-500"><i data-lucide="calendar-days" class="h-3.5 w-3.5 text-[#5e7a51]"></i>Pick-up</span>
+            <input id="pickupInput" type="date" class="w-full bg-transparent text-sm font-bold outline-none">
+          </label>
+          <label class="group border-b border-stone-200 px-5 py-4 transition hover:bg-white md:border-b-0 md:border-r">
+            <span class="mb-1.5 flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-stone-500"><i data-lucide="calendar-check-2" class="h-3.5 w-3.5 text-[#5e7a51]"></i>Pengembalian</span>
+            <input id="returnInput" type="date" class="w-full bg-transparent text-sm font-bold outline-none">
+          </label>
+          <button type="submit" class="flex min-h-[74px] items-center justify-center gap-2 bg-[#f36635] px-7 text-sm font-extrabold text-white transition hover:bg-[#d95328] focus:outline-none focus:ring-4 focus:ring-[#f36635]/35"><i data-lucide="search" class="h-4 w-4"></i>Lihat Armada</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="fleet" class="mx-auto max-w-[1440px] px-4 py-12 sm:px-6 lg:px-10 lg:py-16">
+      <div class="mb-8 flex flex-col justify-between gap-5 border-b border-stone-300 pb-6 md:flex-row md:items-end">
+        <div>
+          <p class="mb-2 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#5e7a51]">Available fleet</p>
+          <h2 class="font-display text-4xl font-semibold tracking-[-0.04em] text-[#183c34] sm:text-5xl">Pilih kendaraan Anda.</h2>
+        </div>
+        <p id="fleetCount" class="text-sm font-semibold text-stone-500"></p>
+      </div>
+
+      <div class="grid items-start gap-8 lg:grid-cols-[210px_minmax(0,1fr)_330px]">
+        <aside class="lg:sticky lg:top-24" aria-label="Filter armada">
+          <div class="border-y border-stone-300 py-5 lg:border-t-0 lg:pt-0">
+            <div class="mb-5 flex items-center justify-between"><h3 class="text-sm font-extrabold text-[#183c34]">Filter Armada</h3><button id="clearFilters" type="button" class="text-xs font-bold text-[#f36635] transition hover:text-[#bd4220]">Reset</button></div>
+            <div class="space-y-5">
+              <div>
+                <p class="mb-2.5 text-[10px] font-extrabold uppercase tracking-[0.13em] text-stone-500">Tipe kendaraan</p>
+                <div class="flex flex-wrap gap-2" id="typeFilters">
+                  <button type="button" data-type-filter="all" class="filter-button rounded-full border px-3 py-1.5 text-xs font-bold">Semua</button>
+                  <button type="button" data-type-filter="MPV" class="filter-button rounded-full border px-3 py-1.5 text-xs font-bold">MPV</button>
+                  <button type="button" data-type-filter="SUV" class="filter-button rounded-full border px-3 py-1.5 text-xs font-bold">SUV</button>
+                  <button type="button" data-type-filter="Luxury" class="filter-button rounded-full border px-3 py-1.5 text-xs font-bold">Luxury</button>
+                  <button type="button" data-type-filter="Sedan" class="filter-button rounded-full border px-3 py-1.5 text-xs font-bold">Sedan</button>
+                </div>
+              </div>
+              <div>
+                <p class="mb-2.5 text-[10px] font-extrabold uppercase tracking-[0.13em] text-stone-500">Transmisi</p>
+                <div class="space-y-1" id="transmissionFilters">
+                  <button type="button" data-transmission-filter="all" class="filter-button flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold"><span>Semua transmisi</span><i data-lucide="chevron-right" class="h-3.5 w-3.5"></i></button>
+                  <button type="button" data-transmission-filter="Manual" class="filter-button flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold"><span>Manual</span><i data-lucide="chevron-right" class="h-3.5 w-3.5"></i></button>
+                  <button type="button" data-transmission-filter="Matic" class="filter-button flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold"><span>Matic</span><i data-lucide="chevron-right" class="h-3.5 w-3.5"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div id="vehicleGrid" class="grid gap-5 sm:grid-cols-2" aria-live="polite"></div>
+
+        <aside id="booking" class="lg:sticky lg:top-24">
+          <div class="overflow-hidden rounded-2xl bg-[#183c34] text-white shadow-[0_20px_45px_rgba(24,60,52,.18)]">
+            <div class="border-b border-white/15 px-5 py-5">
+              <div class="flex items-center justify-between"><div><p class="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#b9d09f]">Your reservation</p><h2 class="mt-1 text-lg font-extrabold">Ringkasan Booking</h2></div><span class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-[#d6e9bb]"><i data-lucide="receipt-text" class="h-[18px] w-[18px]"></i></span></div>
+            </div>
+            <div class="space-y-5 px-5 py-5">
+              <div>
+                <p class="mb-2 text-[10px] font-extrabold uppercase tracking-[0.13em] text-white/50">Layanan</p>
+                <div class="grid grid-cols-2 gap-2" id="serviceModes">
+                  <label class="mode-label cursor-pointer rounded-xl border border-white/15 p-3">
+                    <input class="sr-only" type="radio" name="serviceMode" value="self">
+                    <i data-lucide="key-round" class="mb-2 h-4 w-4"></i><span class="block text-xs font-bold">Lepas Kunci</span>
+                  </label>
+                  <label class="mode-label cursor-pointer rounded-xl border border-white/15 p-3">
+                    <input class="sr-only" type="radio" name="serviceMode" value="driver">
+                    <i data-lucide="steering-wheel" class="mb-2 h-4 w-4"></i><span class="block text-xs font-bold">Dengan Sopir</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <p class="mb-2 text-[10px] font-extrabold uppercase tracking-[0.13em] text-white/50">Add-ons</p>
+                <div class="space-y-2">
+                  <button type="button" data-addon="insurance" class="addon-button flex w-full items-center justify-between rounded-xl border border-white/15 px-3 py-2.5 text-left"><span class="flex items-center gap-2.5"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i></span><span><span class="block text-xs font-bold">Asuransi perjalanan</span><span class="text-[10px] text-white/55">Rp85.000 / hari</span></span></span><span class="addon-check flex h-5 w-5 items-center justify-center rounded-full border border-white/35"><i data-lucide="check" class="hidden h-3 w-3"></i></span></button>
+                  <button type="button" data-addon="babySeat" class="addon-button flex w-full items-center justify-between rounded-xl border border-white/15 px-3 py-2.5 text-left"><span class="flex items-center gap-2.5"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10"><i data-lucide="baby" class="h-3.5 w-3.5"></i></span><span><span class="block text-xs font-bold">Kursi bayi</span><span class="text-[10px] text-white/55">Rp35.000 / hari</span></span></span><span class="addon-check flex h-5 w-5 items-center justify-center rounded-full border border-white/35"><i data-lucide="check" class="hidden h-3 w-3"></i></span></button>
+                </div>
+              </div>
+
+              <div id="summaryDetails" class="border-y border-white/15 py-4"></div>
+              <button id="checkoutButton" type="button" class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#f36635] px-4 py-3.5 text-sm font-extrabold text-white transition hover:bg-[#d95328] focus:outline-none focus:ring-4 focus:ring-[#f36635]/35"><i data-lucide="lock-keyhole" class="h-4 w-4"></i>Checkout Reservasi</button>
+              <p class="text-center text-[10px] leading-4 text-white/50">Harga sudah termasuk PPN 11%. Konfirmasi dilakukan setelah dokumen terunggah.</p>
+            </div>
+          </div>
+
+          <section id="documents" class="mt-5 border-t border-stone-300 pt-5" aria-labelledby="documentsTitle">
+            <p class="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#5e7a51]">Verifikasi penyewa</p>
+            <h2 id="documentsTitle" class="mt-1 text-base font-extrabold text-[#183c34]">Unggah SIM A & KTP</h2>
+            <p class="mt-1 text-xs leading-5 text-stone-500">Gunakan foto yang jelas. Preview tersimpan di browser ini.</p>
+            <div class="mt-4 grid grid-cols-2 gap-3" id="documentUploads"></div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-stone-300 px-4 py-8 sm:px-6 lg:px-10">
+    <div class="mx-auto flex max-w-[1440px] flex-col justify-between gap-2 text-xs text-stone-500 sm:flex-row"><p><span class="font-extrabold tracking-[0.12em] text-[#183c34]">NOVA RIDE</span> (c) 2025. Fleet booking demo.</p><p>Prototype interface by NovaNext.</p></div>
+  </footer>
+
+  <div id="modalRoot" class="hidden fixed inset-0 z-[60] items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></div>
+  <div id="toastRoot" class="pointer-events-none fixed bottom-4 right-4 z-[70] flex w-[min(92vw,380px)] flex-col gap-2" aria-live="polite"></div>
+
+  <script>
+    const STORE_KEY = 'novaride-fleet-booking-v1';
+    const ORDERS_KEY = 'novaride-fleet-orders-v1';
+
+    const vehicles = [
+      { id: 'avanza', name: 'Toyota Avanza Veloz', type: 'MPV', transmission: 'Matic', seats: 7, luggage: 3, year: '2024', price: 380000, image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=900&q=80', accent: 'Keluarga' },
+      { id: 'innova', name: 'Innova Zenix Hybrid', type: 'MPV', transmission: 'Matic', seats: 7, luggage: 4, year: '2024', price: 620000, image: 'https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=900&q=80', accent: 'Efisien' },
+      { id: 'fortuner', name: 'Toyota Fortuner GR', type: 'SUV', transmission: 'Matic', seats: 7, luggage: 4, year: '2023', price: 980000, image: 'https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=900&q=80', accent: 'Adventure' },
+      { id: 'brio', name: 'Honda Brio Satya', type: 'Sedan', transmission: 'Manual', seats: 5, luggage: 2, year: '2024', price: 320000, image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80', accent: 'City ride' },
+      { id: 'city', name: 'Honda City Hatchback', type: 'Sedan', transmission: 'Matic', seats: 5, luggage: 2, year: '2024', price: 540000, image: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=900&q=80', accent: 'Business' },
+      { id: 'alphard', name: 'Toyota Alphard HEV', type: 'Luxury', transmission: 'Matic', seats: 7, luggage: 4, year: '2024', price: 2500000, image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80', accent: 'Premium' }
+    ];
+
+    const toIsoDate = (offset) => {
+      const date = new Date();
+      date.setHours(12, 0, 0, 0);
+      date.setDate(date.getDate() + offset);
+      return date.toISOString().slice(0, 10);
+    };
+
+    const defaultState = () => ({
+      filters: { type: 'all', transmission: 'all' },
+      booking: {
+        location: 'Jakarta Selatan',
+        pickupDate: toIsoDate(1),
+        returnDate: toIsoDate(4),
+        vehicleId: 'avanza',
+        service: 'self',
+        addOns: { insurance: true, babySeat: false },
+        documents: { license: null, identity: null }
+      }
+    });
+
+    let state = loadState();
+    let modalState = null;
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+        if (!saved || !saved.booking) return defaultState();
+        const fallback = defaultState();
+        return {
+          filters: { ...fallback.filters, ...saved.filters },
+          booking: {
+            ...fallback.booking,
+            ...saved.booking,
+            addOns: { ...fallback.booking.addOns, ...(saved.booking.addOns || {}) },
+            documents: { ...fallback.booking.documents, ...(saved.booking.documents || {}) }
+          }
+        };
+      } catch (error) {
+        return defaultState();
+      }
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      } catch (error) {
+        showToast('Penyimpanan browser penuh. Foto belum dapat disimpan.', 'error');
+      }
+    }
+
+    function getVehicle(id = state.booking.vehicleId) {
+      return vehicles.find((vehicle) => vehicle.id === id) || vehicles[0];
+    }
+
+    function daysBetween(start, end) {
+      const startDate = new Date(`${start}T12:00:00`);
+      const endDate = new Date(`${end}T12:00:00`);
+      const diff = Math.round((endDate - startDate) / 86400000);
+      return Number.isFinite(diff) && diff > 0 ? diff : 1;
+    }
+
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+    }
+
+    function formatDate(dateString) {
+      return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${dateString}T12:00:00`));
+    }
+
+    function calculateBooking() {
+      const vehicle = getVehicle();
+      const days = daysBetween(state.booking.pickupDate, state.booking.returnDate);
+      const addOns = {
+        insurance: state.booking.addOns.insurance ? 85000 * days : 0,
+        babySeat: state.booking.addOns.babySeat ? 35000 * days : 0,
+        driver: state.booking.service === 'driver' ? 210000 * days : 0
+      };
+      const rental = vehicle.price * days;
+      const subtotal = rental + addOns.insurance + addOns.babySeat + addOns.driver;
+      const tax = Math.round(subtotal * 0.11);
+      return { vehicle, days, rental, addOns, subtotal, tax, total: subtotal + tax };
+    }
+
+    function filteredVehicles() {
+      return vehicles.filter((vehicle) => {
+        const typeMatch = state.filters.type === 'all' || vehicle.type === state.filters.type;
+        const transmissionMatch = state.filters.transmission === 'all' || vehicle.transmission === state.filters.transmission;
+        return typeMatch && transmissionMatch;
+      });
+    }
+
+    function renderVehicles() {
+      const grid = document.getElementById('vehicleGrid');
+      const list = filteredVehicles();
+      document.getElementById('fleetCount').textContent = `${list.length} dari ${vehicles.length} kendaraan tersedia`;
+      if (!list.length) {
+        grid.innerHTML = '<div class="col-span-full border-y border-dashed border-stone-300 py-14 text-center"><p class="font-display text-2xl text-[#183c34]">Armada tidak ditemukan.</p><button id="emptyReset" type="button" class="mt-3 text-sm font-bold text-[#f36635]">Hapus filter</button></div>';
+        return;
+      }
+      grid.innerHTML = list.map((vehicle, index) => {
+        const selected = vehicle.id === state.booking.vehicleId;
+        return `
+          <article class="vehicle-item overflow-hidden rounded-2xl border ${selected ? 'border-[#5e7a51] ring-1 ring-[#5e7a51]/40' : 'border-stone-200'} bg-white" style="animation-delay: ${index * 55}ms">
+            <div class="relative h-44 overflow-hidden bg-stone-200 sm:h-48">
+              <img src="${vehicle.image}" alt="${vehicle.name}" class="vehicle-photo h-full w-full object-cover" loading="lazy">
+              <span class="absolute left-3 top-3 rounded-full bg-[#183c34] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.1em] text-white">${vehicle.accent}</span>
+              ${selected ? '<span class="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-[#d8e8c2] px-2.5 py-1 text-[10px] font-extrabold text-[#315242]"><i data-lucide="check" class="h-3 w-3"></i>Dipilih</span>' : ''}
+            </div>
+            <div class="p-4">
+              <div class="flex items-start justify-between gap-3">
+              <div><p class="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#6d895b]">${vehicle.type} - ${vehicle.year}</p><h3 class="mt-1 text-base font-extrabold tracking-[-0.02em] text-[#183c34]">${vehicle.name}</h3></div>
+                <button type="button" data-details="${vehicle.id}" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition hover:border-[#183c34] hover:bg-[#183c34] hover:text-white" aria-label="Lihat spesifikasi ${vehicle.name}"><i data-lucide="info" class="h-3.5 w-3.5"></i></button>
+              </div>
+              <div class="mt-4 flex gap-3 border-y border-stone-100 py-3 text-[11px] font-semibold text-stone-500"><span class="flex items-center gap-1"><i data-lucide="settings-2" class="h-3.5 w-3.5 text-[#6d895b]"></i>${vehicle.transmission}</span><span class="flex items-center gap-1"><i data-lucide="users" class="h-3.5 w-3.5 text-[#6d895b]"></i>${vehicle.seats} kursi</span><span class="flex items-center gap-1"><i data-lucide="briefcase-business" class="h-3.5 w-3.5 text-[#6d895b]"></i>${vehicle.luggage}</span></div>
+              <div class="mt-4 flex items-end justify-between gap-3"><p class="text-[11px] font-semibold text-stone-500">Mulai <strong class="ml-1 text-base font-extrabold text-[#183c34]">${formatCurrency(vehicle.price)}</strong><span class="block text-right text-[10px] font-medium">/ hari</span></p><button type="button" data-select-vehicle="${vehicle.id}" class="rounded-lg ${selected ? 'bg-[#e6eddf] text-[#315242]' : 'bg-[#183c34] text-white'} px-3.5 py-2.5 text-xs font-extrabold transition hover:scale-[1.02]">${selected ? 'Terpilih' : 'Pilih'}</button></div>
+            </div>
+          </article>`;
+      }).join('');
+      refreshIcons();
+    }
+
+    function renderFilters() {
+      document.querySelectorAll('[data-type-filter]').forEach((button) => {
+        const active = button.dataset.typeFilter === state.filters.type;
+        button.className = `filter-button rounded-full border px-3 py-1.5 text-xs font-bold ${active ? 'border-[#183c34] bg-[#183c34] text-white' : 'border-stone-300 bg-transparent text-stone-600 hover:border-[#183c34]'}`;
+      });
+      document.querySelectorAll('[data-transmission-filter]').forEach((button) => {
+        const active = button.dataset.transmissionFilter === state.filters.transmission;
+        button.className = `filter-button flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-bold ${active ? 'bg-[#e6eddf] text-[#315242]' : 'text-stone-600 hover:bg-stone-100'}`;
+      });
+    }
+
+    function renderSearchInputs() {
+      document.getElementById('locationInput').value = state.booking.location;
+      document.getElementById('pickupInput').value = state.booking.pickupDate;
+      document.getElementById('returnInput').value = state.booking.returnDate;
+      document.getElementById('pickupInput').min = toIsoDate(0);
+      document.getElementById('returnInput').min = state.booking.pickupDate;
+    }
+
+    function renderBooking() {
+      const result = calculateBooking();
+      const serviceName = state.booking.service === 'driver' ? 'Dengan Sopir' : 'Lepas Kunci';
+      document.getElementById('summaryDetails').innerHTML = `
+        <div class="flex gap-3"><img src="${result.vehicle.image}" alt="" class="h-12 w-16 rounded-lg object-cover"><div class="min-w-0"><p class="truncate text-xs font-extrabold">${result.vehicle.name}</p><p class="mt-1 text-[10px] text-white/55">${serviceName} - ${result.days} hari</p><p class="mt-1 text-[10px] text-white/55">${formatDate(state.booking.pickupDate)} - ${formatDate(state.booking.returnDate)}</p></div></div>
+        <dl class="mt-4 space-y-2 text-[11px] text-white/65"><div class="flex justify-between gap-4"><dt>Sewa kendaraan</dt><dd class="font-semibold text-white">${formatCurrency(result.rental)}</dd></div>${result.addOns.insurance ? `<div class="flex justify-between gap-4"><dt>Asuransi</dt><dd class="font-semibold text-white">${formatCurrency(result.addOns.insurance)}</dd></div>` : ''}${result.addOns.driver ? `<div class="flex justify-between gap-4"><dt>Sopir profesional</dt><dd class="font-semibold text-white">${formatCurrency(result.addOns.driver)}</dd></div>` : ''}${result.addOns.babySeat ? `<div class="flex justify-between gap-4"><dt>Kursi bayi</dt><dd class="font-semibold text-white">${formatCurrency(result.addOns.babySeat)}</dd></div>` : ''}<div class="flex justify-between gap-4"><dt>PPN 11%</dt><dd class="font-semibold text-white">${formatCurrency(result.tax)}</dd></div></dl>
+        <div class="summary-total mt-4 flex items-end justify-between border-t border-white/15 pt-4"><div><p class="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#b9d09f]">Total estimasi</p><p class="mt-1 text-[10px] text-white/55">${state.booking.location}</p></div><strong class="text-lg font-extrabold tracking-[-0.03em]">${formatCurrency(result.total)}</strong></div>`;
+
+      document.querySelectorAll('input[name="serviceMode"]').forEach((input) => {
+        input.checked = input.value === state.booking.service;
+        input.closest('label').classList.toggle('border-[#b9d09f]', input.checked);
+        input.closest('label').classList.toggle('bg-white/10', input.checked);
+      });
+      document.querySelectorAll('[data-addon]').forEach((button) => {
+        const isActive = state.booking.addOns[button.dataset.addon];
+        button.classList.toggle('border-[#b9d09f]', isActive);
+        button.classList.toggle('bg-white/10', isActive);
+        button.querySelector('.addon-check').classList.toggle('border-[#b9d09f]', isActive);
+        button.querySelector('.addon-check').classList.toggle('bg-[#b9d09f]', isActive);
+        button.querySelector('.addon-check').classList.toggle('text-[#183c34]', isActive);
+        const checkIcon = button.querySelector('.addon-check svg, .addon-check i');
+        if (checkIcon) checkIcon.classList.toggle('hidden', !isActive);
+      });
+      refreshIcons();
+    }
+
+    function documentTemplate(kind, label, icon) {
+      const documentData = state.booking.documents[kind];
+      const imageArea = documentData
+        ? `<img src="${documentData.preview}" alt="Preview ${label}" class="h-24 w-full rounded-xl object-cover">`
+        : `<div class="flex h-24 w-full flex-col items-center justify-center rounded-xl border border-dashed border-stone-300 bg-stone-50 text-stone-400"><i data-lucide="${icon}" class="h-5 w-5"></i><span class="mt-1 text-[10px] font-bold">Belum ada foto</span></div>`;
+      return `<div class="relative">${imageArea}<input id="${kind}Input" type="file" accept="image/*" class="sr-only" data-document-input="${kind}"><label for="${kind}Input" class="mt-2 flex cursor-pointer items-center justify-center gap-1.5 text-xs font-extrabold text-[#315242] transition hover:text-[#f36635]"><i data-lucide="${documentData ? 'refresh-cw' : 'upload'}" class="h-3.5 w-3.5"></i>${documentData ? 'Ganti foto' : `Unggah ${label}`}</label>${documentData ? `<button type="button" data-remove-document="${kind}" class="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#12211e]/70 text-white transition hover:bg-[#f36635]" aria-label="Hapus ${label}"><i data-lucide="x" class="h-3.5 w-3.5"></i></button>` : ''}</div>`;
+    }
+
+    function renderDocuments() {
+      document.getElementById('documentUploads').innerHTML = `${documentTemplate('license', 'SIM A', 'id-card')}${documentTemplate('identity', 'KTP', 'credit-card')}`;
+      refreshIcons();
+    }
+
+    function renderAll() {
+      renderSearchInputs();
+      renderFilters();
+      renderVehicles();
+      renderBooking();
+      renderDocuments();
+    }
+
+    function refreshIcons() {
+      if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 1.8 } });
+    }
+
+    function validateDates(showFeedback = false) {
+      if (!state.booking.pickupDate || state.booking.pickupDate < toIsoDate(0)) state.booking.pickupDate = toIsoDate(1);
+      if (!state.booking.returnDate || state.booking.returnDate <= state.booking.pickupDate) {
+        const pickup = new Date(`${state.booking.pickupDate}T12:00:00`);
+        pickup.setDate(pickup.getDate() + 1);
+        state.booking.returnDate = pickup.toISOString().slice(0, 10);
+        if (showFeedback) showToast('Tanggal pengembalian disesuaikan minimal satu hari.', 'info');
+      }
+    }
+
+    function selectVehicle(id) {
+      const vehicle = getVehicle(id);
+      state.booking.vehicleId = vehicle.id;
+      persistState();
+      renderVehicles();
+      renderBooking();
+      showToast(`${vehicle.name} ditambahkan ke ringkasan booking.`, 'success');
+    }
+
+    function openModal(type, vehicleId = null) {
+      modalState = { type, vehicleId };
+      const root = document.getElementById('modalRoot');
+      const result = calculateBooking();
+      if (type === 'details') {
+        const vehicle = getVehicle(vehicleId);
+        root.innerHTML = `<div class="absolute inset-0 bg-[#0c211c]/60" data-close-modal></div><div class="modal-shell relative w-full max-w-lg overflow-hidden rounded-2xl bg-[#f9f8f4] shadow-2xl"><div class="relative h-56"><img src="${vehicle.image}" alt="${vehicle.name}" class="h-full w-full object-cover"><button type="button" data-close-modal class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#183c34] transition hover:bg-[#f36635] hover:text-white" aria-label="Tutup"><i data-lucide="x" class="h-4 w-4"></i></button></div><div class="p-6"><p class="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#6d895b]">${vehicle.type} - ${vehicle.year}</p><h2 id="modalTitle" class="mt-1 font-display text-3xl font-semibold tracking-[-0.04em] text-[#183c34]">${vehicle.name}</h2><div class="mt-5 grid grid-cols-3 border-y border-stone-200 py-4 text-center text-xs"><div><i data-lucide="settings-2" class="mx-auto mb-1 h-4 w-4 text-[#6d895b]"></i><strong class="block">${vehicle.transmission}</strong><span class="text-stone-500">Transmisi</span></div><div class="border-x border-stone-200"><i data-lucide="users" class="mx-auto mb-1 h-4 w-4 text-[#6d895b]"></i><strong class="block">${vehicle.seats} kursi</strong><span class="text-stone-500">Penumpang</span></div><div><i data-lucide="briefcase-business" class="mx-auto mb-1 h-4 w-4 text-[#6d895b]"></i><strong class="block">${vehicle.luggage}</strong><span class="text-stone-500">Bagasi</span></div></div><div class="mt-5 flex items-center justify-between"><p class="text-sm text-stone-500">Mulai <strong class="text-lg text-[#183c34]">${formatCurrency(vehicle.price)}</strong> / hari</p><button type="button" data-modal-select="${vehicle.id}" class="rounded-xl bg-[#183c34] px-4 py-3 text-sm font-extrabold text-white transition hover:bg-[#315242]">Pilih kendaraan</button></div></div></div>`;
+      } else {
+        const documentsComplete = Boolean(state.booking.documents.license && state.booking.documents.identity);
+        root.innerHTML = `<div class="absolute inset-0 bg-[#0c211c]/60" data-close-modal></div><div class="modal-shell relative w-full max-w-md rounded-2xl bg-[#f9f8f4] p-6 shadow-2xl"><button type="button" data-close-modal class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 text-stone-600 transition hover:border-[#f36635] hover:bg-[#f36635] hover:text-white" aria-label="Tutup"><i data-lucide="x" class="h-4 w-4"></i></button><span class="flex h-11 w-11 items-center justify-center rounded-full bg-[#e6eddf] text-[#315242]"><i data-lucide="calendar-check-2" class="h-5 w-5"></i></span><p class="mt-5 text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#6d895b]">Konfirmasi reservasi</p><h2 id="modalTitle" class="mt-1 font-display text-3xl font-semibold tracking-[-0.04em] text-[#183c34]">Siap berangkat?</h2><div class="mt-5 border-y border-stone-200 py-4 text-sm"><div class="flex justify-between gap-4"><span class="text-stone-500">Kendaraan</span><strong class="text-right text-[#183c34]">${result.vehicle.name}</strong></div><div class="mt-3 flex justify-between gap-4"><span class="text-stone-500">Durasi</span><strong class="text-right text-[#183c34]">${result.days} hari</strong></div><div class="mt-3 flex justify-between gap-4"><span class="text-stone-500">Total</span><strong class="text-right text-[#183c34]">${formatCurrency(result.total)}</strong></div></div><div class="mt-4 flex gap-2 rounded-xl ${documentsComplete ? 'bg-[#e6eddf] text-[#315242]' : 'bg-[#fff0e9] text-[#a63f22]'} p-3 text-xs leading-5"><i data-lucide="${documentsComplete ? 'badge-check' : 'circle-alert'}" class="mt-0.5 h-4 w-4 shrink-0"></i><span>${documentsComplete ? 'SIM A dan KTP telah tersimpan. Reservasi siap dikonfirmasi.' : 'Lengkapi SIM A dan KTP pada panel dokumen untuk mengonfirmasi booking.'}</span></div><button type="button" id="confirmBooking" ${documentsComplete ? '' : 'disabled'} class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#f36635] px-4 py-3.5 text-sm font-extrabold text-white transition hover:bg-[#d95328] disabled:cursor-not-allowed disabled:bg-stone-300"><i data-lucide="check-circle-2" class="h-4 w-4"></i>Konfirmasi Booking</button></div>`;
+      }
+      root.classList.remove('hidden');
+      root.classList.add('flex');
+      refreshIcons();
+    }
+
+    function closeModal() {
+      const root = document.getElementById('modalRoot');
+      root.classList.add('hidden');
+      root.classList.remove('flex');
+      root.innerHTML = '';
+      modalState = null;
+    }
+
+    function saveOrder() {
+      const result = calculateBooking();
+      const reference = `NR-${Date.now().toString().slice(-7)}`;
+      const order = {
+        reference,
+        createdAt: new Date().toISOString(),
+        booking: { ...state.booking, documents: { license: Boolean(state.booking.documents.license), identity: Boolean(state.booking.documents.identity) } },
+        total: result.total
+      };
+      try {
+        const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+        orders.unshift(order);
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders.slice(0, 8)));
+        closeModal();
+        showToast(`Booking ${reference} berhasil dikonfirmasi.`, 'success');
+      } catch (error) {
+        showToast('Booking belum dapat disimpan. Silakan coba lagi.', 'error');
+      }
+    }
+
+    function showToast(message, tone = 'info') {
+      const colors = { success: 'border-[#9dbb80] bg-[#eef5e7] text-[#315242]', error: 'border-[#f0a086] bg-[#fff0e9] text-[#9c391e]', info: 'border-[#9bb6aa] bg-[#edf5f1] text-[#244f40]' };
+      const icons = { success: 'check-circle-2', error: 'circle-alert', info: 'info' };
+      const item = document.createElement('div');
+      item.className = `toast-item pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-semibold shadow-lg ${colors[tone] || colors.info}`;
+      item.innerHTML = `<i data-lucide="${icons[tone] || icons.info}" class="mt-0.5 h-4 w-4 shrink-0"></i><span class="flex-1 leading-5">${message}</span><button type="button" class="toast-close opacity-70 transition hover:opacity-100" aria-label="Tutup notifikasi"><i data-lucide="x" class="h-4 w-4"></i></button>`;
+      document.getElementById('toastRoot').appendChild(item);
+      refreshIcons();
+      const remove = () => item.remove();
+      item.querySelector('.toast-close').addEventListener('click', remove);
+      window.setTimeout(remove, 4200);
+    }
+
+    function toggleDrawer(open) {
+      const drawer = document.getElementById('navDrawer');
+      const panel = document.getElementById('drawerPanel');
+      const backdrop = document.getElementById('drawerBackdrop');
+      drawer.classList.toggle('pointer-events-none', !open);
+      drawer.setAttribute('aria-hidden', String(!open));
+      panel.classList.toggle('translate-x-full', !open);
+      backdrop.classList.toggle('opacity-0', !open);
+      document.getElementById('openDrawer').setAttribute('aria-expanded', String(open));
+    }
+
+    function shrinkImage(dataUrl) {
+      return new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => {
+          const maxSide = 900;
+          const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(image.width * scale));
+          canvas.height = Math.max(1, Math.round(image.height * scale));
+          canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.78));
+        };
+        image.onerror = () => resolve(dataUrl);
+        image.src = dataUrl;
+      });
+    }
+
+    async function handleDocumentUpload(kind, file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Gunakan file gambar untuk dokumen verifikasi.', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const preview = await shrinkImage(event.target.result);
+        state.booking.documents[kind] = { name: file.name, preview };
+        persistState();
+        renderDocuments();
+        showToast(`${kind === 'license' ? 'SIM A' : 'KTP'} berhasil diunggah.`, 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+
+      document.getElementById('searchForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        validateDates(true);
+        persistState();
+        renderSearchInputs();
+        renderBooking();
+        document.getElementById('fleet').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showToast(`Menampilkan armada untuk ${state.booking.location}.`, 'info');
+      });
+
+      document.getElementById('locationInput').addEventListener('change', (event) => {
+        state.booking.location = event.target.value;
+        persistState();
+        renderBooking();
+      });
+      document.getElementById('pickupInput').addEventListener('change', (event) => {
+        state.booking.pickupDate = event.target.value;
+        validateDates(true);
+        persistState();
+        renderSearchInputs();
+        renderBooking();
+      });
+      document.getElementById('returnInput').addEventListener('change', (event) => {
+        state.booking.returnDate = event.target.value;
+        validateDates(true);
+        persistState();
+        renderSearchInputs();
+        renderBooking();
+      });
+
+      document.getElementById('typeFilters').addEventListener('click', (event) => {
+        const button = event.target.closest('[data-type-filter]');
+        if (!button) return;
+        state.filters.type = button.dataset.typeFilter;
+        persistState();
+        renderFilters();
+        renderVehicles();
+        showToast(`Filter tipe ${button.dataset.typeFilter === 'all' ? 'dihapus' : `diubah ke ${button.dataset.typeFilter}`}.`, 'info');
+      });
+      document.getElementById('transmissionFilters').addEventListener('click', (event) => {
+        const button = event.target.closest('[data-transmission-filter]');
+        if (!button) return;
+        state.filters.transmission = button.dataset.transmissionFilter;
+        persistState();
+        renderFilters();
+        renderVehicles();
+        showToast(`Filter transmisi ${button.dataset.transmissionFilter === 'all' ? 'dihapus' : button.dataset.transmissionFilter}.`, 'info');
+      });
+      document.getElementById('clearFilters').addEventListener('click', () => {
+        state.filters = { type: 'all', transmission: 'all' };
+        persistState();
+        renderFilters();
+        renderVehicles();
+        showToast('Semua filter telah dihapus.', 'info');
+      });
+
+      document.getElementById('vehicleGrid').addEventListener('click', (event) => {
+        const selectButton = event.target.closest('[data-select-vehicle]');
+        const detailButton = event.target.closest('[data-details]');
+        const resetButton = event.target.closest('#emptyReset');
+        if (selectButton) selectVehicle(selectButton.dataset.selectVehicle);
+        if (detailButton) openModal('details', detailButton.dataset.details);
+        if (resetButton) document.getElementById('clearFilters').click();
+      });
+
+      document.getElementById('serviceModes').addEventListener('change', (event) => {
+        if (!event.target.matches('input[name="serviceMode"]')) return;
+        state.booking.service = event.target.value;
+        persistState();
+        renderBooking();
+        showToast(event.target.value === 'driver' ? 'Layanan sopir profesional ditambahkan.' : 'Layanan diubah ke lepas kunci.', 'success');
+      });
+      document.querySelectorAll('[data-addon]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const addon = button.dataset.addon;
+          state.booking.addOns[addon] = !state.booking.addOns[addon];
+          persistState();
+          renderBooking();
+          showToast(`${addon === 'insurance' ? 'Asuransi perjalanan' : 'Kursi bayi'} ${state.booking.addOns[addon] ? 'ditambahkan' : 'dihapus'}.`, 'success');
+        });
+      });
+
+      document.getElementById('documentUploads').addEventListener('change', (event) => {
+        const input = event.target.closest('[data-document-input]');
+        if (input) handleDocumentUpload(input.dataset.documentInput, input.files[0]);
+      });
+      document.getElementById('documentUploads').addEventListener('click', (event) => {
+        const button = event.target.closest('[data-remove-document]');
+        if (!button) return;
+        state.booking.documents[button.dataset.removeDocument] = null;
+        persistState();
+        renderDocuments();
+        showToast('Dokumen dihapus dari browser.', 'info');
+      });
+
+      document.getElementById('checkoutButton').addEventListener('click', () => openModal('checkout'));
+      document.getElementById('modalRoot').addEventListener('click', (event) => {
+        if (event.target.closest('[data-close-modal]')) closeModal();
+        const selectButton = event.target.closest('[data-modal-select]');
+        if (selectButton) {
+          closeModal();
+          selectVehicle(selectButton.dataset.modalSelect);
+        }
+        if (event.target.closest('#confirmBooking')) saveOrder();
+      });
+
+      document.getElementById('openDrawer').addEventListener('click', () => toggleDrawer(true));
+      document.getElementById('closeDrawer').addEventListener('click', () => toggleDrawer(false));
+      document.getElementById('drawerBackdrop').addEventListener('click', () => toggleDrawer(false));
+      document.querySelectorAll('.drawer-link').forEach((link) => link.addEventListener('click', () => toggleDrawer(false)));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { closeModal(); toggleDrawer(false); }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#4f46e5">
+<title>NovaPOS — Kasir Resto & Retail | Demo Prototype by NovaNext</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: { sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+    } }
+  }
+</script>
+<style id="page-style">@page { margin: 0; }</style>
+<style>
+  html, body { -webkit-tap-highlight-color: transparent; }
+  body { overscroll-behavior: none; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* Animations */
+  @keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+  @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+  @keyframes ring { 0% { transform: scale(.6); opacity: .8 } 100% { transform: scale(1.6); opacity: 0 } }
+  @keyframes bump { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+  .product-card { animation: popIn .35s cubic-bezier(.2,.8,.2,1) both; }
+  .cart-anim { animation: slideIn .3s cubic-bezier(.2,.8,.2,1) both; }
+  .fade-up { animation: fadeUp .4s cubic-bezier(.2,.8,.2,1) both; }
+  .shake { animation: shake .4s ease; }
+  .bump { animation: bump .3s ease; }
+  .check-path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawCheck .5s .2s ease forwards; }
+  .ring-anim::before { content:''; position:absolute; inset:0; border-radius:9999px; background:#10b981; animation: ring 1.2s ease-out infinite; }
+
+  /* Modal system */
+  .modal { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; padding: 12px; }
+  .modal.show { display: flex; }
+  .modal .backdrop { position: absolute; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(4px); opacity: 0; transition: opacity .2s ease; }
+  .modal .panel { position: relative; opacity: 0; transform: translateY(16px) scale(.97); transition: all .25s cubic-bezier(.2,.8,.2,1); }
+  .modal.open .backdrop { opacity: 1; }
+  .modal.open .panel { opacity: 1; transform: none; }
+
+  /* Drawer */
+  #drawer { pointer-events: none; }
+  #drawer .backdrop { opacity: 0; transition: opacity .25s; }
+  #drawer .dpanel { transform: translateX(-100%); transition: transform .32s cubic-bezier(.32,.72,0,1); }
+  #drawer.open { pointer-events: auto; }
+  #drawer.open .backdrop { opacity: 1; }
+  #drawer.open .dpanel { transform: none; }
+
+  /* Mobile cart bottom sheet */
+  @media (max-width: 1023px) {
+    #cart-panel { position: fixed; left: 0; right: 0; bottom: 0; height: 92dvh; z-index: 45; border-radius: 24px 24px 0 0;
+      transform: translateY(105%); transition: transform .38s cubic-bezier(.32,.72,0,1); box-shadow: 0 -20px 50px rgba(15,23,42,.25); }
+    #cart-panel.open { transform: translateY(0); }
+  }
+  #cart-backdrop { opacity: 0; pointer-events: none; transition: opacity .3s; }
+  #cart-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .seg-btn { transition: all .2s; }
+  .seg-btn.active { background: #fff; color: #4f46e5; box-shadow: 0 1px 3px rgba(15,23,42,.12); }
+  .chip.active { background: #4f46e5; color: #fff; border-color: #4f46e5; box-shadow: 0 6px 16px -6px rgba(79,70,229,.6); }
+  .key { transition: transform .08s, background .15s; }
+  .key:active { transform: scale(.94); }
+  .toggle { width: 38px; height: 22px; border-radius: 99px; background: #cbd5e1; position: relative; transition: background .2s; }
+  .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 99px; background: #fff; transition: transform .2s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .toggle.on { background: #4f46e5; }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* Receipt (thermal) */
+  .receipt { font-family: 'JetBrains Mono', ui-monospace, monospace; color: #000; background: #fff; line-height: 1.4; }
+  .receipt-80 { width: 80mm; font-size: 11.5px; padding: 5mm 4mm 7mm; }
+  .receipt-58 { width: 58mm; font-size: 9.5px; padding: 4mm 2.5mm 6mm; }
+  .receipt .row { display: flex; justify-content: space-between; gap: 8px; }
+  .receipt .row span:last-child { text-align: right; white-space: nowrap; }
+  .receipt .sep { border-top: 1px dashed #000; margin: 6px 0; }
+  .receipt .sep2 { border-top: 3px double #000; margin: 6px 0; }
+  .receipt .center { text-align: center; }
+  .receipt .bold { font-weight: 800; }
+  .receipt .big { font-size: 1.3em; font-weight: 800; }
+  .receipt .store { font-size: 1.35em; font-weight: 800; letter-spacing: .5px; }
+  .receipt .item { margin-bottom: 3px; }
+  .receipt .indent { padding-left: 1.2em; }
+  .paper-preview { filter: drop-shadow(0 10px 20px rgba(15,23,42,.15)); }
+  .paper-preview .receipt { position: relative; }
+  .paper-preview .receipt::after { content:''; position:absolute; left:0; right:0; bottom:-8px; height:8px;
+    background: linear-gradient(-45deg, transparent 6px, #fff 0) 0 0/12px 12px, linear-gradient(45deg, transparent 6px, #fff 0) 0 0/12px 12px; background-repeat: repeat-x; }
+
+  #print-area { position: fixed; left: -10000px; top: 0; background: #fff; }
+  @media print {
+    html, body { height: auto !important; overflow: visible !important; background: #fff !important; margin: 0 !important; }
+    body > *:not(#print-area) { display: none !important; }
+    #print-area { position: static; left: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body class="h-full overflow-hidden bg-slate-100 font-sans text-slate-800 antialiased">
+
+<div id="app" class="flex flex-col h-[100dvh]">
+  <!-- ================= HEADER ================= -->
+  <header class="h-16 shrink-0 bg-white/90 backdrop-blur border-b border-slate-200 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 z-30">
+    <button onclick="App.toggleDrawer(true)" class="w-10 h-10 rounded-xl hover:bg-slate-100 grid place-items-center transition" aria-label="Menu">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 grid place-items-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+        <i data-lucide="scan-barcode" class="w-5 h-5"></i>
+      </div>
+      <div class="hidden sm:block leading-tight">
+        <p class="font-extrabold tracking-tight">Nova<span class="text-indigo-600">POS</span></p>
+        <p id="header-sub" class="text-[11px] text-slate-500 -mt-0.5">Kasir</p>
+      </div>
+    </div>
+    <span class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 text-indigo-700 text-[10px] sm:text-xs font-semibold px-2.5 py-1 whitespace-nowrap">
+      <span class="relative flex w-2 h-2"><span class="absolute inline-flex w-full h-full rounded-full bg-indigo-400 opacity-75 animate-ping"></span><span class="relative inline-flex rounded-full w-2 h-2 bg-indigo-500"></span></span>
+      Demo Prototype by NovaNext
+    </span>
+    <div class="flex-1"></div>
+    <div class="hidden md:flex items-center gap-2 text-xs text-slate-500 bg-slate-100 rounded-xl px-3 py-2">
+      <i data-lucide="clock" class="w-4 h-4"></i><span id="clock" class="font-semibold text-slate-700 tabular-nums">--:--</span>
+      <span class="w-px h-4 bg-slate-300"></span><span id="date"></span>
+    </div>
+    <div class="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 rounded-xl px-3 py-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Online
+    </div>
+    <button onclick="App.setView('history')" class="w-10 h-10 rounded-xl hover:bg-slate-100 grid place-items-center transition relative" title="Riwayat">
+      <i data-lucide="receipt-text" class="w-5 h-5"></i>
+      <span id="trx-badge" class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-indigo-600 text-white text-[10px] font-bold grid place-items-center">0</span>
+    </button>
+    <div class="hidden sm:flex items-center gap-2 pl-1">
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white grid place-items-center font-bold text-sm" id="cashier-avatar">R</div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main class="flex-1 min-h-0 relative">
+
+    <!-- ===== POS VIEW ===== -->
+    <section id="view-pos" class="view h-full grid grid-rows-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_400px] xl:grid-cols-[minmax(0,1fr)_440px]">
+      <!-- LEFT: Products -->
+      <div class="flex flex-col min-h-0 h-full">
+        <div class="shrink-0 px-3 sm:px-5 pt-4 pb-3 space-y-3 bg-slate-100">
+          <div class="flex gap-2">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input id="search" type="text" autocomplete="off" placeholder="Cari produk / scan SKU... (tekan / )" class="w-full h-11 pl-10 pr-10 rounded-xl bg-white border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 outline-none text-sm transition">
+              <button id="search-clear" onclick="App.clearSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg hover:bg-slate-100 grid place-items-center"><i data-lucide="x" class="w-4 h-4 text-slate-400"></i></button>
+            </div>
+            <button onclick="App.setView('history')" class="hidden sm:flex h-11 px-4 rounded-xl bg-white border border-slate-200 items-center gap-2 text-sm font-semibold hover:border-indigo-300 hover:text-indigo-600 transition">
+              <i data-lucide="history" class="w-4 h-4"></i> Riwayat
+            </button>
+          </div>
+          <div id="categories" class="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1"></div>
+        </div>
+        <div class="flex-1 min-h-0 overflow-y-auto px-3 sm:px-5 pb-28 lg:pb-6">
+          <div class="flex items-center justify-between mb-3">
+            <p id="product-count" class="text-xs text-slate-500 font-medium"></p>
+            <p class="hidden md:block text-[11px] text-slate-400">Tip: ketik SKU lalu Enter untuk tambah cepat</p>
+          </div>
+          <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3"></div>
+          <div id="product-empty" class="hidden text-center py-16">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-white grid place-items-center mb-3"><i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i></div>
+            <p class="font-semibold">Produk tidak ditemukan</p>
+            <p class="text-sm text-slate-500">Coba kata kunci lain atau ganti kategori.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile cart backdrop -->
+      <div id="cart-backdrop" onclick="App.toggleCart(false)" class="lg:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40"></div>
+
+      <!-- RIGHT: Cart -->
+      <aside id="cart-panel" class="bg-white border-l border-slate-200 flex flex-col min-h-0 h-full lg:h-auto">
+        <div class="lg:hidden pt-2.5 pb-1 grid place-items-center" onclick="App.toggleCart(false)"><span class="w-10 h-1.5 rounded-full bg-slate-300"></span></div>
+        <div class="shrink-0 px-4 pt-2 lg:pt-4 pb-3 border-b border-slate-100 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div id="cart-icon" class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 grid place-items-center relative">
+                <i data-lucide="shopping-basket" class="w-5 h-5"></i>
+                <span id="cart-count-badge" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold grid place-items-center">0</span>
+              </div>
+              <div class="leading-tight">
+                <p class="font-bold">Pesanan Saat Ini</p>
+                <p id="order-no" class="text-[11px] text-slate-500 font-mono"></p>
+              </div>
+            </div>
+            <div class="flex gap-1">
+              <button onclick="App.clearCart()" class="w-9 h-9 rounded-lg hover:bg-rose-50 hover:text-rose-600 grid place-items-center transition" title="Kosongkan"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              <button onclick="App.toggleCart(false)" class="lg:hidden w-9 h-9 rounded-lg hover:bg-slate-100 grid place-items-center"><i data-lucide="chevron-down" class="w-5 h-5"></i></button>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <div id="order-type" class="flex bg-slate-100 rounded-xl p-1 text-xs font-semibold flex-1">
+              <button data-ot="dine" onclick="App.setOrderType('dine')" class="seg-btn flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1"><i data-lucide="utensils-crossed" class="w-3.5 h-3.5"></i>Dine In</button>
+              <button data-ot="take" onclick="App.setOrderType('take')" class="seg-btn flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1"><i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>Take</button>
+              <button data-ot="delivery" onclick="App.setOrderType('delivery')" class="seg-btn flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1"><i data-lucide="bike" class="w-3.5 h-3.5"></i>Kirim</button>
+            </div>
+            <input id="table-input" type="text" placeholder="Meja/Nama" class="w-24 sm:w-28 h-9 my-auto px-2.5 rounded-xl bg-slate-100 border border-transparent focus:border-indigo-400 focus:bg-white outline-none text-xs font-semibold transition">
+          </div>
+        </div>
+
+        <div id="cart-list" class="flex-1 min-h-0 overflow-y-auto px-2 py-2"></div>
+
+        <div class="shrink-0 border-t border-slate-100 px-4 pt-3 pb-4 space-y-2.5 bg-slate-50/60">
+          <!-- Discount -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500 w-14 shrink-0 flex items-center gap-1"><i data-lucide="badge-percent" class="w-3.5 h-3.5"></i>Diskon</span>
+            <div id="disc-type" class="flex bg-slate-200/70 rounded-lg p-0.5 text-xs font-bold shrink-0">
+              <button data-dt="nominal" onclick="App.setDiscType('nominal')" class="seg-btn px-2.5 py-1 rounded-md">Rp</button>
+              <button data-dt="percent" onclick="App.setDiscType('percent')" class="seg-btn px-2.5 py-1 rounded-md">%</button>
+            </div>
+            <input id="disc-input" type="number" inputmode="numeric" min="0" placeholder="0" class="flex-1 min-w-0 h-8 px-2.5 rounded-lg bg-white border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/15 outline-none text-sm font-semibold text-right transition">
+            <div id="disc-quick" class="flex gap-1"></div>
+          </div>
+          <!-- Tax -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500 w-14 shrink-0 flex items-center gap-1"><i data-lucide="landmark" class="w-3.5 h-3.5"></i>Pajak</span>
+            <div id="tax-seg" class="flex bg-slate-200/70 rounded-lg p-0.5 text-[11px] font-bold flex-1">
+              <button data-tax="pb1" onclick="App.setTax('pb1')" class="seg-btn flex-1 py-1 rounded-md">PB1 10%</button>
+              <button data-tax="ppn" onclick="App.setTax('ppn')" class="seg-btn flex-1 py-1 rounded-md">PPN 11%</button>
+              <button data-tax="none" onclick="App.setTax('none')" class="seg-btn flex-1 py-1 rounded-md">Tanpa</button>
+            </div>
+            <button onclick="App.toggleService()" class="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 shrink-0" title="Service charge 5%">
+              <span id="service-toggle" class="toggle"></span>Svc
+            </button>
+          </div>
+          <!-- Summary -->
+          <div class="pt-2 border-t border-dashed border-slate-200 space-y-1 text-sm">
+            <div class="flex justify-between text-slate-500"><span>Subtotal (<span id="sum-items">0</span> item)</span><span id="sum-subtotal" class="font-semibold text-slate-700 tabular-nums">Rp 0</span></div>
+            <div id="row-disc" class="flex justify-between text-rose-600"><span id="sum-disc-label">Diskon</span><span id="sum-disc" class="font-semibold tabular-nums">-Rp 0</span></div>
+            <div id="row-service" class="flex justify-between text-slate-500"><span>Service 5%</span><span id="sum-service" class="font-semibold text-slate-700 tabular-nums">Rp 0</span></div>
+            <div class="flex justify-between text-slate-500"><span id="sum-tax-label">PB1 10%</span><span id="sum-tax" class="font-semibold text-slate-700 tabular-nums">Rp 0</span></div>
+            <div class="flex justify-between items-end pt-1.5">
+              <span class="font-bold">Total</span>
+              <span id="sum-total" class="text-2xl font-extrabold text-indigo-600 tabular-nums tracking-tight">Rp 0</span>
+            </div>
+          </div>
+          <button id="pay-btn" onclick="App.openPay()" class="w-full h-14 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-base flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 active:scale-[.98] transition disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed">
+            <i data-lucide="wallet" class="w-5 h-5"></i> Bayar Sekarang <kbd class="hidden lg:inline text-[10px] bg-white/20 rounded px-1.5 py-0.5 font-mono">F9</kbd>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Mobile floating cart bar -->
+      <button id="mobile-cart-bar" onclick="App.toggleCart(true)" class="lg:hidden fixed bottom-3 left-3 right-3 z-30 h-16 rounded-2xl bg-slate-900 text-white flex items-center gap-3 px-4 shadow-2xl transition-transform duration-300 translate-y-[150%]">
+        <div class="w-10 h-10 rounded-xl bg-white/10 grid place-items-center relative">
+          <i data-lucide="shopping-basket" class="w-5 h-5"></i>
+          <span id="mbar-count" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-[10px] font-bold grid place-items-center">0</span>
+        </div>
+        <div class="text-left leading-tight flex-1">
+          <p class="text-[11px] text-slate-400">Total Pesanan</p>
+          <p id="mbar-total" class="font-extrabold text-lg tabular-nums">Rp 0</p>
+        </div>
+        <span class="flex items-center gap-1 text-sm font-semibold bg-indigo-600 rounded-xl px-3 py-2">Keranjang <i data-lucide="chevron-up" class="w-4 h-4"></i></span>
+      </button>
+    </section>
+
+    <!-- ===== HISTORY VIEW ===== -->
+    <section id="view-history" class="view h-full overflow-y-auto hidden">
+      <div class="max-w-6xl mx-auto p-4 md:p-6 space-y-5 pb-10">
+        <div class="flex flex-wrap items-center gap-3 justify-between">
+          <div>
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Riwayat Transaksi</h1>
+            <p class="text-sm text-slate-500">Ringkasan penjualan & cetak ulang struk.</p>
+          </div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-64">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input id="history-search" type="text" placeholder="Cari no. invoice / meja..." class="w-full h-10 pl-9 pr-3 rounded-xl bg-white border border-slate-200 focus:border-indigo-500 outline-none text-sm">
+            </div>
+            <button onclick="App.clearHistory()" class="h-10 px-3 rounded-xl bg-white border border-slate-200 text-rose-600 text-sm font-semibold flex items-center gap-1.5 hover:bg-rose-50 transition"><i data-lucide="trash" class="w-4 h-4"></i><span class="hidden sm:inline">Hapus Semua</span></button>
+            <button onclick="App.setView('pos')" class="h-10 px-3 rounded-xl bg-indigo-600 text-white text-sm font-semibold flex items-center gap-1.5 hover:bg-indigo-700 transition"><i data-lucide="monitor" class="w-4 h-4"></i><span class="hidden sm:inline">Ke Kasir</span></button>
+          </div>
+        </div>
+        <div id="stats" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="lg:col-span-2 space-y-2.5" id="history-list"></div>
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit fade-up">
+            <p class="font-bold flex items-center gap-2 mb-4"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>Produk Terlaris</p>
+            <div id="top-products" class="space-y-3"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS VIEW ===== -->
+    <section id="view-settings" class="view h-full overflow-y-auto hidden">
+      <div class="max-w-5xl mx-auto p-4 md:p-6 pb-10">
+        <h1 class="text-xl md:text-2xl font-extrabold tracking-tight">Pengaturan Toko & Struk</h1>
+        <p class="text-sm text-slate-500 mb-5">Data ditampilkan pada struk cetak thermal.</p>
+        <div class="grid lg:grid-cols-2 gap-5">
+          <form id="settings-form" class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 fade-up" onsubmit="App.saveSettings(event)">
+            <label class="block"><span class="text-xs font-semibold text-slate-500">Nama Toko</span>
+              <input name="storeName" class="mt-1 w-full h-10 px-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm"></label>
+            <label class="block"><span class="text-xs font-semibold text-slate-500">Alamat</span>
+              <input name="address" class="mt-1 w-full h-10 px-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm"></label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block"><span class="text-xs font-semibold text-slate-500">Telepon</span>
+                <input name="phone" class="mt-1 w-full h-10 px-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm"></label>
+              <label class="block"><span class="text-xs font-semibold text-slate-500">Nama Kasir</span>
+                <input name="cashier" class="mt-1 w-full h-10 px-3 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm"></label>
+            </div>
+            <label class="block"><span class="text-xs font-semibold text-slate-500">Pesan Footer Struk</span>
+              <textarea name="footer" rows="3" class="mt-1 w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-sm resize-none"></textarea></label>
+            <div>
+              <span class="text-xs font-semibold text-slate-500">Ukuran Kertas Thermal</span>
+              <div class="mt-1 grid grid-cols-2 gap-2">
+                <label class="cursor-pointer"><input type="radio" name="paper" value="58" class="peer sr-only">
+                  <div class="peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 border-2 border-slate-200 rounded-xl p-3 text-center transition"><p class="font-bold">58 mm</p><p class="text-[11px] text-slate-500">Printer mini / portable</p></div></label>
+                <label class="cursor-pointer"><input type="radio" name="paper" value="80" class="peer sr-only">
+                  <div class="peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 border-2 border-slate-200 rounded-xl p-3 text-center transition"><p class="font-bold">80 mm</p><p class="text-[11px] text-slate-500">Printer kasir standar</p></div></label>
+              </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+              <button type="submit" class="flex-1 h-11 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i>Simpan</button>
+              <button type="button" onclick="App.resetDemo()" class="h-11 px-4 rounded-xl border border-rose-200 text-rose-600 font-semibold hover:bg-rose-50 transition flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i>Reset Demo</button>
+            </div>
+          </form>
+          <div class="bg-slate-200/60 rounded-2xl p-5 fade-up" style="animation-delay:.08s">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-bold flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i>Preview Struk</p>
+              <button onclick="App.printSample()" class="h-9 px-3 rounded-xl bg-white text-sm font-semibold flex items-center gap-1.5 hover:text-indigo-600 transition"><i data-lucide="printer" class="w-4 h-4"></i>Tes Cetak</button>
+            </div>
+            <div id="settings-preview" class="paper-preview flex justify-center overflow-x-auto pb-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= DRAWER ================= -->
+<div id="drawer" class="fixed inset-0 z-50">
+  <div class="backdrop absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="App.toggleDrawer(false)"></div>
+  <nav class="dpanel absolute left-0 top-0 bottom-0 w-[290px] max-w-[85vw] bg-white flex flex-col shadow-2xl">
+    <div class="p-5 bg-gradient-to-br from-indigo-600 to-violet-700 text-white">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-xl bg-white/15 grid place-items-center"><i data-lucide="scan-barcode" class="w-5 h-5"></i></div>
+          <p class="font-extrabold text-lg">NovaPOS</p>
+        </div>
+        <button onclick="App.toggleDrawer(false)" class="w-9 h-9 rounded-lg hover:bg-white/15 grid place-items-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <p id="drawer-store" class="mt-4 font-semibold text-sm"></p>
+      <p id="drawer-cashier" class="text-xs text-indigo-100"></p>
+    </div>
+    <div class="p-3 space-y-1 flex-1 overflow-y-auto">
+      <p class="px-3 pt-2 pb-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Menu</p>
+      <button data-nav="pos" onclick="App.setView('pos')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition"><i data-lucide="monitor" class="w-5 h-5"></i>Kasir (POS)</button>
+      <button data-nav="history" onclick="App.setView('history')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition"><i data-lucide="receipt-text" class="w-5 h-5"></i>Riwayat & Laporan</button>
+      <button data-nav="settings" onclick="App.setView('settings')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition"><i data-lucide="settings" class="w-5 h-5"></i>Pengaturan Struk</button>
+      <p class="px-3 pt-5 pb-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Shift Hari Ini</p>
+      <div class="mx-1 rounded-xl bg-slate-50 border border-slate-200 p-3 space-y-1.5 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">Transaksi</span><span id="drawer-trx" class="font-bold">0</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Omzet</span><span id="drawer-omzet" class="font-bold text-indigo-600">Rp 0</span></div>
+      </div>
+      <p class="px-3 pt-5 pb-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider hidden lg:block">Shortcut</p>
+      <div class="mx-1 text-xs text-slate-500 space-y-1.5 hidden lg:block px-2">
+        <div class="flex justify-between"><span>Fokus pencarian</span><kbd class="font-mono bg-slate-100 px-1.5 rounded">/</kbd></div>
+        <div class="flex justify-between"><span>Buka pembayaran</span><kbd class="font-mono bg-slate-100 px-1.5 rounded">F9</kbd></div>
+        <div class="flex justify-between"><span>Input numpad</span><kbd class="font-mono bg-slate-100 px-1.5 rounded">0-9 ⌫ Enter</kbd></div>
+        <div class="flex justify-between"><span>Tutup modal</span><kbd class="font-mono bg-slate-100 px-1.5 rounded">Esc</kbd></div>
+      </div>
+    </div>
+    <div class="p-4 border-t border-slate-100 text-center">
+      <p class="text-[11px] text-slate-400">Demo Prototype by <span class="font-bold text-indigo-600">NovaNext</span></p>
+    </div>
+  </nav>
+</div>
+
+<!-- ================= PAYMENT MODAL (NUMPAD) ================= -->
+<div id="modal-pay" class="modal">
+  <div class="backdrop" onclick="App.closeModal('modal-pay')"></div>
+  <div class="panel w-full max-w-3xl max-h-[96dvh] overflow-y-auto bg-white rounded-3xl shadow-2xl">
+    <div class="flex items-center justify-between px-5 pt-5 pb-3">
+      <div>
+        <p class="font-extrabold text-lg">Pembayaran</p>
+        <p id="pay-sub" class="text-xs text-slate-500"></p>
+      </div>
+      <button onclick="App.closeModal('modal-pay')" class="w-9 h-9 rounded-xl hover:bg-slate-100 grid place-items-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 px-5 pb-5">
+      <div class="space-y-3">
+        <div class="rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-4 relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10"></div>
+          <div class="absolute right-8 -bottom-10 w-24 h-24 rounded-full bg-white/10"></div>
+          <p class="text-xs text-indigo-100">Total Tagihan</p>
+          <p id="pay-total" class="text-3xl font-extrabold tracking-tight tabular-nums">Rp 0</p>
+          <p id="pay-breakdown" class="text-[11px] text-indigo-100 mt-1"></p>
+        </div>
+        <div id="pay-methods" class="grid grid-cols-3 gap-2">
+          <button data-pm="cash" onclick="App.setPayMethod('cash')" class="pm-btn border-2 rounded-xl py-2.5 flex flex-col items-center gap-1 text-xs font-bold transition"><i data-lucide="banknote" class="w-5 h-5"></i>Tunai</button>
+          <button data-pm="qris" onclick="App.setPayMethod('qris')" class="pm-btn border-2 rounded-xl py-2.5 flex flex-col items-center gap-1 text-xs font-bold transition"><i data-lucide="qr-code" class="w-5 h-5"></i>QRIS</button>
+          <button data-pm="debit" onclick="App.setPayMethod('debit')" class="pm-btn border-2 rounded-xl py-2.5 flex flex-col items-center gap-1 text-xs font-bold transition"><i data-lucide="credit-card" class="w-5 h-5"></i>Debit</button>
+        </div>
+        <div id="cash-info" class="space-y-3">
+          <div id="cash-display" class="rounded-2xl border-2 border-slate-200 p-3.5">
+            <p class="text-xs text-slate-500 font-semibold">Uang Diterima</p>
+            <p id="cash-input" class="text-3xl font-extrabold tabular-nums tracking-tight text-slate-800 truncate">Rp 0</p>
+          </div>
+          <div id="change-box" class="rounded-2xl p-3.5 bg-slate-100 transition-colors">
+            <p id="change-label" class="text-xs font-semibold text-slate-500">Kembalian</p>
+            <p id="change-value" class="text-2xl font-extrabold tabular-nums">-</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-500 mb-1.5">Uang Cepat</p>
+            <div id="quick-cash" class="grid grid-cols-3 gap-2"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div id="numpad" class="grid grid-cols-4 gap-2 h-full min-h-[300px]">
+          <button onclick="App.key('7')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">7</button>
+          <button onclick="App.key('8')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">8</button>
+          <button onclick="App.key('9')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">9</button>
+          <button onclick="App.key('back')" class="key rounded-2xl bg-amber-100 text-amber-700 hover:bg-amber-200 grid place-items-center"><i data-lucide="delete" class="w-6 h-6"></i></button>
+          <button onclick="App.key('4')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">4</button>
+          <button onclick="App.key('5')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">5</button>
+          <button onclick="App.key('6')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">6</button>
+          <button onclick="App.key('clear')" class="key rounded-2xl bg-rose-100 text-rose-600 hover:bg-rose-200 text-lg font-extrabold">C</button>
+          <button onclick="App.key('1')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">1</button>
+          <button onclick="App.key('2')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">2</button>
+          <button onclick="App.key('3')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">3</button>
+          <button id="numpad-ok" onclick="App.checkout()" class="key row-span-2 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold flex flex-col items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"><i data-lucide="check-check" class="w-7 h-7"></i>Bayar</button>
+          <button onclick="App.key('0')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-2xl font-bold">0</button>
+          <button onclick="App.key('00')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-xl font-bold">00</button>
+          <button onclick="App.key('000')" class="key rounded-2xl bg-slate-100 hover:bg-slate-200 text-xl font-bold">000</button>
+        </div>
+        <div id="noncash-panel" class="hidden h-full min-h-[300px] flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed border-slate-200 p-5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SUCCESS MODAL ================= -->
+<div id="modal-success" class="modal">
+  <div class="backdrop"></div>
+  <div class="panel w-full max-w-4xl max-h-[96dvh] overflow-y-auto bg-white rounded-3xl shadow-2xl">
+    <div class="grid md:grid-cols-2">
+      <div class="p-6 md:p-8 flex flex-col items-center text-center justify-center">
+        <div class="relative w-20 h-20 mb-4">
+          <div class="ring-anim absolute inset-0 rounded-full"></div>
+          <div class="relative w-20 h-20 rounded-full bg-emerald-500 grid place-items-center shadow-lg shadow-emerald-500/40">
+            <svg viewBox="0 0 24 24" class="w-10 h-10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path class="check-path" d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          </div>
+        </div>
+        <p class="text-xl font-extrabold">Pembayaran Berhasil!</p>
+        <p id="succ-inv" class="text-sm text-slate-500 font-mono mt-1"></p>
+        <div class="w-full mt-5 rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-slate-500">Total</span><span id="succ-total" class="font-bold tabular-nums"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500" id="succ-method-label">Dibayar</span><span id="succ-paid" class="font-bold tabular-nums"></span></div>
+          <div class="pt-2 border-t border-dashed border-slate-300 flex justify-between items-end"><span class="font-semibold">Kembalian</span><span id="succ-change" class="text-3xl font-extrabold text-emerald-600 tabular-nums"></span></div>
+        </div>
+        <div class="w-full grid grid-cols-2 gap-2 mt-5">
+          <button onclick="App.printLast()" class="h-12 rounded-xl bg-slate-900 text-white font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition"><i data-lucide="printer" class="w-5 h-5"></i>Cetak Struk</button>
+          <button onclick="App.newTransaction()" class="h-12 rounded-xl bg-indigo-600 text-white font-semibold flex items-center justify-center gap-2 hover:bg-indigo-700 transition"><i data-lucide="plus" class="w-5 h-5"></i>Transaksi Baru</button>
+        </div>
+      </div>
+      <div class="bg-slate-100 p-5 md:rounded-r-3xl">
+        <div class="flex items-center justify-between mb-3">
+          <p class="font-bold text-sm flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i>Preview Struk</p>
+          <div class="paper-seg flex bg-slate-200 rounded-lg p-0.5 text-xs font-bold">
+            <button data-paper="58" onclick="App.setPaper('58')" class="seg-btn px-2.5 py-1 rounded-md">58mm</button>
+            <button data-paper="80" onclick="App.setPaper('80')" class="seg-btn px-2.5 py-1 rounded-md">80mm</button>
+          </div>
+        </div>
+        <div id="succ-preview" class="paper-preview flex justify-center overflow-auto max-h-[60dvh] pb-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RECEIPT DETAIL MODAL ================= -->
+<div id="modal-receipt" class="modal">
+  <div class="backdrop" onclick="App.closeModal('modal-receipt')"></div>
+  <div class="panel w-full max-w-md max-h-[96dvh] flex flex-col bg-slate-100 rounded-3xl shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 bg-white">
+      <div><p class="font-bold">Detail Transaksi</p><p id="rcpt-inv" class="text-xs text-slate-500 font-mono"></p></div>
+      <div class="flex items-center gap-2">
+        <div class="paper-seg flex bg-slate-100 rounded-lg p-0.5 text-xs font-bold">
+          <button data-paper="58" onclick="App.setPaper('58')" class="seg-btn px-2 py-1 rounded-md">58</button>
+          <button data-paper="80" onclick="App.setPaper('80')" class="seg-btn px-2 py-1 rounded-md">80</button>
+        </div>
+        <button onclick="App.closeModal('modal-receipt')" class="w-9 h-9 rounded-xl hover:bg-slate-100 grid place-items-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+    </div>
+    <div id="rcpt-preview" class="paper-preview flex-1 overflow-auto p-5 flex justify-center"></div>
+    <div class="grid grid-cols-2 gap-2 p-4 bg-white">
+      <button onclick="App.deleteViewed()" class="h-11 rounded-xl border border-rose-200 text-rose-600 font-semibold flex items-center justify-center gap-2 hover:bg-rose-50 transition"><i data-lucide="trash-2" class="w-4 h-4"></i>Hapus</button>
+      <button onclick="App.printViewed()" class="h-11 rounded-xl bg-slate-900 text-white font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition"><i data-lucide="printer" class="w-4 h-4"></i>Cetak Ulang</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CONFIRM MODAL ================= -->
+<div id="modal-confirm" class="modal">
+  <div class="backdrop" onclick="App.closeModal('modal-confirm')"></div>
+  <div class="panel w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 text-center">
+    <div id="confirm-icon" class="w-14 h-14 mx-auto rounded-2xl bg-rose-100 text-rose-600 grid place-items-center mb-4"></div>
+    <p id="confirm-title" class="font-extrabold text-lg"></p>
+    <p id="confirm-msg" class="text-sm text-slate-500 mt-1"></p>
+    <div class="grid grid-cols-2 gap-2 mt-6">
+      <button onclick="App.closeModal('modal-confirm')" class="h-11 rounded-xl border border-slate-200 font-semibold hover:bg-slate-50 transition">Batal</button>
+      <button id="confirm-ok" class="h-11 rounded-xl bg-rose-600 text-white font-semibold hover:bg-rose-700 transition">Ya</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="fixed z-[80] top-20 right-3 left-3 sm:left-auto sm:w-80 flex flex-col gap-2 pointer-events-none"></div>
+
+<!-- Print area (thermal receipt) -->
+<div id="print-area"></div>
+
+<script>
+(() => {
+  'use strict';
+  /* ============== HELPERS ============== */
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+  const fmtN = (n) => Math.round(n || 0).toLocaleString('id-ID');
+  const fmt = (n) => 'Rp ' + fmtN(n);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const icons = () => window.lucide && lucide.createIcons();
+  const pad = (n, l = 2) => String(n).padStart(l, '0');
+
+  /* ============== MOCK DATA ============== */
+  const GRADIENTS = {
+    makanan: ['from-amber-100 to-orange-200', 'from-orange-100 to-red-200', 'from-yellow-100 to-amber-200'],
+    minuman: ['from-sky-100 to-cyan-200', 'from-emerald-100 to-teal-200', 'from-indigo-100 to-sky-200'],
+    snack:   ['from-pink-100 to-rose-200', 'from-fuchsia-100 to-pink-200', 'from-violet-100 to-purple-200']
+  };
+  const RAW = [
+    ['Nasi Goreng Spesial', 'makanan', 28000, '🍛', 40, true],
+    ['Mie Ayam Bakso', 'makanan', 25000, '🍜', 35],
+    ['Ayam Geprek Sambal Matah', 'makanan', 27000, '🍗', 30, true],
+    ['Sate Ayam Madura (10 tsk)', 'makanan', 32000, '🍢', 25],
+    ['Nasi Rendang Padang', 'makanan', 35000, '🥘', 20],
+    ['Burger Sapi Keju', 'makanan', 38000, '🍔', 18],
+    ['Spaghetti Bolognese', 'makanan', 36000, '🍝', 15],
+    ['Bento Ayam Teriyaki', 'makanan', 30000, '🍱', 22],
+    ['Pizza Mini Pepperoni', 'makanan', 42000, '🍕', 5],
+    ['Es Teh Manis', 'minuman', 8000, '🥤', 100],
+    ['Es Kopi Susu Gula Aren', 'minuman', 22000, '☕', 60, true],
+    ['Jus Alpukat', 'minuman', 18000, '🥑', 25],
+    ['Es Jeruk Peras', 'minuman', 12000, '🍊', 40],
+    ['Matcha Latte', 'minuman', 26000, '🍵', 30],
+    ['Air Mineral 600ml', 'minuman', 6000, '💧', 120],
+    ['Lemon Tea', 'minuman', 15000, '🍋', 45],
+    ['Boba Brown Sugar', 'minuman', 24000, '🧋', 8],
+    ['Kentang Goreng', 'snack', 18000, '🍟', 50, true],
+    ['Pisang Goreng Keju', 'snack', 16000, '🍌', 30],
+    ['Roti Bakar Cokelat', 'snack', 20000, '🍞', 25],
+    ['Dimsum Ayam (4 pcs)', 'snack', 22000, '🥟', 28],
+    ['Kerupuk Udang', 'snack', 5000, '🍘', 80],
+    ['Donat Gula Halus', 'snack', 10000, '🍩', 36],
+    ['Cookies Choco Chip', 'snack', 12000, '🍪', 40],
+    ['Popcorn Caramel', 'snack', 15000, '🍿', 4]
+  ];
+  const catCounter = { makanan: 0, minuman: 0, snack: 0 };
+  const SKU_PREFIX = { makanan: 'MKN', minuman: 'MNM', snack: 'SNK' };
+  const PRODUCTS = RAW.map((r, i) => {
+    const idx = catCounter[r[1]]++;
+    return { id: 'p' + (i + 1), name: r[0], cat: r[1], price: r[2], emoji: r[3], stock: r[4], best: !!r[5],
+      sku: SKU_PREFIX[r[1]] + '-' + pad(idx + 1, 3), bg: GRADIENTS[r[1]][idx % 3] };
+  });
+  const P = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+  const CATEGORIES = [
+    { id: 'all', name: 'Semua', icon: 'layout-grid' },
+    { id: 'makanan', name: 'Makanan', icon: 'utensils' },
+    { id: 'minuman', name: 'Minuman', icon: 'cup-soda' },
+    { id: 'snack', name: 'Snack', icon: 'cookie' }
+  ];
+  const TAXES = { pb1: { label: 'PB1 10%', rate: .10 }, ppn: { label: 'PPN 11%', rate: .11 }, none: { label: 'Tanpa Pajak', rate: 0 } };
+  const ORDER_TYPES = { dine: 'Dine In', take: 'Take Away', delivery: 'Delivery' };
+  const METHODS = { cash: 'Tunai', qris: 'QRIS', debit: 'Kartu Debit' };
+  const DEFAULT_SETTINGS = {
+    storeName: 'NovaResto Kopi & Dapur', address: 'Jl. Jend. Sudirman No. 88, Jakarta Selatan',
+    phone: '0812-3456-7890', cashier: 'Rina (Kasir 01)',
+    footer: 'Terima kasih atas kunjungan Anda!\nKritik & saran: @novanext.id', paper: '80'
+  };
+
+  /* ============== STATE ENGINE ============== */
+  const STORE_KEY = 'novapos_demo_v1';
+  const PERSIST = ['cart', 'discount', 'tax', 'service', 'orderType', 'table', 'stock', 'transactions', 'settings', 'counter', 'category'];
+  const state = {
+    view: 'pos', category: 'all', search: '',
+    cart: [], discount: { type: 'nominal', value: 0 }, tax: 'pb1', service: false,
+    orderType: 'dine', table: '',
+    pay: { method: 'cash', input: '' },
+    stock: {}, transactions: [], settings: { ...DEFAULT_SETTINGS }, counter: 0,
+    ui: { lastAdded: null, lastTrx: null, viewTrx: null, confirmCb: null, cartOpen: false }
+  };
+  const Store = {
+    load() { try { return JSON.parse(localStorage.getItem(STORE_KEY)); } catch { return null; } },
+    save() { const o = {}; PERSIST.forEach(k => o[k] = state[k]); try { localStorage.setItem(STORE_KEY, JSON.stringify(o)); } catch {} }
+  };
+
+  /* ============== CALCULATION ============== */
+  function calcFor(cart, discount, taxKey, service) {
+    const subtotal = cart.reduce((s, i) => s + (P[i.id]?.price || 0) * i.qty, 0);
+    const v = Math.max(0, Number(discount.value) || 0);
+    let disc = discount.type === 'percent' ? subtotal * Math.min(v, 100) / 100 : Math.min(v, subtotal);
+    disc = Math.round(disc);
+    const after = subtotal - disc;
+    const serviceAmt = service ? Math.round(after * .05) : 0;
+    const tax = Math.round((after + serviceAmt) * TAXES[taxKey].rate);
+    const total = after + serviceAmt + tax;
+    const items = cart.reduce((s, i) => s + i.qty, 0);
+    return { subtotal, disc, serviceAmt, tax, total, items };
+  }
+  const calc = () => calcFor(state.cart, state.discount, state.tax, state.service);
+  const cartQty = (id) => state.cart.find(i => i.id === id)?.qty || 0;
+  const avail = (id) => (state.stock[id] ?? 0) - cartQty(id);
+
+  function buildTrx(cart, c, meta, date) {
+    const d = date || new Date();
+    const id = `INV-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(state.counter, 4)}`;
+    return {
+      id, date: d.toISOString(),
+      items: cart.map(i => ({ id: i.id, name: P[i.id].name, price: P[i.id].price, qty: i.qty, emoji: P[i.id].emoji })),
+      subtotal: c.subtotal, disc: c.disc, serviceAmt: c.serviceAmt, tax: c.tax, total: c.total, itemsCount: c.items,
+      discount: { ...meta.discount }, taxKey: meta.tax, taxLabel: TAXES[meta.tax].label, service: meta.service,
+      orderType: meta.orderType, table: meta.table, method: meta.method, paid: meta.paid, change: meta.paid - c.total,
+      cashier: state.settings.cashier
+    };
+  }
+
+  function seed() {
+    const now = Date.now();
+    const samples = [
+      { items: [['p1', 2], ['p11', 2]], discount: { type: 'percent', value: 10 }, tax: 'pb1', service: false, method: 'cash', orderType: 'dine', table: 'Meja 4', ago: 190 },
+      { items: [['p6', 1], ['p18', 1], ['p10', 1]], discount: { type: 'nominal', value: 0 }, tax: 'pb1', service: true, method: 'qris', orderType: 'take', table: 'Budi', ago: 125 },
+      { items: [['p3', 3], ['p12', 3], ['p21', 1]], discount: { type: 'nominal', value: 10000 }, tax: 'pb1', service: false, method: 'debit', orderType: 'dine', table: 'Meja 7', ago: 64 },
+      { items: [['p11', 4], ['p23', 2]], discount: { type: 'nominal', value: 0 }, tax: 'none', service: false, method: 'cash', orderType: 'delivery', table: 'GoFood A12', ago: 18 }
+    ];
+    samples.forEach(s => {
+      const cart = s.items.map(([id, qty]) => ({ id, qty }));
+      const c = calcFor(cart, s.discount, s.tax, s.service);
+      state.counter++;
+      const paid = s.method === 'cash' ? Math.ceil(c.total / 50000) * 50000 : c.total;
+      state.transactions.unshift(buildTrx(cart, c, { ...s, paid }, new Date(now - s.ago * 60000)));
+      cart.forEach(i => state.stock[i.id] -= i.qty);
+    });
+  }
+
+  /* ============== TOAST ============== */
+  const TOAST_STYLE = {
+    success: ['bg-emerald-500', 'check-circle-2'], error: ['bg-rose-500', 'x-circle'],
+    info: ['bg-indigo-500', 'info'], warn: ['bg-amber-500', 'alert-triangle']
+  };
+  function toast(msg, type = 'success', icon, dur = 2400) {
+    const wrap = $('#toasts');
+    while (wrap.children.length >= 3) wrap.firstElementChild.remove();
+    const [bg, defIcon] = TOAST_STYLE[type];
+    const el = document.createElement('div');
+    el.className = 'pointer-events-auto flex items-center gap-3 bg-white rounded-2xl shadow-xl border border-slate-200 p-3 pr-4 transition-all duration-300 translate-x-8 opacity-0';
+    el.innerHTML = `<div class="w-8 h-8 rounded-xl ${bg} text-white grid place-items-center shrink-0"><i data-lucide="${icon || defIcon}" class="w-4 h-4"></i></div><p class="text-sm font-semibold text-slate-700 leading-snug">${msg}</p>`;
+    wrap.appendChild(el);
+    icons();
+    requestAnimationFrame(() => el.classList.remove('translate-x-8', 'opacity-0'));
+    setTimeout(() => { el.classList.add('translate-x-8', 'opacity-0'); setTimeout(() => el.remove(), 300); }, dur);
+  }
+
+  /* ============== MODALS ============== */
+  function openModal(id) {
+    const m = document.getElementById(id);
+    m.classList.add('show');
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('open')));
+  }
+  function closeModal(id) {
+    const m = document.getElementById(id);
+    m.classList.remove('open');
+    setTimeout(() => m.classList.remove('show'), 230);
+  }
+  const isOpen = (id) => document.getElementById(id).classList.contains('show');
+
+  function confirmAction({ title, message, okText = 'Ya, Lanjutkan', icon = 'alert-triangle', onOk }) {
+    $('#confirm-title').textContent = title;
+    $('#confirm-msg').textContent = message;
+    $('#confirm-ok').textContent = okText;
+    $('#confirm-icon').innerHTML = `<i data-lucide="${icon}" class="w-7 h-7"></i>`;
+    icons();
+    state.ui.confirmCb = onOk;
+    openModal('modal-confirm');
+  }
+  $('#confirm-ok').addEventListener('click', () => {
+    const cb = state.ui.confirmCb; state.ui.confirmCb = null;
+    closeModal('modal-confirm');
+    cb && cb();
+  });
+
+  /* ============== RENDER: CATEGORIES & PRODUCTS ============== */
+  function renderCategories() {
+    $('#categories').innerHTML = CATEGORIES.map(c => {
+      const count = c.id === 'all' ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === c.id).length;
+      return `<button onclick="App.setCategory('${c.id}')" class="chip ${state.category === c.id ? 'active' : ''} shrink-0 h-10 px-4 rounded-xl bg-white border border-slate-200 text-sm font-semibold flex items-center gap-2 transition hover:border-indigo-300">
+        <i data-lucide="${c.icon}" class="w-4 h-4"></i>${c.name}<span class="text-[10px] opacity-70 font-bold">${count}</span></button>`;
+    }).join('');
+  }
+
+  function renderProducts() {
+    const q = state.search.trim().toLowerCase();
+    const list = PRODUCTS.filter(p => (state.category === 'all' || p.cat === state.category) &&
+      (!q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)));
+    $('#product-count').textContent = `Menampilkan ${list.length} produk` + (q ? ` untuk "${state.search}"` : '');
+    $('#product-empty').classList.toggle('hidden', list.length > 0);
+    $('#product-grid').innerHTML = list.map((p, i) => {
+      return `<button data-pid="${p.id}" onclick="App.add('${p.id}', this)" class="product-card group text-left bg-white rounded-2xl p-2 border border-slate-200 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-0.5 active:scale-[.97] transition-all duration-200 relative" style="animation-delay:${Math.min(i * 22, 400)}ms">
+        <div class="aspect-[4/3] rounded-xl bg-gradient-to-br ${p.bg} grid place-items-center relative overflow-hidden">
+          <span class="emoji text-5xl drop-shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">${p.emoji}</span>
+          ${p.best ? '<span class="absolute top-1.5 left-1.5 text-[9px] font-extrabold uppercase tracking-wide bg-white/90 text-orange-600 rounded-md px-1.5 py-0.5 flex items-center gap-0.5">🔥 Laris</span>' : ''}
+          <span class="qty-badge absolute top-1.5 right-1.5 min-w-[24px] h-6 px-1.5 rounded-full bg-indigo-600 text-white text-xs font-bold grid place-items-center shadow-md hidden"></span>
+          <span class="soldout absolute inset-0 bg-white/70 backdrop-blur-[1px] grid place-items-center text-xs font-extrabold text-rose-600 uppercase hidden">Stok Habis</span>
+        </div>
+        <div class="px-1 pt-2 pb-0.5">
+          <p class="font-semibold text-[13px] leading-tight line-clamp-2 min-h-[2.2em]">${p.name}</p>
+          <div class="flex justify-between items-center mt-1.5 gap-1">
+            <span class="text-indigo-600 font-extrabold text-sm tabular-nums">${fmt(p.price)}</span>
+            <span class="stock-label text-[10px] font-semibold"></span>
+          </div>
+          <p class="text-[10px] text-slate-400 font-mono">${p.sku}</p>
+        </div>
+      </button>`;
+    }).join('');
+    updateProductBadges();
+  }
+
+  function updateProductBadges() {
+    $$('#product-grid [data-pid]').forEach(card => {
+      const id = card.dataset.pid, q = cartQty(id), a = avail(id);
+      const b = card.querySelector('.qty-badge');
+      b.classList.toggle('hidden', q === 0);
+      if (q && b.textContent !== String(q)) { b.textContent = q; b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+      card.querySelector('.soldout').classList.toggle('hidden', (state.stock[id] ?? 0) > 0);
+      const sl = card.querySelector('.stock-label');
+      sl.textContent = a <= 0 ? 'Habis' : `Sisa ${a}`;
+      sl.className = 'stock-label text-[10px] font-semibold ' + (a <= 0 ? 'text-rose-500' : a <= 5 ? 'text-amber-600' : 'text-slate-400');
+    });
+  }
+
+  /* ============== RENDER: CART ============== */
+  function renderCart() {
+    const list = $('#cart-list');
+    if (!state.cart.length) {
+      list.innerHTML = `<div class="h-full min-h-[180px] flex flex-col items-center justify-center text-center px-6 fade-up">
+        <div class="w-20 h-20 rounded-3xl bg-slate-100 grid place-items-center mb-3"><i data-lucide="shopping-cart" class="w-9 h-9 text-slate-300"></i></div>
+        <p class="font-bold text-slate-600">Keranjang masih kosong</p>
+        <p class="text-xs text-slate-400 mt-1">Ketuk produk di sebelah kiri untuk menambahkan pesanan.</p></div>`;
+    } else {
+      list.innerHTML = state.cart.map(i => {
+        const p = P[i.id]; const anim = state.ui.lastAdded === i.id ? 'cart-anim' : '';
+        return `<div class="${anim} flex gap-3 p-2.5 rounded-xl hover:bg-slate-50 transition group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${p.bg} grid place-items-center text-2xl shrink-0">${p.emoji}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between gap-2 items-start">
+              <div class="min-w-0"><p class="font-semibold text-sm truncate">${p.name}</p><p class="text-[11px] text-slate-400 tabular-nums">@ ${fmt(p.price)}</p></div>
+              <button onclick="App.remove('${p.id}')" class="w-7 h-7 shrink-0 rounded-lg text-slate-300 hover:text-rose-500 hover:bg-rose-50 grid place-items-center transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex justify-between items-center mt-1.5">
+              <div class="flex items-center bg-slate-100 rounded-lg">
+                <button onclick="App.dec('${p.id}')" class="w-8 h-8 grid place-items-center rounded-lg hover:bg-white hover:shadow-sm transition active:scale-90"><i data-lucide="${i.qty === 1 ? 'trash-2' : 'minus'}" class="w-3.5 h-3.5"></i></button>
+                <span class="w-8 text-center text-sm font-bold tabular-nums">${i.qty}</span>
+                <button onclick="App.inc('${p.id}')" class="w-8 h-8 grid place-items-center rounded-lg hover:bg-white hover:shadow-sm transition active:scale-90"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+              </div>
+              <span class="font-bold text-sm tabular-nums">${fmt(p.price * i.qty)}</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    state.ui.lastAdded = null;
+    renderSummary();
+    updateProductBadges();
+    icons();
+  }
+
+  function renderSummary() {
+    const c = calc();
+    $('#sum-items').textContent = c.items;
+    $('#sum-subtotal').textContent = fmt(c.subtotal);
+    $('#sum-disc').textContent = '-' + fmt(c.disc);
+    $('#sum-disc-label').textContent = state.discount.type === 'percent' && state.discount.value ? `Diskon (${Math.min(state.discount.value, 100)}%)` : 'Diskon';
+    $('#row-disc').style.display = c.disc ? 'flex' : 'none';
+    $('#row-service').style.display = state.service ? 'flex' : 'none';
+    $('#sum-service').textContent = fmt(c.serviceAmt);
+    $('#sum-tax-label').textContent = TAXES[state.tax].label;
+    $('#sum-tax').textContent = fmt(c.tax);
+    $('#sum-total').textContent = fmt(c.total);
+    $('#pay-btn').disabled = !state.cart.length;
+    $('#cart-count-badge').textContent = c.items;
+    $('#cart-count-badge').style.display = c.items ? 'grid' : 'none';
+    $('#mbar-count').textContent = c.items;
+    $('#mbar-total').textContent = fmt(c.total);
+    $('#mobile-cart-bar').classList.toggle('translate-y-[150%]', !c.items || state.view !== 'pos');
+    $('#order-no').textContent = 'Order #' + pad(state.counter + 1, 4) + ' • ' + ORDER_TYPES[state.orderType];
+    // segmented states
+    $$('#disc-type [data-dt]').forEach(b => b.classList.toggle('active', b.dataset.dt === state.discount.type));
+    $$('#tax-seg [data-tax]').forEach(b => b.classList.toggle('active', b.dataset.tax === state.tax));
+    $$('#order-type [data-ot]').forEach(b => b.classList.toggle('active', b.dataset.ot === state.orderType));
+    $('#service-toggle').classList.toggle('on', state.service);
+    const quick = state.discount.type === 'percent' ? [5, 10, 20] : [5000, 10000];
+    $('#disc-quick').innerHTML = quick.map(v => `<button onclick="App.quickDisc(${v})" class="h-8 px-2 rounded-lg bg-white border border-slate-200 text-[11px] font-bold hover:border-indigo-400 hover:text-indigo-600 transition">${state.discount.type === 'percent' ? v + '%' : (v / 1000) + 'k'}</button>`).join('');
+  }
+
+  /* ============== FLY TO CART ANIMATION ============== */
+  function fly(fromEl, emoji) {
+    const target = window.innerWidth >= 1024 ? $('#cart-icon') : $('#mobile-cart-bar');
+    if (!fromEl || !target) return;
+    const src = fromEl.querySelector('.emoji') || fromEl;
+    const a = src.getBoundingClientRect(), b = target.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.textContent = emoji;
+    el.style.cssText = `position:fixed;z-index:90;pointer-events:none;font-size:40px;left:${a.left + a.width / 2 - 20}px;top:${a.top + a.height / 2 - 24}px`;
+    document.body.appendChild(el);
+    const dx = (b.left + Math.min(b.width, 60) / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+    el.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: `translate(${dx * .45}px, ${dy * .45 - 90}px) scale(1.15)`, opacity: 1, offset: .5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(.3)`, opacity: .3 }
+    ], { duration: 620, easing: 'cubic-bezier(.45,0,.55,1)' }).onfinish = () => {
+      el.remove();
+      const t = window.innerWidth >= 1024 ? target : target.querySelector('div');
+      t.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 280 });
+    };
+  }
+
+  /* ============== RECEIPT TEMPLATE ============== */
+  function barcode(text) {
+    let x = 0, bars = '';
+    for (const ch of text) {
+      const c = ch.charCodeAt(0);
+      for (let b = 0; b < 5; b++) {
+        const w = ((c >> b) & 1) + 1;
+        if (b % 2 === 0) bars += `<rect x="${x}" y="0" width="${w}" height="40"/>`;
+        x += w;
+      }
+      x += 1;
+    }
+    return `<svg viewBox="0 0 ${x} 40" preserveAspectRatio="none" style="width:85%;height:32px;margin:0 auto;display:block" fill="#000">${bars}</svg>`;
+  }
+
+  function renderReceipt(t, paper) {
+    const s = state.settings, d = new Date(t.date);
+    const dateStr = d.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const items = t.items.map(i => `<div class="item"><div>${esc(i.name)}</div><div class="row indent"><span>${i.qty} x ${fmtN(i.price)}</span><span>${fmtN(i.qty * i.price)}</span></div></div>`).join('');
+    const discLabel = t.discount.type === 'percent' ? `Diskon (${Math.min(t.discount.value, 100)}%)` : 'Diskon';
+    return `<div class="receipt receipt-${paper}">
+      <div class="center">
+        <div class="store">${esc(s.storeName)}</div>
+        <div>${esc(s.address)}</div>
+        <div>Telp. ${esc(s.phone)}</div>
+      </div>
+      <div class="sep"></div>
+      <div class="row"><span>No</span><span>${t.id}</span></div>
+      <div class="row"><span>Tanggal</span><span>${dateStr}</span></div>
+      <div class="row"><span>Kasir</span><span>${esc(t.cashier)}</span></div>
+      <div class="row"><span>Tipe</span><span>${ORDER_TYPES[t.orderType]}${t.table ? ' / ' + esc(t.table) : ''}</span></div>
+      <div class="sep"></div>
+      ${items}
+      <div class="sep"></div>
+      <div class="row"><span>Subtotal (${t.itemsCount} item)</span><span>${fmtN(t.subtotal)}</span></div>
+      ${t.disc ? `<div class="row"><span>${discLabel}</span><span>-${fmtN(t.disc)}</span></div>` : ''}
+      ${t.serviceAmt ? `<div class="row"><span>Service 5%</span><span>${fmtN(t.serviceAmt)}</span></div>` : ''}
+      ${t.taxKey !== 'none' ? `<div class="row"><span>${t.taxLabel}</span><span>${fmtN(t.tax)}</span></div>` : ''}
+      <div class="sep2"></div>
+      <div class="row big"><span>TOTAL</span><span>${fmtN(t.total)}</span></div>
+      <div class="row"><span>${METHODS[t.method]}</span><span>${fmtN(t.paid)}</span></div>
+      <div class="row bold"><span>Kembalian</span><span>${fmtN(t.change)}</span></div>
+      <div class="sep"></div>
+      <div class="center" style="margin:6px 0">${esc(s.footer).replace(/\n/g, '<br>')}</div>
+      ${barcode(t.id)}
+      <div class="center" style="font-size:.85em;margin-top:2px">${t.id}</div>
+      <div class="center" style="font-size:.8em;margin-top:6px">— Demo Prototype by NovaNext —</div>
+    </div>`;
+  }
+
+  function printTrx(t) {
+    if (!t) return;
+    const paper = state.settings.paper;
+    const area = $('#print-area');
+    area.innerHTML = renderReceipt(t, paper);
+    const h = area.firstElementChild.offsetHeight;
+    const mm = Math.ceil(h * 25.4 / 96) + 6;
+    $('#page-style').textContent = `@page { size: ${paper}mm ${mm}mm; margin: 0; }`;
+    toast(`Mengirim struk ${paper}mm ke printer...`, 'info', 'printer');
+    setTimeout(() => window.print(), 300);
+  }
+
+  function updatePaperSeg() {
+    $$('.paper-seg [data-paper]').forEach(b => b.classList.toggle('active', b.dataset.paper === state.settings.paper));
+  }
+
+  /* ============== PAYMENT ============== */
+  function qrSvg(seed) {
+    const n = 25; let r = '', s = seed % 233280;
+    const rand = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const f = (x < 8 && y < 8) || (x >= n - 8 && y < 8) || (x < 8 && y >= n - 8);
+      if (!f && rand() > .52) r += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+    }
+    const fd = (fx, fy) => `<rect x="${fx}" y="${fy}" width="7" height="7"/><rect x="${fx + 1}" y="${fy + 1}" width="5" height="5" fill="#fff"/><rect x="${fx + 2}" y="${fy + 2}" width="3" height="3"/>`;
+    return `<svg viewBox="-1 -1 ${n + 2} ${n + 2}" class="w-44 h-44" shape-rendering="crispEdges"><rect x="-1" y="-1" width="${n + 2}" height="${n + 2}" fill="#fff"/><g fill="#0f172a">${r}${fd(0, 0)}${fd(n - 7, 0)}${fd(0, n - 7)}</g></svg>`;
+  }
+
+  function cashSuggestions(total) {
+    const set = new Set([total]);
+    [5000, 10000, 20000, 50000, 100000].forEach(d => set.add(Math.ceil(total / d) * d));
+    [100000, 200000, 500000].forEach(v => v >= total && set.add(v));
+    return [...set].filter(v => v >= total).sort((a, b) => a - b).slice(0, 6);
+  }
+
+  function renderPay() {
+    const c = calc(), m = state.pay.method;
+    $('#pay-total').textContent = fmt(c.total);
+    $('#pay-sub').textContent = `${c.items} item • ${ORDER_TYPES[state.orderType]}${state.table ? ' • ' + state.table : ''}`;
+    $('#pay-breakdown').textContent = `Subtotal ${fmt(c.subtotal)}${c.disc ? ' − Diskon ' + fmt(c.disc) : ''}${c.serviceAmt ? ' + Svc ' + fmt(c.serviceAmt) : ''}${c.tax ? ' + ' + TAXES[state.tax].label.split(' ')[0] + ' ' + fmt(c.tax) : ''}`;
+    $$('.pm-btn').forEach(b => {
+      const on = b.dataset.pm === m;
+      b.className = 'pm-btn border-2 rounded-xl py-2.5 flex flex-col items-center gap-1 text-xs font-bold transition ' + (on ? 'border-indigo-600 bg-indigo-50 text-indigo-700' : 'border-slate-200 text-slate-500 hover:border-slate-300');
+    });
+    const isCash = m === 'cash';
+    $('#cash-info').style.display = isCash ? '' : 'none';
+    $('#numpad').style.display = isCash ? 'grid' : 'none';
+    const np = $('#noncash-panel');
+    np.classList.toggle('hidden', isCash);
+    np.style.display = isCash ? 'none' : 'flex';
+    if (isCash) {
+      const paid = Number(state.pay.input || 0);
+      $('#cash-input').textContent = fmt(paid);
+      const box = $('#change-box');
+      if (!state.pay.input) {
+        box.className = 'rounded-2xl p-3.5 bg-slate-100 transition-colors';
+        $('#change-label').textContent = 'Kembalian'; $('#change-value').textContent = 'Masukkan nominal';
+        $('#change-value').className = 'text-lg font-bold text-slate-400';
+      } else if (paid < c.total) {
+        box.className = 'rounded-2xl p-3.5 bg-rose-50 text-rose-600 transition-colors';
+        $('#change-label').textContent = 'Uang Kurang'; $('#change-value').textContent = fmt(c.total - paid);
+        $('#change-value').className = 'text-2xl font-extrabold tabular-nums';
+      } else {
+        box.className = 'rounded-2xl p-3.5 bg-emerald-50 text-emerald-700 transition-colors';
+        $('#change-label').textContent = 'Kembalian'; $('#change-value').textContent = fmt(paid - c.total);
+        $('#change-value').className = 'text-2xl font-extrabold tabular-nums';
+      }
+      $('#numpad-ok').disabled = paid < c.total;
+      $('#quick-cash').innerHTML = cashSuggestions(c.total).map((v, i) => `<button onclick="App.setCash(${v})" class="h-10 rounded-xl border text-xs font-bold transition active:scale-95 ${Number(state.pay.input) === v ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-200 hover:border-indigo-400 hover:text-indigo-600'}">${i === 0 ? 'Uang Pas' : fmtN(v)}</button>`).join('');
+    } else if (m === 'qris') {
+      np.innerHTML = `<div class="fade-up flex flex-col items-center">
+        <div class="flex items-center gap-2 mb-3"><span class="font-extrabold text-lg tracking-tight">QRIS</span><span class="text-[10px] font-bold bg-rose-600 text-white rounded px-1.5 py-0.5">GPN</span></div>
+        <div class="p-3 bg-white rounded-2xl border border-slate-200 shadow-sm">${qrSvg(c.total + state.counter)}</div>
+        <p class="font-extrabold text-xl mt-3 tabular-nums">${fmt(c.total)}</p>
+        <p class="text-xs text-slate-500 mb-4">Minta pelanggan scan QR menggunakan e-wallet / m-banking</p>
+        <button onclick="App.checkout()" class="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 transition active:scale-[.98]"><i data-lucide="check-check" class="w-5 h-5"></i>Konfirmasi Pembayaran Diterima</button></div>`;
+    } else {
+      np.innerHTML = `<div class="fade-up w-full flex flex-col items-center">
+        <div class="w-64 max-w-full aspect-[1.6] rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 text-white p-5 text-left relative overflow-hidden shadow-xl">
+          <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-indigo-500/30"></div>
+          <div class="w-10 h-7 rounded-md bg-gradient-to-br from-amber-300 to-amber-500"></div>
+          <p class="font-mono tracking-widest mt-5 text-sm">•••• •••• •••• 4821</p>
+          <div class="flex justify-between items-end mt-3 text-[10px] text-slate-300"><span>DEBIT CARD</span><span class="font-extrabold text-white text-sm italic">GPN</span></div>
+        </div>
+        <p class="font-extrabold text-xl mt-4 tabular-nums">${fmt(c.total)}</p>
+        <p class="text-xs text-slate-500 mb-4 flex items-center gap-1"><i data-lucide="nfc" class="w-4 h-4"></i>Tap / insert kartu pada mesin EDC</p>
+        <button onclick="App.checkout()" class="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold flex items-center justify-center gap-2 transition active:scale-[.98]"><i data-lucide="check-check" class="w-5 h-5"></i>Transaksi EDC Approved</button></div>`;
+    }
+    icons();
+  }
+
+  /* ============== HISTORY & SETTINGS ============== */
+  function isToday(iso) { const d = new Date(iso), n = new Date(); return d.toDateString() === n.toDateString(); }
+
+  function renderHistory() {
+    const today = state.transactions.filter(t => isToday(t.date));
+    const omzet = today.reduce((s, t) => s + t.total, 0);
+    const items = today.reduce((s, t) => s + t.itemsCount, 0);
+    const avg = today.length ? omzet / today.length : 0;
+    const stats = [
+      ['Omzet Hari Ini', fmt(omzet), 'trending-up', 'from-indigo-500 to-violet-600'],
+      ['Transaksi', today.length, 'receipt', 'from-emerald-500 to-teal-600'],
+      ['Item Terjual', items, 'package', 'from-amber-500 to-orange-600'],
+      ['Rata-rata / Trx', fmt(avg), 'calculator', 'from-pink-500 to-rose-600']
+    ];
+    $('#stats').innerHTML = stats.map((s, i) => `<div class="fade-up bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-3" style="animation-delay:${i * 60}ms">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${s[3]} text-white grid place-items-center shrink-0 shadow-md"><i data-lucide="${s[2]}" class="w-5 h-5"></i></div>
+      <div class="min-w-0"><p class="text-[11px] text-slate-500 font-semibold">${s[0]}</p><p class="font-extrabold text-base md:text-lg truncate tabular-nums">${s[1]}</p></div></div>`).join('');
+
+    const q = ($('#history-search').value || '').toLowerCase();
+    const list = state.transactions.filter(t => !q || t.id.toLowerCase().includes(q) || (t.table || '').toLowerCase().includes(q));
+    const mStyle = { cash: 'bg-emerald-50 text-emerald-700', qris: 'bg-sky-50 text-sky-700', debit: 'bg-violet-50 text-violet-700' };
+    const mIcon = { cash: 'banknote', qris: 'qr-code', debit: 'credit-card' };
+    $('#history-list').innerHTML = list.length ? list.map((t, i) => {
+      const d = new Date(t.date);
+      return `<div class="fade-up bg-white rounded-2xl border border-slate-200 p-3.5 flex flex-wrap items-center gap-3 hover:shadow-md hover:border-indigo-200 transition cursor-pointer" style="animation-delay:${Math.min(i * 40, 400)}ms" onclick="App.viewTrx('${t.id}')">
+        <div class="w-11 h-11 rounded-xl ${mStyle[t.method]} grid place-items-center shrink-0"><i data-lucide="${mIcon[t.method]}" class="w-5 h-5"></i></div>
+        <div class="flex-1 min-w-[150px]">
+          <p class="font-mono font-bold text-sm">${t.id}</p>
+          <p class="text-xs text-slate-500">${d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}, ${d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} • ${t.itemsCount} item • ${ORDER_TYPES[t.orderType]}${t.table ? ' • ' + esc(t.table) : ''}</p>
+          <p class="text-xs mt-0.5 truncate">${t.items.slice(0, 4).map(i => i.emoji).join(' ')} ${t.items.length > 4 ? '+' + (t.items.length - 4) : ''}</p>
+        </div>
+        <div class="text-right"><p class="font-extrabold tabular-nums">${fmt(t.total)}</p><span class="text-[10px] font-bold rounded-md px-1.5 py-0.5 ${mStyle[t.method]}">${METHODS[t.method]}</span></div>
+        <div class="flex gap-1" onclick="event.stopPropagation()">
+          <button onclick="App.printById('${t.id}')" class="w-9 h-9 rounded-lg hover:bg-slate-100 grid place-items-center" title="Cetak"><i data-lucide="printer" class="w-4 h-4"></i></button>
+          <button onclick="App.deleteTrx('${t.id}')" class="w-9 h-9 rounded-lg hover:bg-rose-50 hover:text-rose-600 grid place-items-center" title="Hapus"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </div></div>`;
+    }).join('') : `<div class="bg-white rounded-2xl border border-dashed border-slate-300 p-10 text-center fade-up"><i data-lucide="inbox" class="w-10 h-10 mx-auto text-slate-300"></i><p class="font-semibold mt-2">Belum ada transaksi</p><p class="text-sm text-slate-500">Transaksi yang selesai akan muncul di sini.</p></div>`;
+
+    const agg = {};
+    state.transactions.forEach(t => t.items.forEach(i => { agg[i.id] = agg[i.id] || { ...i, qty: 0 }; agg[i.id].qty += i.qty; }));
+    const top = Object.values(agg).sort((a, b) => b.qty - a.qty).slice(0, 5);
+    const max = top[0]?.qty || 1;
+    $('#top-products').innerHTML = top.length ? top.map((p, i) => `<div>
+      <div class="flex items-center gap-2 text-sm"><span class="text-xl">${p.emoji}</span><span class="font-semibold flex-1 truncate">${esc(p.name)}</span><span class="font-bold text-indigo-600">${p.qty}x</span></div>
+      <div class="h-2 bg-slate-100 rounded-full mt-1.5 overflow-hidden"><div class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-700" style="width:0" data-w="${p.qty / max * 100}%"></div></div></div>`).join('')
+      : '<p class="text-sm text-slate-400">Belum ada data.</p>';
+    requestAnimationFrame(() => $$('#top-products [data-w]').forEach(el => el.style.width = el.dataset.w));
+    icons();
+  }
+
+  function sampleTrx() {
+    const cart = [{ id: 'p1', qty: 1 }, { id: 'p11', qty: 2 }, { id: 'p18', qty: 1 }];
+    const c = calcFor(cart, { type: 'percent', value: 10 }, 'pb1', false);
+    const saved = state.counter; state.counter = 9999;
+    const t = buildTrx(cart, c, { discount: { type: 'percent', value: 10 }, tax: 'pb1', service: false, orderType: 'dine', table: 'Meja 1', method: 'cash', paid: 100000 }, new Date());
+    state.counter = saved;
+    return t;
+  }
+
+  function renderSettings() {
+    const f = $('#settings-form'), s = state.settings;
+    ['storeName', 'address', 'phone', 'cashier', 'footer'].forEach(k => f.elements[k].value = s[k]);
+    f.querySelectorAll('[name=paper]').forEach(r => r.checked = r.value === s.paper);
+    renderSettingsPreview();
+  }
+  function renderSettingsPreview() {
+    $('#settings-preview').innerHTML = renderReceipt(sampleTrx(), state.settings.paper);
+  }
+
+  function updateMeta() {
+    const today = state.transactions.filter(t => isToday(t.date));
+    $('#trx-badge').textContent = state.transactions.length;
+    $('#drawer-trx').textContent = today.length;
+    $('#drawer-omzet').textContent = fmt(today.reduce((s, t) => s + t.total, 0));
+    $('#drawer-store').textContent = state.settings.storeName;
+    $('#drawer-cashier').textContent = 'Kasir: ' + state.settings.cashier;
+    $('#cashier-avatar').textContent = (state.settings.cashier || 'K').trim()[0].toUpperCase();
+  }
+
+  /* ============== PUBLIC ACTIONS ============== */
+  const App = {
+    setView(v) {
+      state.view = v;
+      ['pos', 'history', 'settings'].forEach(k => $('#view-' + k).classList.toggle('hidden', k !== v));
+      $$('.nav-item').forEach(n => {
+        const on = n.dataset.nav === v;
+        n.className = 'nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition ' + (on ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50');
+      });
+      $('#header-sub').textContent = { pos: 'Kasir', history: 'Riwayat & Laporan', settings: 'Pengaturan' }[v];
+      if (v === 'history') renderHistory();
+      if (v === 'settings') renderSettings();
+      if (v === 'pos') renderProducts();
+      this.toggleDrawer(false);
+      this.toggleCart(false);
+      renderSummary();
+      icons();
+    },
+    toggleDrawer(open) { $('#drawer').classList.toggle('open', open); },
+    toggleCart(open) {
+      state.ui.cartOpen = open;
+      $('#cart-panel').classList.toggle('open', open);
+      $('#cart-backdrop').classList.toggle('open', open);
+    },
+    setCategory(c) { state.category = c; renderCategories(); renderProducts(); icons(); Store.save(); },
+    clearSearch() { state.search = ''; $('#search').value = ''; $('#search-clear').classList.add('hidden'); renderProducts(); $('#search').focus(); },
+
+    add(id, el) {
+      const p = P[id];
+      if (avail(id) <= 0) {
+        toast(`Stok <b>${p.name}</b> tidak mencukupi`, 'warn', 'package-x');
+        el && (el.classList.remove('shake'), void el.offsetWidth, el.classList.add('shake'));
+        return;
+      }
+      const it = state.cart.find(i => i.id === id);
+      if (it) it.qty++; else { state.cart.push({ id, qty: 1 }); state.ui.lastAdded = id; }
+      fly(el, p.emoji);
+      renderCart(); Store.save();
+      toast(`${p.emoji} <b>${p.name}</b> ditambahkan`, 'success', 'shopping-cart', 1500);
+    },
+    inc(id) {
+      if (avail(id) <= 0) return toast('Stok tidak mencukupi', 'warn', 'package-x');
+      state.cart.find(i => i.id === id).qty++; renderCart(); Store.save();
+    },
+    dec(id) {
+      const it = state.cart.find(i => i.id === id);
+      if (it.qty > 1) { it.qty--; renderCart(); Store.save(); }
+      else this.remove(id);
+    },
+    remove(id) {
+      state.cart = state.cart.filter(i => i.id !== id);
+      renderCart(); Store.save();
+      toast(`<b>${P[id].name}</b> dihapus dari keranjang`, 'error', 'trash-2', 1600);
+    },
+    clearCart() {
+      if (!state.cart.length) return toast('Keranjang sudah kosong', 'info');
+      confirmAction({ title: 'Kosongkan Keranjang?', message: `Semua ${calc().items} item pada pesanan ini akan dihapus.`, okText: 'Ya, Kosongkan', icon: 'shopping-cart',
+        onOk: () => { state.cart = []; state.discount.value = 0; $('#disc-input').value = ''; renderCart(); Store.save(); toast('Keranjang dikosongkan', 'success', 'trash-2'); } });
+    },
+    setOrderType(t) { state.orderType = t; renderSummary(); Store.save(); toast(`Tipe pesanan: <b>${ORDER_TYPES[t]}</b>`, 'info', 'clipboard-list', 1400); },
+    setDiscType(t) {
+      state.discount.type = t;
+      if (t === 'percent' && state.discount.value > 100) { state.discount.value = 0; $('#disc-input').value = ''; }
+      renderSummary(); Store.save();
+    },
+    quickDisc(v) { state.discount.value = v; $('#disc-input').value = v; renderSummary(); Store.save(); toast(`Diskon ${state.discount.type === 'percent' ? v + '%' : fmt(v)} diterapkan`, 'success', 'badge-percent', 1500); },
+    setTax(t) { state.tax = t; renderSummary(); Store.save(); toast(`Pajak: <b>${TAXES[t].label}</b>`, 'info', 'landmark', 1400); },
+    toggleService() { state.service = !state.service; renderSummary(); Store.save(); toast(`Service charge 5% ${state.service ? 'aktif' : 'nonaktif'}`, 'info', 'hand-platter', 1400); },
+
+    openPay() {
+      if (!state.cart.length) return toast('Keranjang kosong, tambahkan produk dulu', 'warn', 'shopping-cart');
+      state.pay = { method: 'cash', input: '' };
+      renderPay(); openModal('modal-pay');
+    },
+    closeModal,
+    setPayMethod(m) { state.pay.method = m; state.pay.input = ''; renderPay(); },
+    key(k) {
+      let v = state.pay.input;
+      if (k === 'back') v = v.slice(0, -1);
+      else if (k === 'clear') v = '';
+      else { if (v.length >= 10) return; v = (v + k).replace(/^0+/, ''); }
+      state.pay.input = v; renderPay();
+      const d = $('#cash-display'); d.classList.remove('border-slate-200'); d.classList.add('border-indigo-400');
+      setTimeout(() => { d.classList.add('border-slate-200'); d.classList.remove('border-indigo-400'); }, 150);
+    },
+    setCash(v) { state.pay.input = String(v); renderPay(); },
+    checkout() {
+      const c = calc(), m = state.pay.method;
+      const paid = m === 'cash' ? Number(state.pay.input || 0) : c.total;
+      if (paid < c.total) {
+        const d = $('#cash-display'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake');
+        return toast(`Uang kurang ${fmt(c.total - paid)}`, 'error', 'banknote');
+      }
+      state.counter++;
+      const trx = buildTrx(state.cart, c, { discount: state.discount, tax: state.tax, service: state.service, orderType: state.orderType, table: state.table, method: m, paid });
+      state.cart.forEach(i => state.stock[i.id] = Math.max(0, (state.stock[i.id] || 0) - i.qty));
+      state.transactions.unshift(trx);
+      state.cart = []; state.discount = { type: state.discount.type, value: 0 }; state.table = '';
+      $('#disc-input').value = ''; $('#table-input').value = '';
+      state.ui.lastTrx = trx;
+      Store.save();
+      closeModal('modal-pay');
+      this.toggleCart(false);
+      renderCart(); updateMeta();
+      setTimeout(() => this.showSuccess(trx), 180);
+      toast(`Transaksi <b>${trx.id}</b> berhasil disimpan`, 'success', 'badge-check');
+    },
+    showSuccess(t) {
+      $('#succ-inv').textContent = t.id + ' • ' + METHODS[t.method];
+      $('#succ-total').textContent = fmt(t.total);
+      $('#succ-method-label').textContent = 'Dibayar (' + METHODS[t.method] + ')';
+      $('#succ-paid').textContent = fmt(t.paid);
+      $('#succ-change').textContent = fmt(t.change);
+      $('#succ-preview').innerHTML = renderReceipt(t, state.settings.paper);
+      const svg = $('#modal-success .check-path'); const clone = svg.cloneNode(true); svg.replaceWith(clone);
+      updatePaperSeg(); openModal('modal-success'); icons();
+    },
+    newTransaction() { closeModal('modal-success'); setTimeout(() => $('#search').focus({ preventScroll: true }), 250); toast('Siap untuk transaksi baru', 'info', 'sparkles', 1500); },
+    printLast() { printTrx(state.ui.lastTrx); },
+    setPaper(p) {
+      state.settings.paper = p; Store.save(); updatePaperSeg();
+      if (isOpen('modal-success') && state.ui.lastTrx) $('#succ-preview').innerHTML = renderReceipt(state.ui.lastTrx, p);
+      if (isOpen('modal-receipt') && state.ui.viewTrx) $('#rcpt-preview').innerHTML = renderReceipt(state.ui.viewTrx, p);
+      toast(`Format kertas: <b>${p}mm</b>`, 'info', 'ruler', 1300);
+    },
+
+    viewTrx(id) {
+      const t = state.transactions.find(x => x.id === id); if (!t) return;
+      state.ui.viewTrx = t;
+      $('#rcpt-inv').textContent = t.id;
+      $('#rcpt-preview').innerHTML = renderReceipt(t, state.settings.paper);
+      updatePaperSeg(); openModal('modal-receipt');
+    },
+    printById(id) { printTrx(state.transactions.find(x => x.id === id)); },
+    printViewed() { printTrx(state.ui.viewTrx); },
+    deleteTrx(id) {
+      confirmAction({ title: 'Hapus Transaksi?', message: `Transaksi ${id} akan dihapus permanen dari riwayat.`, okText: 'Ya, Hapus', icon: 'trash-2',
+        onOk: () => {
+          state.transactions = state.transactions.filter(t => t.id !== id);
+          Store.save(); renderHistory(); updateMeta();
+          if (isOpen('modal-receipt')) closeModal('modal-receipt');
+          toast(`Transaksi <b>${id}</b> dihapus`, 'error', 'trash-2');
+        } });
+    },
+    deleteViewed() { state.ui.viewTrx && this.deleteTrx(state.ui.viewTrx.id); },
+    clearHistory() {
+      if (!state.transactions.length) return toast('Riwayat sudah kosong', 'info');
+      confirmAction({ title: 'Hapus Semua Riwayat?', message: `${state.transactions.length} transaksi akan dihapus. Tindakan ini tidak dapat dibatalkan.`, okText: 'Hapus Semua', icon: 'alert-triangle',
+        onOk: () => { state.transactions = []; Store.save(); renderHistory(); updateMeta(); toast('Semua riwayat dihapus', 'error', 'trash'); } });
+    },
+
+    saveSettings(e) {
+      e.preventDefault();
+      const f = e.target;
+      ['storeName', 'address', 'phone', 'cashier', 'footer'].forEach(k => state.settings[k] = f.elements[k].value.trim() || DEFAULT_SETTINGS[k]);
+      state.settings.paper = f.querySelector('[name=paper]:checked')?.value || '80';
+      Store.save(); updateMeta(); renderSettingsPreview();
+      toast('Pengaturan struk berhasil disimpan', 'success', 'save');
+    },
+    printSample() { printTrx(sampleTrx()); },
+    resetDemo() {
+      confirmAction({ title: 'Reset Data Demo?', message: 'Keranjang, stok, riwayat & pengaturan akan dikembalikan ke kondisi awal.', okText: 'Reset', icon: 'rotate-ccw',
+        onOk: () => { localStorage.removeItem(STORE_KEY); toast('Data demo direset, memuat ulang...', 'info', 'rotate-ccw'); setTimeout(() => location.reload(), 700); } });
+    }
+  };
+  window.App = App;
+
+  /* ============== EVENT BINDINGS ============== */
+  let searchTimer;
+  $('#search').addEventListener('input', e => {
+    state.search = e.target.value;
+    $('#search-clear').classList.toggle('hidden', !state.search);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(renderProducts, 80);
+  });
+  $('#search').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    const q = state.search.trim().toLowerCase(); if (!q) return;
+    const exact = PRODUCTS.find(p => p.sku.toLowerCase() === q);
+    const list = PRODUCTS.filter(p => (state.category === 'all' || p.cat === state.category) && (p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)));
+    const target = exact || (list.length === 1 ? list[0] : null);
+    if (target) { App.add(target.id, document.querySelector(`[data-pid="${target.id}"]`)); App.clearSearch(); }
+    else toast(list.length ? 'Lebih dari 1 hasil, pilih produk dari grid' : 'Produk tidak ditemukan', 'warn', 'search');
+  });
+  $('#disc-input').addEventListener('input', e => {
+    let v = Math.max(0, Number(e.target.value) || 0);
+    if (state.discount.type === 'percent' && v > 100) { v = 100; e.target.value = 100; }
+    state.discount.value = v; renderSummary(); Store.save();
+  });
+  $('#disc-input').addEventListener('change', () => { if (state.discount.value) toast('Diskon diterapkan', 'success', 'badge-percent', 1300); });
+  $('#table-input').addEventListener('input', e => { state.table = e.target.value; Store.save(); });
+  $('#history-search').addEventListener('input', () => renderHistory());
+  $('#settings-form').addEventListener('change', e => {
+    if (e.target.name === 'paper') { state.settings.paper = e.target.value; renderSettingsPreview(); }
+  });
+
+  document.addEventListener('keydown', e => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    const typing = tag === 'input' || tag === 'textarea';
+    if (isOpen('modal-pay') && state.pay.method === 'cash') {
+      if (/^[0-9]$/.test(e.key)) { e.preventDefault(); return App.key(e.key); }
+      if (e.key === 'Backspace') { e.preventDefault(); return App.key('back'); }
+      if (e.key === 'Delete') { e.preventDefault(); return App.key('clear'); }
+      if (e.key === 'Enter') { e.preventDefault(); return App.checkout(); }
+    }
+    if (e.key === 'Escape') {
+      ['modal-confirm', 'modal-receipt', 'modal-pay'].some(id => isOpen(id) && (closeModal(id), true));
+      App.toggleDrawer(false); App.toggleCart(false);
+      return;
+    }
+    if (e.key === 'F9') { e.preventDefault(); if (state.view === 'pos' && !isOpen('modal-pay')) App.openPay(); return; }
+    if ((e.key === '/' || e.key === 'F2') && !typing && state.view === 'pos') { e.preventDefault(); $('#search').focus(); }
+  });
+
+  /* ============== CLOCK ============== */
+  function tick() {
+    const n = new Date();
+    $('#clock').textContent = n.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    $('#date').textContent = n.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  /* ============== INIT ============== */
+  function init() {
+    const saved = Store.load();
+    if (saved) {
+      PERSIST.forEach(k => { if (saved[k] !== undefined) state[k] = saved[k]; });
+      state.settings = { ...DEFAULT_SETTINGS, ...state.settings };
+      PRODUCTS.forEach(p => { if (state.stock[p.id] === undefined) state.stock[p.id] = p.stock; });
+      state.cart = state.cart.filter(i => P[i.id]);
+    } else {
+      state.stock = Object.fromEntries(PRODUCTS.map(p => [p.id, p.stock]));
+      seed();
+      Store.save();
+    }
+    $('#disc-input').value = state.discount.value || '';
+    $('#table-input').value = state.table || '';
+    renderCategories();
+    App.setView('pos');
+    renderCart();
+    updateMeta();
+    tick(); setInterval(tick, 1000);
+    icons();
+    setTimeout(() => toast('Selamat datang di <b>NovaPOS</b> — data tersimpan otomatis', 'info', 'sparkles', 3000), 400);
+  }
+  init();
+})();
+</script>
+</body>
+</html>

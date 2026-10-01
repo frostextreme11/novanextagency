@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaRent — Car Rental & Fleet Booking System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          50:'#eef6ff',100:'#d9ecff',200:'#bcdcff',300:'#8ec6ff',400:'#59a6ff',
+          500:'#3382ff',600:'#1b61f5',700:'#144ce1',800:'#173eb6',900:'#19398f',950:'#142457'
+        }
+      },
+      keyframes: {
+        fadeUp: { '0%': { opacity:'0', transform:'translateY(16px)' }, '100%': { opacity:'1', transform:'translateY(0)' } },
+        fadeIn: { '0%': { opacity:'0' }, '100%': { opacity:'1' } },
+        slideInRight: { '0%': { opacity:'0', transform:'translateX(100%)' }, '100%': { opacity:'1', transform:'translateX(0)' } },
+        popIn: { '0%': { opacity:'0', transform:'scale(.92)' }, '100%': { opacity:'1', transform:'scale(1)' } },
+        shimmer: { '0%': { backgroundPosition:'-400px 0' }, '100%': { backgroundPosition:'400px 0' } },
+        floaty: { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(-8px)' } },
+        pulseRing: { '0%': { boxShadow:'0 0 0 0 rgba(51,130,255,.5)' }, '70%': { boxShadow:'0 0 0 12px rgba(51,130,255,0)' }, '100%': { boxShadow:'0 0 0 0 rgba(51,130,255,0)' } }
+      },
+      animation: {
+        fadeUp: 'fadeUp .5s ease both',
+        fadeIn: 'fadeIn .3s ease both',
+        slideInRight: 'slideInRight .35s cubic-bezier(.22,1,.36,1) both',
+        popIn: 'popIn .3s cubic-bezier(.22,1,.36,1) both',
+        floaty: 'floaty 4s ease-in-out infinite',
+        pulseRing: 'pulseRing 2s infinite'
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  h1,h2,h3,h4,.font-head { font-family: 'Plus Jakarta Sans', sans-serif; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #c7d2e5; border-radius: 99px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  .no-scrollbar::-webkit-scrollbar { display:none; }
+  .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+  .card-stagger > * { opacity: 0; animation: fadeUp .5s ease both; }
+  .glass { background: rgba(255,255,255,.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .chip-active { background:#1b61f5 !important; color:#fff !important; border-color:#1b61f5 !important; box-shadow:0 6px 16px -6px rgba(27,97,245,.55); }
+  input[type=date]::-webkit-calendar-picker-indicator { cursor:pointer; opacity:.6; }
+  .toast-enter { animation: slideInRight .35s cubic-bezier(.22,1,.36,1) both; }
+  .toast-exit { transition: all .3s ease; opacity:0; transform: translateX(110%); }
+  .skeleton { background: linear-gradient(90deg,#eef2f7 25%,#e2e8f0 37%,#eef2f7 63%); background-size:800px 100%; animation: shimmer 1.3s infinite linear; }
+  .car-emoji { filter: drop-shadow(0 14px 18px rgba(20,60,140,.25)); }
+  details summary::-webkit-details-marker{display:none}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+<!-- ============ HEADER / NAVBAR ============ -->
+<header class="glass sticky top-0 z-40 border-b border-slate-200/70">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      <a href="#" class="flex items-center gap-2.5 group">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white grid place-items-center shadow-lg shadow-brand-500/30 group-hover:scale-105 transition">
+          <i data-lucide="car-front" class="w-5 h-5"></i>
+        </span>
+        <span>
+          <span class="font-head font-extrabold text-lg tracking-tight text-slate-900 block leading-none">Nova<span class="text-brand-600">Rent</span></span>
+          <span class="text-[10px] font-semibold text-slate-400 tracking-widest uppercase">Fleet Booking</span>
+        </span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+        <a href="#search" class="px-3.5 py-2 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition">Cari Armada</a>
+        <a href="#fleet" class="px-3.5 py-2 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition">Katalog</a>
+        <a href="#howto" class="px-3.5 py-2 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition">Cara Sewa</a>
+        <button onclick="App.openHistory()" class="px-3.5 py-2 rounded-lg hover:bg-brand-50 hover:text-brand-700 transition flex items-center gap-1.5">
+          <i data-lucide="history" class="w-4 h-4"></i> Riwayat
+          <span id="historyBadge" class="hidden min-w-5 h-5 px-1 rounded-full bg-brand-600 text-white text-[10px] grid place-items-center font-bold"></span>
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200 animate-pulseRing">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Demo Prototype by NovaNext
+        </span>
+        <button onclick="App.toggleDrawer(true)" class="md:hidden w-10 h-10 grid place-items-center rounded-xl border border-slate-200 bg-white hover:bg-slate-100 transition active:scale-95">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="sm:hidden bg-amber-50 border-t border-amber-200 text-amber-700 text-[11px] font-bold text-center py-1.5 flex items-center justify-center gap-1">
+    <i data-lucide="sparkles" class="w-3 h-3"></i> Demo Prototype by NovaNext
+  </div>
+</header>
+
+<!-- ============ MOBILE DRAWER ============ -->
+<div id="drawerOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden" onclick="App.toggleDrawer(false)"></div>
+<aside id="drawer" class="fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl translate-x-full transition-transform duration-300 flex flex-col">
+  <div class="p-4 flex items-center justify-between border-b border-slate-100">
+    <span class="font-head font-bold text-slate-900">Menu Navigasi</span>
+    <button onclick="App.toggleDrawer(false)" class="w-9 h-9 grid place-items-center rounded-lg hover:bg-slate-100 active:scale-95 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+  </div>
+  <nav class="p-4 flex flex-col gap-1 text-sm font-medium">
+    <a href="#search" onclick="App.toggleDrawer(false)" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 transition"><i data-lucide="search" class="w-4.5 h-4.5 w-5 h-5"></i> Cari Armada</a>
+    <a href="#fleet" onclick="App.toggleDrawer(false)" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 transition"><i data-lucide="car" class="w-5 h-5"></i> Katalog Kendaraan</a>
+    <a href="#howto" onclick="App.toggleDrawer(false)" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 transition"><i data-lucide="list-checks" class="w-5 h-5"></i> Cara Sewa</a>
+    <button onclick="App.toggleDrawer(false); App.openHistory()" class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-700 transition text-left"><i data-lucide="history" class="w-5 h-5"></i> Riwayat Booking</button>
+    <button onclick="App.resetDemo()" class="flex items-center gap-3 px-3 py-3 rounded-xl text-rose-600 hover:bg-rose-50 transition text-left"><i data-lucide="rotate-ccw" class="w-5 h-5"></i> Reset Data Demo</button>
+  </nav>
+  <div class="mt-auto p-4 text-[11px] text-slate-400 border-t border-slate-100">© 2025 NovaNext Studio — Prototype v1.0</div>
+</aside>
+
+<!-- ============ HERO + SEARCH ============ -->
+<section id="search" class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-br from-brand-950 via-brand-800 to-brand-600"></div>
+  <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-400/30 rounded-full blur-3xl"></div>
+  <div class="absolute -bottom-32 -left-20 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-24 sm:pt-16 sm:pb-28">
+    <div class="max-w-2xl animate-fadeUp">
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-100 bg-white/10 border border-white/20 rounded-full px-3 py-1.5 mb-5">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Armada terawat · Lepas kunci / dengan sopir
+      </span>
+      <h1 class="font-head text-3xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight">
+        Sewa Mobil Mudah,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-brand-200">Transparan & Cepat.</span>
+      </h1>
+      <p class="mt-4 text-brand-100/90 text-sm sm:text-base max-w-lg">Pilih tanggal, bandingkan armada MPV hingga Luxury, dan dapatkan kalkulasi biaya otomatis — semua dalam satu halaman.</p>
+    </div>
+    <div class="absolute right-8 top-16 hidden lg:block text-[120px] animate-floaty car-emoji select-none">🚙</div>
+  </div>
+
+  <!-- Search Bar Card -->
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 -mt-16 sm:-mt-20 pb-6 z-10">
+    <div class="bg-white rounded-2xl shadow-xl shadow-brand-950/10 border border-slate-100 p-4 sm:p-6 animate-popIn">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div class="lg:col-span-1">
+          <label class="text-[11px] font-bold uppercase tracking-wide text-slate-500 flex items-center gap-1 mb-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-brand-500"></i> Lokasi Penjemputan</label>
+          <select id="inpLocation" class="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+            <option>Jakarta — Bandara Soetta</option>
+            <option>Jakarta — Kota</option>
+            <option>Bandung</option>
+            <option>Surabaya</option>
+            <option>Yogyakarta</option>
+            <option>Bali — Ngurah Rai</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[11px] font-bold uppercase tracking-wide text-slate-500 flex items-center gap-1 mb-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-brand-500"></i> Pick-up Date</label>
+          <input type="date" id="inpPickup" class="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold uppercase tracking-wide text-slate-500 flex items-center gap-1 mb-1.5"><i data-lucide="calendar-check" class="w-3.5 h-3.5 text-brand-500"></i> Return Date</label>
+          <input type="date" id="inpReturn" class="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+        </div>
+        <div class="flex flex-col justify-end">
+          <div id="durationPill" class="h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center gap-2 text-sm font-bold text-brand-700">
+            <i data-lucide="clock" class="w-4 h-4"></i><span id="durationText">— hari</span>
+          </div>
+        </div>
+        <div class="flex flex-col justify-end">
+          <button onclick="App.searchFleet()" class="h-11 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5 active:scale-95 transition-all">
+            <i data-lucide="search" class="w-4.5 h-4.5 w-4 h-4"></i> Cari Armada
+          </button>
+        </div>
+      </div>
+      <p id="dateError" class="hidden mt-3 text-xs font-semibold text-rose-600 flex items-center gap-1.5"><i data-lucide="alert-circle" class="w-4 h-4"></i> Tanggal kembali harus setelah tanggal jemput.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAIN ============ -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+
+    <!-- LEFT: Fleet listing -->
+    <div class="lg:col-span-2" id="fleet">
+      <div class="flex items-end justify-between mb-4 flex-wrap gap-2">
+        <div>
+          <h2 class="font-head text-xl sm:text-2xl font-extrabold text-slate-900">Katalog Armada</h2>
+          <p class="text-sm text-slate-500 mt-0.5"><span id="fleetCount">0</span> kendaraan tersedia di <span id="fleetLoc" class="font-semibold text-slate-700">—</span></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-semibold text-slate-500">Urutkan:</label>
+          <select id="inpSort" onchange="App.setSort(this.value)" class="h-9 rounded-lg border border-slate-200 bg-white px-2.5 text-xs font-semibold focus:ring-2 focus:ring-brand-500 outline-none">
+            <option value="popular">Terpopuler</option>
+            <option value="price-asc">Harga Terendah</option>
+            <option value="price-desc">Harga Tertinggi</option>
+            <option value="rating">Rating Tertinggi</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="sticky top-16 z-30 -mx-4 px-4 py-3 bg-slate-50/90 backdrop-blur-md sm:rounded-xl mb-4">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-0.5" id="filterTypeWrap">
+          <button data-type="ALL" class="filter-type chip-active shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition active:scale-95">Semua</button>
+          <button data-type="MPV" class="filter-type shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">🚐 MPV</button>
+          <button data-type="SUV" class="filter-type shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">🚙 SUV</button>
+          <button data-type="Sedan" class="filter-type shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">🚗 Sedan</button>
+          <button data-type="Luxury" class="filter-type shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">✨ Luxury</button>
+          <span class="shrink-0 w-px bg-slate-200 mx-1"></span>
+          <button data-trans="ALL" class="filter-trans chip-active shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition active:scale-95">Semua Transmisi</button>
+          <button data-trans="Matic" class="filter-trans shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">⚙️ Matic</button>
+          <button data-trans="Manual" class="filter-trans shrink-0 px-4 h-9 rounded-full border border-slate-200 bg-white text-xs font-bold transition hover:border-brand-300 active:scale-95">🕹️ Manual</button>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div id="fleetGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 card-stagger"></div>
+      <div id="emptyState" class="hidden text-center py-16 animate-fadeIn">
+        <div class="text-6xl mb-3">🔍</div>
+        <h3 class="font-head font-bold text-slate-700">Tidak ada armada cocok</h3>
+        <p class="text-sm text-slate-500 mt-1">Coba ubah filter jenis armada atau transmisi.</p>
+        <button onclick="App.clearFilters()" class="mt-4 px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-bold hover:bg-brand-700 active:scale-95 transition">Reset Filter</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Sticky booking summary -->
+    <div class="lg:col-span-1">
+      <div class="lg:sticky lg:top-24 space-y-4">
+        <div id="summaryCard" class="bg-white rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/60 overflow-hidden animate-fadeUp">
+          <div class="bg-gradient-to-r from-brand-700 to-brand-500 px-5 py-4 flex items-center justify-between">
+            <h3 class="font-head font-bold text-white flex items-center gap-2"><i data-lucide="receipt-text" class="w-5 h-5"></i> Ringkasan Booking</h3>
+            <span id="summaryBadge" class="text-[10px] font-bold bg-white/20 text-white px-2.5 py-1 rounded-full border border-white/20">Draft</span>
+          </div>
+
+          <div id="summaryEmpty" class="p-6 text-center">
+            <div class="text-5xl mb-3 animate-floaty inline-block">🚘</div>
+            <p class="text-sm font-semibold text-slate-600">Belum ada kendaraan dipilih</p>
+            <p class="text-xs text-slate-400 mt-1">Klik "Pilih Mobil Ini" pada katalog untuk mulai booking.</p>
+          </div>
+
+          <div id="summaryBody" class="hidden">
+            <div class="p-5 border-b border-dashed border-slate-200">
+              <div class="flex items-center gap-3">
+                <div id="sumCarEmoji" class="w-14 h-14 rounded-xl bg-brand-50 grid place-items-center text-3xl shrink-0"></div>
+                <div class="min-w-0">
+                  <p id="sumCarName" class="font-head font-bold text-slate-900 truncate"></p>
+                  <p id="sumCarMeta" class="text-xs text-slate-500"></p>
+                </div>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-slate-50 rounded-lg px-3 py-2"><span class="text-slate-400 block text-[10px] font-bold uppercase">Pick-up</span><span id="sumPickup" class="font-semibold text-slate-700">—</span></div>
+                <div class="bg-slate-50 rounded-lg px-3 py-2"><span class="text-slate-400 block text-[10px] font-bold uppercase">Return</span><span id="sumReturn" class="font-semibold text-slate-700">—</span></div>
+                <div class="bg-slate-50 rounded-lg px-3 py-2 col-span-2"><span class="text-slate-400 block text-[10px] font-bold uppercase">Lokasi</span><span id="sumLoc" class="font-semibold text-slate-700">—</span></div>
+              </div>
+            </div>
+
+            <!-- Mode sewa -->
+            <div class="p-5 border-b border-dashed border-slate-200">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-2">Mode Sewa</p>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="modeSelf" onclick="App.setMode('self')" class="rounded-xl border-2 border-brand-500 bg-brand-50 p-3 text-left transition active:scale-95">
+                  <i data-lucide="key-round" class="w-5 h-5 text-brand-600 mb-1.5"></i>
+                  <p class="text-xs font-bold text-slate-800">Lepas Kunci</p>
+                  <p class="text-[10px] text-slate-500">Setir sendiri</p>
+                </button>
+                <button id="modeDriver" onclick="App.setMode('driver')" class="rounded-xl border-2 border-slate-200 p-3 text-left transition hover:border-brand-300 active:scale-95">
+                  <i data-lucide="user-round" class="w-5 h-5 text-slate-500 mb-1.5"></i>
+                  <p class="text-xs font-bold text-slate-800">Dengan Sopir</p>
+                  <p class="text-[10px] text-slate-500">+Rp 150rb/hari</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Add-ons -->
+            <div class="p-5 border-b border-dashed border-slate-200">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-slate-500 mb-2">Add-ons</p>
+              <div class="space-y-2" id="addonList"></div>
+            </div>
+
+            <!-- Price breakdown -->
+            <div class="p-5">
+              <div class="space-y-1.5 text-sm" id="priceRows"></div>
+              <div class="mt-3 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
+                <span class="font-head font-bold text-slate-900">Total</span>
+                <span id="sumTotal" class="font-head text-xl font-extrabold text-brand-600 transition-all">Rp 0</span>
+              </div>
+              <button onclick="App.openBookingModal()" class="mt-4 w-full h-12 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5 active:scale-95 transition-all">
+                <i data-lucide="calendar-plus" class="w-5 h-5"></i> Lanjut Booking
+              </button>
+              <button onclick="App.clearSelection()" class="mt-2 w-full h-10 rounded-xl text-slate-500 text-xs font-bold hover:bg-slate-100 active:scale-95 transition">Batalkan pilihan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info card -->
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex gap-3 animate-fadeUp">
+          <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+          <p class="text-xs text-emerald-800 leading-relaxed"><strong>Gratis pembatalan</strong> hingga 24 jam sebelum pick-up. Semua unit sudah termasuk sanitasi & pengecekan 25 titik.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to -->
+  <section id="howto" class="mt-20">
+    <h2 class="font-head text-xl sm:text-2xl font-extrabold text-slate-900 text-center">Cara Sewa dalam 4 Langkah</h2>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 card-stagger">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 grid place-items-center mb-3"><i data-lucide="calendar-search" class="w-6 h-6 text-brand-600"></i></div>
+        <p class="font-head font-bold text-sm">1. Pilih Tanggal</p><p class="text-xs text-slate-500 mt-1">Tentukan durasi & lokasi jemput.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 grid place-items-center mb-3"><i data-lucide="car" class="w-6 h-6 text-brand-600"></i></div>
+        <p class="font-head font-bold text-sm">2. Pilih Armada</p><p class="text-xs text-slate-500 mt-1">Bandingkan spesifikasi unit.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 grid place-items-center mb-3"><i data-lucide="file-up" class="w-6 h-6 text-brand-600"></i></div>
+        <p class="font-head font-bold text-sm">3. Upload Dokumen</p><p class="text-xs text-slate-500 mt-1">SIM A & KTP dengan preview.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 grid place-items-center mb-3"><i data-lucide="key" class="w-6 h-6 text-brand-600"></i></div>
+        <p class="font-head font-bold text-sm">4. Ambil Kunci</p><p class="text-xs text-slate-500 mt-1">Konfirmasi instan, jalan!</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ MOBILE STICKY BAR ============ -->
+<div id="mobileBar" class="lg:hidden fixed bottom-0 inset-x-0 z-40 glass border-t border-slate-200 px-4 py-3 hidden">
+  <div class="flex items-center justify-between gap-3">
+    <div class="min-w-0">
+      <p id="mbarCar" class="text-xs font-bold text-slate-800 truncate">—</p>
+      <p class="text-sm"><span id="mbarTotal" class="font-head font-extrabold text-brand-600">Rp 0</span> <span id="mbarDays" class="text-[10px] text-slate-400 font-semibold"></span></p>
+    </div>
+    <button onclick="App.openBookingModal()" class="shrink-0 h-11 px-5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white text-sm font-bold flex items-center gap-2 shadow-lg shadow-brand-500/30 active:scale-95 transition">
+      Lanjut Booking <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </button>
+  </div>
+</div>
+
+<!-- ============ BOOKING MODAL (form + upload) ============ -->
+<div id="bookingModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn" onclick="App.closeBookingModal()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:m-auto sm:max-w-lg sm:h-fit sm:max-h-[90vh] bg-white sm:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col animate-popIn overflow-hidden max-h-[92vh]">
+    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+      <h3 class="font-head font-bold text-lg text-slate-900 flex items-center gap-2"><i data-lucide="clipboard-pen" class="w-5 h-5 text-brand-600"></i> Data Penyewa & Dokumen</h3>
+      <button onclick="App.closeBookingModal()" class="w-9 h-9 grid place-items-center rounded-lg hover:bg-slate-100 active:scale-95 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="overflow-y-auto p-6 space-y-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold text-slate-600 mb-1.5 block">Nama Lengkap *</label>
+          <input id="inpName" type="text" placeholder="cth: Budi Santoso" class="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 mb-1.5 block">No. WhatsApp *</label>
+          <input id="inpPhone" type="tel" placeholder="08xxxxxxxxxx" class="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+        </div>
+      </div>
+
+      <!-- Upload SIM A -->
+      <div>
+        <label class="text-xs font-bold text-slate-600 mb-1.5 flex items-center gap-1.5"><i data-lucide="id-card" class="w-4 h-4 text-brand-500"></i> Foto SIM A <span id="simReq" class="text-rose-500">*</span> <span id="simOptional" class="hidden text-[10px] font-semibold text-slate-400">(opsional — mode dengan sopir)</span></label>
+        <div id="simDrop" onclick="document.getElementById('inpSim').click()" class="relative cursor-pointer group rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-400 bg-slate-50 hover:bg-brand-50/50 transition p-4 text-center">
+          <input type="file" id="inpSim" accept="image/*" class="hidden" onchange="App.previewFile(this,'sim')">
+          <div id="simPlaceholder">
+            <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400 group-hover:text-brand-500 mx-auto mb-1.5 transition"></i>
+            <p class="text-xs font-semibold text-slate-500">Klik untuk upload foto SIM A</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">JPG/PNG · maks 5MB</p>
+          </div>
+          <div id="simPreviewWrap" class="hidden">
+            <img id="simPreview" class="mx-auto rounded-lg max-h-36 object-contain shadow-md" alt="Preview SIM A">
+            <div class="mt-2 flex items-center justify-center gap-2 text-[11px] font-bold text-emerald-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i> <span id="simFileName"></span></div>
+            <button onclick="event.stopPropagation(); App.removeFile('sim')" class="mt-1 text-[11px] font-bold text-rose-500 hover:underline">Hapus & ganti</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload KTP -->
+      <div>
+        <label class="text-xs font-bold text-slate-600 mb-1.5 flex items-center gap-1.5"><i data-lucide="contact-round" class="w-4 h-4 text-brand-500"></i> Foto KTP <span class="text-rose-500">*</span></label>
+        <div id="ktpDrop" onclick="document.getElementById('inpKtp').click()" class="relative cursor-pointer group rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-400 bg-slate-50 hover:bg-brand-50/50 transition p-4 text-center">
+          <input type="file" id="inpKtp" accept="image/*" class="hidden" onchange="App.previewFile(this,'ktp')">
+          <div id="ktpPlaceholder">
+            <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400 group-hover:text-brand-500 mx-auto mb-1.5 transition"></i>
+            <p class="text-xs font-semibold text-slate-500">Klik untuk upload foto KTP</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">JPG/PNG · maks 5MB</p>
+          </div>
+          <div id="ktpPreviewWrap" class="hidden">
+            <img id="ktpPreview" class="mx-auto rounded-lg max-h-36 object-contain shadow-md" alt="Preview KTP">
+            <div class="mt-2 flex items-center justify-center gap-2 text-[11px] font-bold text-emerald-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i> <span id="ktpFileName"></span></div>
+            <button onclick="event.stopPropagation(); App.removeFile('ktp')" class="mt-1 text-[11px] font-bold text-rose-500 hover:underline">Hapus & ganti</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- mini total -->
+      <div class="rounded-xl bg-brand-50 border border-brand-100 p-4 flex items-center justify-between">
+        <div>
+          <p class="text-[10px] font-bold uppercase text-brand-400">Total Pembayaran</p>
+          <p id="modalTotal" class="font-head text-lg font-extrabold text-brand-700">Rp 0</p>
+        </div>
+        <span id="modalDays" class="text-xs font-bold text-brand-600 bg-white rounded-full px-3 py-1.5 border border-brand-200">— hari</span>
+      </div>
+    </div>
+    <div class="p-5 border-t border-slate-100 shrink-0">
+      <button onclick="App.submitBooking()" class="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 hover:-translate-y-0.5 active:scale-95 transition-all">
+        <i data-lucide="check-check" class="w-5 h-5"></i> Konfirmasi Booking
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SUCCESS MODAL ============ -->
+<div id="successModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"></div>
+  <div class="absolute inset-x-4 sm:inset-x-0 sm:mx-auto top-1/2 -translate-y-1/2 sm:max-w-sm bg-white rounded-2xl shadow-2xl p-7 text-center animate-popIn">
+    <div class="w-16 h-16 mx-auto rounded-full bg-emerald-100 grid place-items-center mb-4 animate-pulseRing">
+      <i data-lucide="check" class="w-8 h-8 text-emerald-600"></i>
+    </div>
+    <h3 class="font-head text-xl font-extrabold text-slate-900">Booking Berhasil! 🎉</h3>
+    <p class="text-sm text-slate-500 mt-2">Kode booking kamu:</p>
+    <p id="successCode" class="font-head text-2xl font-extrabold text-brand-600 tracking-widest mt-1"></p>
+    <div id="successDetail" class="mt-4 text-left bg-slate-50 rounded-xl p-4 text-xs space-y-1.5"></div>
+    <button onclick="App.closeSuccess()" class="mt-5 w-full h-11 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-700 active:scale-95 transition">Selesai</button>
+  </div>
+</div>
+
+<!-- ============ HISTORY MODAL ============ -->
+<div id="historyModal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn" onclick="App.closeHistory()"></div>
+  <div class="absolute inset-x-0 bottom-0 sm:inset-0 sm:m-auto sm:max-w-md sm:h-fit sm:max-h-[85vh] bg-white sm:rounded-2xl rounded-t-3xl shadow-2xl flex flex-col animate-popIn overflow-hidden max-h-[90vh]">
+    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+      <h3 class="font-head font-bold text-lg flex items-center gap-2"><i data-lucide="history" class="w-5 h-5 text-brand-600"></i> Riwayat Booking</h3>
+      <button onclick="App.closeHistory()" class="w-9 h-9 grid place-items-center rounded-lg hover:bg-slate-100 active:scale-95 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="historyList" class="overflow-y-auto p-5 space-y-3"></div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM MODAL (generic) ============ -->
+<div id="confirmModal" class="fixed inset-0 z-[60] hidden">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"></div>
+  <div class="absolute inset-x-4 sm:inset-x-0 sm:mx-auto top-1/2 -translate-y-1/2 sm:max-w-xs bg-white rounded-2xl shadow-2xl p-6 text-center animate-popIn">
+    <div class="w-14 h-14 mx-auto rounded-full bg-rose-100 grid place-items-center mb-3"><i data-lucide="alert-triangle" class="w-7 h-7 text-rose-500"></i></div>
+    <h3 id="confirmTitle" class="font-head font-bold text-slate-900">Yakin?</h3>
+    <p id="confirmMsg" class="text-xs text-slate-500 mt-1.5"></p>
+    <div class="grid grid-cols-2 gap-2 mt-5">
+      <button onclick="App.closeConfirm()" class="h-10 rounded-xl border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 active:scale-95 transition">Batal</button>
+      <button id="confirmOkBtn" class="h-10 rounded-xl bg-rose-500 text-white text-sm font-bold hover:bg-rose-600 active:scale-95 transition">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOAST CONTAINER ============ -->
+<div id="toastWrap" class="fixed top-20 right-4 z-[70] flex flex-col gap-2 w-[calc(100%-2rem)] max-w-xs pointer-events-none"></div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-slate-200 bg-white mt-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+    <p>© 2025 <strong class="text-slate-600">NovaRent</strong> — Demo Prototype by NovaNext Studio.</p>
+    <button onclick="App.resetDemo()" class="inline-flex items-center gap-1.5 font-bold text-rose-500 hover:text-rose-600 transition"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Data Demo</button>
+  </div>
+</footer>
+<div class="h-20 lg:hidden"></div>
+
+<script>
+/* =====================================================
+   NovaRent — Car Rental & Fleet Booking System
+   Vanilla JS ES6+ · Encapsulated App Module
+===================================================== */
+const App = (() => {
+
+  /* ---------- MOCK DATA GENERATOR ---------- */
+  const FLEET = [
+    { id:1,  name:'Toyota Avanza',        type:'MPV',    trans:'Manual', seats:7, luggage:3, fuel:'Bensin', year:2023, price:350000,  rating:4.6, trips:412, emoji:'🚐', tag:'Best Seller', features:['AC Double Blower','Audio Bluetooth','Airbag'] },
+    { id:2,  name:'Toyota Innova Zenix',  type:'MPV',    trans:'Matic',  seats:7, luggage:4, fuel:'Hybrid', year:2024, price:750000,  rating:4.9, trips:287, emoji:'🚐', tag:'Hybrid', features:['Captain Seat','Cruise Control','ADAS'] },
+    { id:3,  name:'Mitsubishi Xpander',   type:'MPV',    trans:'Matic',  seats:7, luggage:3, fuel:'Bensin', year:2023, price:450000,  rating:4.7, trips:356, emoji:'🚐', tag:'', features:['Keyless Entry','Rear Camera','USB Charger'] },
+    { id:4,  name:'Honda BR-V',           type:'SUV',    trans:'Matic',  seats:7, luggage:3, fuel:'Bensin', year:2023, price:500000,  rating:4.6, trips:198, emoji:'🚙', tag:'', features:['Honda Sensing','Paddle Shift','Hill Start'] },
+    { id:5,  name:'Toyota Rush',          type:'SUV',    trans:'Manual', seats:7, luggage:3, fuel:'Bensin', year:2022, price:420000,  rating:4.5, trips:301, emoji:'🚙', tag:'', features:['Ground Clearance Tinggi','Rear AC','ABS'] },
+    { id:6,  name:'Hyundai Creta',        type:'SUV',    trans:'Matic',  seats:5, luggage:3, fuel:'Bensin', year:2024, price:600000,  rating:4.8, trips:154, emoji:'🚙', tag:'New Arrival', features:['Sunroof','Wireless Charging','BlueLink'] },
+    { id:7,  name:'Toyota Fortuner GR',   type:'SUV',    trans:'Matic',  seats:7, luggage:4, fuel:'Diesel', year:2024, price:1200000, rating:4.9, trips:176, emoji:'🚙', tag:'Favorit', features:['4x2 Diesel Turbo','Leather Seat','Power Back Door'] },
+    { id:8,  name:'Honda City Sedan',     type:'Sedan',  trans:'Matic',  seats:5, luggage:2, fuel:'Bensin', year:2023, price:550000,  rating:4.6, trips:143, emoji:'🚗', tag:'', features:['Honda Sensing','Smart Key','Eco Mode'] },
+    { id:9,  name:'Toyota Vios',          type:'Sedan',  trans:'Manual', seats:5, luggage:2, fuel:'Bensin', year:2022, price:400000,  rating:4.4, trips:221, emoji:'🚗', tag:'Hemat', features:['Irit BBM','Audio Steering Switch','Dual Airbag'] },
+    { id:10, name:'Toyota Camry Hybrid',  type:'Luxury', trans:'Matic',  seats:5, luggage:3, fuel:'Hybrid', year:2024, price:1500000, rating:4.9, trips:98,  emoji:'🚘', tag:'Executive', features:['Rear Power Seat','JBL Audio','Ambient Light'] },
+    { id:11, name:'Toyota Alphard',       type:'Luxury', trans:'Matic',  seats:7, luggage:4, fuel:'Bensin', year:2024, price:2500000, rating:5.0, trips:134, emoji:'🚖', tag:'VIP', features:['Pilot Seat','Moonroof','Premium Sound'] },
+    { id:12, name:'Mercedes-Benz E300',   type:'Luxury', trans:'Matic',  seats:5, luggage:3, fuel:'Bensin', year:2023, price:3000000, rating:4.9, trips:67,  emoji:'🏎️', tag:'Prestige', features:['MBUX','Burmester Audio','Air Suspension'] },
+  ];
+
+  const ADDONS = [
+    { id:'insurance', label:'Asuransi All-Risk',  desc:'Perlindungan penuh kerusakan', price:75000,  per:'hari', icon:'shield-check' },
+    { id:'babyseat',  label:'Kursi Bayi',         desc:'ISOFIX, usia 0–4 tahun',       price:50000,  per:'hari', icon:'baby' },
+    { id:'wifi',      label:'WiFi Portable',      desc:'Unlimited 4G, 10 device',      price:40000,  per:'hari', icon:'wifi' },
+    { id:'delivery',  label:'Antar-Jemput Unit',  desc:'Diantar ke lokasi kamu',       price:100000, per:'sekali', icon:'truck' },
+  ];
+  const DRIVER_FEE = 150000;
+
+  /* ---------- STATE ENGINE ---------- */
+  const state = {
+    filterType: 'ALL',
+    filterTrans: 'ALL',
+    sort: 'popular',
+    selectedCar: null,
+    mode: 'self',          // 'self' | 'driver'
+    addons: new Set(),
+    pickup: null,
+    ret: null,
+    location: 'Jakarta — Bandara Soetta',
+    docs: { sim: null, ktp: null },
+    bookings: [],
+    confirmCb: null,
+  };
+
+  const LS_KEY = 'novarent_demo_v1';
+  const fmt = n => 'Rp ' + n.toLocaleString('id-ID');
+  const $ = id => document.getElementById(id);
+
+  /* ---------- PERSISTENCE ---------- */
+  function save() {
+    const snap = {
+      bookings: state.bookings,
+      selectedCarId: state.selectedCar ? state.selectedCar.id : null,
+      mode: state.mode,
+      addons: [...state.addons],
+      pickup: state.pickup, ret: state.ret, location: state.location,
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(snap));
+  }
+  function load() {
+    try {
+      const snap = JSON.parse(localStorage.getItem(LS_KEY));
+      if (!snap) return;
+      state.bookings = snap.bookings || [];
+      state.mode = snap.mode || 'self';
+      state.addons = new Set(snap.addons || []);
+      state.pickup = snap.pickup; state.ret = snap.ret;
+      state.location = snap.location || state.location;
+      if (snap.selectedCarId) state.selectedCar = FLEET.find(c => c.id === snap.selectedCarId) || null;
+    } catch(e){}
+  }
+
+  /* ---------- TOAST ---------- */
+  function toast(msg, type = 'success') {
+    const palette = {
+      success: ['bg-emerald-600','check-circle-2'],
+      info:    ['bg-brand-600','info'],
+      warn:    ['bg-amber-500','alert-triangle'],
+      error:   ['bg-rose-600','x-circle'],
+    }[type];
+    const el = document.createElement('div');
+    el.className = `toast-enter pointer-events-auto flex items-center gap-2.5 ${palette[0]} text-white text-xs font-semibold rounded-xl px-4 py-3 shadow-xl`;
+    el.innerHTML = `<i data-lucide="${palette[1]}" class="w-4.5 h-4.5 w-4 h-4 shrink-0"></i><span>${msg}</span>`;
+    $('toastWrap').appendChild(el);
+    lucide.createIcons({ attrs:{}, nameAttr:'data-lucide' });
+    setTimeout(() => { el.classList.add('toast-exit'); setTimeout(() => el.remove(), 320); }, 2800);
+  }
+
+  /* ---------- DATE / DURATION ---------- */
+  function getDays() {
+    if (!state.pickup || !state.ret) return 0;
+    const a = new Date(state.pickup), b = new Date(state.ret);
+    const diff = Math.ceil((b - a) / 86400000);
+    return diff > 0 ? diff : 0;
+  }
+  function fmtDate(str) {
+    if (!str) return '—';
+    return new Date(str).toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'short' });
+  }
+  function onDateChange() {
+    state.pickup = $('inpPickup').value || null;
+    state.ret = $('inpReturn').value || null;
+    state.location = $('inpLocation').value;
+    const days = getDays();
+    const bad = state.pickup && state.ret && days <= 0;
+    $('dateError').classList.toggle('hidden', !bad);
+    $('durationText').textContent = days > 0 ? `${days} hari` : '— hari';
+    $('durationPill').classList.toggle('bg-emerald-50', days > 0);
+    $('durationPill').classList.toggle('text-emerald-700', days > 0);
+    $('durationPill').classList.toggle('border-emerald-200', days > 0);
+    renderSummary(); save();
+  }
+
+  /* ---------- FLEET RENDER ---------- */
+  function getFiltered() {
+    let list = FLEET.filter(c =>
+      (state.filterType === 'ALL' || c.type === state.filterType) &&
+      (state.filterTrans === 'ALL' || c.trans === state.filterTrans)
+    );
+    const sorters = {
+      'popular':   (a,b) => b.trips - a.trips,
+      'price-asc': (a,b) => a.price - b.price,
+      'price-desc':(a,b) => b.price - a.price,
+      'rating':    (a,b) => b.rating - a.rating,
+    };
+    return list.sort(sorters[state.sort]);
+  }
+
+  function renderFleet() {
+    const list = getFiltered();
+    const grid = $('fleetGrid');
+    $('fleetCount').textContent = list.length;
+    $('fleetLoc').textContent = state.location;
+    $('emptyState').classList.toggle('hidden', list.length > 0);
+    grid.innerHTML = list.map((c, i) => {
+      const sel = state.selectedCar && state.selectedCar.id === c.id;
+      return `
+      <article class="bg-white rounded-2xl border ${sel ? 'border-brand-500 ring-2 ring-brand-500/30' : 'border-slate-200'} shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col" style="animation-delay:${i*60}ms">
+        <div class="relative bg-gradient-to-br from-slate-100 to-slate-50 h-32 grid place-items-center">
+          <span class="text-6xl car-emoji group-hover:scale-110 transition">${c.emoji}</span>
+          ${c.tag ? `<span class="absolute top-3 left-3 text-[10px] font-bold px-2.5 py-1 rounded-full bg-brand-600 text-white shadow">${c.tag}</span>` : ''}
+          <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 rounded-full bg-white/90 text-slate-600 border border-slate-200 flex items-center gap-1"><i data-lucide="star" class="w-3 h-3 text-amber-400 fill-amber-400"></i>${c.rating} · ${c.trips}x</span>
+        </div>
+        <div class="p-4 flex flex-col flex-1">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h3 class="font-head font-bold text-slate-900 leading-tight">${c.name}</h3>
+              <p class="text-[11px] text-slate-400 font-semibold mt-0.5">${c.type} · ${c.year}</p>
+            </div>
+            <span class="shrink-0 text-[10px] font-bold px-2 py-1 rounded-md ${c.trans==='Matic'?'bg-violet-50 text-violet-600':'bg-orange-50 text-orange-600'}">${c.trans}</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 mt-3 text-[10px] font-semibold text-slate-500">
+            <span class="flex items-center gap-1 bg-slate-50 rounded-lg px-2 py-1.5"><i data-lucide="users" class="w-3.5 h-3.5 text-brand-500"></i>${c.seats} Kursi</span>
+            <span class="flex items-center gap-1 bg-slate-50 rounded-lg px-2 py-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5 text-brand-500"></i>${c.luggage} Koper</span>
+            <span class="flex items-center gap-1 bg-slate-50 rounded-lg px-2 py-1.5"><i data-lucide="fuel" class="w-3.5 h-3.5 text-brand-500"></i>${c.fuel}</span>
+          </div>
+          <details class="mt-2.5 group/det">
+            <summary class="text-[11px] font-bold text-brand-600 cursor-pointer flex items-center gap-1 select-none hover:text-brand-700">
+              <i data-lucide="list" class="w-3.5 h-3.5"></i> Spesifikasi lengkap
+            </summary>
+            <ul class="mt-2 space-y-1">${c.features.map(f => `<li class="text-[11px] text-slate-500 flex items-center gap-1.5"><i data-lucide="check" class="w-3 h-3 text-emerald-500"></i>${f}</li>`).join('')}</ul>
+          </details>
+          <div class="mt-auto pt-3.5 flex items-end justify-between gap-2">
+            <div>
+              <p class="font-head text-lg font-extrabold text-slate-900 leading-none">${fmt(c.price)}</p>
+              <p class="text-[10px] text-slate-400 font-semibold mt-1">per hari (lepas kunci)</p>
+            </div>
+            <button onclick="App.selectCar(${c.id})" class="shrink-0 h-10 px-4 rounded-xl text-xs font-bold transition active:scale-95 ${sel ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-500/25'}">
+              ${sel ? '✓ Dipilih' : 'Pilih Mobil Ini'}
+            </button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+    lucide.createIcons();
+  }
+
+  /* ---------- SUMMARY & PRICE CALC ---------- */
+  function calc() {
+    const days = getDays() || 1;
+    const car = state.selectedCar;
+    if (!car) return null;
+    const rows = [];
+    let total = car.price * days;
+    rows.push({ label: `Sewa unit × ${days} hari`, val: car.price * days });
+    if (state.mode === 'driver') { const v = DRIVER_FEE * days; total += v; rows.push({ label:`Sopir × ${days} hari`, val:v }); }
+    state.addons.forEach(id => {
+      const a = ADDONS.find(x => x.id === id);
+      const v = a.per === 'hari' ? a.price * days : a.price;
+      total += v;
+      rows.push({ label: a.per === 'hari' ? `${a.label} × ${days} hari` : a.label, val: v });
+    });
+    const service = Math.round(total * 0.05);
+    rows.push({ label: 'Biaya layanan (5%)', val: service });
+    total += service;
+    return { rows, total, days };
+  }
+
+  function renderSummary() {
+    const car = state.selectedCar;
+    $('summaryEmpty').classList.toggle('hidden', !!car);
+    $('summaryBody').classList.toggle('hidden', !car);
+    $('mobileBar').classList.toggle('hidden', !car);
+    $('summaryBadge').textContent = car ? 'Aktif' : 'Draft';
+    if (!car) { lucide.createIcons(); return; }
+
+    $('sumCarEmoji').textContent = car.emoji;
+    $('sumCarName').textContent = car.name;
+    $('sumCarMeta').textContent = `${car.type} · ${car.trans} · ${car.seats} kursi`;
+    $('sumPickup').textContent = fmtDate(state.pickup);
+    $('sumReturn').textContent = fmtDate(state.ret);
+    $('sumLoc').textContent = state.location;
+
+    // mode buttons
+    const self = $('modeSelf'), drv = $('modeDriver');
+    const on = ['border-brand-500','bg-brand-50'], off = ['border-slate-200'];
+    self.className = `rounded-xl border-2 p-3 text-left transition active:scale-95 ${state.mode==='self' ? on.join(' ') : off.join(' ')+' hover:border-brand-300'}`;
+    drv.className  = `rounded-xl border-2 p-3 text-left transition active:scale-95 ${state.mode==='driver' ? on.join(' ') : off.join(' ')+' hover:border-brand-300'}`;
+
+    // addons
+    $('addonList').innerHTML = ADDONS.map(a => {
+      const on = state.addons.has(a.id);
+      return `
+      <label class="flex items-center gap-3 rounded-xl border ${on ? 'border-brand-400 bg-brand-50/60' : 'border-slate-200'} p-3 cursor-pointer hover:border-brand-300 transition">
+        <input type="checkbox" ${on ? 'checked' : ''} onchange="App.toggleAddon('${a.id}')" class="w-4 h-4 rounded accent-blue-600">
+        <i data-lucide="${a.icon}" class="w-4.5 h-4.5 w-5 h-5 ${on?'text-brand-600':'text-slate-400'}"></i>
+        <span class="flex-1 min-w-0">
+          <span class="text-xs font-bold text-slate-800 block">${a.label}</span>
+          <span class="text-[10px] text-slate-400">${a.desc}</span>
+        </span>
+        <span class="text-[11px] font-bold ${on?'text-brand-600':'text-slate-500'} shrink-0">+${fmt(a.price)}<span class="text-[9px] font-semibold text-slate-400">/${a.per}</span></span>
+      </label>`;
+    }).join('');
+
+    const c = calc();
+    $('priceRows').innerHTML = c.rows.map(r => `<div class="flex justify-between text-slate-600"><span class="text-xs">${r.label}</span><span class="text-xs font-semibold">${fmt(r.val)}</span></div>`).join('');
+    $('sumTotal').textContent = fmt(c.total);
+    $('mbarCar').textContent = `${car.emoji} ${car.name}`;
+    $('mbarTotal').textContent = fmt(c.total);
+    $('mbarDays').textContent = `· ${c.days} hari`;
+    lucide.createIcons();
+  }
+
+  /* ---------- ACTIONS ---------- */
+  function selectCar(id) {
+    const car = FLEET.find(c => c.id === id);
+    if (state.selectedCar && state.selectedCar.id === id) {
+      toast(`${car.name} sudah dipilih`, 'info');
+      return;
+    }
+    state.selectedCar = car;
+    toast(`${car.emoji} ${car.name} ditambahkan ke booking`, 'success');
+    renderFleet(); renderSummary(); save();
+  }
+
+  function clearSelection() {
+    state.selectedCar = null; state.addons.clear(); state.mode = 'self';
+    renderFleet(); renderSummary(); save();
+    toast('Pilihan kendaraan dibatalkan', 'warn');
+  }
+
+  function setMode(m) {
+    state.mode = m;
+    toast(m === 'driver' ? 'Mode: Dengan Sopir (+Rp 150rb/hari)' : 'Mode: Lepas Kunci', 'info');
+    renderSummary(); save();
+    // sim requirement hint in modal
+    $('simReq').classList.toggle('hidden', m === 'driver');
+    $('simOptional').classList.toggle('hidden', m !== 'driver');
+  }
+
+  function toggleAddon(id) {
+    const a = ADDONS.find(x => x.id === id);
+    if (state.addons.has(id)) { state.addons.delete(id); toast(`${a.label} dihapus`, 'warn'); }
+    else { state.addons.add(id); toast(`${a.label} ditambahkan`, 'success'); }
+    renderSummary(); save();
+  }
+
+  function setSort(v) { state.sort = v; renderFleet(); }
+
+  function searchFleet() {
+    onDateChange();
+    const days = getDays();
+    if (!state.pickup || !state.ret) { toast('Lengkapi tanggal pick-up & return dulu', 'error'); return; }
+    if (days <= 0) { toast('Tanggal return harus setelah pick-up', 'error'); return; }
+    // simulate loading skeleton
+    const grid = $('fleetGrid');
+    grid.innerHTML = Array(4).fill(`<div class="rounded-2xl h-72 skeleton"></div>`).join('');
+    setTimeout(() => {
+      renderFleet();
+      toast(`${getFiltered().length} armada tersedia · ${days} hari sewa`, 'success');
+      document.getElementById('fleet').scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 600);
+  }
+
+  function clearFilters() {
+    state.filterType = 'ALL'; state.filterTrans = 'ALL';
+    document.querySelectorAll('.filter-type').forEach(b => b.classList.toggle('chip-active', b.dataset.type === 'ALL'));
+    document.querySelectorAll('.filter-trans').forEach(b => b.classList.toggle('chip-active', b.dataset.trans === 'ALL'));
+    renderFleet();
+    toast('Filter direset', 'info');
+  }
+
+  /* ---------- FILE UPLOAD PREVIEW ---------- */
+  function previewFile(input, kind) {
+    const file = input.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast('File harus berupa gambar (JPG/PNG)', 'error'); input.value=''; return; }
+    if (file.size > 5 * 1024 * 1024) { toast('Ukuran maksimal 5MB', 'error'); input.value=''; return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.docs[kind] = { name: file.name, data: e.target.result };
+      $(kind + 'Preview').src = e.target.result;
+      $(kind + 'FileName').textContent = file.name;
+      $(kind + 'Placeholder').classList.add('hidden');
+      $(kind + 'PreviewWrap').classList.remove('hidden');
+      $(kind + 'Drop').classList.add('border-emerald-400','bg-emerald-50/40');
+      lucide.createIcons();
+      toast(`Foto ${kind === 'sim' ? 'SIM A' : 'KTP'} berhasil diupload`, 'success');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeFile(kind) {
+    state.docs[kind] = null;
+    $('inp' + (kind === 'sim' ? 'Sim' : 'Ktp')).value = '';
+    $(kind + 'Placeholder').classList.remove('hidden');
+    $(kind + 'PreviewWrap').classList.add('hidden');
+    $(kind + 'Drop').classList.remove('border-emerald-400','bg-emerald-50/40');
+    toast(`Foto ${kind === 'sim' ? 'SIM A' : 'KTP'} dihapus`, 'warn');
+  }
+
+  /* ---------- BOOKING FLOW ---------- */
+  function openBookingModal() {
+    if (!state.selectedCar) { toast('Pilih kendaraan dulu', 'error'); return; }
+    if (!state.pickup || !state.ret || getDays() <= 0) {
+      toast('Lengkapi tanggal sewa yang valid dulu', 'error');
+      document.getElementById('search').scrollIntoView({ behavior:'smooth' });
+      return;
+    }
+    const c = calc();
+    $('modalTotal').textContent = fmt(c.total);
+    $('modalDays').textContent = `${c.days} hari`;
+    $('simReq').classList.toggle('hidden', state.mode === 'driver');
+    $('simOptional').classList.toggle('hidden', state.mode !== 'driver');
+    $('bookingModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+  }
+  function closeBookingModal() { $('bookingModal').classList.add('hidden'); document.body.style.overflow = ''; }
+
+  function submitBooking() {
+    const name = $('inpName').value.trim();
+    const phone = $('inpPhone').value.trim();
+    if (!name) { toast('Nama lengkap wajib diisi', 'error'); return; }
+    if (!phone || phone.length < 9) { toast('Nomor WhatsApp tidak valid', 'error'); return; }
+    if (state.mode === 'self' && !state.docs.sim) { toast('Upload foto SIM A dulu (wajib untuk lepas kunci)', 'error'); return; }
+    if (!state.docs.ktp) { toast('Upload foto KTP dulu', 'error'); return; }
+
+    const c = calc();
+    const code = 'NVR-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+    const booking = {
+      code, name, phone,
+      car: state.selectedCar.name, emoji: state.selectedCar.emoji,
+      mode: state.mode, addons: [...state.addons],
+      pickup: state.pickup, ret: state.ret, location: state.location,
+      days: c.days, total: c.total,
+      docs: { sim: !!state.docs.sim, ktp: !!state.docs.ktp },
+      createdAt: new Date().toISOString(), status: 'Confirmed'
+    };
+    state.bookings.unshift(booking);
+    closeBookingModal();
+
+    $('successCode').textContent = code;
+    $('successDetail').innerHTML = `
+      <p class="flex justify-between"><span class="text-slate-400">Kendaraan</span><strong>${booking.emoji} ${booking.car}</strong></p>
+      <p class="flex justify-between"><span class="text-slate-400">Mode</span><strong>${booking.mode === 'driver' ? 'Dengan Sopir' : 'Lepas Kunci'}</strong></p>
+      <p class="flex justify-between"><span class="text-slate-400">Durasi</span><strong>${fmtDate(booking.pickup)} → ${fmtDate(booking.ret)} (${booking.days} hari)</strong></p>
+      <p class="flex justify-between"><span class="text-slate-400">Lokasi</span><strong>${booking.location}</strong></p>
+      <p class="flex justify-between border-t border-slate-200 pt-1.5 mt-1.5"><span class="text-slate-400">Total</span><strong class="text-brand-600">${fmt(booking.total)}</strong></p>`;
+    $('successModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+
+    // reset selection
+    state.selectedCar = null; state.addons.clear(); state.mode = 'self';
+    state.docs = { sim: null, ktp: null };
+    ['sim','ktp'].forEach(k => {
+      $(k + 'Placeholder').classList.remove('hidden');
+      $(k + 'PreviewWrap').classList.add('hidden');
+      $(k + 'Drop').classList.remove('border-emerald-400','bg-emerald-50/40');
+    });
+    $('inpName').value = ''; $('inpPhone').value = ''; $('inpSim').value = ''; $('inpKtp').value = '';
+    save(); renderFleet(); renderSummary(); updateBadge();
+  }
+
+  function closeSuccess() { $('successModal').classList.add('hidden'); document.body.style.overflow = ''; toast('Detail booking tersimpan di Riwayat', 'info'); }
+
+  /* ---------- HISTORY ---------- */
+  function updateBadge() {
+    const b = $('historyBadge');
+    b.classList.toggle('hidden', state.bookings.length === 0);
+    b.textContent = state.bookings.length;
+  }
+
+  function openHistory() {
+    const list = $('historyList');
+    if (state.bookings.length === 0) {
+      list.innerHTML = `<div class="text-center py-10"><div class="text-5xl mb-3">📭</div><p class="text-sm font-semibold text-slate-600">Belum ada booking</p><p class="text-xs text-slate-400 mt-1">Booking yang kamu buat akan muncul di sini.</p></div>`;
+    } else {
+      list.innerHTML = state.bookings.map((b, i) => `
+        <div class="rounded-xl border border-slate-200 p-4 hover:shadow-md transition animate-fadeUp" style="animation-delay:${i*50}ms">
+          <div class="flex items-center justify-between">
+            <span class="font-head font-extrabold text-brand-600 text-sm tracking-wider">${b.code}</span>
+            <span class="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">${b.status}</span>
+          </div>
+          <p class="mt-2 text-sm font-bold text-slate-800">${b.emoji} ${b.car} <span class="text-[10px] font-semibold text-slate-400">· ${b.mode === 'driver' ? 'Dengan Sopir' : 'Lepas Kunci'}</span></p>
+          <p class="text-[11px] text-slate-500 mt-1 flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i>${fmtDate(b.pickup)} → ${fmtDate(b.ret)} · ${b.days} hari</p>
+          <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>${b.location}</p>
+          <div class="mt-2.5 pt-2.5 border-t border-dashed border-slate-200 flex items-center justify-between">
+            <span class="font-head font-extrabold text-slate-900 text-sm">${fmt(b.total)}</span>
+            <button onclick="App.cancelBooking('${b.code}')" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 active:scale-95 transition flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Batalkan</button>
+          </div>
+        </div>`).join('');
+    }
+    $('historyModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+  }
+  function closeHistory() { $('historyModal').classList.add('hidden'); document.body.style.overflow = ''; }
+
+  function cancelBooking(code) {
+    showConfirm('Batalkan booking?', `Booking ${code} akan dihapus permanen dari riwayat demo.`, () => {
+      state.bookings = state.bookings.filter(b => b.code !== code);
+      save(); updateBadge(); openHistory();
+      toast(`Booking ${code} dibatalkan`, 'warn');
+    });
+  }
+
+  /* ---------- CONFIRM MODAL ---------- */
+  function showConfirm(title, msg, cb) {
+    $('confirmTitle').textContent = title;
+    $('confirmMsg').textContent = msg;
+    state.confirmCb = cb;
+    $('confirmModal').classList.remove('hidden');
+    lucide.createIcons();
+  }
+  function closeConfirm() { $('confirmModal').classList.add('hidden'); state.confirmCb = null; }
+
+  function resetDemo() {
+    showConfirm('Reset data demo?', 'Semua booking, pilihan mobil, dan data tersimpan akan dihapus dari localStorage.', () => {
+      localStorage.removeItem(LS_KEY);
+      location.reload();
+    });
+  }
+
+  /* ---------- DRAWER ---------- */
+  function toggleDrawer(open) {
+    $('drawer').classList.toggle('translate-x-full', !open);
+    $('drawerOverlay').classList.toggle('hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  /* ---------- INIT ---------- */
+  function init() {
+    load();
+
+    // default dates: today+1 → today+3 if not saved
+    const d = n => { const x = new Date(); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+    if (!state.pickup) state.pickup = d(1);
+    if (!state.ret) state.ret = d(3);
+    $('inpPickup').value = state.pickup;
+    $('inpReturn').value = state.ret;
+    $('inpPickup').min = d(0);
+    $('inpReturn').min = d(1);
+    $('inpLocation').value = state.location;
+
+    ['inpPickup','inpReturn','inpLocation'].forEach(id => $(id).addEventListener('change', onDateChange));
+
+    // filter listeners
+    document.querySelectorAll('.filter-type').forEach(btn => btn.addEventListener('click', () => {
+      state.filterType = btn.dataset.type;
+      document.querySelectorAll('.filter-type').forEach(b => b.classList.toggle('chip-active', b === btn));
+      renderFleet();
+      toast(`Filter: ${btn.dataset.type === 'ALL' ? 'Semua jenis' : btn.textContent.trim()}`, 'info');
+    }));
+    document.querySelectorAll('.filter-trans').forEach(btn => btn.addEventListener('click', () => {
+      state.filterTrans = btn.dataset.trans;
+      document.querySelectorAll('.filter-trans').forEach(b => b.classList.toggle('chip-active', b === btn));
+      renderFleet();
+      toast(`Transmisi: ${btn.dataset.trans === 'ALL' ? 'Semua' : btn.dataset.trans}`, 'info');
+    }));
+
+    $('confirmOkBtn').addEventListener('click', () => { const cb = state.confirmCb; closeConfirm(); if (cb) cb(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeBookingModal(); closeHistory(); closeConfirm(); toggleDrawer(false); }
+    });
+
+    onDateChange();
+    renderFleet();
+    renderSummary();
+    updateBadge();
+    lucide.createIcons();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  /* ---------- PUBLIC API ---------- */
+  return { selectCar, clearSelection, setMode, toggleAddon, setSort, searchFleet, clearFilters,
+           previewFile, removeFile, openBookingModal, closeBookingModal, submitBooking, closeSuccess,
+           openHistory, closeHistory, cancelBooking, closeConfirm, resetDemo, toggleDrawer };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestabites · Artisanal Bakery & Sourdough Pre-Order</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Quicksand:wght@400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        butter: '#FFF9EB',
+        terra: '#D97746',
+        terradark: '#B85C33',
+        sage: '#A8B99A',
+        sagedark: '#7E9270',
+        flour: '#F3E9D6',
+        crust: '#C98A4B',
+        cocoa: '#5B4636',
+      },
+      fontFamily: {
+        display: ['Fraunces', 'serif'],
+        body: ['Quicksand', 'sans-serif'],
+        script: ['Caveat', 'cursive'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { background-color: #FFF9EB; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #F3E9D6; }
+  ::-webkit-scrollbar-thumb { background: #D97746; border-radius: 10px; }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    20% { transform: rotate(-7deg); }
+    40% { transform: rotate(6deg); }
+    60% { transform: rotate(-4deg); }
+    80% { transform: rotate(3deg); }
+  }
+  .wiggle:active { animation: wiggle 0.5s ease-in-out; }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .float { animation: float 4s ease-in-out infinite; }
+  .float-slow { animation: float 6s ease-in-out infinite; }
+
+  @keyframes spin-slow { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  .spin-slow { animation: spin-slow 22s linear infinite; }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop { animation: pop 0.4s cubic-bezier(.17,.67,.5,1.4) both; }
+
+  @keyframes toastIn {
+    from { transform: translateY(40px) scale(0.9); opacity:0; }
+    to { transform: translateY(0) scale(1); opacity:1; }
+  }
+  .toast-in { animation: toastIn 0.4s cubic-bezier(.17,.67,.5,1.4) both; }
+
+  .card-tilt { transition: transform .35s cubic-bezier(.17,.67,.5,1.4), box-shadow .35s; }
+  .card-tilt:hover { transform: translateY(-8px) rotate(-1deg); }
+
+  .dash-border { background-image: repeating-linear-gradient(90deg,#D97746,#D97746 10px,transparent 10px,transparent 20px); }
+
+  input[type=range] { -webkit-appearance:none; height: 10px; border-radius:999px; background:#F3E9D6; outline:none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:26px; height:26px; border-radius:50%; background:#D97746; border:4px solid #fff; cursor:pointer; box-shadow:0 2px 8px rgba(185,92,51,.4); transition:transform .15s; }
+  input[type=range]::-webkit-slider-thumb:active { transform:scale(1.2); }
+  input[type=range]::-moz-range-thumb { width:26px; height:26px; border-radius:50%; background:#D97746; border:4px solid #fff; cursor:pointer; }
+
+  .grain { background-image: radial-gradient(#D9774622 1px, transparent 1px); background-size: 18px 18px; }
+</style>
+</head>
+<body class="font-body text-cocoa antialiased overflow-x-hidden">
+
+<!-- ========== HEADER / NAVBAR ========== -->
+<header id="navbar" class="sticky top-0 z-40 transition-all duration-300 bg-butter/80 backdrop-blur-md border-b border-flour">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-full bg-terra flex items-center justify-center shadow-lg shadow-terra/30 float">
+        <i data-lucide="croissant" class="text-butter w-7 h-7"></i>
+      </div>
+      <div class="leading-none">
+        <h1 class="font-display font-black text-2xl text-terradark tracking-tight">Bestabites</h1>
+        <p class="font-script text-xl text-sagedark -mt-1">artisanal bakery</p>
+      </div>
+    </div>
+
+    <nav class="hidden lg:flex items-center gap-1 font-semibold text-sm">
+      <a href="#batch" class="px-4 py-2 rounded-full hover:bg-flour transition">Batch Calendar</a>
+      <a href="#customizer" class="px-4 py-2 rounded-full hover:bg-flour transition">Sourdough Lab</a>
+      <a href="#cake" class="px-4 py-2 rounded-full hover:bg-flour transition">Custom Cake</a>
+      <a href="#menu" class="px-4 py-2 rounded-full hover:bg-flour transition">Menu</a>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <span class="hidden sm:flex items-center gap-1.5 bg-sage/30 text-sagedark text-xs font-bold px-3 py-1.5 rounded-full border border-sage/40">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Demo Prototype by NovaNext
+      </span>
+      <button onclick="toggleCart()" class="wiggle relative bg-terra hover:bg-terradark text-white w-11 h-11 rounded-full flex items-center justify-center shadow-lg shadow-terra/30 transition">
+        <i data-lucide="shopping-basket" class="w-5 h-5"></i>
+        <span id="cartBadge" class="absolute -top-1 -right-1 bg-sagedark text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+      </button>
+      <button onclick="toggleDrawer()" class="lg:hidden w-11 h-11 rounded-full bg-flour flex items-center justify-center">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Drawer -->
+<div id="drawer" class="fixed inset-0 z-50 pointer-events-none">
+  <div id="drawerBg" class="absolute inset-0 bg-cocoa/40 opacity-0 transition-opacity duration-300" onclick="toggleDrawer()"></div>
+  <div id="drawerPanel" class="absolute right-0 top-0 h-full w-72 bg-butter shadow-2xl p-6 translate-x-full transition-transform duration-300">
+    <div class="flex justify-between items-center mb-8">
+      <span class="font-display font-black text-xl text-terradark">Menu</span>
+      <button onclick="toggleDrawer()" class="w-9 h-9 rounded-full bg-flour flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <nav class="flex flex-col gap-2 font-semibold">
+      <a href="#batch" onclick="toggleDrawer()" class="p-3 rounded-2xl hover:bg-flour flex items-center gap-3"><i data-lucide="calendar-days" class="w-5 h-5 text-terra"></i> Batch Calendar</a>
+      <a href="#customizer" onclick="toggleDrawer()" class="p-3 rounded-2xl hover:bg-flour flex items-center gap-3"><i data-lucide="wheat" class="w-5 h-5 text-terra"></i> Sourdough Lab</a>
+      <a href="#cake" onclick="toggleDrawer()" class="p-3 rounded-2xl hover:bg-flour flex items-center gap-3"><i data-lucide="cake" class="w-5 h-5 text-terra"></i> Custom Cake</a>
+      <a href="#menu" onclick="toggleDrawer()" class="p-3 rounded-2xl hover:bg-flour flex items-center gap-3"><i data-lucide="utensils" class="w-5 h-5 text-terra"></i> Menu</a>
+    </nav>
+    <div class="mt-8 bg-sage/20 rounded-2xl p-4 text-center">
+      <p class="font-script text-2xl text-sagedark">baked with love</p>
+      <p class="text-xs text-cocoa/60 mt-1">every single loaf 🥖</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== HERO ========== -->
+<section class="relative overflow-hidden grain">
+  <!-- floating stickers -->
+  <div class="absolute top-20 left-[8%] text-5xl float-slow select-none hidden sm:block">🥐</div>
+  <div class="absolute top-40 right-[10%] text-5xl float select-none hidden sm:block">🍞</div>
+  <div class="absolute bottom-16 left-[15%] text-4xl float select-none hidden md:block">🌾</div>
+  <div class="absolute bottom-32 right-[18%] text-4xl float-slow select-none hidden md:block">🧈</div>
+
+  <div class="max-w-7xl mx-auto px-6 pt-16 pb-24 grid md:grid-cols-2 gap-10 items-center">
+    <div class="relative z-10">
+      <span class="inline-flex items-center gap-2 bg-terra/10 text-terradark font-bold text-sm px-4 py-2 rounded-full border border-terra/20 mb-5 pop">
+        <i data-lucide="hand-heart" class="w-4 h-4"></i> Handmade · Small Batch · Fresh Daily
+      </span>
+      <h2 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl leading-[0.95] text-cocoa">
+        Roti <span class="text-terra italic">sourdough</span> yang <br class="hidden sm:block"> dipanggang <span class="relative inline-block">penuh cinta
+          <svg class="absolute -bottom-2 left-0 w-full" height="14" viewBox="0 0 200 14" fill="none"><path d="M2 8C50 2 150 2 198 8" stroke="#A8B99A" stroke-width="5" stroke-linecap="round"/></svg>
+        </span>
+      </h2>
+      <p class="mt-6 text-lg text-cocoa/70 max-w-md">Fermentasi perlahan 36 jam, bahan lokal pilihan. Pesan slot batch panggang harianmu sebelum kehabisan!</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#batch" class="wiggle bg-terra hover:bg-terradark text-white font-bold px-7 py-4 rounded-full shadow-lg shadow-terra/30 flex items-center gap-2 transition">
+          <i data-lucide="calendar-check" class="w-5 h-5"></i> Pilih Batch
+        </a>
+        <a href="#customizer" class="wiggle bg-white hover:bg-flour text-cocoa font-bold px-7 py-4 rounded-full border-2 border-flour flex items-center gap-2 transition">
+          <i data-lucide="sliders-horizontal" class="w-5 h-5 text-sagedark"></i> Racik Sourdough
+        </a>
+      </div>
+      <div class="mt-8 flex items-center gap-6">
+        <div><p class="font-display font-black text-3xl text-terradark">36<span class="text-lg">h</span></p><p class="text-xs text-cocoa/60">fermentasi</p></div>
+        <div class="w-px h-10 bg-flour"></div>
+        <div><p class="font-display font-black text-3xl text-terradark">100%</p><p class="text-xs text-cocoa/60">natural</p></div>
+        <div class="w-px h-10 bg-flour"></div>
+        <div><p class="font-display font-black text-3xl text-terradark">4.9★</p><p class="text-xs text-cocoa/60">pelanggan</p></div>
+      </div>
+    </div>
+
+    <div class="relative flex justify-center items-center">
+      <div class="absolute w-80 h-80 bg-sage/30 rounded-full blur-2xl"></div>
+      <div class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-crust to-terradark shadow-2xl shadow-terra/40 flex items-center justify-center float">
+        <div class="text-[11rem] sm:text-[14rem] drop-shadow-xl">🍞</div>
+        <div class="spin-slow absolute inset-0">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white rounded-full px-4 py-2 shadow-lg font-script text-xl text-terra">so fresh!</span>
+        </div>
+      </div>
+      <div class="absolute -bottom-2 -left-2 bg-white rounded-3xl shadow-xl p-4 rotate-[-6deg] float-slow">
+        <p class="font-script text-2xl text-sagedark leading-none">just baked</p>
+        <p class="text-xs font-bold text-cocoa/60">07:00 setiap hari</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== BATCH CALENDAR ========== -->
+<section id="batch" class="max-w-7xl mx-auto px-6 py-16">
+  <div class="text-center mb-10">
+    <span class="font-script text-3xl text-terra">batch baking calendar</span>
+    <h3 class="font-display font-black text-4xl sm:text-5xl text-cocoa mt-1">Pilih Slot Batch Panggangmu</h3>
+    <p class="text-cocoa/60 mt-2 max-w-xl mx-auto">Setiap batch dipanggang dalam jumlah terbatas. Amankan slotmu sekarang sebelum oven penuh! 🔥</p>
+  </div>
+  <div id="batchGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  <div class="mt-6 flex items-center justify-center gap-2 text-sm text-cocoa/60">
+    <i data-lucide="info" class="w-4 h-4"></i> Slot terpilih akan diterapkan otomatis ke keranjang pre-order kamu.
+  </div>
+</section>
+
+<!-- ========== SOURDOUGH CUSTOMIZER ========== -->
+<section id="customizer" class="relative py-16 bg-flour/50 grain">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-10">
+      <span class="font-script text-3xl text-terra">interactive sourdough lab</span>
+      <h3 class="font-display font-black text-4xl sm:text-5xl text-cocoa mt-1">Racik Sourdough Impianmu</h3>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8 items-start">
+      <!-- Preview -->
+      <div class="bg-white rounded-[2.5rem] p-8 shadow-xl border-4 border-butter sticky top-28">
+        <div class="relative aspect-square rounded-[2rem] flex items-center justify-center overflow-hidden transition-colors duration-500" id="loafStage" style="background:#F3E9D6">
+          <div id="loafEmoji" class="text-[12rem] transition-all duration-500 drop-shadow-xl">🍞</div>
+          <div id="toppingLayer" class="absolute inset-0 flex items-center justify-center pointer-events-none"></div>
+          <span id="cutBadge" class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-sm font-bold text-terra shadow hidden">Sliced 🔪</span>
+        </div>
+        <div class="mt-5 flex items-center justify-between">
+          <div>
+            <p class="text-xs text-cocoa/50 font-semibold uppercase tracking-wide">Your creation</p>
+            <p id="loafName" class="font-display font-black text-xl text-terradark">Golden Classic Loaf</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-cocoa/50 font-semibold uppercase tracking-wide">Harga</p>
+            <p id="loafPrice" class="font-display font-black text-2xl text-sagedark">Rp 65.000</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="space-y-6">
+        <!-- Crust -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-flour">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="flame" class="w-5 h-5 text-terra"></i>
+            <h4 class="font-display font-bold text-lg">Tingkat Kematangan Crust</h4>
+          </div>
+          <input type="range" id="crustSlider" min="0" max="3" step="1" value="1" class="w-full" oninput="updateLoaf()">
+          <div class="flex justify-between mt-3 text-xs font-semibold text-cocoa/50">
+            <span>Light</span><span>Golden</span><span>Deep</span><span>Caramel</span>
+          </div>
+          <p class="mt-3 text-sm bg-flour/60 rounded-xl px-4 py-2 font-semibold text-terradark" id="crustLabel">🌾 Golden Crisp — renyah tipis, lembut di dalam</p>
+        </div>
+
+        <!-- Topping -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-flour">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="sprout" class="w-5 h-5 text-sagedark"></i>
+            <h4 class="font-display font-bold text-lg">Seed & Topping</h4>
+            <span class="text-xs text-cocoa/40">(boleh pilih banyak)</span>
+          </div>
+          <div id="toppingGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- Slice option -->
+        <div class="bg-white rounded-3xl p-6 shadow-lg border border-flour">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="utensils-crossed" class="w-5 h-5 text-crust"></i>
+            <h4 class="font-display font-bold text-lg">Potongan</h4>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="setCut('whole')" id="cutWhole" class="cut-btn p-4 rounded-2xl border-2 border-terra bg-terra/10 font-bold flex flex-col items-center gap-1 transition">
+              <span class="text-3xl">🍞</span> Whole Loaf
+            </button>
+            <button onclick="setCut('sliced')" id="cutSliced" class="cut-btn p-4 rounded-2xl border-2 border-flour font-bold flex flex-col items-center gap-1 transition">
+              <span class="text-3xl">🔪</span> Sliced <span class="text-xs text-cocoa/50 font-semibold">+Rp 5.000</span>
+            </button>
+          </div>
+        </div>
+
+        <button onclick="addCustomSourdough()" class="wiggle w-full bg-terra hover:bg-terradark text-white font-bold py-4 rounded-2xl shadow-lg shadow-terra/30 flex items-center justify-center gap-2 text-lg transition">
+          <i data-lucide="plus-circle" class="w-6 h-6"></i> Tambah ke Keranjang
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CUSTOM CAKE ========== -->
+<section id="cake" class="max-w-7xl mx-auto px-6 py-16">
+  <div class="text-center mb-10">
+    <span class="font-script text-3xl text-terra">custom cake message</span>
+    <h3 class="font-display font-black text-4xl sm:text-5xl text-cocoa mt-1">Tulis Pesan Spesialmu</h3>
+    <p class="text-cocoa/60 mt-2">Lihat preview tulisan tangan langsung di atas kue mini 🎂✨</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-8 items-center">
+    <!-- Cake Preview -->
+    <div class="order-2 lg:order-1 bg-gradient-to-br from-butter to-flour rounded-[2.5rem] p-8 shadow-xl border-4 border-white flex items-center justify-center min-h-[22rem]">
+      <div class="relative">
+        <!-- cake -->
+        <div class="w-64 sm:w-72 rounded-[1.5rem] overflow-hidden shadow-2xl transition-colors duration-500" id="cakeBody">
+          <div class="h-28 flex items-end justify-center relative transition-colors duration-500" id="cakeTop" style="background:#F6D5C6">
+            <!-- frosting drips -->
+            <div class="absolute -bottom-1 left-0 right-0 flex justify-around" id="cakeDrips"></div>
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 flex gap-3 text-2xl" id="cakeCandles">🕯️🕯️🕯️</div>
+          </div>
+          <div class="h-32 flex items-center justify-center px-5 transition-colors duration-500" id="cakeMiddle" style="background:#E7A977">
+            <p id="cakeMsgPreview" class="font-script text-center text-3xl leading-tight text-white drop-shadow break-words">Happy Birthday!</p>
+          </div>
+        </div>
+        <p class="text-center mt-4 font-script text-2xl text-sagedark">preview langsung ✨</p>
+      </div>
+    </div>
+
+    <!-- Cake Controls -->
+    <div class="order-1 lg:order-2 bg-white rounded-[2.5rem] p-8 shadow-xl border border-flour space-y-6">
+      <div>
+        <label class="font-bold text-sm flex items-center gap-2 mb-2"><i data-lucide="pen-line" class="w-4 h-4 text-terra"></i> Pesan di atas kue</label>
+        <input id="cakeMsg" type="text" maxlength="40" value="Happy Birthday!" oninput="updateCake()" class="w-full border-2 border-flour focus:border-terra rounded-2xl px-4 py-3 font-script text-2xl outline-none transition" placeholder="Tulis ucapanmu...">
+        <p class="text-xs text-cocoa/40 mt-1 text-right"><span id="cakeCharCount">15</span>/40 karakter</p>
+      </div>
+
+      <div>
+        <label class="font-bold text-sm flex items-center gap-2 mb-3"><i data-lucide="palette" class="w-4 h-4 text-terra"></i> Warna Frosting</label>
+        <div id="flavorGrid" class="grid grid-cols-4 gap-3"></div>
+      </div>
+
+      <div>
+        <label class="font-bold text-sm flex items-center gap-2 mb-3"><i data-lucide="ruler" class="w-4 h-4 text-terra"></i> Ukuran</label>
+        <div id="cakeSizeGrid" class="grid grid-cols-3 gap-3"></div>
+      </div>
+
+      <div class="flex items-center justify-between bg-flour/50 rounded-2xl px-5 py-4">
+        <span class="font-bold">Total</span>
+        <span id="cakeTotal" class="font-display font-black text-2xl text-terradark">Rp 180.000</span>
+      </div>
+
+      <button onclick="addCustomCake()" class="wiggle w-full bg-sagedark hover:bg-sage text-white font-bold py-4 rounded-2xl shadow-lg shadow-sage/40 flex items-center justify-center gap-2 text-lg transition">
+        <i data-lucide="cake" class="w-6 h-6"></i> Pesan Kue Ini
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== MENU / CATALOG ========== -->
+<section id="menu" class="py-16 bg-flour/50 grain">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-8">
+      <span class="font-script text-3xl text-terra">our bakes</span>
+      <h3 class="font-display font-black text-4xl sm:text-5xl text-cocoa mt-1">Menu Hari Ini</h3>
+    </div>
+    <!-- filters -->
+    <div id="filterBar" class="flex flex-wrap justify-center gap-2 mb-10"></div>
+    <div id="menuGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="bg-cocoa text-butter/80 pt-14 pb-8">
+  <div class="max-w-7xl mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-10 h-10 rounded-full bg-terra flex items-center justify-center"><i data-lucide="croissant" class="w-6 h-6 text-butter"></i></div>
+        <span class="font-display font-black text-2xl text-butter">Bestabites</span>
+      </div>
+      <p class="text-sm">Artisanal bakery & sourdough pre-order. Dipanggang segar setiap hari dengan bahan lokal pilihan.</p>
+    </div>
+    <div>
+      <h5 class="font-bold text-butter mb-3">Jelajahi</h5>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#batch" class="hover:text-terra transition">Batch Calendar</a></li>
+        <li><a href="#customizer" class="hover:text-terra transition">Sourdough Lab</a></li>
+        <li><a href="#cake" class="hover:text-terra transition">Custom Cake</a></li>
+        <li><a href="#menu" class="hover:text-terra transition">Menu</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5 class="font-bold text-butter mb-3">Buka Setiap Hari</h5>
+      <p class="text-sm">Senin – Minggu<br>07.00 – 20.00 WIB</p>
+      <p class="text-sm mt-2">Jl. Tepung Hangat No. 36<br>Bandung</p>
+    </div>
+    <div>
+      <h5 class="font-bold text-butter mb-3">Pre-Order via</h5>
+      <button onclick="toggleCart()" class="bg-[#25D366] hover:brightness-110 text-white font-bold px-5 py-3 rounded-full flex items-center gap-2 transition">
+        <i data-lucide="message-circle" class="w-5 h-5"></i> WhatsApp Order
+      </button>
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-6 mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-butter/50">
+    <p>© 2026 Bestabites. Baked with love 🥖</p>
+    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Demo Prototype by NovaNext</span>
+  </div>
+</footer>
+
+<!-- ========== CART DRAWER ========== -->
+<div id="cartOverlay" class="fixed inset-0 z-50 pointer-events-none">
+  <div id="cartBg" class="absolute inset-0 bg-cocoa/50 opacity-0 transition-opacity duration-300" onclick="toggleCart()"></div>
+  <div id="cartPanel" class="absolute right-0 top-0 h-full w-full max-w-md bg-butter shadow-2xl flex flex-col translate-x-full transition-transform duration-300">
+    <div class="p-5 border-b border-flour flex items-center justify-between bg-terra text-white">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shopping-basket" class="w-6 h-6"></i>
+        <h4 class="font-display font-black text-xl">Keranjang Pre-Order</h4>
+      </div>
+      <button onclick="toggleCart()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+
+    <div id="selectedBatchBar" class="px-5 py-3 bg-sage/20 border-b border-sage/30 text-sm font-semibold text-sagedark hidden items-center gap-2">
+      <i data-lucide="calendar-check" class="w-4 h-4"></i> <span id="selectedBatchText"></span>
+    </div>
+
+    <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+
+    <div class="border-t border-flour p-5 bg-white space-y-4">
+      <div class="space-y-2">
+        <input id="custName" type="text" placeholder="Nama penerima" class="w-full border-2 border-flour focus:border-terra rounded-xl px-4 py-2.5 text-sm outline-none transition">
+        <textarea id="custAddr" rows="2" placeholder="Alamat kirim lengkap" class="w-full border-2 border-flour focus:border-terra rounded-xl px-4 py-2.5 text-sm outline-none transition resize-none"></textarea>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="font-bold text-lg">Total</span>
+        <span id="cartTotal" class="font-display font-black text-2xl text-terradark">Rp 0</span>
+      </div>
+      <button onclick="checkoutWhatsApp()" class="wiggle w-full bg-[#25D366] hover:brightness-110 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition">
+        <i data-lucide="message-circle" class="w-6 h-6"></i> Checkout via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastWrap" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2 pointer-events-none"></div>
+
+<!-- Confirm Modal -->
+<div id="confirmModal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-cocoa/50" onclick="closeConfirm()"></div>
+  <div class="relative bg-butter rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center pop">
+    <div class="w-16 h-16 rounded-full bg-sage/30 flex items-center justify-center mx-auto mb-4 float">
+      <i data-lucide="party-popper" class="w-8 h-8 text-sagedark"></i>
+    </div>
+    <h4 class="font-display font-black text-2xl text-terradark mb-2">Pesanan Terkirim! 🎉</h4>
+    <p class="text-cocoa/70 text-sm mb-6">Keranjangmu sudah dirapikan & dikirim ke WhatsApp admin kami. Terima kasih sudah memesan!</p>
+    <button onclick="closeConfirm()" class="wiggle bg-terra hover:bg-terradark text-white font-bold px-8 py-3 rounded-full transition">Yeay, tutup!</button>
+  </div>
+</div>
+
+<script>
+/* ============ STATE ENGINE ============ */
+const WA_NUMBER = '628123456789';
+const fmt = n => 'Rp ' + n.toLocaleString('id-ID');
+
+const State = {
+  cart: JSON.parse(localStorage.getItem('bb_cart') || '[]'),
+  selectedBatch: JSON.parse(localStorage.getItem('bb_batch') || 'null'),
+  filter: 'all',
+  crust: 1,
+  toppings: [],
+  cut: 'whole',
+  cake: { flavor: 0, size: 0 },
+  save() {
+    localStorage.setItem('bb_cart', JSON.stringify(this.cart));
+    localStorage.setItem('bb_batch', JSON.stringify(this.selectedBatch));
+  }
+};
+
+/* ============ MOCK DATA ============ */
+const batches = [
+  { id:'b1', day:'Selasa', date:'4 Mar', emoji:'🥖', total:10, left:2, note:'Sourdough Classic batch' },
+  { id:'b2', day:'Kamis', date:'6 Mar', emoji:'🥐', total:12, left:7, note:'Viennoiserie & croissant' },
+  { id:'b3', day:'Sabtu', date:'8 Mar', emoji:'🍞', total:14, left:4, note:'Full artisan loaf batch' },
+  { id:'b4', day:'Minggu', date:'9 Mar', emoji:'🧁', total:8, left:6, note:'Pastry & cake batch' },
+  { id:'b5', day:'Senin', date:'10 Mar', emoji:'🥯', total:10, left:0, note:'Bagel & bun batch' },
+  { id:'b6', day:'Rabu', date:'12 Mar', emoji:'🫓', total:12, left:9, note:'Focaccia & flatbread' },
+];
+
+const toppingOptions = [
+  { id:'sesame', name:'Sesame', emoji:'⚪', price:3000 },
+  { id:'chia', name:'Chia', emoji:'⚫', price:4000 },
+  { id:'jalapeno', name:'Jalapeno Cheddar', emoji:'🌶️', price:8000 },
+  { id:'sunflower', name:'Sunflower', emoji:'🌻', price:5000 },
+  { id:'rosemary', name:'Rosemary', emoji:'🌿', price:4000 },
+  { id:'oat', name:'Oat Flakes', emoji:'🌾', price:3000 },
+];
+
+const crustLevels = [
+  { name:'Light Bake', emoji:'🍞', color:'#F3E9D6', label:'🤍 Light & Soft — kulit tipis pucat, super lembut' },
+  { name:'Golden Classic', emoji:'🍞', color:'#EBD3A8', label:'🌾 Golden Crisp — renyah tipis, lembut di dalam' },
+  { name:'Deep Bake', emoji:'🥖', color:'#D7A86E', label:'🔥 Deep Bake — kerak tebal aromatik' },
+  { name:'Caramelized', emoji:'🥖', color:'#B2733E', label:'🍯 Deep Caramelized — pekat, karamel, maksimal crunchy' },
+];
+
+const cakeFlavors = [
+  { name:'Strawberry', color:'#F6D5C6', mid:'#E7A977', drip:'#EF9A9A' },
+  { name:'Matcha', color:'#CBD8B5', mid:'#A8B99A', drip:'#8DA572' },
+  { name:'Chocolate', color:'#8B5E3C', mid:'#5B4636', drip:'#6B4226' },
+  { name:'Vanilla', color:'#FFF1CC', mid:'#F0D98A', drip:'#F3C969' },
+];
+const cakeSizes = [
+  { name:'Mini 12cm', price:180000 },
+  { name:'Medium 18cm', price:280000 },
+  { name:'Large 22cm', price:380000 },
+];
+
+const menuItems = [
+  { id:'m1', name:'Classic Sourdough', cat:'sourdough', emoji:'🍞', price:65000, tag:'Best Seller', desc:'Fermentasi 36 jam, kerak renyah' },
+  { id:'m2', name:'Rustic Baguette', cat:'sourdough', emoji:'🥖', price:38000, tag:'', desc:'Panjang, garing, klasik Prancis' },
+  { id:'m3', name:'Butter Croissant', cat:'pastry', emoji:'🥐', price:28000, tag:'Favorit', desc:'72 layer butter berkualitas' },
+  { id:'m4', name:'Pain au Chocolat', cat:'pastry', emoji:'🥐', price:32000, tag:'', desc:'Cokelat Belgia meleleh' },
+  { id:'m5', name:'Cinnamon Roll', cat:'pastry', emoji:'🧁', price:30000, tag:'Hangat', desc:'Gula kayu manis & cream cheese' },
+  { id:'m6', name:'Birthday Cake Mini', cat:'cake', emoji:'🎂', price:180000, tag:'Custom', desc:'Bisa custom pesan & warna' },
+  { id:'m7', name:'Carrot Cake Slice', cat:'cake', emoji:'🍰', price:42000, tag:'', desc:'Wortel, walnut, cream cheese' },
+  { id:'m8', name:'Everything Bagel', cat:'sourdough', emoji:'🥯', price:26000, tag:'', desc:'Topping biji-bijian lengkap' },
+  { id:'m9', name:'Choco Chip Cookie', cat:'pastry', emoji:'🍪', price:18000, tag:'', desc:'Gooey, chunky, besar' },
+  { id:'m10', name:'Garlic Focaccia', cat:'sourdough', emoji:'🫓', price:48000, tag:'Baru', desc:'Rosemary & olive oil' },
+  { id:'m11', name:'Red Velvet Jar', cat:'cake', emoji:'🍮', price:35000, tag:'', desc:'Dalam jar, praktis & creamy' },
+  { id:'m12', name:'Almond Danish', cat:'pastry', emoji:'🥐', price:34000, tag:'', desc:'Krim almond & irisan almond' },
+];
+
+/* ============ TOAST ============ */
+function toast(msg, icon='check', color='bg-sagedark') {
+  const el = document.createElement('div');
+  el.className = `toast-in ${color} text-white font-semibold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 pointer-events-auto`;
+  el.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i> ${msg}`;
+  document.getElementById('toastWrap').appendChild(el);
+  lucide.createIcons();
+  setTimeout(()=>{ el.style.transition='all .4s'; el.style.opacity='0'; el.style.transform='translateY(20px)'; setTimeout(()=>el.remove(),400); }, 2600);
+}
+
+/* ============ RENDER BATCH ============ */
+function renderBatches() {
+  const grid = document.getElementById('batchGrid');
+  grid.innerHTML = batches.map(b => {
+    const pct = Math.round((b.left/b.total)*100);
+    const sold = b.left === 0;
+    const low = b.left > 0 && b.left <= 3;
+    const sel = State.selectedBatch && State.selectedBatch.id === b.id;
+    return `
+    <div class="card-tilt bg-white rounded-3xl p-6 shadow-lg border-2 ${sel?'border-terra':'border-flour'} relative overflow-hidden ${sold?'opacity-60':''}">
+      ${sel?'<span class="absolute top-4 right-4 bg-terra text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"><i data-lucide=\"check\" class=\"w-3 h-3\"></i> Dipilih</span>':''}
+      <div class="text-5xl mb-3">${b.emoji}</div>
+      <h4 class="font-display font-black text-2xl text-cocoa">Batch ${b.day}</h4>
+      <p class="text-sm text-cocoa/50 font-semibold">${b.date} · ${b.note}</p>
+      <div class="mt-4">
+        <div class="flex justify-between text-xs font-bold mb-1">
+          <span class="${sold?'text-red-500':low?'text-terra':'text-sagedark'}">${sold?'Habis terjual 😢':'Sisa '+b.left+' slot'}</span>
+          <span class="text-cocoa/40">${b.total} total</span>
+        </div>
+        <div class="h-2.5 rounded-full bg-flour overflow-hidden">
+          <div class="h-full rounded-full ${sold?'bg-red-400':low?'bg-terra':'bg-sagedark'}" style="width:${sold?100:pct}%"></div>
+        </div>
+      </div>
+      <button ${sold?'disabled':''} onclick="selectBatch('${b.id}')" class="wiggle mt-5 w-full font-bold py-3 rounded-2xl transition flex items-center justify-center gap-2 ${sold?'bg-flour text-cocoa/40 cursor-not-allowed':sel?'bg-terra text-white':'bg-flour hover:bg-terra hover:text-white text-cocoa'}">
+        ${sold?'<i data-lucide="x-circle" class="w-5 h-5"></i> Penuh':sel?'<i data-lucide="check-circle" class="w-5 h-5"></i> Slot Diamankan':'<i data-lucide="calendar-plus" class="w-5 h-5"></i> Pilih Slot Ini'}
+      </button>
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+function selectBatch(id) {
+  const b = batches.find(x=>x.id===id);
+  State.selectedBatch = { id:b.id, label:`Batch ${b.day} (${b.date})` };
+  State.save();
+  renderBatches(); updateCartUI();
+  toast(`Slot Batch ${b.day} diamankan! 🎉`, 'calendar-check');
+}
+
+/* ============ SOURDOUGH CUSTOMIZER ============ */
+function renderToppings() {
+  document.getElementById('toppingGrid').innerHTML = toppingOptions.map(t=>`
+    <button onclick="toggleTopping('${t.id}')" id="top-${t.id}" class="topping-btn p-3 rounded-2xl border-2 border-flour font-semibold text-sm flex flex-col items-center gap-1 transition hover:border-sage">
+      <span class="text-2xl">${t.emoji}</span>
+      <span>${t.name}</span>
+      <span class="text-xs text-cocoa/50">+${(t.price/1000)}k</span>
+    </button>`).join('');
+}
+function toggleTopping(id) {
+  const i = State.toppings.indexOf(id);
+  if (i>-1) State.toppings.splice(i,1); else State.toppings.push(id);
+  updateLoaf();
+}
+function setCut(c) { State.cut = c; updateLoaf(); }
+
+function calcSourdoughPrice() {
+  let base = 65000 + State.crust*3000;
+  State.toppings.forEach(id => base += toppingOptions.find(t=>t.id===id).price);
+  if (State.cut==='sliced') base += 5000;
+  return base;
+}
+function updateLoaf() {
+  State.crust = parseInt(document.getElementById('crustSlider').value);
+  const c = crustLevels[State.crust];
+  document.getElementById('loafStage').style.background = c.color;
+  document.getElementById('loafEmoji').textContent = c.emoji;
+  document.getElementById('crustLabel').textContent = c.label;
+  document.getElementById('loafName').textContent = c.name + (State.toppings.length? ' + '+State.toppings.length+' topping':'') + ' Loaf';
+  // topping layer
+  document.getElementById('toppingLayer').innerHTML = State.toppings.map((id,i)=>{
+    const t=toppingOptions.find(x=>x.id===id);
+    const positions=['top-10 left-12','top-16 right-14','bottom-16 left-16','bottom-12 right-12','top-24 left-1/2','bottom-24 right-1/3'];
+    return `<span class="absolute ${positions[i%6]} text-3xl pop">${t.emoji}</span>`;
+  }).join('');
+  // cut
+  document.getElementById('cutBadge').classList.toggle('hidden', State.cut!=='sliced');
+  document.getElementById('cutWhole').className = 'cut-btn p-4 rounded-2xl border-2 font-bold flex flex-col items-center gap-1 transition '+(State.cut==='whole'?'border-terra bg-terra/10':'border-flour');
+  document.getElementById('cutSliced').className = 'cut-btn p-4 rounded-2xl border-2 font-bold flex flex-col items-center gap-1 transition '+(State.cut==='sliced'?'border-terra bg-terra/10':'border-flour');
+  // topping buttons highlight
+  toppingOptions.forEach(t=>{
+    const b=document.getElementById('top-'+t.id);
+    b.className='topping-btn p-3 rounded-2xl border-2 font-semibold text-sm flex flex-col items-center gap-1 transition '+(State.toppings.includes(t.id)?'border-sage bg-sage/20':'border-flour hover:border-sage');
+  });
+  document.getElementById('loafPrice').textContent = fmt(calcSourdoughPrice());
+}
+function addCustomSourdough() {
+  const c = crustLevels[State.crust];
+  const tNames = State.toppings.map(id=>toppingOptions.find(t=>t.id===id).name);
+  const name = `${c.name} Sourdough${State.cut==='sliced'?' (Sliced)':''}`;
+  const detail = tNames.length? 'Topping: '+tNames.join(', ') : 'Plain';
+  addToCart({ id:'sd-'+Date.now(), name, emoji:c.emoji, price:calcSourdoughPrice(), detail, qty:1 });
+  toast('Sourdough custom masuk keranjang! 🥖');
+}
+
+/* ============ CUSTOM CAKE ============ */
+function renderCakeOptions() {
+  document.getElementById('flavorGrid').innerHTML = cakeFlavors.map((f,i)=>`
+    <button onclick="setFlavor(${i})" id="flavor-${i}" class="h-14 rounded-2xl border-4 transition flex items-end justify-center pb-1" style="background:${f.mid};border-color:${State.cake.flavor===i?'#D97746':'transparent'}">
+      <span class="text-[10px] font-bold text-white drop-shadow">${f.name}</span>
+    </button>`).join('');
+  document.getElementById('cakeSizeGrid').innerHTML = cakeSizes.map((s,i)=>`
+    <button onclick="setCakeSize(${i})" id="size-${i}" class="cake-size p-3 rounded-2xl border-2 font-bold text-sm transition ${State.cake.size===i?'border-terra bg-terra/10':'border-flour'}">
+      ${s.name.split(' ')[0]}<br><span class="text-xs text-cocoa/50 font-semibold">${s.name.split(' ')[1]}</span>
+    </button>`).join('');
+}
+function setFlavor(i){ State.cake.flavor=i; updateCake(); renderCakeOptions(); }
+function setCakeSize(i){ State.cake.size=i; updateCake(); renderCakeOptions(); }
+function updateCake() {
+  const f = cakeFlavors[State.cake.flavor];
+  const msg = document.getElementById('cakeMsg').value || 'Your Message';
+  document.getElementById('cakeTop').style.background = f.color;
+  document.getElementById('cakeMiddle').style.background = f.mid;
+  document.getElementById('cakeMsgPreview').textContent = msg;
+  document.getElementById('cakeMsgPreview').style.color = State.cake.flavor===3?'#5B4636':'#ffffff';
+  document.getElementById('cakeCharCount').textContent = document.getElementById('cakeMsg').value.length;
+  document.getElementById('cakeDrips').innerHTML = Array.from({length:7}).map(()=>`<span class="w-5 h-4 rounded-b-full" style="background:${f.drip}"></span>`).join('');
+  document.getElementById('cakeTotal').textContent = fmt(cakeSizes[State.cake.size].price);
+}
+function addCustomCake() {
+  const f = cakeFlavors[State.cake.flavor];
+  const s = cakeSizes[State.cake.size];
+  const msg = document.getElementById('cakeMsg').value || '(tanpa pesan)';
+  addToCart({ id:'cake-'+Date.now(), name:`Custom Cake ${f.name} ${s.name}`, emoji:'🎂', price:s.price, detail:`Pesan: "${msg}"`, qty:1 });
+  toast('Custom cake ditambahkan! 🎂', 'cake');
+}
+
+/* ============ MENU ============ */
+const cats = [
+  {id:'all', name:'Semua', emoji:'🧺'},
+  {id:'sourdough', name:'Sourdough', emoji:'🍞'},
+  {id:'pastry', name:'Pastry', emoji:'🥐'},
+  {id:'cake', name:'Cake', emoji:'🎂'},
+];
+function renderFilters() {
+  document.getElementById('filterBar').innerHTML = cats.map(c=>`
+    <button onclick="setFilter('${c.id}')" class="wiggle px-5 py-2.5 rounded-full font-bold text-sm transition ${State.filter===c.id?'bg-terra text-white shadow-lg shadow-terra/30':'bg-white text-cocoa border-2 border-flour hover:border-terra'}">
+      ${c.emoji} ${c.name}
+    </button>`).join('');
+}
+function setFilter(id){ State.filter=id; renderFilters(); renderMenu(); toast('Filter: '+cats.find(c=>c.id===id).name,'filter'); }
+function renderMenu() {
+  const items = State.filter==='all'? menuItems : menuItems.filter(m=>m.cat===State.filter);
+  document.getElementById('menuGrid').innerHTML = items.map(m=>`
+    <div class="card-tilt bg-white rounded-3xl p-5 shadow-lg border border-flour flex flex-col">
+      <div class="relative aspect-square rounded-2xl bg-flour/60 flex items-center justify-center mb-4">
+        <span class="text-7xl">${m.emoji}</span>
+        ${m.tag?`<span class="absolute top-2 left-2 bg-terra text-white text-[11px] font-bold px-2.5 py-1 rounded-full">${m.tag}</span>`:''}
+      </div>
+      <h4 class="font-display font-bold text-lg text-cocoa leading-tight">${m.name}</h4>
+      <p class="text-xs text-cocoa/50 mb-3 flex-1">${m.desc}</p>
+      <div class="flex items-center justify-between">
+        <span class="font-display font-black text-lg text-sagedark">${fmt(m.price)}</span>
+        <button onclick="addMenuItem('${m.id}')" class="wiggle bg-terra hover:bg-terradark text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md shadow-terra/30">
+          <i data-lucide="plus" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>`).join('');
+  lucide.createIcons();
+}
+function addMenuItem(id){
+  const m = menuItems.find(x=>x.id===id);
+  addToCart({ id:m.id, name:m.name, emoji:m.emoji, price:m.price, detail:'', qty:1 });
+  toast(m.name+' ditambahkan! 🧺');
+}
+
+/* ============ CART ============ */
+function addToCart(item) {
+  const existing = State.cart.find(c=>c.id===item.id && c.detail===item.detail);
+  if (existing) existing.qty += 1; else State.cart.push(item);
+  State.save(); updateCartUI(); bumpBadge();
+}
+function changeQty(idx, d) {
+  State.cart[idx].qty += d;
+  if (State.cart[idx].qty<=0) State.cart.splice(idx,1);
+  State.save(); updateCartUI();
+}
+function bumpBadge() {
+  const badge=document.getElementById('cartBadge');
+  badge.style.transform='scale(1.4)';
+  setTimeout(()=>badge.style.transform='scale(1)',200);
+}
+function cartCount(){ return State.cart.reduce((s,i)=>s+i.qty,0); }
+function cartTotal(){ return State.cart.reduce((s,i)=>s+i.price*i.qty,0); }
+function updateCartUI() {
+  const cnt = cartCount();
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = cnt;
+  badge.style.transform = cnt>0?'scale(1)':'scale(0)';
+
+  const bar = document.getElementById('selectedBatchBar');
+  if (State.selectedBatch) { bar.classList.remove('hidden'); bar.classList.add('flex'); document.getElementById('selectedBatchText').textContent = 'Jadwal: '+State.selectedBatch.label; }
+  else { bar.classList.add('hidden'); bar.classList.remove('flex'); }
+
+  const wrap = document.getElementById('cartItems');
+  if (!State.cart.length) {
+    wrap.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center text-cocoa/40 py-16">
+      <div class="text-6xl mb-3 float">🧺</div>
+      <p class="font-display font-bold text-lg">Keranjang masih kosong</p>
+      <p class="text-sm">Yuk pilih roti favoritmu!</p>
+    </div>`;
+  } else {
+    wrap.innerHTML = State.cart.map((it,i)=>`
+      <div class="bg-white rounded-2xl p-3 shadow border border-flour flex items-center gap-3 pop">
+        <div class="w-14 h-14 rounded-xl bg-flour flex items-center justify-center text-3xl shrink-0">${it.emoji}</div>
+        <div class="flex-1 min-w-0">
+          <p class="font-bold text-sm leading-tight truncate">${it.name}</p>
+          ${it.detail?`<p class="text-xs text-cocoa/50 truncate">${it.detail}</p>`:''}
+          <p class="text-sm font-display font-black text-terradark">${fmt(it.price*it.qty)}</p>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="changeQty(${i},-1)" class="w-7 h-7 rounded-full bg-flour hover:bg-terra hover:text-white flex items-center justify-center transition"><i data-lucide="minus" class="w-4 h-4"></i></button>
+          <span class="w-5 text-center font-bold text-sm">${it.qty}</span>
+          <button onclick="changeQty(${i},1)" class="w-7 h-7 rounded-full bg-flour hover:bg-terra hover:text-white flex items-center justify-center transition"><i data-lucide="plus" class="w-4 h-4"></i></button>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('cartTotal').textContent = fmt(cartTotal());
+  lucide.createIcons();
+}
+
+/* ============ CHECKOUT WHATSAPP ============ */
+function checkoutWhatsApp() {
+  if (!State.cart.length) { toast('Keranjang masih kosong ya 🥲','alert-circle','bg-terra'); return; }
+  const name = document.getElementById('custName').value.trim();
+  const addr = document.getElementById('custAddr').value.trim();
+  if (!name || !addr) { toast('Isi nama & alamat kirim dulu 📝','map-pin','bg-terra'); return; }
+
+  let msg = `*🥖 PRE-ORDER BESTABITES BAKERY*\n`;
+  msg += `━━━━━━━━━━━━━━━\n`;
+  msg += `👤 Nama: ${name}\n`;
+  msg += `📍 Alamat: ${addr}\n`;
+  if (State.selectedBatch) msg += `📅 Jadwal: ${State.selectedBatch.label}\n`;
+  msg += `━━━━━━━━━━━━━━━\n*Detail Pesanan:*\n`;
+  State.cart.forEach((it,i)=>{
+    msg += `\n${i+1}. ${it.emoji} ${it.name}\n`;
+    if (it.detail) msg += `   _${it.detail}_\n`;
+    msg += `   ${it.qty} x ${fmt(it.price)} = *${fmt(it.price*it.qty)}*\n`;
+  });
+  msg += `━━━━━━━━━━━━━━━\n`;
+  msg += `💰 *TOTAL: ${fmt(cartTotal())}*\n`;
+  msg += `━━━━━━━━━━━━━━━\n`;
+  msg += `Terima kasih! Mohon konfirmasi ketersediaan 🙏`;
+
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+  openConfirm();
+}
+
+/* ============ MODALS / DRAWERS ============ */
+function toggleCart() {
+  const ov=document.getElementById('cartOverlay'), bg=document.getElementById('cartBg'), pn=document.getElementById('cartPanel');
+  const open = pn.classList.contains('translate-x-full');
+  if (open){ ov.classList.add('pointer-events-auto'); bg.classList.remove('opacity-0'); pn.classList.remove('translate-x-full'); }
+  else { bg.classList.add('opacity-0'); pn.classList.add('translate-x-full'); setTimeout(()=>ov.classList.remove('pointer-events-auto'),300); }
+}
+function toggleDrawer() {
+  const ov=document.getElementById('drawer'), bg=document.getElementById('drawerBg'), pn=document.getElementById('drawerPanel');
+  const open = pn.classList.contains('translate-x-full');
+  if (open){ ov.classList.add('pointer-events-auto'); bg.classList.remove('opacity-0'); pn.classList.remove('translate-x-full'); }
+  else { bg.classList.add('opacity-0'); pn.classList.add('translate-x-full'); setTimeout(()=>ov.classList.remove('pointer-events-auto'),300); }
+}
+function openConfirm(){ const m=document.getElementById('confirmModal'); m.classList.remove('hidden'); m.classList.add('flex'); lucide.createIcons(); }
+function closeConfirm(){
+  const m=document.getElementById('confirmModal'); m.classList.add('hidden'); m.classList.remove('flex');
+  State.cart=[]; State.save(); updateCartUI(); toggleCart();
+}
+
+/* navbar shrink */
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('navbar');
+  if(window.scrollY>20) nav.classList.add('shadow-md'); else nav.classList.remove('shadow-md');
+});
+
+/* ============ INIT ============ */
+renderBatches();
+renderToppings();
+updateLoaf();
+renderCakeOptions();
+updateCake();
+renderFilters();
+renderMenu();
+updateCartUI();
+lucide.createIcons();
+</script>
+</body>
+</html>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { TEST_SHOWCASES } from "@/lib/test-showcases";
 
 // --- Interfaces ---
 interface WebsiteItem {
@@ -260,8 +261,44 @@ export default function Showcase() {
                     </p>
                 </motion.div>
 
+                {/* Test Showcase Spotlight Banner */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="mb-10 max-w-4xl mx-auto"
+                >
+                    <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-primary/40 bg-gradient-to-r from-primary/15 via-purple-600/10 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_25px_rgba(99,102,241,0.15)]">
+                        <div className="flex items-center gap-3 text-left">
+                            <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
+                                <span className="material-icons text-primary text-xl">play_circle</span>
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h2 className="text-white font-bold text-sm sm:text-base">
+                                        Ingin Mencoba Demo Interaktif Langsung?
+                                    </h2>
+                                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                                        {TEST_SHOWCASES.length} Live Demos
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-400">
+                                    Uji alur kasir POS, checkout sat-set, telemedicine, pelacakan armada IoT, sistem arsitektur, dan sistem HR langsung di browser.
+                                </p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/test-showcase"
+                            className="bg-white hover:bg-slate-200 text-black font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0 shadow-sm"
+                        >
+                            <span>Buka Test Showcase</span>
+                            <span className="material-icons text-xs">arrow_forward</span>
+                        </Link>
+                    </div>
+                </motion.div>
+
                 {/* Tabs */}
-                <div className="flex justify-center gap-2 mb-12">
+                <div className="flex flex-wrap justify-center gap-2 mb-12">
                     {[
                         { id: 'all', label: 'All Projects' },
                         { id: 'website', label: 'Websites' },
@@ -278,6 +315,13 @@ export default function Showcase() {
                             {tab.label}
                         </button>
                     ))}
+                    <Link
+                        href="/test-showcase"
+                        className="px-6 py-2 rounded-full text-sm font-bold bg-primary/20 text-primary-glow border border-primary/40 hover:bg-primary hover:text-white transition-all duration-300 flex items-center gap-1.5 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                    >
+                        <span>⚡ Test Showcase Live</span>
+                        <span className="text-[10px] bg-primary text-white px-1.5 py-0.5 rounded-full">{TEST_SHOWCASES.length}</span>
+                    </Link>
                 </div>
 
                 {/* Content Grid */}

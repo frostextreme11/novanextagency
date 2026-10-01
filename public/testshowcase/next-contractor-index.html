@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101411">
+  <meta name="description" content="NextContractor, partner konstruksi untuk rumah, kosan, kantor, dan properti investasi. Jelajahi portofolio dan hitung estimasi biaya proyek Anda.">
+  <title>NextContractor | Ruang yang Dibangun untuk Masa Depan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --bg:#101411; --panel:#1a201b; --line:#343c34; --cream:#f3f0e7; --muted:#a1a99e; --accent:#d9fb79; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--cream); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
+    h1,h2,h3,h4,.display { font-family:'Plus Jakarta Sans',sans-serif; }
+    button,input,select,textarea { font:inherit; }
+    button { cursor:pointer; }
+    ::selection { background:var(--accent); color:#101411; }
+    .container-custom { width:min(100% - 80px, 1376px); margin-inline:auto; }
+    .eyebrow { font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; }
+    .accent { color:var(--accent); }
+    .hero { position:relative; min-height:790px; height:min(850px,100svh); isolation:isolate; overflow:hidden; background:#1b261e; }
+    .hero-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 55%; z-index:-3; animation:heroZoom 16s ease-out both; }
+    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,16,11,.92) 0%,rgba(8,16,11,.75) 34%,rgba(8,16,11,.25) 72%,rgba(8,16,11,.2) 100%),linear-gradient(0deg,rgba(9,17,12,.81),transparent 29%,rgba(8,16,11,.28)); z-index:-2; }
+    .hero::after { content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(circle at 8% 52%,rgba(133,167,93,.13),transparent 34%); }
+    .site-header { height:88px; border-bottom:1px solid rgba(255,255,255,.17); position:relative; z-index:20; }
+    .logo-mark { width:35px; height:35px; display:grid; place-items:center; background:var(--accent); color:#182115; clip-path:polygon(0 0,100% 0,100% 72%,72% 100%,0 100%); }
+    .nav-link { font-size:13px; font-weight:600; color:#e5e9df; transition:color .25s; }
+    .nav-link:hover,.nav-link.active { color:var(--accent); }
+    .nav-link.active { position:relative; }
+    .nav-link.active::after { content:""; width:4px; height:4px; border-radius:50%; background:var(--accent); position:absolute; left:50%; bottom:-15px; }
+    .btn-primary { background:var(--accent); color:#192116; display:inline-flex; align-items:center; justify-content:center; gap:11px; font-weight:800; font-size:13px; padding:17px 23px; transition:transform .25s,background .25s,box-shadow .25s; }
+    .btn-primary:hover { transform:translateY(-3px); background:#e7ff9e; box-shadow:0 12px 32px rgba(217,251,121,.18); }
+    .btn-outline { border:1px solid rgba(255,255,255,.5); color:white; display:inline-flex; align-items:center; justify-content:center; gap:11px; font-weight:700; font-size:13px; padding:16px 22px; transition:background .25s,border-color .25s,transform .25s; }
+    .btn-outline:hover { background:rgba(255,255,255,.11); border-color:#fff; transform:translateY(-3px); }
+    .hero-content { padding-top:clamp(105px,15vh,158px); }
+    .hero-title { font-size:clamp(54px,7.1vw,108px); line-height:1.03; letter-spacing:-.075em; font-weight:800; max-width:1000px; }
+    .hero-title .name { display:block; color:var(--accent); }
+    .hero-title .line2 { display:block; font-size:.65em; letter-spacing:-.065em; margin-top:11px; }
+    .hero-bottom { position:absolute; bottom:39px; left:0; right:0; display:flex; align-items:end; justify-content:space-between; }
+    .vertical-line { width:1px; height:42px; background:var(--accent); }
+    .section-heading { font-size:clamp(36px,4.4vw,62px); font-weight:800; line-height:1.13; letter-spacing:-.055em; }
+    .section-pad { padding:112px 0; }
+    .project-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:25px; }
+    .project { position:relative; overflow:hidden; background:#202820; aspect-ratio:1.5; cursor:pointer; }
+    .project img { width:100%; height:100%; object-fit:cover; transition:transform .7s cubic-bezier(.2,.75,.2,1),filter .5s; filter:brightness(.83); }
+    .project:hover img { transform:scale(1.07); filter:brightness(.66); }
+    .project::after { content:""; position:absolute; inset:35% 0 0; background:linear-gradient(transparent,rgba(5,12,7,.84)); pointer-events:none; }
+    .project-info { position:absolute; bottom:27px; left:30px; right:30px; z-index:2; display:flex; justify-content:space-between; align-items:end; gap:15px; }
+    .project-arrow { width:44px; height:44px; display:grid; place-items:center; background:var(--accent); color:#162014; transition:transform .3s; flex-shrink:0; }
+    .project:hover .project-arrow { transform:rotate(45deg); }
+    .filter-btn { color:#949e92; font-weight:700; font-size:13px; border-bottom:2px solid transparent; padding:0 0 11px; white-space:nowrap; transition:color .2s,border-color .2s; }
+    .filter-btn:hover,.filter-btn.active { color:var(--accent); border-color:var(--accent); }
+    .mesh-section { position:relative; overflow:hidden; background:radial-gradient(ellipse at 78% 17%,rgba(92,123,68,.27),transparent 32%),radial-gradient(ellipse at 5% 88%,rgba(52,91,68,.26),transparent 34%),#19231c; }
+    .mesh-section::before { content:""; position:absolute; inset:0; opacity:.1; pointer-events:none; background-image:linear-gradient(#9daf93 1px,transparent 1px),linear-gradient(90deg,#9daf93 1px,transparent 1px); background-size:68px 68px; mask-image:linear-gradient(90deg,transparent,#000); }
+    .estimator { background:#eef0e6; color:#1a2519; padding:34px; position:relative; box-shadow:0 30px 80px rgba(0,0,0,.16); }
+    .select-field,.input-field { width:100%; background:#fff; color:#20281e; border:1px solid #d9dfd2; outline:none; border-radius:0; padding:15px 16px; height:53px; transition:border-color .2s,box-shadow .2s; }
+    .select-field:focus,.input-field:focus { border-color:#709536; box-shadow:0 0 0 3px rgba(112,149,54,.13); }
+    .field-label { display:block; font-size:12px; font-weight:800; margin-bottom:9px; }
+    .range-input { width:100%; accent-color:#709536; cursor:pointer; }
+    .estimate-result { background:#dce8c7; padding:23px 25px; }
+    .estimate-number { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; letter-spacing:-.055em; line-height:1.1; font-size:clamp(27px,3vw,39px); }
+    .step-number { color:var(--accent); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:800; }
+    .booking-input { width:100%; background:#202920; border:1px solid #485449; color:#fff; height:54px; border-radius:0; padding:14px 16px; outline:none; transition:border-color .2s,box-shadow .2s; }
+    .booking-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(217,251,121,.1); }
+    .booking-input::placeholder { color:#839083; }
+    .booking-input option { background:#202920; }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .75s ease,transform .75s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .mobile-panel { transform:translateY(-12px); opacity:0; visibility:hidden; transition:transform .25s,opacity .25s,visibility .25s; }
+    .mobile-panel.open { transform:translateY(0); opacity:1; visibility:visible; }
+    .modal-backdrop { position:fixed; inset:0; z-index:100; background:rgba(5,10,6,.8); backdrop-filter:blur(9px); display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; visibility:hidden; transition:opacity .25s,visibility .25s; }
+    .modal-backdrop.open { opacity:1; visibility:visible; }
+    .modal-box { width:min(100%,560px); max-height:90vh; overflow:auto; background:#1c251e; border:1px solid #53614f; transform:translateY(20px) scale(.98); transition:transform .3s; }
+    .modal-backdrop.open .modal-box { transform:translateY(0) scale(1); }
+    .toast { position:fixed; right:24px; bottom:24px; z-index:120; max-width:380px; background:var(--accent); color:#182216; display:flex; align-items:center; gap:12px; padding:16px 20px; font-weight:700; font-size:13px; box-shadow:0 14px 40px #0007; transform:translateY(30px); opacity:0; pointer-events:none; transition:transform .3s,opacity .3s; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .showcase-frame { aspect-ratio:16/9; background:#162018; position:relative; overflow:hidden; }
+    .showcase-frame img { width:100%; height:100%; object-fit:cover; animation:showcasePan 5s ease-in-out infinite alternate; }
+    .showcase-frame::after { content:""; position:absolute; inset:0; background:linear-gradient(transparent 60%,rgba(0,0,0,.55)); pointer-events:none; }
+    .showcase-progress { height:3px; background:#ffffff55; position:relative; overflow:hidden; }
+    .showcase-progress::after { content:""; position:absolute; height:100%; width:100%; left:0; background:var(--accent); transform-origin:left; animation:progress 5s linear infinite; }
+    .showcase-progress.paused::after,.showcase-frame.paused img { animation-play-state:paused; }
+    @keyframes progress { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+    @keyframes showcasePan { from{transform:scale(1)} to{transform:scale(1.13)} }
+    @keyframes heroZoom { from{transform:scale(1.08)} to{transform:scale(1)} }
+    @media(max-width:767px) {
+      .container-custom { width:min(100% - 40px,1376px); }
+      .hero { min-height:740px; height:100svh; max-height:880px; }
+      .hero-image { object-position:62% center; }
+      .hero::before { background:linear-gradient(90deg,rgba(8,16,11,.88),rgba(8,16,11,.38)),linear-gradient(0deg,rgba(8,16,11,.8),transparent 35%); }
+      .site-header { height:72px; }
+      .hero-content { padding-top:clamp(130px,19vh,180px); }
+      .hero-title { font-size:clamp(31px,9.2vw,68px); }
+      .hero-title .line2 { font-size:.64em; }
+      .hero-bottom { bottom:27px; }
+      .section-pad { padding:76px 0; }
+      .project-grid { grid-template-columns:1fr; gap:17px; }
+      .project { aspect-ratio:1.28; }
+      .project-info { bottom:20px; left:20px; right:20px; }
+      .estimator { padding:23px; }
+      .toast { left:20px; right:20px; bottom:18px; max-width:none; }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; } .reveal { opacity:1; transform:none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="beranda" aria-label="Beranda NextContractor">
+      <img class="hero-image" src="https://images.pexels.com/photos/36676879/pexels-photo-36676879.jpeg?auto=compress&cs=tinysrgb&w=2000" alt="Rumah modern dengan kolam renang di waktu senja">
+      <header class="site-header">
+        <div class="container-custom h-full flex items-center justify-between gap-5">
+          <a href="#beranda" class="flex items-center gap-2.5 shrink-0" aria-label="NextContractor, ke beranda"><span class="logo-mark"><i data-lucide="move-up-right" class="w-[22px] h-[22px] stroke-[2.8]"></i></span><span class="display font-extrabold text-[18px] tracking-[-.06em] text-white">next<span class="accent">contractor.</span></span></a>
+          <nav class="hidden lg:flex items-center gap-9" aria-label="Navigasi utama"><a class="nav-link active" href="#beranda">Beranda</a><a class="nav-link" href="#proyek">Proyek Kami</a><a class="nav-link" href="#layanan">Layanan</a><a class="nav-link" href="#estimasi">Estimasi Biaya</a></nav>
+          <div class="hidden lg:flex items-center gap-4"><span class="text-[10px] text-white/65 border border-white/25 px-3 py-1.5 tracking-wide whitespace-nowrap">Demo Prototype by NovaNext</span><a href="#kontak" class="btn-primary !py-[12px] !px-[18px]">Mulai Proyek <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a></div>
+          <button id="menuToggle" type="button" class="lg:hidden text-white p-2" aria-label="Buka menu" aria-expanded="false" aria-controls="mobileMenu"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </div>
+        <nav id="mobileMenu" class="mobile-panel lg:hidden absolute top-full inset-x-0 bg-[#172018] border-b border-white/15 px-5 py-6 flex flex-col gap-5 shadow-2xl" aria-label="Navigasi mobile"><a href="#beranda" class="nav-link">Beranda</a><a href="#proyek" class="nav-link">Proyek Kami</a><a href="#layanan" class="nav-link">Layanan</a><a href="#estimasi" class="nav-link">Estimasi Biaya</a><a href="#kontak" class="nav-link">Konsultasi</a><span class="text-[10px] text-white/50 border-t border-white/15 pt-4">Demo Prototype by NovaNext</span></nav>
+      </header>
+      <div class="container-custom hero-content">
+        <div class="flex items-center gap-3 text-[#e2f9bd] eyebrow mb-7"><span class="w-8 h-px bg-[#d9fb79]"></span> Mitra konstruksi untuk langkah besar Anda</div>
+        <h1 class="hero-title text-white"><span class="name">NextContractor.</span><span class="line2">Bangun ruang.<br>Bentuk masa depan.</span></h1>
+        <p class="text-[#e0e8db] text-[15px] md:text-[17px] leading-[1.8] max-w-[540px] mt-7 mb-9">Dari ide pertama hingga kunci terakhir. Kami wujudkan bangunan yang bukan hanya indah, tapi bermakna untuk setiap langkah Anda.</p>
+        <div class="flex flex-wrap gap-3"><a href="#kontak" class="btn-primary">Konsultasi Gratis <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a><button id="watchShowcase" type="button" class="btn-outline"><i data-lucide="play" class="w-4 h-4 fill-current"></i> Lihat Showcase</button></div>
+      </div>
+      <div class="container-custom hero-bottom"><div class="flex items-center gap-4"><div class="vertical-line"></div><span class="text-[11px] md:text-xs text-white/75 leading-relaxed tracking-[.13em] uppercase">Built with purpose.<br>Made to last.</span></div><a href="#proyek" class="text-white/80 flex items-center gap-3 text-[11px] uppercase tracking-[.2em] hover:text-[#d9fb79] transition-colors">Scroll untuk jelajahi <i data-lucide="arrow-down" class="w-4 h-4"></i></a></div>
+    </section>
+
+    <section id="layanan" class="section-pad border-b border-[#343c34]">
+      <div class="container-custom grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-24 items-start reveal">
+        <div><p class="eyebrow accent mb-6">01 / Tentang kami</p><h2 class="section-heading">Bukan sekadar<br>membangun. <span class="text-[#838f82]">Kami<br>memikirkan ke depan.</span></h2></div>
+        <div class="lg:pt-11"><p class="text-[#b6bfb2] text-base md:text-lg leading-[1.9] max-w-[590px]">Setiap bangunan dimulai dari percakapan yang tepat. Di NextContractor, kami menggabungkan perencanaan matang, pengerjaan presisi, dan komunikasi transparan untuk menciptakan ruang yang tumbuh bersama kebutuhan Anda.</p><div class="mt-11 grid sm:grid-cols-3 gap-7 border-t border-[#3a443b] pt-7"><div><span class="text-[#d9fb79] display text-[29px] font-bold tracking-tight">01</span><p class="text-sm text-[#cbd1c7] mt-1">Perencanaan jelas</p></div><div><span class="text-[#d9fb79] display text-[29px] font-bold tracking-tight">02</span><p class="text-sm text-[#cbd1c7] mt-1">Eksekusi terukur</p></div><div><span class="text-[#d9fb79] display text-[29px] font-bold tracking-tight">03</span><p class="text-sm text-[#cbd1c7] mt-1">Hasil tahan lama</p></div></div></div>
+      </div>
+    </section>
+
+    <section id="proyek" class="section-pad">
+      <div class="container-custom">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10 reveal"><div><p class="eyebrow accent mb-5">02 / Portofolio</p><h2 class="section-heading">Ruang yang berbicara<br><span class="text-[#8d998b]">lewat hasilnya.</span></h2></div><p class="text-[#aab4a7] text-[15px] leading-relaxed max-w-[320px]">Jelajahi berbagai kemungkinan dari rumah pribadi hingga ruang bisnis yang siap berkembang.</p></div>
+        <div class="flex items-center gap-7 md:gap-9 overflow-x-auto mb-7 border-b border-[#384239] reveal" role="group" aria-label="Filter proyek" id="portfolioFilters"></div>
+        <div id="projectGrid" class="project-grid" aria-live="polite"></div>
+        <p id="projectCount" class="text-[#8e998b] text-xs mt-6 tracking-wide"></p>
+      </div>
+    </section>
+
+    <section id="estimasi" class="mesh-section section-pad">
+      <div class="container-custom grid lg:grid-cols-[.9fr_1.1fr] gap-12 lg:gap-24 items-center relative z-10">
+        <div class="reveal"><p class="eyebrow accent mb-6">03 / Rencanakan dari sekarang</p><h2 class="section-heading">Punya rencana?<br><span class="text-[#d9fb79]">Mulai dari angka.</span></h2><p class="text-[#b9c5b5] text-base leading-[1.9] max-w-[470px] mt-7">Tidak perlu menebak-nebak biaya. Pilih jenis bangunan, tentukan luasnya, dan dapatkan gambaran awal anggaran proyek Anda dalam hitungan detik.</p><div class="border-l-2 border-[#d9fb79] pl-5 mt-12 text-sm text-[#c1cbbb] leading-relaxed max-w-[450px]">Angka ini adalah estimasi awal, bukan penawaran final. Konsultasi dengan tim kami untuk perhitungan yang lebih akurat.</div></div>
+        <div class="estimator reveal" aria-label="Kalkulator estimasi biaya pembangunan"><div class="flex items-start justify-between gap-4 mb-8"><div><p class="text-[10px] font-extrabold tracking-[.2em] uppercase text-[#687963] mb-2">Kalkulator Proyek</p><h3 class="display text-[25px] md:text-[29px] font-extrabold tracking-[-.05em]">Hitung estimasi Anda</h3></div><i data-lucide="calculator" class="w-7 h-7 text-[#66823e] shrink-0"></i></div>
+          <div class="grid sm:grid-cols-2 gap-4 mb-6"><div><label for="buildingType" class="field-label">Jenis bangunan</label><select id="buildingType" class="select-field"><option value="rumah">Rumah Tinggal</option><option value="kosan">Kosan / Hunian Sewa</option><option value="kantor">Kantor / Komersial</option><option value="kontrakan">Kontrakan</option></select></div><div><label for="finishType" class="field-label">Standar finishing</label><select id="finishType" class="select-field"><option value="standard">Standard</option><option value="premium">Premium</option><option value="luxury">Luxury</option></select></div></div>
+          <div class="mb-8"><div class="flex items-center justify-between mb-2"><label for="landArea" class="field-label !mb-0">Luas tanah / area rencana bangun</label><span class="text-[#506341] text-sm font-bold"><span id="areaValue">120</span> m²</span></div><input id="landArea" type="range" min="30" max="1000" step="10" value="120" class="range-input" aria-label="Luas tanah atau area rencana bangun dalam meter persegi"><div class="flex justify-between text-[11px] text-[#84917f] mt-1"><span>30 m²</span><span>1.000 m²</span></div></div>
+          <div class="estimate-result"><p class="text-[11px] font-bold uppercase tracking-[.12em] text-[#4d6343] mb-2">Estimasi investasi proyek</p><div id="estimateValue" class="estimate-number">Rp 0 - Rp 0</div><p class="text-xs text-[#607653] mt-3">Asumsi seluruh area dibangun. Belum termasuk pembelian tanah & perizinan.</p></div><button id="estimateCTA" type="button" class="btn-primary !bg-[#202b1e] !text-[#d9fb79] hover:!bg-[#33432b] w-full mt-5">Diskusikan Estimasi Ini <i data-lucide="arrow-up-right" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad border-b border-[#343c34]">
+      <div class="container-custom"><div class="reveal"><p class="eyebrow accent mb-5">04 / Cara kami bekerja</p><h2 class="section-heading mb-14">Proses jelas.<br><span class="text-[#8d998b]">Pikiran tenang.</span></h2></div><div class="grid md:grid-cols-3 gap-9 md:gap-12"><div class="border-t border-[#566152] pt-6 reveal"><span class="step-number">01 /</span><h3 class="display font-bold text-xl mt-8 mb-3">Kenalan & diskusi</h3><p class="text-[#aab5a8] text-sm leading-[1.8]">Ceritakan visi, kebutuhan, dan anggaran Anda. Kami dengarkan sebelum mulai merancang.</p></div><div class="border-t border-[#566152] pt-6 reveal"><span class="step-number">02 /</span><h3 class="display font-bold text-xl mt-8 mb-3">Rancang & rencanakan</h3><p class="text-[#aab5a8] text-sm leading-[1.8]">Kami susun konsep, cakupan kerja, dan estimasi yang bisa Anda pahami dengan jelas.</p></div><div class="border-t border-[#566152] pt-6 reveal"><span class="step-number">03 /</span><h3 class="display font-bold text-xl mt-8 mb-3">Bangun & wujudkan</h3><p class="text-[#aab5a8] text-sm leading-[1.8]">Dari pondasi hingga sentuhan akhir, setiap tahap dikerjakan dengan perhatian penuh.</p></div></div></div>
+    </section>
+
+    <section id="kontak" class="section-pad bg-[#172019]">
+      <div class="container-custom grid lg:grid-cols-[.9fr_1.1fr] gap-12 lg:gap-24 items-start"><div class="reveal"><p class="eyebrow accent mb-6">05 / Mari mulai</p><h2 class="section-heading">Bangunan hebat<br>dimulai dari <span class="accent">satu percakapan.</span></h2><p class="text-[#abb8a8] text-base leading-[1.9] max-w-[440px] mt-7">Ceritakan proyek yang ada di pikiran Anda. Pilih waktu yang nyaman, dan mari temukan langkah pertama bersama.</p><div class="mt-12 pt-7 border-t border-[#3f4a3f] max-w-[440px]"><p class="text-[11px] uppercase tracking-[.16em] text-[#879784] mb-2">Lebih suka lewat email?</p><a href="mailto:hello@nextcontractor.id?subject=Konsultasi%20Proyek%20NextContractor" class="text-[#d9fb79] font-semibold inline-flex items-center gap-2 hover:underline">hello@nextcontractor.id <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a></div></div>
+        <div class="reveal"><form id="bookingForm" class="grid sm:grid-cols-2 gap-5" novalidate><div class="sm:col-span-2"><label for="clientName" class="block text-xs font-bold mb-2">Nama lengkap <span class="accent">*</span></label><input id="clientName" name="name" class="booking-input" type="text" placeholder="Nama Anda" required autocomplete="name"></div><div><label for="clientPhone" class="block text-xs font-bold mb-2">Nomor WhatsApp <span class="accent">*</span></label><input id="clientPhone" name="phone" class="booking-input" type="tel" inputmode="tel" placeholder="08xxxxxxxxxx" required autocomplete="tel"></div><div><label for="clientEmail" class="block text-xs font-bold mb-2">Email <span class="accent">*</span></label><input id="clientEmail" name="email" class="booking-input" type="email" placeholder="nama@email.com" required autocomplete="email"></div><div><label for="projectInterest" class="block text-xs font-bold mb-2">Jenis proyek <span class="accent">*</span></label><select id="projectInterest" name="project" class="booking-input" required><option value="">Pilih jenis proyek</option><option value="Rumah Tinggal">Rumah Tinggal</option><option value="Kosan / Hunian Sewa">Kosan / Hunian Sewa</option><option value="Kantor / Komersial">Kantor / Komersial</option><option value="Kontrakan">Kontrakan</option></select></div><div><label for="callDate" class="block text-xs font-bold mb-2">Tanggal diskusi <span class="accent">*</span></label><input id="callDate" name="date" class="booking-input" type="date" required></div><div class="sm:col-span-2"><label for="clientMessage" class="block text-xs font-bold mb-2">Ceritakan sedikit proyek Anda</label><textarea id="clientMessage" name="message" rows="4" class="booking-input !h-auto resize-y" placeholder="Lokasi, luas lahan, atau ide yang sudah ada..."></textarea></div><div class="sm:col-span-2"><button class="btn-primary w-full" type="submit">Booking Discovery Call <i data-lucide="arrow-up-right" class="w-4 h-4"></i></button><p class="text-[#839181] text-xs mt-3 leading-relaxed">Prototipe demo: booking tersimpan di browser Anda. Kirim detail melalui WhatsApp atau email pada langkah berikutnya.</p></div></form><div id="savedBooking" class="hidden mt-5 border border-[#4a5948] p-4 text-sm"></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#101411] border-t border-[#303b31] pt-12 pb-8"><div class="container-custom"><div class="flex flex-col md:flex-row md:items-start md:justify-between gap-9 pb-12"><div><a href="#beranda" class="display font-extrabold text-2xl tracking-[-.06em]">next<span class="accent">contractor.</span></a><p class="text-[#8c9a8a] text-sm mt-4 max-w-[290px] leading-relaxed">Ruang yang dibangun dengan tujuan. Hasil yang dirancang untuk bertahan.</p></div><div class="flex gap-12 text-sm"><div class="flex flex-col gap-3"><span class="text-[#829080] text-[11px] uppercase tracking-widest mb-1">Jelajahi</span><a href="#proyek" class="hover:text-[#d9fb79] transition-colors">Proyek Kami</a><a href="#estimasi" class="hover:text-[#d9fb79] transition-colors">Estimasi Biaya</a><a href="#kontak" class="hover:text-[#d9fb79] transition-colors">Konsultasi</a></div><div class="flex flex-col gap-3"><span class="text-[#829080] text-[11px] uppercase tracking-widest mb-1">Kontak</span><a href="mailto:hello@nextcontractor.id" class="hover:text-[#d9fb79] transition-colors">Email kami</a><button type="button" id="footerWhatsApp" class="text-left hover:text-[#d9fb79] transition-colors">WhatsApp</button></div></div></div><div class="border-t border-[#303b31] pt-6 flex flex-col sm:flex-row gap-3 justify-between text-[#7e8b7d] text-xs"><span>© <span id="year"></span> NextContractor. All rights reserved.</span><span>Demo Prototype by NovaNext</span></div></div></footer>
+
+  <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true"><div class="modal-box"><div class="flex justify-between items-center border-b border-[#465346] px-6 py-5"><h2 id="modalTitle" class="display font-bold text-xl tracking-tight">Detail</h2><button id="closeModal" type="button" class="p-1 text-[#b7c2b4] hover:text-white" aria-label="Tutup dialog"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="modalContent"></div></div></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"><i data-lucide="check-circle-2" class="w-5 h-5 shrink-0"></i><span id="toastText"></span></div>
+
+  <script>
+    const App = (() => {
+      const STORE = 'nextcontractor_demo_v1';
+      const projects = [
+        { id:1, name:'The Aruna Residence', category:'rumah', categoryLabel:'Rumah Mewah', location:'Jakarta Selatan', year:'2025', size:'420 m²', image:'https://images.pexels.com/photos/8082328/pexels-photo-8082328.jpeg?auto=compress&cs=tinysrgb&w=1000', description:'Hunian modern yang mempertemukan garis arsitektur tegas dengan kehangatan ruang keluarga.' },
+        { id:2, name:'Nusa Living', category:'kosan', categoryLabel:'Kosan', location:'Yogyakarta', year:'2025', size:'680 m²', image:'https://images.pexels.com/photos/27459248/pexels-photo-27459248.jpeg?auto=compress&cs=tinysrgb&w=1000', description:'Ruang tinggal bersama yang efisien, nyaman, dan dirancang untuk generasi yang bergerak.' },
+        { id:3, name:'Axis Workspace', category:'kantor', categoryLabel:'Kantor', location:'Tangerang', year:'2024', size:'950 m²', image:'https://images.pexels.com/photos/946310/pexels-photo-946310.jpeg?auto=compress&cs=tinysrgb&w=1000', description:'Fasad dan ruang kerja kontemporer yang memberi tempat bagi ide-ide baru untuk tumbuh.' },
+        { id:4, name:'Kirana Homes', category:'kontrakan', categoryLabel:'Kontrakan', location:'Bekasi', year:'2024', size:'310 m²', image:'https://images.pexels.com/photos/16787446/pexels-photo-16787446.png?auto=compress&cs=tinysrgb&w=1000', description:'Hunian sewa minimalis yang memadukan kenyamanan penghuni dan nilai investasi jangka panjang.' }
+      ];
+      const rates = { rumah: 5500000, kosan: 4500000, kantor: 6500000, kontrakan: 4000000 };
+      const multipliers = { standard:1, premium:1.35, luxury:1.8 };
+      const labels = { rumah:'Rumah Tinggal', kosan:'Kosan / Hunian Sewa', kantor:'Kantor / Komersial', kontrakan:'Kontrakan' };
+      const state = { filter:'semua', modal:null, showcaseIndex:0, showcasePlaying:true, showcaseTimer:null, toastTimer:null, booking:null, estimate:{ type:'rumah', finish:'standard', area:120 } };
+      const $ = selector => document.querySelector(selector);
+      const formatIDR = amount => 'Rp ' + Math.round(amount / 1000000).toLocaleString('id-ID') + ' jt';
+      const safe = text => String(text ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+      function load() {
+        try { const saved = JSON.parse(localStorage.getItem(STORE)); if (saved) { state.booking = saved.booking || null; state.estimate = { ...state.estimate, ...(saved.estimate || {}) }; } } catch(e) { /* Ignore invalid demo storage. */ }
+      }
+      function persist() { try { localStorage.setItem(STORE, JSON.stringify({ booking:state.booking, estimate:state.estimate })); } catch(e) {} }
+      function icons() { if (window.lucide) lucide.createIcons(); }
+      function toast(message) { $('#toastText').textContent = message; $('#toast').classList.add('show'); clearTimeout(state.toastTimer); state.toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 3500); }
+      function openModal(title, html, type) { state.modal = type; $('#modalTitle').textContent = title; $('#modalContent').innerHTML = html; $('#modal').classList.add('open'); $('#modal').setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; icons(); $('#closeModal').focus(); }
+      function closeModal() { $('#modal').classList.remove('open'); $('#modal').setAttribute('aria-hidden','true'); document.body.style.overflow=''; state.modal=null; clearInterval(state.showcaseTimer); state.showcaseTimer=null; }
+
+      function renderFilters() {
+        const filters = [['semua','Semua Proyek'],['rumah','Rumah Mewah'],['kosan','Kosan'],['kantor','Kantor'],['kontrakan','Kontrakan']];
+        $('#portfolioFilters').innerHTML = filters.map(([key,label]) => `<button type="button" class="filter-btn ${state.filter===key?'active':''}" data-filter="${key}" aria-pressed="${state.filter===key}">${label}</button>`).join('');
+      }
+      function renderProjects() {
+        const list = projects.filter(p => state.filter === 'semua' || p.category === state.filter);
+        $('#projectGrid').innerHTML = list.map(p => `<button type="button" class="project text-left reveal visible" data-project="${p.id}" aria-label="Lihat detail ${p.name}"><img src="${p.image}" alt="${p.categoryLabel} ${p.name}" loading="lazy"><span class="project-info"><span><span class="block text-[10px] uppercase tracking-[.18em] font-bold text-[#d9fb79] mb-2">${p.categoryLabel} / ${p.location}</span><span class="display block font-bold tracking-[-.04em] text-white text-xl md:text-[26px]">${p.name}</span></span><span class="project-arrow"><i data-lucide="arrow-up-right" class="w-5 h-5"></i></span></span></button>`).join('');
+        $('#projectCount').textContent = `Menampilkan ${list.length} dari ${projects.length} proyek`;
+        icons();
+      }
+      function openProject(id) {
+        const p = projects.find(item => item.id === id); if (!p) return;
+        openModal(p.name, `<img src="${p.image}" alt="${p.categoryLabel} ${p.name}" class="w-full aspect-[16/9] object-cover"><div class="p-6"><p class="eyebrow accent mb-4">${p.categoryLabel} / ${p.location}</p><p class="text-[#c5cfc1] text-sm leading-[1.8]">${p.description}</p><div class="flex gap-8 border-t border-[#475347] mt-6 pt-5 text-sm"><div><span class="block text-[#849482] text-xs mb-1">Luas</span>${p.size}</div><div><span class="block text-[#849482] text-xs mb-1">Tahun</span>${p.year}</div></div><button type="button" class="btn-primary w-full mt-7" id="projectConsult">Diskusikan Proyek Serupa <i data-lucide="arrow-up-right" class="w-4 h-4"></i></button></div>`, 'project');
+        $('#projectConsult').addEventListener('click', () => { closeModal(); $('#projectInterest').value=labels[p.category]; $('#kontak').scrollIntoView({behavior:'smooth'}); toast('Jenis proyek sudah dipilih di formulir konsultasi.'); });
+      }
+
+      function renderEstimate() {
+        const {type,finish,area} = state.estimate;
+        $('#buildingType').value = rates[type] ? type : 'rumah'; $('#finishType').value = multipliers[finish] ? finish : 'standard'; $('#landArea').value=area;
+        $('#areaValue').textContent=Number(area).toLocaleString('id-ID');
+        const base = rates[type] * multipliers[finish] * area;
+        $('#estimateValue').textContent = `${formatIDR(base*.9)} - ${formatIDR(base*1.15)}`;
+      }
+      function updateEstimate() { state.estimate = { type:$('#buildingType').value, finish:$('#finishType').value, area:Number($('#landArea').value) }; renderEstimate(); persist(); }
+
+      function renderSavedBooking() {
+        const wrap=$('#savedBooking'); if(!state.booking) { wrap.classList.add('hidden'); wrap.innerHTML=''; return; }
+        wrap.classList.remove('hidden');
+        wrap.innerHTML=`<div class="flex flex-wrap justify-between gap-3 items-start"><div><p class="text-[#d9fb79] font-bold mb-1">Booking tersimpan di browser</p><p class="text-[#b9c6b6]">${safe(state.booking.name)} · ${safe(state.booking.project)} · ${safe(state.booking.date)}</p></div><button type="button" id="deleteBooking" class="text-[#d9fb79] underline underline-offset-4 text-xs font-bold">Hapus booking</button></div>`;
+        $('#deleteBooking').addEventListener('click', () => openModal('Hapus booking?', `<div class="p-6"><p class="text-[#bdc8b9] leading-relaxed mb-7">Booking yang tersimpan di browser ini akan dihapus. Tindakan ini tidak membatalkan pesan yang sudah Anda kirim melalui WhatsApp atau email.</p><div class="flex gap-3"><button type="button" id="cancelDelete" class="btn-outline flex-1">Kembali</button><button type="button" id="confirmDelete" class="btn-primary flex-1">Ya, hapus</button></div></div>`, 'delete'));
+      }
+      function bookingMessage(b) { return `Halo NextContractor, saya ingin booking discovery call.\n\nNama: ${b.name}\nWhatsApp: ${b.phone}\nEmail: ${b.email}\nJenis proyek: ${b.project}\nTanggal pilihan: ${b.date}\nCatatan: ${b.message || '-'}\n\nMohon konfirmasi ketersediaan jadwal. (Dikirim dari demo website NextContractor)`; }
+      function bookingLinks(b) { const message=bookingMessage(b); return { wa:'https://wa.me/6281234567890?text='+encodeURIComponent(message), email:'mailto:hello@nextcontractor.id?subject='+encodeURIComponent('Booking Discovery Call - '+b.name)+'&body='+encodeURIComponent(message) }; }
+      function showBookingConfirmation() {
+        const b=state.booking, links=bookingLinks(b);
+        openModal('Permintaan tersimpan', `<div class="p-6"><div class="w-12 h-12 bg-[#d9fb79] text-[#182216] flex items-center justify-center mb-5"><i data-lucide="check" class="w-6 h-6"></i></div><p class="text-[#c6d1c3] leading-[1.8] mb-3">Terima kasih, <strong class="text-white">${safe(b.name)}</strong>. Pilihan discovery call Anda untuk <strong class="text-white">${safe(b.project)}</strong> pada <strong class="text-white">${safe(b.date)}</strong> telah disimpan di browser.</p><p class="text-[#9eaf9b] text-sm leading-relaxed mb-7">Ini prototipe. Agar tim menerima permintaan Anda, kirim detailnya melalui salah satu pilihan berikut. Nomor WhatsApp dan email adalah kontak demo.</p><div class="flex flex-col sm:flex-row gap-3"><a id="sendWhatsApp" href="${links.wa}" target="_blank" rel="noopener noreferrer" class="btn-primary flex-1"><i data-lucide="message-circle" class="w-4 h-4"></i> Kirim via WhatsApp</a><a id="sendEmail" href="${links.email}" class="btn-outline flex-1"><i data-lucide="mail" class="w-4 h-4"></i> Kirim via Email</a></div></div>`, 'booking');
+        $('#sendWhatsApp').addEventListener('click', () => toast('WhatsApp dibuka dengan detail booking Anda.'));
+        $('#sendEmail').addEventListener('click', () => toast('Aplikasi email dibuka dengan detail booking Anda.'));
+      }
+
+      function showcaseSlide() {
+        const p=projects[state.showcaseIndex];
+        $('#showcaseImage').src=p.image; $('#showcaseImage').alt=`Showcase ${p.name}`;
+        $('#showcaseName').textContent=p.name; $('#showcaseMeta').textContent=`${p.categoryLabel} / ${p.location}`;
+        $('#showcaseCounter').textContent=`0${state.showcaseIndex+1} / 0${projects.length}`;
+        const bar=$('#showcaseProgress'); bar.style.animation='none'; void bar.offsetWidth; bar.style.animation='';
+      }
+      function advanceShowcase(direction=1) { state.showcaseIndex=(state.showcaseIndex+direction+projects.length)%projects.length; showcaseSlide(); }
+      function startShowcaseTimer() { clearInterval(state.showcaseTimer); if(state.showcasePlaying) state.showcaseTimer=setInterval(() => advanceShowcase(),5000); }
+      function openShowcase() {
+        state.showcasePlaying=true; state.showcaseIndex=0;
+        openModal('Showcase Proyek', `<div class="showcase-frame" id="showcaseFrame"><img id="showcaseImage" src="" alt=""></div><div class="showcase-progress" id="showcaseProgress"></div><div class="p-6"><div class="flex items-end justify-between gap-4"><div><p id="showcaseMeta" class="eyebrow accent mb-2"></p><h3 id="showcaseName" class="display font-bold text-xl"></h3></div><span id="showcaseCounter" class="text-xs text-[#a9b8a5]"></span></div><div class="flex justify-between items-center mt-7"><button type="button" id="showcasePlay" class="text-xs font-bold text-[#d9fb79] flex items-center gap-2"><i data-lucide="pause" class="w-4 h-4"></i><span>Jeda animasi</span></button><div class="flex gap-2"><button type="button" id="showcasePrev" class="border border-[#556453] p-2 hover:bg-[#334133]" aria-label="Proyek sebelumnya"><i data-lucide="arrow-left" class="w-5 h-5"></i></button><button type="button" id="showcaseNext" class="border border-[#556453] p-2 hover:bg-[#334133]" aria-label="Proyek selanjutnya"><i data-lucide="arrow-right" class="w-5 h-5"></i></button></div></div></div>`, 'showcase');
+        showcaseSlide(); startShowcaseTimer();
+        $('#showcasePrev').addEventListener('click', () => { advanceShowcase(-1); startShowcaseTimer(); });
+        $('#showcaseNext').addEventListener('click', () => { advanceShowcase(1); startShowcaseTimer(); });
+        $('#showcasePlay').addEventListener('click', () => { state.showcasePlaying=!state.showcasePlaying; $('#showcaseFrame').classList.toggle('paused',!state.showcasePlaying); $('#showcaseProgress').classList.toggle('paused',!state.showcasePlaying); $('#showcasePlay span').textContent=state.showcasePlaying?'Jeda animasi':'Putar animasi'; $('#showcasePlay i').setAttribute('data-lucide',state.showcasePlaying?'pause':'play'); icons(); startShowcaseTimer(); });
+      }
+
+      function init() {
+        load(); renderFilters(); renderProjects(); renderEstimate(); renderSavedBooking(); icons();
+        $('#year').textContent=new Date().getFullYear();
+        const dateInput=$('#callDate'), tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+1); dateInput.min=`${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
+        $('#portfolioFilters').addEventListener('click', e => { const btn=e.target.closest('[data-filter]'); if(!btn) return; state.filter=btn.dataset.filter; renderFilters(); renderProjects(); toast(`Filter ${btn.textContent} diterapkan.`); });
+        $('#projectGrid').addEventListener('click', e => { const btn=e.target.closest('[data-project]'); if(btn) openProject(Number(btn.dataset.project)); });
+        ['buildingType','finishType','landArea'].forEach(id => $('#'+id).addEventListener(id==='landArea'?'input':'change',updateEstimate));
+        $('#estimateCTA').addEventListener('click', () => { $('#projectInterest').value=labels[state.estimate.type]; $('#kontak').scrollIntoView({behavior:'smooth'}); toast('Estimasi siap. Isi formulir untuk diskusikan proyek Anda.'); });
+        $('#bookingForm').addEventListener('submit', e => { e.preventDefault(); const form=e.currentTarget; if(!form.checkValidity()) { form.reportValidity(); toast('Lengkapi data wajib sebelum melanjutkan.'); return; } const data=new FormData(form); const phone=String(data.get('phone')).trim(); if(!/^[+\d\s()-]{9,20}$/.test(phone)) { $('#clientPhone').setCustomValidity('Masukkan nomor WhatsApp yang valid.'); $('#clientPhone').reportValidity(); $('#clientPhone').setCustomValidity(''); toast('Masukkan nomor WhatsApp yang valid.'); return; } state.booking={name:String(data.get('name')).trim(),phone,email:String(data.get('email')).trim(),project:data.get('project'),date:data.get('date'),message:String(data.get('message')).trim()}; persist(); renderSavedBooking(); showBookingConfirmation(); toast('Permintaan booking disimpan di browser.'); });
+        $('#modal').addEventListener('click', e => { if(e.target===$('#modal')) closeModal(); if(e.target.closest('#cancelDelete')) closeModal(); if(e.target.closest('#confirmDelete')) { state.booking=null; persist(); renderSavedBooking(); closeModal(); toast('Booking berhasil dihapus dari browser.'); } });
+        $('#closeModal').addEventListener('click',closeModal); document.addEventListener('keydown',e => { if(e.key==='Escape' && state.modal) closeModal(); });
+        $('#watchShowcase').addEventListener('click',openShowcase);
+        $('#footerWhatsApp').addEventListener('click', () => { window.open('https://wa.me/6281234567890?text='+encodeURIComponent('Halo NextContractor, saya ingin konsultasi proyek. (Pesan dari demo website)'), '_blank','noopener,noreferrer'); toast('Membuka kontak WhatsApp demo.'); });
+        $('#menuToggle').addEventListener('click', () => { const open=$('#mobileMenu').classList.toggle('open'); $('#menuToggle').setAttribute('aria-expanded',String(open)); $('#menuToggle').setAttribute('aria-label',open?'Tutup menu':'Buka menu'); $('#menuToggle').innerHTML=`<i data-lucide="${open?'x':'menu'}" class="w-6 h-6"></i>`; icons(); });
+        $('#mobileMenu').addEventListener('click',e => { if(e.target.closest('a')) { $('#mobileMenu').classList.remove('open'); $('#menuToggle').setAttribute('aria-expanded','false'); $('#menuToggle').innerHTML='<i data-lucide="menu" class="w-6 h-6"></i>'; icons(); } });
+        const observer=new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }),{threshold:.08}); document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      }
+      return { init };
+    })();
+    document.addEventListener('DOMContentLoaded',App.init);
+  </script>
+</body>
+</html>

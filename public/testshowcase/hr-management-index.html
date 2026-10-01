@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NovaNext · Enterprise HR &amp; Talent Intelligence</title>
+<meta name="description" content="Demo prototype sistem rekrutmen enterprise: Kanban pipeline, drag & drop, evaluasi kandidat, analitik talenta." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: '#E9EDF2',
+          shell:  '#0E1822',
+          shell2: '#132131',
+          ink:    { DEFAULT:'#0C1522', soft:'#33455C', mute:'#6C7D92' },
+          line:   '#D9E1EA',
+          surf:   '#FFFFFF',
+          teal:   '#0E7C6B',
+          amberx: '#B07708',
+          rosex:  '#B23A48',
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"','system-ui','sans-serif'],
+          display: ['"Space Grotesk"','system-ui','sans-serif'],
+          mono: ['"IBM Plex Mono"','ui-monospace','monospace'],
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(12,21,34,.06), 0 6px 16px -8px rgba(12,21,34,.14)',
+          lift: '0 12px 30px -12px rgba(12,21,34,.30), 0 2px 6px rgba(12,21,34,.06)',
+          modal:'0 40px 90px -30px rgba(8,16,28,.55)',
+        }
+      }
+    }
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{ --acc:#0E7C6B; --tint:#EEF1F4; }
+  body{ background:#E9EDF2; }
+  ::selection{ background:#0E7C6B22 }
+
+  /* ambient layers */
+  .bg-grid{
+    background-image:
+      linear-gradient(to right, rgba(12,21,34,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(12,21,34,.045) 1px, transparent 1px);
+    background-size:56px 56px;
+    animation:drift 60s linear infinite;
+  }
+  @keyframes drift{ to{ background-position:56px 56px } }
+  .bg-wash{
+    background:
+      radial-gradient(900px 420px at 8% -8%, rgba(14,124,107,.10), transparent 60%),
+      radial-gradient(700px 380px at 92% 4%, rgba(31,111,155,.10), transparent 62%),
+      radial-gradient(620px 420px at 60% 100%, rgba(176,119,8,.07), transparent 60%);
+  }
+  .shell-tex{
+    background-image:
+      linear-gradient(to bottom, rgba(255,255,255,.045), transparent 40%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,.022) 0 1px, transparent 1px 7px);
+  }
+
+  /* scrollbar */
+  .thin-scroll::-webkit-scrollbar{ height:9px; width:9px }
+  .thin-scroll::-webkit-scrollbar-track{ background:transparent }
+  .thin-scroll::-webkit-scrollbar-thumb{ background:#C4CFDA; border-radius:99px; border:2px solid transparent; background-clip:padding-box }
+  .thin-scroll::-webkit-scrollbar-thumb:hover{ background:#A9B8C7; background-clip:padding-box }
+  .rail-scroll::-webkit-scrollbar{ width:6px }
+  .rail-scroll::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.14); border-radius:99px }
+  [data-list]{ scrollbar-width:thin; scrollbar-color:#C4CFDA transparent }
+
+  /* motion */
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(12px) scale(.975) } to{ opacity:1; transform:none } }
+  .card-in{ animation:cardIn .42s cubic-bezier(.2,.85,.25,1) both; }
+  @keyframes colIn{ from{ opacity:0; transform:translateY(16px) } to{ opacity:1; transform:none } }
+  .col-in{ animation:colIn .5s cubic-bezier(.2,.85,.25,1) both }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:none } }
+  .fade-up{ animation:fadeUp .5s ease-out both }
+  @keyframes popIn{ from{ opacity:0; transform:translateY(14px) scale(.97) } to{ opacity:1; transform:none } }
+  .pop-in{ animation:popIn .3s cubic-bezier(.2,.9,.25,1) both }
+  @keyframes toastIn{ from{ opacity:0; transform:translateX(26px) scale(.96) } to{ opacity:1; transform:none } }
+  .toast-in{ animation:toastIn .3s cubic-bezier(.2,.9,.25,1) both }
+  @keyframes shimmer{ to{ background-position:200% 0 } }
+  .shimmer{ background:linear-gradient(90deg,#E6EBF1 0%,#F4F7FA 40%,#E6EBF1 80%); background-size:200% 100%; animation:shimmer 1.3s linear infinite }
+  @keyframes pulseDot{ 0%,100%{ opacity:1; transform:scale(1) } 50%{ opacity:.35; transform:scale(.7) } }
+  .live-dot{ animation:pulseDot 1.8s ease-in-out infinite }
+  @keyframes ringPulse{ 0%{ box-shadow:0 0 0 0 rgba(14,124,107,.35) } 100%{ box-shadow:0 0 0 12px rgba(14,124,107,0) } }
+  .ring-pulse{ animation:ringPulse 1.8s ease-out infinite }
+
+  .cand{ cursor:grab; transition:transform .18s ease, box-shadow .22s ease, border-color .2s ease }
+  .cand:hover{ transform:translateY(-2px); box-shadow:0 12px 26px -14px rgba(12,21,34,.34); border-color:#C3D0DE }
+  .cand:active{ cursor:grabbing }
+  .cand.dragging{ transform:rotate(1.6deg) scale(1.03); opacity:.92; box-shadow:0 22px 40px -18px rgba(12,21,34,.5); cursor:grabbing }
+  .cand.flash{ animation:flashHi .9s ease-out }
+  @keyframes flashHi{ 0%{ box-shadow:0 0 0 0 rgba(14,124,107,.5) } 100%{ box-shadow:0 0 0 14px rgba(14,124,107,0) } }
+  .col-body{ transition:background .18s ease, box-shadow .18s ease, border-color .18s ease }
+  .col.drop-hot .col-body{ background:var(--tint); border-color:var(--acc); box-shadow:inset 0 0 0 1px var(--acc) }
+  .bar-fill{ transition:width .7s cubic-bezier(.2,.85,.25,1) }
+
+  input[type=range]{ -webkit-appearance:none; appearance:none; height:22px; background:transparent; width:100% }
+  input[type=range]::-webkit-slider-runnable-track{ height:6px; border-radius:99px; background:linear-gradient(90deg, var(--acc) var(--p,50%), #DFE6EE var(--p,50%)) }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px; margin-top:-6px; border-radius:99px; background:#fff; border:2px solid var(--acc); box-shadow:0 2px 6px rgba(12,21,34,.25); transition:transform .15s }
+  input[type=range]:active::-webkit-slider-thumb{ transform:scale(1.18) }
+  input[type=range]::-moz-range-track{ height:6px; border-radius:99px; background:#DFE6EE }
+  input[type=range]::-moz-range-progress{ height:6px; border-radius:99px; background:var(--acc) }
+  input[type=range]::-moz-range-thumb{ width:16px;height:16px;border-radius:99px;background:#fff;border:2px solid var(--acc) }
+
+  .no-bar{ -ms-overflow-style:none; scrollbar-width:none } .no-bar::-webkit-scrollbar{ display:none }
+  @media (min-width:1024px) and (max-width:1279px){ .nav-btn{ justify-content:center; padding-left:0; padding-right:0 } }
+  .chip:not(.bg-ink):hover{ background:#F5F8FA }
+  .cand:focus-within{ border-color:#0E7C6B }
+  [hidden]{ display:none !important }
+  .doc-line{ background-image:linear-gradient(to right, #EDF1F6 100%, transparent 0) }
+  details>summary{ list-style:none; cursor:pointer } details>summary::-webkit-details-marker{ display:none }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001ms !important; transition-duration:.001ms !important } }
+</style>
+</head>
+
+<body class="text-ink font-sans antialiased overflow-x-hidden">
+
+<!-- ══ ambient background ══ -->
+<div class="fixed inset-0 -z-10 bg-canvas">
+  <div class="absolute inset-0 bg-grid"></div>
+  <div class="absolute inset-0 bg-wash"></div>
+</div>
+
+<!-- ══ boot splash ══ -->
+<div id="boot" class="fixed inset-0 z-[120] bg-shell shell-tex flex items-center justify-center px-6 transition-opacity duration-500">
+  <div class="w-full max-w-sm">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="w-11 h-11 rounded-xl bg-teal/90 grid place-items-center text-white font-display font-bold text-lg shadow-lift">N</div>
+      <div>
+        <p class="font-display text-white text-lg leading-none tracking-tight">NovaNext HR·OS</p>
+        <p class="text-white/45 text-[11px] font-mono mt-1.5 tracking-widest uppercase">Talent Intelligence</p>
+      </div>
+    </div>
+    <div class="h-1 rounded-full bg-white/10 overflow-hidden">
+      <div id="bootBar" class="h-full w-0 bg-gradient-to-r from-teal to-amberx rounded-full transition-[width] duration-300 ease-out"></div>
+    </div>
+    <p id="bootMsg" class="text-white/55 text-xs font-mono mt-3">Menyambungkan ATS gateway…</p>
+  </div>
+</div>
+
+<!-- ══ app shell ══ -->
+<div class="min-h-screen lg:pl-[86px] xl:pl-[248px]">
+
+  <!-- rail / drawer nav -->
+  <aside id="sidebar" class="fixed z-[70] inset-y-0 left-0 w-[262px] bg-shell shell-tex text-white/80 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:w-[86px] xl:w-[248px]">
+    <div class="px-4 h-16 flex items-center gap-3 border-b border-white/8 shrink-0">
+      <div class="w-9 h-9 rounded-[10px] bg-teal grid place-items-center text-white font-display font-bold shrink-0">N</div>
+      <div class="min-w-0">
+        <p class="font-display text-[15px] text-white leading-none tracking-tight truncate">NovaNext HR·OS</p>
+        <p class="text-[10px] font-mono text-white/40 mt-1 tracking-[.18em] uppercase truncate">Enterprise Suite</p>
+      </div>
+      <button id="navClose" class="ml-auto lg:hidden w-8 h-8 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto rail-scroll px-3 py-4 space-y-1">
+      <p class="hidden xl:block px-3 text-[10px] font-mono tracking-[.2em] uppercase text-white/30 mb-2">Modul</p>
+      <button data-view-btn="pipeline" class="nav-btn w-full group flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-semibold text-white/70 hover:text-white hover:bg-white/8 transition-colors">
+        <span class="nav-ic w-9 h-9 grid place-items-center rounded-lg shrink-0 transition-colors"><i data-lucide="layout-dashboard" class="w-[18px] h-[18px]"></i></span>
+        <span class="hidden xl:inline flex-1 text-left">Rekrutmen Pipeline</span>
+        <span class="hidden xl:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-white/60" data-nav-count>0</span>
+      </button>
+      <button data-view-btn="analytics" class="nav-btn w-full group flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-semibold text-white/70 hover:text-white hover:bg-white/8 transition-colors">
+        <span class="nav-ic w-9 h-9 grid place-items-center rounded-lg shrink-0 transition-colors"><i data-lucide="trending-up" class="w-[18px] h-[18px]"></i></span>
+        <span class="hidden xl:inline flex-1 text-left">Talent Analytics</span>
+      </button>
+      <button data-view-btn="positions" class="nav-btn w-full group flex items-center gap-3 px-3 h-11 rounded-xl text-sm font-semibold text-white/70 hover:text-white hover:bg-white/8 transition-colors">
+        <span class="nav-ic w-9 h-9 grid place-items-center rounded-lg shrink-0 transition-colors"><i data-lucide="briefcase" class="w-[18px] h-[18px]"></i></span>
+        <span class="hidden xl:inline flex-1 text-left">Lowongan / Req.</span>
+        <span class="hidden xl:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-amberx/25 text-[#F0C880]">4</span>
+      </button>
+
+      <p class="hidden xl:block px-3 pt-6 text-[10px] font-mono tracking-[.2em] uppercase text-white/30 mb-2">Filter cepat</p>
+      <div class="hidden xl:block space-y-1" id="railDivisions"></div>
+
+      <p class="hidden xl:block px-3 pt-6 text-[10px] font-mono tracking-[.2em] uppercase text-white/30 mb-2">Sistem</p>
+      <div class="hidden xl:block rounded-xl bg-white/5 border border-white/8 p-3">
+        <div class="flex items-center gap-2 text-[11px] text-white/60 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-teal live-dot"></span>Sinkron aktif</div>
+        <div class="mt-2.5 space-y-1.5">
+          <div class="flex justify-between text-[11px]"><span class="text-white/45">Beban rekruter</span><span class="font-mono text-white/80">72%</span></div>
+          <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[72%] bg-amberx rounded-full"></div></div>
+          <div class="flex justify-between text-[11px] mt-1"><span class="text-white/45">Kepatuhan SLA</span><span class="font-mono text-white/80">94%</span></div>
+          <div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full w-[94%] bg-teal rounded-full"></div></div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="p-3 border-t border-white/8 space-y-2 shrink-0">
+      <button id="resetDemo" class="w-full flex items-center gap-2 px-3 h-10 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/8 transition-colors">
+        <i data-lucide="refresh-ccw" class="w-4 h-4"></i><span class="hidden xl:inline">Reset data demo</span>
+      </button>
+      <div class="hidden xl:flex items-center gap-2.5 px-2 pt-1">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#3E6E9E] to-[#183A57] grid place-items-center text-[11px] font-bold text-white">RP</div>
+        <div class="min-w-0"><p class="text-[12px] text-white/85 font-semibold truncate">Rani Prameswari</p><p class="text-[10px] text-white/40 truncate">Talent Ops Lead</p></div>
+      </div>
+    </div>
+  </aside>
+  <div id="navScrim" class="fixed inset-0 z-[65] bg-shell/50 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+
+  <!-- ══ main ══ -->
+  <div>
+    <!-- header -->
+    <header class="sticky top-0 z-40 bg-canvas/85 backdrop-blur-md border-b border-line/80">
+      <div class="h-16 px-3 sm:px-5 flex items-center gap-2.5 sm:gap-4">
+        <button id="navOpen" class="lg:hidden w-10 h-10 grid place-items-center rounded-xl border border-line bg-surf hover:bg-white shadow-card shrink-0"><i data-lucide="menu" class="w-5 h-5"></i></button>
+
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <h1 id="viewTitle" class="font-display text-[17px] sm:text-xl font-bold tracking-tight truncate">Rekrutmen Pipeline</h1>
+            <span class="hidden sm:inline-flex items-center gap-1.5 pl-1 pr-2 py-0.5 rounded-full bg-ink/5 border border-ink/10 text-[10px] font-mono uppercase tracking-wider text-ink-mute">
+              <span class="w-1.5 h-1.5 rounded-full bg-teal live-dot"></span>Demo Prototype by NovaNext
+            </span>
+          </div>
+          <p id="viewSub" class="hidden sm:block text-[11.5px] text-ink-mute -mt-0.5 truncate">Board Q3 Hiring · 5 tahap · sumber: NovaNext ATS v4.2</p>
+        </div>
+
+        <div class="relative hidden md:block w-[240px] lg:w-[300px] shrink-0">
+          <i data-lucide="search" class="w-4 h-4 text-ink-mute absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input id="search" type="search" placeholder="Cari nama, peran, keahlian…" class="w-full h-10 pl-9 pr-12 rounded-xl bg-surf border border-line text-[13px] placeholder:text-ink-mute/70 focus:outline-none focus:border-teal focus:ring-4 focus:ring-teal/12 transition-shadow" />
+          <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded border border-line text-ink-mute bg-canvas">⌘K</kbd>
+        </div>
+
+        <button id="signalBtn" class="relative w-10 h-10 grid place-items-center rounded-xl border border-line bg-surf hover:bg-white shadow-card transition-all hover:-translate-y-0.5" title="Talent Signal">
+          <i data-lucide="activity" class="w-[18px] h-[18px]"></i>
+          <span id="signalDot" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full bg-rosex text-white text-[10px] font-mono font-semibold shadow">0</span>
+        </button>
+        <div class="hidden sm:flex items-center gap-2 pl-2.5 border-l border-line">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#0E7C6B] to-[#0A4E45] grid place-items-center text-[11px] font-bold text-white">RP</div>
+        </div>
+      </div>
+      <div class="h-[3px] w-full bg-transparent overflow-hidden"><div id="syncBar" class="h-0 w-1/3 bg-gradient-to-r from-transparent via-teal/70 to-transparent"></div></div>
+    </header>
+
+    <main class="px-3 sm:px-5 py-4 sm:py-6 max-w-[1800px] mx-auto">
+
+      <!-- ══ VIEW: PIPELINE ══ -->
+      <section id="view-pipeline">
+        <!-- stat strip -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 mb-4 sm:mb-5">
+          <div class="stat tile col-span-2 lg:col-span-1 bg-surf border border-line/80 rounded-2xl p-4 shadow-card relative overflow-hidden group hover:shadow-lift transition-shadow">
+            <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Total kandidat</p>
+            <div class="flex items-end gap-2 mt-1.5">
+              <span class="font-display text-[38px] leading-none font-bold tracking-tight" data-count data-key="total">0</span>
+              <span class="text-[12px] text-ink-mute mb-1.5">aktif</span>
+            </div>
+            <div class="flex gap-1 mt-3" id="statMini"></div>
+          </div>
+          <div class="bg-surf border border-line/80 rounded-2xl p-4 shadow-card hover:shadow-lift transition-shadow">
+            <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Match rata-rata</p>
+            <div class="flex items-end gap-1.5 mt-1.5">
+              <span class="font-display text-[38px] leading-none font-bold tracking-tight text-teal" data-count data-key="avgmatch">0</span>
+              <span class="text-[13px] text-ink-mute mb-1.5 font-mono">%</span>
+            </div>
+            <p class="text-[11px] text-ink-mute mt-3 flex items-center gap-1"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-teal"></i>+6,4 pt vs kuartal lalu</p>
+          </div>
+          <div class="bg-surf border border-line/80 rounded-2xl p-4 shadow-card hover:shadow-lift transition-shadow">
+            <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Offer aktif</p>
+            <div class="flex items-end gap-2 mt-1.5">
+              <span class="font-display text-[38px] leading-none font-bold tracking-tight" data-count data-key="offers">0</span>
+              <span class="text-[12px] text-ink-mute mb-1.5">tgl. 12 bln</span>
+            </div>
+            <p class="text-[11px] text-ink-mute mt-3 flex items-center gap-1"><i data-lucide="file-signature" class="w-3.5 h-3.5 text-[#2E7D4F]"></i>Acceptance rate 78%</p>
+          </div>
+          <div class="bg-surf border border-line/80 rounded-2xl p-4 shadow-card hover:shadow-lift transition-shadow">
+            <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Waktu rata-rata</p>
+            <div class="flex items-end gap-1.5 mt-1.5">
+              <span class="font-display text-[38px] leading-none font-bold tracking-tight" data-count data-key="days">0</span>
+              <span class="text-[13px] text-ink-mute mb-1.5">hari</span>
+            </div>
+            <p class="text-[11px] text-amberx mt-3 flex items-center gap-1"><i data-lucide="alarm-clock" class="w-3.5 h-3.5"></i><span data-sla>0</span> kandidat lewat SLA</p>
+          </div>
+        </div>
+
+        <!-- filter bar -->
+        <div class="bg-surf border border-line/80 rounded-2xl shadow-card mb-4 sm:mb-5">
+          <div class="p-3 flex flex-wrap items-center gap-2.5">
+            <div class="flex items-center gap-1 p-1 rounded-xl bg-canvas/80 border border-line/70 overflow-x-auto no-bar">
+              <span class="px-2 text-[10px] font-mono uppercase tracking-widest text-ink-mute hidden sm:inline">Divisi</span>
+              <div id="divChips" class="flex items-center gap-1"></div>
+            </div>
+
+            <label class="relative shrink-0">
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-ink-mute absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              <select id="sortSel" class="appearance-none h-9 pl-8 pr-7 rounded-xl border border-line bg-white text-[12.5px] font-semibold text-ink-soft focus:outline-none focus:border-teal cursor-pointer">
+                <option value="manual">Urut: manual (urutan drag)</option>
+                <option value="match">Urut: Match tertinggi</option>
+                <option value="recent">Urut: Terbaru</option>
+                <option value="salary">Urut: Ekspektasi gaji</option>
+                <option value="name">Urut: Nama A–Z</option>
+              </select>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-ink-mute absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            </label>
+
+            <button id="flagToggle" class="h-9 px-3 rounded-xl border border-line bg-white text-[12.5px] font-semibold text-ink-soft inline-flex items-center gap-1.5 hover:border-rosex/50 hover:text-rosex transition-colors">
+              <i data-lucide="flag" class="w-3.5 h-3.5"></i> Prioritas
+            </button>
+            <button id="clearFilters" class="h-9 px-3 rounded-xl text-[12.5px] font-semibold text-ink-mute hover:text-ink hover:bg-canvas transition-colors inline-flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+            </button>
+
+            <div class="ml-auto flex items-center gap-2">
+              <span class="text-[11.5px] font-mono text-ink-mute hidden lg:inline" id="resultCount"></span>
+              <button id="addCand" class="h-9 px-3.5 rounded-xl bg-ink text-white text-[12.5px] font-bold inline-flex items-center gap-1.5 hover:bg-ink/90 active:scale-[.97] transition-all shadow-card hover:shadow-lift">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Kandidat baru
+              </button>
+            </div>
+          </div>
+          <div class="md:hidden border-t border-line/80 p-2.5">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-ink-mute absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input id="searchM" type="search" placeholder="Cari kandidat…" class="w-full h-10 pl-9 pr-3 rounded-xl bg-canvas border border-line text-[13px] focus:outline-none focus:border-teal" />
+            </div>
+          </div>
+        </div>
+
+        <!-- board -->
+        <div id="board" class="flex gap-3 sm:gap-3.5 overflow-x-auto pb-3 snap-x snap-mandatory thin-scroll items-start"></div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-[11.5px] text-ink-mute">
+          <p class="flex items-center gap-2"><i data-lucide="mouse-pointer-click" class="w-4 h-4"></i> Seret kartu antar kolom untuk memindahkan tahap — atau gunakan tombol ‹ › pada kartu (mobile).</p>
+          <p class="font-mono" id="savedAt">Tersimpan di perangkat</p>
+        </div>
+      </section>
+
+      <!-- ══ VIEW: ANALYTICS ══ -->
+      <section id="view-analytics" class="hidden">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-3.5">
+          <div class="xl:col-span-2 bg-surf border border-line/80 rounded-2xl p-4 sm:p-5 shadow-card">
+            <div class="flex items-start justify-between gap-3 mb-4">
+              <div>
+                <h2 class="font-display text-lg font-bold tracking-tight">Distribusi pipeline</h2>
+                <p class="text-[12px] text-ink-mute">Sebaran kandidat per tahap pada req. aktif</p>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-1 rounded-lg bg-canvas border border-line text-ink-mute">realtime</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+              <div class="relative h-[230px]"><canvas id="chDoughnut"></canvas></div>
+              <div class="space-y-2.5" id="funnelBars"></div>
+            </div>
+          </div>
+
+          <div class="bg-shell shell-tex border border-white/8 rounded-2xl p-4 sm:p-5 text-white shadow-lift">
+            <h2 class="font-display text-lg font-bold tracking-tight">Skor evaluasi / divisi</h2>
+            <p class="text-[12px] text-white/45 mb-4">Rata-rata composite score panel interviewer</p>
+            <div class="h-[190px]"><canvas id="chDivision"></canvas></div>
+            <div class="mt-5 grid grid-cols-2 gap-3 text-center">
+              <div class="rounded-xl bg-white/5 border border-white/8 py-3">
+                <p class="font-display text-2xl font-bold" id="anPass">0%</p><p class="text-[10px] font-mono uppercase tracking-widest text-white/40 mt-1">Pass rate</p>
+              </div>
+              <div class="rounded-xl bg-white/5 border border-white/8 py-3">
+                <p class="font-display text-2xl font-bold" id="anDrop">0%</p><p class="text-[10px] font-mono uppercase tracking-widest text-white/40 mt-1">Drop screening</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="xl:col-span-2 bg-surf border border-line/80 rounded-2xl p-4 sm:p-5 shadow-card">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div><h2 class="font-display text-lg font-bold tracking-tight">Volume pelamar</h2>
+              <p class="text-[12px] text-ink-mute">Aplikasi masuk per pekan · 8 pekan terakhir</p></div>
+            </div>
+            <div class="h-[210px]"><canvas id="chTrend"></canvas></div>
+          </div>
+
+          <div class="bg-surf border border-line/80 rounded-2xl p-4 sm:p-5 shadow-card">
+            <h2 class="font-display text-lg font-bold tracking-tight">Keahlian paling dicari</h2>
+            <p class="text-[12px] text-ink-mute mb-4">Frekuensi pada pipeline aktif</p>
+            <div class="space-y-2.5" id="skillBars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ VIEW: POSITIONS ══ -->
+      <section id="view-positions" class="hidden">
+        <div id="posGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-3.5"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- ══ right drawer: talent signal ══ -->
+<aside id="signal" class="fixed z-[75] inset-y-0 right-0 w-full sm:w-[380px] bg-surf border-l border-line shadow-modal translate-x-full transition-transform duration-300 ease-out flex flex-col">
+  <div class="h-16 px-4 flex items-center gap-3 border-b border-line shrink-0">
+    <span class="w-9 h-9 rounded-xl bg-canvas grid place-items-center"><i data-lucide="activity" class="w-[18px] h-[18px] text-teal"></i></span>
+    <div class="min-w-0 flex-1">
+      <p class="font-display text-[15px] font-bold tracking-tight leading-none">Talent Signal</p>
+      <p class="text-[11px] text-ink-mute mt-1">Aktivitas pipeline &amp; tenggat SLA</p>
+    </div>
+    <button id="signalClose" class="w-9 h-9 grid place-items-center rounded-xl hover:bg-canvas transition-colors"><i data-lucide="x" class="w-[18px] h-[18px]"></i></button>
+  </div>
+  <div class="flex-1 overflow-y-auto thin-scroll p-4 space-y-5">
+    <div>
+      <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute mb-2.5">Perlu perhatian</p>
+      <div id="slaList" class="space-y-2"></div>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-2.5">
+        <p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Log aktivitas</p>
+        <button id="clearLog" class="text-[11px] font-semibold text-ink-mute hover:text-rosex transition-colors">Bersihkan</button>
+      </div>
+      <div id="activityList" class="space-y-1"></div>
+    </div>
+  </div>
+</aside>
+<div id="signalScrim" class="fixed inset-0 z-[72] bg-shell/40 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+<!-- ══ modals & toast roots ══ -->
+<div id="modalRoot" class="fixed inset-0 z-[90] hidden"></div>
+<div id="confirmRoot" class="fixed inset-0 z-[95] hidden"></div>
+<div id="toastRoot" class="fixed z-[110] bottom-3 right-3 sm:top-20 sm:bottom-auto sm:right-4 w-[calc(100vw-24px)] sm:w-[368px] space-y-2.5 pointer-events-none"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   NovaNext HR·OS — Talent Intelligence (single-file prototype)
+   Modules: Stage → Data → Store(localStorage) → Bus → UI engines
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Domain config ────────────────────────────────────────── */
+const STAGES = [
+  { key:'applied',    name:'Applied',             accent:'#5A6B84', tint:'#EEF2F7', icon:'inbox',            hint:'Menunggu review rekruter' },
+  { key:'screening',  name:'Screening',           accent:'#B07708', tint:'#FBF3E4', icon:'search',         hint:'Telepon & saringan awal' },
+  { key:'technical',  name:'Technical Interview', accent:'#1F6F9B', tint:'#E9F2F8', icon:'code',           hint:'Panel teknis & studi kasus' },
+  { key:'offered',    name:'Offered',             accent:'#2E7D4F', tint:'#EAF5EE', icon:'file-signature', hint:'Penawaran terkirim' },
+  { key:'rejected',   name:'Rejected',            accent:'#B23A48', tint:'#FBEDEF', icon:'user-x',           hint:'Ditolak / kandidat mundur' },
+];
+const DIVISIONS = [
+  { key:'all',         name:'Semua',        color:'#33455C' },
+  { key:'Engineering', name:'Engineering',  color:'#1F6F9B' },
+  { key:'Design',      name:'Design',       color:'#8B4E9B' },
+  { key:'Marketing',   name:'Marketing',    color:'#B07708' },
+];
+const CRITERIA = [
+  { k:'technical',      label:'Kemampuan teknis', w:0.40 },
+  { k:'communication',  label:'Komunikasi',        w:0.25 },
+  { k:'problemSolving', label:'Problem solving',    w:0.20 },
+  { k:'culture',        label:'Culture add',        w:0.15 },
+];
+const stageOf = k => STAGES.find(s => s.key === k) || STAGES[0];
+
+/* ── 2. Mock data generator ─────────────────────────────────── */
+const SEED = [
+  { id:'CND-0417', name:'Arya Mahendra', role:'Senior Frontend Engineer', division:'Engineering', stage:'technical', match:88, exp:7, salary:32, source:'LinkedIn', days:3, flagged:true,
+    skills:['React','TypeScript','Design System','Vite'], edu:'S1 Ilmu Komputer — Universitas Indonesia',
+    summary:'Lead frontend dengan rekam jejak menaikkan Core Web Vitals 38% pada aplikasi bertraf 12jt MAU.',
+    history:[{c:'Traveloka',t:'Frontend Lead',p:'2021–2024',b:'Memimpin design system lintas 6 tim produk.'},{c:'Bukalapak',t:'Frontend Engineer',p:'2018–2021',b:'Migrasi legacy jQuery ke React + TypeScript.'}],
+    scores:{technical:86,communication:78,problemSolving:90,culture:82},
+    notes:[{id:'n1',who:'Dimas R.',initials:'DR',at:Date.now()-36e5*26,rating:88,text:'Kasus virtual list & windowing dijawab rapi. Kuat di arsitektur state.'},{id:'n2',who:'Rani P.',initials:'RP',at:Date.now()-36e5*70,rating:80,text:'Ekspektasi gaji perlu dinegosiasi ulang dengan band level P5.'}] },
+
+  { id:'CND-0418', name:'Nadia Putri Ramadhani', role:'Product Designer', division:'Design', stage:'screening', match:82, exp:5, salary:26, source:'Referral', days:1, flagged:false,
+    skills:['Figma','Prototyping','User Testing'], edu:'S1 DKV — Institut Teknologi Bandung',
+    summary:'Desainer produk fokus pada 0→1, terbiasa memegang discovery dua sprint penuh.',
+    history:[{c:'Gojek',t:'Product Designer',p:'2021–2024',b:'Redesign onboarding merchant, +14pt completion.'},{c:'SalingJaga',t:'UI Designer',p:'2019–2021',b:'Menyusun library komponen mobile.'}],
+    scores:{technical:76,communication:85,problemSolving:74,culture:88}, notes:[] },
+
+  { id:'CND-0419', name:'Bagas Widiantoro', role:'Backend Platform Engineer', division:'Engineering', stage:'applied', match:74, exp:4, salary:24, source:'JobStreet', days:5, flagged:false,
+    skills:['Go','Kubernetes','gRPC'], edu:'S1 Teknik Informatika — UGM',
+    summary:'Membangun internal developer platform untuk 40+ layanan mikro.',
+    history:[{c:'Dana',t:'Backend Engineer',p:'2021–2024',b:'Menurunkan latensi service payment 22%.'},{c:'Maxim',t:'Junior Backend',p:'2020–2021',b:'Membangun worker antrian RabbitMQ.'}],
+    scores:{technical:70,communication:66,problemSolving:72,culture:70}, notes:[] },
+
+  { id:'CND-0420', name:'Sinta Larasati', role:'Growth Marketing Lead', division:'Marketing', stage:'offered', match:91, exp:8, salary:35, source:'Glints', days:2, flagged:true,
+    skills:['Performance','SEO','Lifecycle','SQL'], edu:'S1 Manajemen Pemasaran — Unpad',
+    summary:'Memimpin tim growth 6 orang, CAC turun 31% dalam 3 kuartal.',
+    history:[{c:'Ruangguru',t:'Growth Lead',p:'2021–2024',b:'Eksperimen lifecycle 12 varian, +19% reaktivasi.'},{c:'Halodoc',t:'Acquisition Manager',p:'2018–2021',b:'Menata ulang atribusi MMM.'}],
+    scores:{technical:84,communication:95,problemSolving:88,culture:93},
+    notes:[{id:'n3',who:'Rani P.',initials:'RP',at:Date.now()-36e5*8,rating:93,text:'Offer Rp34,5jt/bln dikirim. Tenggat tanda tangan 3 hari kerja.'}] },
+
+  { id:'CND-0421', name:'Reza Firmansyah', role:'React Native Engineer', division:'Engineering', stage:'rejected', match:61, exp:3, salary:20, source:'LinkedIn', days:11, flagged:false,
+    skills:['React Native','Firebase'], edu:'Politeknik Negeri Surabaya',
+    summary:'Fokus aplikasi mobile UMKM, masih pendalaman arsitektur offline-first.',
+    history:[{c:'Kredivo',t:'Mobile Engineer',p:'2022–2024',b:'Fitur OCR KTP on-device.'}],
+    scores:{technical:55,communication:64,problemSolving:58,culture:70},
+    notes:[{id:'n4',who:'Dimas R.',initials:'DR',at:Date.now()-36e5*240,rating:58,text:'Belum memenuhi bar level senior untuk kuartal ini.'}] },
+
+  { id:'CND-0422', name:'Kirana Ayu Pratiwi', role:'UX Researcher', division:'Design', stage:'technical', match:85, exp:6, salary:28, source:'Referral', days:4, flagged:false,
+    skills:['Research Ops','Interview','Dovetail'], edu:'S1 Psikologi — UGM',
+    summary:'Membangun repository riset terstruktur untuk 4 lini produk.',
+    history:[{c:'Tokopedia',t:'UX Researcher',p:'2020–2024',b:'Program riset berkelanjutan, 60 studi/tahun.'},{c:'BFI',t:'Research Associate',p:'2018–2020',b:'Riset kuantitatif produk pembiayaan.'}],
+    scores:{technical:79,communication:92,problemSolving:83,culture:87}, notes:[] },
+
+  { id:'CND-0423', name:'Dimas Prakoso', role:'DevOps Engineer', division:'Engineering', stage:'screening', match:79, exp:5, salary:29, source:'JobStreet', days:2, flagged:false,
+    skills:['Terraform','AWS','CI/CD'], edu:'S1 Sistem Informasi — ITS',
+    summary:'Menekan biaya cloud 28% lewat right-sizing & spot fleet.',
+    history:[{c:'Blibli',t:'DevOps Engineer',p:'2020–2024',b:'Deploi self-service untuk 12 tim.'},{c:'Telkomsel',t:'SysAdmin',p:'2019–2020',b:'Otomasi monitoring Prometheus.'}],
+    scores:{technical:82,communication:70,problemSolving:80,culture:74}, notes:[] },
+
+  { id:'CND-0424', name:'Olivia Tanuwijaya', role:'Brand Designer', division:'Design', stage:'applied', match:76, exp:3, salary:21, source:'Behance', days:6, flagged:false,
+    skills:['Identity','Illustration','Motion'], edu:'S1 DKV — Binus',
+    summary:'Identitas merek untuk F&B & retail, nyaman pada brand guideline system.',
+    history:[{c:'Kopi Kenangan',t:'Brand Designer',p:'2021–2024',b:'Kampanye musiman 30+ aset.'}],
+    scores:{technical:71,communication:80,problemSolving:68,culture:82}, notes:[] },
+
+  { id:'CND-0425', name:'Amanda Chandra', role:'Performance Marketing Specialist', division:'Marketing', stage:'screening', match:72, exp:4, salary:22, source:'Glints', days:3, flagged:false,
+    skills:['Meta Ads','GA4','A/B Testing'], edu:'S1 Komunikasi — Binus',
+    summary:'Mengelola budget iklan Rp4M/bulan dengan ROAS 4,6x.',
+    history:[{c:'Zalora',t:'Paid Social',p:'2021–2024',b:'Strukturisasi campaign & creative testing.'}],
+    scores:{technical:70,communication:76,problemSolving:69,culture:75}, notes:[] },
+
+  { id:'CND-0426', name:'Yoga Pratama', role:'Fullstack Engineer', division:'Engineering', stage:'offered', match:87, exp:6, salary:31, source:'LinkedIn', days:1, flagged:false,
+    skills:['Node.js','React','PostgreSQL'], edu:'S1 Informatika — Unpar',
+    summary:'Ship fitur end-to-end, nyaman di area data modelling hingga FE.',
+    history:[{c:'Xendit',t:'Fullstack Engineer',p:'2020–2024',b:'Dashboard merchant realtime.'},{c:'Startup (co-founder)',t:'CTO',p:'2018–2020',b:'Membangun MVP hingga 20rb pengguna.'}],
+    scores:{technical:88,communication:84,problemSolving:90,culture:85},
+    notes:[{id:'n5',who:'Rani P.',initials:'RP',at:Date.now()-36e5*30,rating:87,text:'Screening cultura ok, tim siap onboarding 2 minggu.'}] },
+
+  { id:'CND-0427', name:'Rania Hidayah', role:'Motion Designer', division:'Design', stage:'applied', match:69, exp:2, salary:17, source:'Behance', days:7, flagged:false,
+    skills:['After Effects','Lottie','3D'], edu:'S1 DKV — ISI Yogyakarta',
+    summary:'Motion untuk produk digital & iklan pendek, portofolio 24 proyek.',
+    history:[{c:'Freelance',t:'Motion Designer',p:'2022–2024',b:'Aset Lottie untuk 8 aplikasi mobile.'}],
+    scores:{technical:66,communication:72,problemSolving:63,culture:78}, notes:[] },
+
+  { id:'CND-0428', name:'Kevin Suryanto', role:'QA Automation Engineer', division:'Engineering', stage:'technical', match:70, exp:4, salary:23, source:'JobStreet', days:5, flagged:false,
+    skills:['Playwright','Cypress','CI'], edu:'S1 Teknik Komputer — Untar',
+    summary:'Otomasi E2E memangkas regression dari 3 hari ke 40 menit.',
+    history:[{c:'BCA Digital',t:'QA Engineer',p:'2021–2024',b:'Framework Playwright untuk 5 produk.'}],
+    scores:{technical:74,communication:63,problemSolving:77,culture:66}, notes:[] },
+
+  { id:'CND-0429', name:'Meylita Dewi', role:'Content Marketing Manager', division:'Marketing', stage:'applied', match:83, exp:6, salary:25, source:'Referral', days:2, flagged:true,
+    skills:['SEO','Editorial','Strategy'], edu:'S1 Sastra Inggris — UI',
+    summary:'Menumbuhkan trafik organik 4,5x lewat hub editorial & programmatic SEO.',
+    history:[{c:'Ruangguru',t:'Content Lead',p:'2021–2024',b:'Tim 5 penulis + kalender editorial.'}],
+    scores:{technical:76,communication:90,problemSolving:80,culture:86}, notes:[] },
+
+  { id:'CND-0430', name:'Arif Setiawan', role:'Platform Security Engineer', division:'Engineering', stage:'applied', match:80, exp:7, salary:34, source:'LinkedIn', days:1, flagged:false,
+    skills:['AppSec','Threat Modeling','SOC'], edu:'S1 Informatika — ITN',
+    summary:'Program secure SDLC + bug bounty untuk 60 layanan internal.',
+    history:[{c:'DANA',t:'Security Engineer',p:'2019–2024',b:'Menutup 14 temuan severity tinggi.'}],
+    scores:{technical:84,communication:72,problemSolving:86,culture:73}, notes:[] },
+
+  { id:'CND-0431', name:'Tsabita Nurhaliza', role:'Senior Product Designer', division:'Design', stage:'offered', match:89, exp:7, salary:33, source:'Referral', days:2, flagged:false,
+    skills:['Product Strategy','Design Systems','Facilitation'], edu:'S2 Design — NUS',
+    summary:'Mengawinkan strategi produk dengan craft; mentor 4 desainer yunior.',
+    history:[{c:'Grab',t:'Senior Designer',p:'2020–2024',b:'Redesign driver earnings, -22% tiket support.'}],
+    scores:{technical:87,communication:93,problemSolving:88,culture:90},
+    notes:[{id:'n6',who:'Andi L.',initials:'AL',at:Date.now()-36e5*14,rating:90,text:'Panel sepakat: kuat di discovery & stakeholder management.'}] },
+
+  { id:'CND-0432', name:'Hanno Wibowo', role:'Marketing Automation Specialist', division:'Marketing', stage:'rejected', match:58, exp:3, salary:19, source:'Glints', days:14, flagged:false,
+    skills:['HubSpot','Zapier','Email'], edu:'S1 Bisnis Digital — Swiss German Univ.',
+    summary:'Berpengalaman di lifecycle email, masih butuh kedalaman analitik.',
+    history:[{c:'Amartha',t:'Marketing Ops',p:'2022–2024',b:'Otomasi drip investor.'}],
+    scores:{technical:56,communication:66,problemSolving:54,culture:68}, notes:[] },
+
+  { id:'CND-0433', name:'Cahya Ramadhan', role:'Frontend Engineer', division:'Engineering', stage:'technical', match:78, exp:4, salary:25, source:'LinkedIn', days:2, flagged:false,
+    skills:['React','Next.js','Testing'], edu:'S1 Informatika — UNEJ',
+    summary:'Implementasi SSR & testing pyramid pada e-commerce multi-bahasa.',
+    history:[{c:'Blibli',t:'Frontend Engineer',p:'2021–2024',b:'Cutover PDP ke Next.js App Router.'}],
+    scores:{technical:81,communication:70,problemSolving:78,culture:74}, notes:[] },
+
+  { id:'CND-0434', name:'Gita Permata', role:'Lifecycle CRM Lead', division:'Marketing', stage:'screening', match:81, exp:6, salary:27, source:'Referral', days:4, flagged:false,
+    skills:['CRM','Segmentation','SQL'], edu:'S1 Statistika — IPB',
+    summary:'Segmentasi berbasis RFM menaikkan repeat order 12%.',
+    history:[{c:'Blibli',t:'CRM Specialist',p:'2019–2024',b:'Program win-back 4 lapis.'}],
+    scores:{technical:74,communication:86,problemSolving:79,culture:83}, notes:[] },
+];
+const SEED_TS = Date.now();
+const POSITIONS = [
+  { code:'REQ-2041', title:'Senior Frontend Engineer', division:'Engineering', team:'Commerce Platform', loc:'Jakarta · Hybrid', type:'Full-time', band:'Rp 30–36 jt', head:2, need:82 },
+  { code:'REQ-2044', title:'Backend Platform Engineer', division:'Engineering', team:'Developer Experience', loc:'Remote (ID)', type:'Full-time', band:'Rp 24–30 jt', head:1, need:64 },
+  { code:'REQ-2048', title:'Senior Product Designer', division:'Design', team:'Seller Growth', loc:'Bandung · Hybrid', type:'Full-time', band:'Rp 28–34 jt', head:1, need:57 },
+  { code:'REQ-2052', title:'Growth Marketing Lead', division:'Marketing', team:'Performance', loc:'Jakarta · On-site', type:'Full-time', band:'Rp 32–38 jt', head:1, need:70 },
+];
+
+/* ── 3. Store (localStorage persistence) ───────────────────── */
+const KEY = 'novanext.hr.talent.v1';
+const Store = {
+  state: {
+    view:'pipeline',
+    candidates:[],
+    filters:{ division:'all', q:'', sort:'manual', flaggedOnly:false },
+    activeId:null,
+    activity:[],
+    lastSnapshot:null,
+    order:{},
+    booted:false,
+  },
+  load(){
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+    if (saved && Array.isArray(saved.candidates) && saved.candidates.length) {
+      this.state.candidates = saved.candidates.map(c => ({ ...c, _new:false }));
+      this.state.activity = Array.isArray(saved.activity) ? saved.activity : [];
+      this.state.filters = { ...this.state.filters, ...(saved.filters||{}) };
+    } else {
+      this.state.candidates = SEED.map(s => JSON.parse(JSON.stringify(s)));
+      this.state.activity = [{ id:'a0', type:'sync', text:'Pipeline disinkronkan dari NovaNext ATS v4.2 · 18 kandidat dimuat', at:SEED_TS }];
+      this.persist();
+    }
+    if (!this.state.candidates.length) this.state.candidates = SEED.map(s => JSON.parse(JSON.stringify(s)));
+  },
+  persist(){
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ candidates:this.state.candidates, activity:this.state.activity.slice(0,40), filters:this.state.filters }));
+      const el = document.getElementById('savedAt');
+      if (el) el.textContent = 'Tersimpan ' + new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    } catch(e){}
+  },
+  get(){ return this.state; },
+  set(patch){ Object.assign(this.state, patch); },
+  find(id){ return this.state.candidates.find(c => c.id === id); },
+  reset(){ localStorage.removeItem(KEY); this.load(); },
+  log(type, text){
+    this.state.activity.unshift({ id:'a'+Date.now()+Math.random(), type, text, at:Date.now() });
+    this.state.activity = this.state.activity.slice(0,40);
+  }
+};
+
+/* ── tiny event bus ──────────────────────────────────────────── */
+const Bus = {
+  m:{},
+  on(ev,fn){ (this.m[ev]=this.m[ev]||[]).push(fn); },
+  emit(ev,data){ (this.m[ev]||[]).forEach(fn => fn(data)); }
+};
+
+/* ── helpers ─────────────────────────────────────────────────── */
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initials = n => n.trim().split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase();
+const relTime = t => {
+  const d = Math.floor((Date.now()-t)/1000);
+  if (d < 60) return 'baru saja';
+  if (d < 3600) return Math.floor(d/60)+' mnt lalu';
+  if (d < 86400) return Math.floor(d/3600)+' jam lalu';
+  return Math.floor(d/86400)+' hr lalu';
+};
+const hueOf = str => { let h=0; for (let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))%360; return h; };
+const composite = c => Math.round(CRITERIA.reduce((a,k)=>a + (c.scores?.[k.k] ?? c.match) * k.w, 0));
+const divColor = d => (DIVISIONS.find(x=>x.key===d)||DIVISIONS[0]).color;
+const icons = () => { try { window.lucide && lucide.createIcons(); } catch(e){} };
+
+/* ── 4. Toast engine ─────────────────────────────────────────── */
+const Toast = (() => {
+  const root = document.getElementById('toastRoot');
+  const skin = {
+    ok:   { icon:'circle-check',   ring:'bg-teal', bar:'bg-teal', fg:'text-teal' },
+    info: { icon:'info',           ring:'bg-[#1F6F9B]', bar:'bg-[#1F6F9B]', fg:'text-[#1F6F9B]' },
+    warn: { icon:'triangle-alert', ring:'bg-amberx',    bar:'bg-amberx',    fg:'text-amberx' },
+    bad:  { icon:'circle-x',       ring:'bg-rosex',     bar:'bg-rosex',     fg:'text-rosex' },
+  };
+  function show(msg, opt = {}) {
+    const type = opt.type || 'ok';
+    const s = skin[type] || skin.ok;
+    const el = document.createElement('div');
+    el.className = 'pointer-events-auto toast-in relative bg-surf border border-line/90 rounded-2xl shadow-lift overflow-hidden flex items-start gap-3 p-3 pr-2.5';
+    el.innerHTML =
+      '<span class="mt-0.5 w-8 h-8 rounded-xl '+s.ring+' grid place-items-center shrink-0 text-white"><i data-lucide="'+s.icon+'" class="w-[17px] h-[17px]"></i></span>' +
+      '<div class="min-w-0 flex-1">' +
+        '<p class="text-[13px] font-bold text-ink leading-snug">'+esc(opt.title || 'Tersimpan')+'</p>' +
+        '<p class="text-[12px] text-ink-mute leading-snug mt-0.5">'+esc(msg)+'</p>' +
+        (opt.action ? '<button data-undo class="mt-2 inline-flex items-center gap-1.5 text-[11.5px] font-bold '+s.fg+' hover:underline underline-offset-2"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>'+esc(opt.action)+'</button>' : '') +
+      '</div>' +
+      '<button data-x class="w-7 h-7 grid place-items-center rounded-lg text-ink-mute hover:bg-canvas shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>' +
+      '<span class="absolute bottom-0 left-0 h-[3px] '+s.bar+' transition-[width] ease-linear" style="width:100%"></span>';
+    root.appendChild(el);
+    icons();
+    const life = opt.ms || 4200;
+    const prog = el.querySelector('span:last-child');
+    requestAnimationFrame(() => { prog.style.transitionDuration = life+'ms'; prog.style.width = '0%'; });
+    const kill = () => { el.style.transition='opacity .2s, transform .2s'; el.style.opacity='0'; el.style.transform='translateX(18px)'; setTimeout(()=>el.remove(),210); };
+    const timer = setTimeout(kill, life);
+    if (opt.onAction) el.querySelector('[data-undo]').addEventListener('click', () => { clearTimeout(timer); opt.onAction(); kill(); });
+    el.querySelector('[data-x]').addEventListener('click', () => { clearTimeout(timer); kill(); });
+    while (root.children.length > 4) root.firstElementChild.remove();
+  }
+  return { show };
+})();
+
+/* ── 5. Confirm modal engine ─────────────────────────────────── */
+const Confirm = (() => {
+  const root = document.getElementById('confirmRoot');
+  let onYes = null;
+  function open(cfg){
+    onYes = cfg.onConfirm;
+    const tone = cfg.danger
+      ? { ic:'bg-rosex', icon:'triangle-alert', btn:'bg-rosex hover:bg-rosex/90' }
+      : { ic:'bg-ink',  icon:'circle-help',      btn:'bg-ink hover:bg-ink/90' };
+    root.className = 'fixed inset-0 z-[95] flex items-end sm:items-center justify-center p-3 sm:p-6';
+    root.innerHTML =
+      '<div data-close class="absolute inset-0 bg-shell/55 backdrop-blur-[3px] opacity-0 transition-opacity duration-200"></div>' +
+      '<div class="pop-in relative w-full max-w-[420px] bg-surf rounded-2xl shadow-modal border border-line/80 p-5">' +
+        '<div class="flex gap-3.5">' +
+          '<span class="w-10 h-10 rounded-xl '+tone.ic+' grid place-items-center text-white shrink-0"><i data-lucide="'+tone.icon+'" class="w-5 h-5"></i></span>' +
+          '<div class="min-w-0"><h3 class="font-display text-[17px] font-bold tracking-tight">'+esc(cfg.title)+'</h3>' +
+          '<p class="text-[13px] text-ink-soft mt-1.5 leading-relaxed">'+esc(cfg.body)+'</p></div>' +
+        '</div>' +
+        '<div class="flex gap-2 mt-5">' +
+          '<button data-no class="flex-1 h-10 rounded-xl border border-line text-[13px] font-bold text-ink-soft hover:bg-canvas transition-colors">Batal</button>' +
+          '<button data-yes class="flex-1 h-10 rounded-xl text-[13px] font-bold text-white '+tone.btn+' transition-all active:scale-[.98]">'+esc(cfg.confirmText||'Konfirmasi')+'</button>' +
+        '</div>' +
+      '</div>';
+    root.classList.remove('hidden');
+    requestAnimationFrame(() => { const b = root.querySelector('[data-close]'); if (b) b.style.opacity = 1; });
+    icons();
+    root.querySelector('[data-yes]').onclick = () => { close(); onYes && onYes(); };
+    root.querySelector('[data-no]').onclick = close;
+    root.querySelector('[data-close]').onclick = close;
+  }
+  function close(){ root.classList.add('hidden'); root.innerHTML=''; onYes=null; }
+  return { open, close, root };
+})();
+
+/* ── 6. UI state engine ──────────────────────────────────────── */
+const UI = {
+  openCandidate(id){ Store.state.activeId = id; Candidate.open(id); },
+  closeAll(){ Candidate.close(); Confirm.close(); },
+  setView(v){
+    if (Store.state.view === v && v !== 'analytics') { }
+    Store.state.view = v;
+    ['pipeline','analytics','positions'].forEach(k => {
+      document.getElementById('view-'+k).hidden = (k !== v);
+    });
+    document.querySelectorAll('[data-view-btn]').forEach(b => {
+      const on = b.dataset.viewBtn === v;
+      b.classList.toggle('bg-white/10', on); b.classList.toggle('text-white', on);
+      b.classList.toggle('text-white/70', !on);
+      b.querySelector('.nav-ic').classList.toggle('bg-teal', on);
+      b.querySelector('.nav-ic').classList.toggle('text-white', on);
+    });
+    const meta = {
+      pipeline:['Rekrutmen Pipeline','Board Q3 Hiring · 5 tahap · sumber: NovaNext ATS v4.2'],
+      analytics:['Talent Analytics','Metrik corong, skor panel, dan beban req aktif'],
+      positions:['Lowongan & Requisition','4 req terbuka · total 5 headcount dibutuhkan'],
+    };
+    document.getElementById('viewTitle').textContent = meta[v][0];
+    document.getElementById('viewSub').textContent = meta[v][1];
+    if (v === 'analytics') Charts.build(); else Charts.destroy();
+    Render.stats();
+    closeNav();
+    icons();
+  }
+};
+
+/* ── 7. Render engine ────────────────────────────────────────── */
+const Render = {
+  all(){ this.chips(); this.rail(); this.board(); this.stats(); this.positions(); this.signal(); icons(); },
+
+  visible(){
+    const f = Store.state.filters;
+    let list = Store.state.candidates.filter(c => {
+      if (f.division !== 'all' && c.division !== f.division) return false;
+      if (f.flaggedOnly && !c.flagged) return false;
+      if (f.q) {
+        const q = f.q.toLowerCase();
+        const hay = (c.name+' '+c.role+' '+c.division+' '+c.id+' '+(c.skills||[]).join(' ')).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+    const s = f.sort;
+    if (s === 'manual') return list;
+    list.sort((a,b) => {
+      if (s === 'recent')  return b.days - a.days || b.match - a.match;
+      if (s === 'salary')   return b.salary - a.salary;
+      if (s === 'name')     return a.name.localeCompare(b.name);
+      return (composite(b) + b.match) - (composite(a) + a.match);
+    });
+    return list;
+  },
+
+  chips(){
+    const wrap = document.getElementById('divChips');
+    wrap.innerHTML = DIVISIONS.map(d => {
+      const n = d.key==='all' ? Store.state.candidates.length : Store.state.candidates.filter(c=>c.division===d.key).length;
+      const on = Store.state.filters.division === d.key;
+      return '<button data-div="'+d.key+'" class="chip shrink-0 h-7 px-2.5 rounded-lg text-[12px] font-bold inline-flex items-center gap-1.5 transition-all">'+
+        '<span class="w-1.5 h-1.5 rounded-full" style="background:'+d.color+'"></span>'+d.name+
+        '<span class="font-mono text-[10px] '+(on?'opacity-70':'text-ink-mute')+'">'+n+'</span></button>';
+    }).join('');
+    wrap.querySelectorAll('[data-div]').forEach(b => {
+      const on = b.dataset.div === Store.state.filters.division;
+      b.classList.toggle('bg-ink', on); b.classList.toggle('text-white', on); b.classList.toggle('shadow-card', on);
+      b.classList.toggle('text-ink-soft', !on);
+      b.classList.toggle('hover:bg-white', !on);
+    });
+    icons();
+  },
+
+  rail(){
+    const box = document.getElementById('railDivisions');
+    const cands = Store.state.candidates;
+    box.innerHTML = DIVISIONS.slice(1).map(d => {
+      const list = cands.filter(c => c.division === d.key);
+      const active = list.filter(c => c.stage !== 'rejected').length;
+      const avg = list.length ? Math.round(list.reduce((a,c)=>a+c.match,0)/list.length) : 0;
+      const on = Store.state.filters.division === d.key;
+      return '<button data-div="'+d.key+'" class="w-full text-left px-3 py-2.5 rounded-xl transition-colors '+(on?'bg-white/10':'hover:bg-white/6')+'">'+
+        '<div class="flex items-center justify-between"><span class="text-[12.5px] font-semibold text-white/80">'+d.name+'</span>'+
+        '<span class="text-[11px] font-mono text-white/45">'+active+'</span></div>'+
+        '<div class="h-1 rounded-full bg-white/10 mt-2 overflow-hidden"><div class="h-full rounded-full bar-fill" style="width:'+avg+'%;background:'+d.color+'"></div></div>'+
+        '<p class="text-[10px] font-mono text-white/35 mt-1.5">avg match '+avg+'%</p></button>';
+    }).join('');
+    document.querySelector('[data-nav-count]').textContent = cands.length;
+  },
+
+  stats(){
+    const cs = Store.state.candidates;
+    const total = cs.filter(c => c.stage !== 'rejected').length;
+    const avg = cs.length ? Math.round(cs.reduce((a,c)=>a+c.match,0)/cs.length) : 0;
+    const offers = cs.filter(c => c.stage === 'offered').length;
+    const days = cs.length ? Math.round(cs.reduce((a,c)=>a+c.days,0)/cs.length) : 0;
+    const sla = cs.filter(c => c.days >= 5 && c.stage !== 'rejected').length;
+    const map = { total, avgmatch:avg, offers, days };
+    document.querySelectorAll('[data-count]').forEach(el => animateNum(el, map[el.dataset.key] ?? 0));
+    document.querySelector('[data-sla]').textContent = sla;
+    const mini = document.getElementById('statMini');
+    const mx = Math.max(1, ...STAGES.map(s => cs.filter(c=>c.stage===s.key).length));
+    mini.innerHTML = STAGES.map(s => {
+      const n = cs.filter(c=>c.stage===s.key).length;
+      return '<span title="'+s.name+': '+n+'" class="flex-1 flex items-end h-7"><span class="w-full rounded-[3px] bar-fill" style="height:'+Math.max(8,(n/mx)*100)+'%;background:'+s.accent+';opacity:'+(n?'.9':'.22')+'"></span></span>';
+    }).join('');
+  },
+
+  board(){
+    const board = document.getElementById('board');
+    const vis = this.visible();
+    const cs = Store.state.candidates;
+    board.innerHTML = STAGES.map((s, si) => {
+      const items = vis.filter(c => c.stage === s.key);
+      const all = cs.filter(c => c.stage === s.key).length;
+      const pct = cs.length ? Math.round(all / cs.length * 100) : 0;
+      return '<section class="col col-in snap-start shrink-0 w-[85vw] max-w-[320px] sm:w-[300px] lg:w-[clamp(210px,20vw,300px)] bg-surf/80 backdrop-blur-[1px] border border-line/80 rounded-2xl flex flex-col shadow-card" data-col="'+s.key+'" style="--acc:'+s.accent+';--tint:'+s.tint+';animation-delay:'+(si*55)+'ms">'+
+        '<header class="p-3 pb-2.5 border-b border-line/70">'+
+          '<div class="flex items-center gap-2">'+
+            '<span class="w-7 h-7 rounded-lg grid place-items-center shrink-0" style="background:'+s.tint+';color:'+s.accent+'"><i data-lucide="'+s.icon+'" class="w-[15px] h-[15px]"></i></span>'+
+            '<h3 class="font-display text-[13.5px] font-bold tracking-tight leading-none flex-1 min-w-0 truncate">'+s.name+'</h3>'+
+            '<span class="text-[11px] font-mono font-semibold px-1.5 py-0.5 rounded-md" style="background:'+s.tint+';color:'+s.accent+'">'+items.length+'</span>'+
+          '</div>'+
+          '<p class="text-[10.5px] text-ink-mute mt-2 truncate">'+s.hint+'</p>'+
+          '<div class="h-[3px] rounded-full bg-canvas mt-2 overflow-hidden"><div class="h-full rounded-full bar-fill" style="width:'+pct+'%;background:'+s.accent+'"></div></div>'+
+        '</header>'+
+        '<div data-list data-stage="'+s.key+'" class="col-body flex-1 min-h-[120px] max-h-[min(62vh,640px)] overflow-y-auto thin-scroll p-2.5 space-y-2.5">'+
+          (items.length ? items.map(this.card).join('') : this.empty(s))+
+        '</div>'+
+        '<footer class="p-2.5 pt-1.5 border-t border-line/70 flex items-center gap-1.5">'+
+          '<button data-act="quick-add" data-stage="'+s.key+'" class="flex-1 h-8 rounded-lg text-[12px] font-bold text-ink-soft hover:text-white inline-flex items-center justify-center gap-1.5 border border-dashed border-line hover:border-transparent hover:bg-ink transition-all"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Tambah</button>'+
+          '<button data-act="col-sort" title="Urutkan kolom sesuai skor" class="w-8 h-8 grid place-items-center rounded-lg border border-line text-ink-mute hover:text-ink hover:bg-canvas transition-colors"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i></button>'+
+        '</footer>'+
+      '</section>';
+    }).join('');
+    document.getElementById('resultCount').textContent = vis.length + ' / ' + cs.length + ' kandidat';
+    this.chips(); this.stats(); this.rail(); this.signal();
+    icons();
+  },
+
+  empty(s){
+    return '<div class="h-[112px] rounded-xl border border-dashed border-line grid place-items-center text-center px-3">'+
+      '<div><i data-lucide="tray" class="w-5 h-5 mx-auto text-ink-mute/60"></i>'+
+      '<p class="text-[11.5px] text-ink-mute mt-1.5 leading-snug">Kolom kosong.<br>Seret kartu ke sini.</p></div></div>';
+  },
+
+  card(c){
+    const comp = composite(c);
+    const hue = hueOf(c.name);
+    const delta = comp - c.match;
+    const stage = stageOf(c.stage);
+    const late = c.days >= 5 && c.stage !== 'rejected';
+    const idx = STAGES.findIndex(s => s.key === c.stage);
+    return '<article class="cand card-in relative bg-white rounded-[14px] border border-line/80 p-3 shadow-[0_1px_2px_rgba(12,21,34,.05)]" draggable="true" data-card data-id="'+c.id+'">'+
+      '<span class="absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full" style="background:'+stage.accent+'"></span>'+
+      '<div class="flex items-start gap-2.5 pl-1.5">'+
+        '<span class="w-9 h-9 rounded-[10px] grid place-items-center text-[12px] font-bold text-white shrink-0" style="background:linear-gradient(140deg,hsl('+hue+' 42% 44%),hsl('+((hue+38)%360)+' 46% 30%))">'+esc(initials(c.name))+'</span>'+
+        '<div class="min-w-0 flex-1">'+
+          '<p class="text-[13px] font-bold leading-tight truncate">'+esc(c.name)+'</p>'+
+          '<p class="text-[11px] text-ink-mute truncate mt-0.5">'+esc(c.role)+'</p>'+
+        '</div>'+
+        (c.flagged ? '<span class="w-5 h-5 grid place-items-center rounded-md bg-rosex/10 text-rosex shrink-0" title="Prioritas"><i data-lucide="flag" class="w-3 h-3"></i></span>' : '')+
+      '</div>'+
+      '<div class="flex flex-wrap gap-1 mt-2.5 pl-1.5">'+
+        '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border border-line text-ink-mute">'+c.id+'</span>'+
+        '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md" style="background:'+divColor(c.division)+'14;color:'+divColor(c.division)+'">'+esc(c.division)+'</span>'+
+        (c.skills||[]).slice(0,2).map(s=>'<span class="text-[10px] px-1.5 py-0.5 rounded-md bg-canvas text-ink-soft">'+esc(s)+'</span>').join('')+
+      '</div>'+
+      '<div class="flex items-center gap-2 mt-2.5 pt-2.5 border-t border-line/70 pl-1.5">'+
+        '<div class="relative w-9 h-9 shrink-0" title="AI match">'+
+          '<svg viewBox="0 0 36 36" class="w-9 h-9 -rotate-90"><circle cx="18" cy="18" r="15.5" fill="none" stroke="#E4EAF1" stroke-width="3.4"/><circle cx="18" cy="18" r="15.5" fill="none" stroke="'+stage.accent+'" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="'+(c.match*0.974)+' 100"/></svg>'+
+          '<span class="absolute inset-0 grid place-items-center text-[10px] font-mono font-semibold">'+c.match+'</span>'+
+        '</div>'+
+        '<div class="min-w-0 flex-1 leading-tight">'+
+          '<p class="text-[10px] font-mono uppercase tracking-wider text-ink-mute">'+(delta!==0?('eval '+(delta>0?'+':'')+delta):'menunggu eval')+'</p>'+
+          '<p class="text-[11.5px] font-semibold text-ink-soft mt-0.5 truncate">'+c.exp+' thn · Rp '+c.salary+'jt'+(late?' · <span class="text-rosex font-bold">'+c.days+'h</span>':'')+'</p>'+
+        '</div>'+
+        '<div class="flex items-center gap-0.5 shrink-0">'+
+          '<button data-act="move" data-dir="-1" '+(idx===0?'disabled':'')+' class="w-7 h-7 grid place-items-center rounded-lg border border-line text-ink-mute hover:text-ink hover:bg-canvas disabled:opacity-30 disabled:pointer-events-none transition-colors"><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i></button>'+
+          '<button data-act="move" data-dir="1" '+(idx===STAGES.length-1?'disabled':'')+' class="w-7 h-7 grid place-items-center rounded-lg border border-line text-ink-mute hover:text-white hover:bg-ink disabled:opacity-30 disabled:pointer-events-none transition-colors"><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></button>'+
+        '</div>'+
+      '</div>'+
+      '</article>';
+  },
+
+  positions(){
+    const grid = document.getElementById('posGrid');
+    grid.innerHTML = POSITIONS.map((p,i) => {
+      const pool = Store.state.candidates.filter(c => c.division === p.division);
+      const per = STAGES.map(s => ({ s, n: pool.filter(c=>c.stage===s.key).length }));
+      const mx = Math.max(1, ...per.map(x=>x.n));
+      const filled = pool.filter(c=>c.stage==='offered').length;
+      return '<article class="col-in bg-surf border border-line/80 rounded-2xl p-4 sm:p-5 shadow-card hover:shadow-lift transition-all" style="animation-delay:'+(i*70)+'ms">'+
+        '<div class="flex items-start justify-between gap-3">'+
+          '<div class="min-w-0">'+
+            '<p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">'+p.code+'</p>'+
+            '<h3 class="font-display text-[19px] font-bold tracking-tight mt-1 leading-tight">'+esc(p.title)+'</h3>'+
+            '<p class="text-[12px] text-ink-mute mt-1">'+esc(p.team)+' · '+esc(p.loc)+'</p>'+
+          '</div>'+
+          '<span class="text-[10px] font-bold px-2 py-1 rounded-lg shrink-0" style="background:'+divColor(p.division)+'14;color:'+divColor(p.division)+'">'+esc(p.division)+'</span>'+
+        '</div>'+
+        '<div class="grid grid-cols-3 gap-2 mt-4">'+
+          [['Headcount', p.head+' orang'],['Band gaji', p.band],['SLA butuh', p.need+' hari']].map(x=>
+            '<div class="rounded-xl bg-canvas/70 border border-line/70 p-2.5"><p class="text-[9.5px] font-mono uppercase tracking-wider text-ink-mute">'+x[0]+'</p><p class="text-[12.5px] font-bold mt-0.5">'+x[1]+'</p></div>').join('')+
+        '</div>'+
+        '<div class="mt-4"><p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute mb-2">Corong kandidat · '+pool.length+' pelamar</p>'+
+          '<div class="flex items-end gap-1.5 h-16">'+per.map(x=>
+            '<div class="flex-1 flex flex-col items-center gap-1"><span class="text-[10px] font-mono" style="color:'+x.s.accent+'">'+x.n+'</span>'+
+            '<div class="w-full rounded-md bar-fill" style="height:'+Math.max(4,(x.n/mx)*36)+'px;background:'+x.s.accent+';opacity:'+(x.n?'.85':'.18')+'"></div>'+
+            '<span class="text-[9px] font-mono text-ink-mute truncate max-w-full">'+x.s.key.slice(0,4)+'</span></div>').join('')+
+          '</div></div>'+
+        '<div class="flex items-center gap-2 mt-4 pt-3.5 border-t border-line/70">'+
+          '<span class="text-[11.5px] font-mono text-ink-mute flex-1">offer terkirim: <b class="text-ink">'+filled+'</b></span>'+
+          '<button data-pos-open="'+p.division+'" class="h-9 px-3 rounded-xl bg-ink text-white text-[12.5px] font-bold inline-flex items-center gap-1.5 hover:bg-ink/90 active:scale-[.98] transition-all">Buka di board <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></button>'+
+        '</div>'+
+      '</article>';
+    }).join('');
+    grid.querySelectorAll('[data-pos-open]').forEach(b => b.onclick = () => {
+      Store.state.filters.division = b.dataset.posOpen; Store.persist();
+      UI.setView('pipeline'); Render.board();
+      Toast.show('Filter divisi '+b.dataset.posOpen+' diterapkan pada board.', { type:'info', title:'Filter aktif' });
+    });
+    icons();
+  },
+
+  signal(){
+    const list = document.getElementById('activityList');
+    const act = Store.state.activity;
+    const tone = { sync:['rotate-cw','#1F6F9B'], move:['arrow-right-left','#0E7C6B'], score:['sliders-horizontal','#B07708'], note:['message-square-plus','#5A6B84'], add:['user-plus','#2E7D4F'], flag:['flag','#B23A48'], del:['trash-2','#B23A48'], reject:['user-x','#B23A48'], offer:['file-signature','#2E7D4F'] };
+    list.innerHTML = act.length ? act.slice(0,16).map(a => {
+      const t = tone[a.type] || ['circle','#5A6B84'];
+      return '<div class="flex gap-2.5 py-2 border-b border-line/60 last:border-0">'+
+        '<span class="w-6 h-6 rounded-lg grid place-items-center shrink-0 mt-0.5" style="background:'+t[1]+'14;color:'+t[1]+'"><i data-lucide="'+t[0]+'" class="w-3 h-3"></i></span>'+
+        '<div class="min-w-0 flex-1"><p class="text-[12px] leading-snug text-ink-soft">'+esc(a.text)+'</p><p class="text-[10px] font-mono text-ink-mute mt-1">'+relTime(a.at)+'</p></div></div>';
+    }).join('') : '<p class="text-[12px] text-ink-mute py-3">Belum ada aktivitas pada sesi ini.</p>';
+
+    const late = Store.state.candidates.filter(c => c.days >= 5 && c.stage !== 'rejected')
+      .sort((a,b) => b.days - a.days);
+    document.getElementById('slaList').innerHTML = late.length ? late.map(c =>
+      '<button data-sla-open="'+c.id+'" class="w-full text-left flex items-center gap-2.5 p-2.5 rounded-xl border border-line bg-canvas/50 hover:bg-canvas transition-colors">'+
+      '<span class="w-8 h-8 rounded-lg grid place-items-center text-[11px] font-bold text-white shrink-0" style="background:'+stageOf(c.stage).accent+'">'+esc(initials(c.name))+'</span>'+
+      '<span class="min-w-0 flex-1"><span class="block text-[12.5px] font-bold truncate">'+esc(c.name)+'</span>'+
+      '<span class="block text-[11px] text-ink-mute truncate">tertahan '+c.days+' hari di '+stageOf(c.stage).name+'</span></span>'+
+      '<span class="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded-md bg-rosex/10 text-rosex shrink-0">SLA</span></button>'
+    ).join('') : '<p class="text-[12px] text-ink-mute">Semua tahap berada dalam SLA 5 hari. 👌</p>';
+    document.getElementById('signalDot').textContent = late.length;
+    document.getElementById('signalDot').classList.toggle('hidden', late.length === 0);
+    document.querySelectorAll('[data-sla-open]').forEach(b => b.onclick = () => { closeSignal(); UI.openCandidate(b.dataset.slaOpen); });
+    icons();
+  }
+};
+
+/* number counter */
+function animateNum(el, to){
+  const from = parseInt(el.dataset.cur || '0', 10);
+  if (from === to) { el.textContent = to; return; }
+  el.dataset.cur = to;
+  const t0 = performance.now(), dur = 620;
+  (function step(t){
+    const p = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(from + (to - from) * e);
+    if (p < 1) requestAnimationFrame(step);
+  })(performance.now());
+}
+
+/* ── 8a. App helpers ─────────────────────────────────────────── */
+const App = {
+  /* once a user reorders cards by hand, keep that manual order sticky */
+  manualSort(){
+    if (Store.state.filters.sort === 'manual') return;
+    Store.state.filters.sort = 'manual';
+    const sel = document.getElementById('sortSel'); if (sel) sel.value = 'manual';
+  }
+};
+
+/* ── 8b. Drag & drop engine (vanilla) ────────────────────────── */
+const DnD = (() => {
+  let dragEl = null, hotCol = null;
+  const board = document.getElementById('board');
+
+  function after(list, y){
+    const els = [...list.querySelectorAll('.cand:not(.dragging)')];
+    let best = { off:-Infinity, el:null };
+    for (const e of els){
+      const box = e.getBoundingClientRect();
+      const off = y - box.top - box.height/2;
+      if (off < 0 && off > best.off) best = { off, el:e };
+    }
+    return best.el;
+  }
+
+  board.addEventListener('dragstart', e => {
+    const card = e.target.closest('.cand'); if (!card) return;
+    dragEl = card; card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', card.dataset.id); } catch(_){}
+    board.style.cursor = 'grabbing';
+  });
+
+  board.addEventListener('dragover', e => {
+    if (!dragEl) return;
+    const list = e.target.closest('[data-list]') || e.target.closest('[data-col]')?.querySelector('[data-list]');
+    if (!list) return;
+    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    const col = list.closest('[data-col]');
+    if (hotCol !== col){ if (hotCol) hotCol.classList.remove('drop-hot'); hotCol = col; col.classList.add('drop-hot'); }
+    const pos = after(list, e.clientY);
+    if (pos == null) list.appendChild(dragEl); else list.insertBefore(dragEl, pos);
+  });
+
+  board.addEventListener('drop', e => { if (dragEl) e.preventDefault(); });
+
+  board.addEventListener('dragend', () => {
+    if (!dragEl) return;
+    const id = dragEl.dataset.id;
+    const list = dragEl.closest('[data-list]');
+    const stage = list ? list.dataset.stage : null;
+    const order = list ? [...list.querySelectorAll('.cand')].map(el => el.dataset.id) : null;
+    dragEl.classList.remove('dragging');
+    if (hotCol) hotCol.classList.remove('drop-hot');
+    hotCol = null; dragEl = null; board.style.cursor = '';
+    if (stage){ App.manualSort(); Pipeline.moveTo(id, stage, { via:'drag', order }); }
+    else Render.board();
+  });
+
+  /* click actions (delegated) */
+  board.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (btn){
+      const card = btn.closest('[data-card]');
+      const act = btn.dataset.act;
+      if (act === 'quick-add'){ Candidate.openNew(btn.dataset.stage); return; }
+      if (act === 'col-sort'){
+        const col = btn.closest('[data-col]').dataset.col;
+        const ids = Store.state.candidates.filter(c => c.stage === col).sort((a,b) => composite(b) - composite(a)).map(c => c.id);
+        Pipeline.reorder(col, ids); App.manualSort(); Store.persist(); Render.board();
+        Toast.show('Kartu di kolom '+stageOf(col).name+' diurutkan berdasar composite score.', { type:'info', title:'Kolom dirapikan' });
+        return;
+      }
+      if (act === 'move' && card){
+        const c = Store.find(card.dataset.id);
+        const i = STAGES.findIndex(s => s.key === c.stage) + Number(btn.dataset.dir);
+        if (STAGES[i]) Pipeline.moveTo(c.id, STAGES[i].key, { via:'btn' });
+        else Toast.show('Kandidat sudah berada di tahap terakhir alur.', { type:'warn', title:'Tidak ada tahap berikutnya' });
+        return;
+      }
+    }
+    const card = e.target.closest('[data-card]');
+    if (card) UI.openCandidate(card.dataset.id);
+  });
+})();
+
+/* ── 9. Pipeline mutations (CRUD + persistence) ──────────────── */
+const Pipeline = {
+  reorder(stage, ids){
+    const cs = Store.state.candidates, map = {};
+    cs.forEach(c => map[c.id] = c);
+    const ordered = ids.map(i => map[i]).filter(c => c && c.stage === stage);
+    const slots = []; cs.forEach((c,i) => { if (c.stage === stage) slots.push(i); });
+    const out = cs.slice();
+    slots.forEach((pos, k) => { if (ordered[k]) out[pos] = ordered[k]; });
+    Store.state.candidates = [...new Map(out.filter(Boolean).map(c => [c.id, c])).values()];
+  },
+  moveTo(id, stageKey, meta = {}){
+    const c = Store.find(id); if (!c) return;
+    const prev = c.stage, same = prev === stageKey;
+    const before = JSON.parse(JSON.stringify(c));
+    c.stage = stageKey;
+    if (!same) c.days = 0;
+    if (meta.order) this.reorder(stageKey, meta.order);
+    Store.state.lastSnapshot = { id, before };
+    Store.log('move', same
+      ? 'Urutan kartu pada kolom ' + stageOf(stageKey).name + ' dirapikan'
+      : c.name + ' dipindahkan dari ' + stageOf(prev).name + ' ke ' + stageOf(stageKey).name + (meta.via === 'drag' ? ' (drag & drop)' : (meta.via === 'btn' ? ' (tombol aksi)' : '')));
+    Store.persist(); Render.board();
+    const card = document.querySelector('[data-id="'+c.id+'"]');
+    if (card){ card.classList.add('flash'); setTimeout(()=>card.classList.remove('flash'), 900); }
+    if (same) return;
+
+    const label = { applied:'Menunggu review rekruter.', screening:'Menunggu jadwal screening call.', technical:'Panel teknis akan dijadwalkan otomatis.', offered:'Offer need-approval HRBP.', rejected:'Kandidat dipindahkan ke arsip.' }[stageKey];
+    Toast.show(c.name + ' → ' + stageOf(stageKey).name + '. ' + label, {
+      type: stageKey === 'rejected' ? 'bad' : (stageKey === 'offered' ? 'ok' : 'info'),
+      title: 'Tahap diperbarui',
+      action: 'Undo',
+      onAction: () => { Store.state.candidates = Store.state.candidates.map(x => x.id === id ? before : x); Store.log('move', 'Perubahan tahap untuk ' + before.name + ' dibatalkan'); Store.persist(); Render.board(); Toast.show('Perubahan dibatalkan.', { type:'warn', title:'Undo berhasil' }); }
+    });
+    if (stageKey === 'offered' || stageKey === 'rejected') Confirm.afterStage(c, stageKey);
+  },
+  setScore(id, key, val){
+    const c = Store.find(id); if (!c) return;
+    c.scores[key] = val;
+    Store.persist();
+  },
+  saveScores(id){
+    const c = Store.find(id);
+    Store.log('score', 'Skor panel '+c.name+' disimpan · composite '+composite(c)+'/100');
+    Store.persist(); Render.board();
+    Toast.show('Composite score '+c.name+' kini '+composite(c)+'/100.', { type:'ok', title:'Evaluasi tercatat' });
+  },
+  addNote(id, text, rating){
+    const c = Store.find(id);
+    const note = { id:'n'+Date.now(), who:'Rani P.', initials:'RP', at:Date.now(), rating:Number(rating)||composite(c), text };
+    c.notes = c.notes || []; c.notes.unshift(note);
+    Store.log('note', 'Catatan interviewer baru pada '+c.name+' ('+rating+'/100)');
+    Store.persist(); Candidate.renderNotes(c); Toast.show('Catatan interviewer tersimpan di profil '+c.name.split(' ')[0]+'.', { type:'ok', title:'Catatan ditambahkan' });
+  },
+  delNote(id, nid){
+    const c = Store.find(id);
+    const i = c.notes.findIndex(n => n.id === nid);
+    const removed = c.notes[i]; c.notes.splice(i,1);
+    Store.persist(); Candidate.renderNotes(c);
+    Toast.show('Catatan dihapus.', { type:'warn', title:'Catatan dihapus', action:'Pulihkan',
+      onAction: () => { c.notes.splice(i,0,removed); Store.persist(); Candidate.renderNotes(c); } });
+  },
+  toggleFlag(id){
+    const c = Store.find(id); c.flagged = !c.flagged;
+    Store.log('flag', (c.flagged?'Ditandai prioritas: ':'Prioritas dilepas: ') + c.name);
+    Store.persist(); Render.board(); Candidate.paint(c);
+    Toast.show(c.name + (c.flagged ? ' masuk antrean prioritas.' : ' dikeluarkan dari antrean prioritas.'), { type: c.flagged?'warn':'info', title: c.flagged?'Prioritas aktif':'Prioritas nonaktif' });
+  },
+  create(data){
+    const maxNum = Store.state.candidates.reduce((a,c) => Math.max(a, parseInt(String(c.id).replace(/\D/g,''),10) || 0), 434);
+    const id = 'CND-' + String(maxNum + 1).padStart(4,'0');
+    const c = { id, ...data, stage:'applied', days:0, flagged:false, notes:[],
+      match: Math.max(45, Math.min(94, 56 + data.exp*4 + (data.skills.length>2?6:0))),
+      summary:'Profil singkat akan diperkaya otomatis oleh modul parsing CV NovaNext.',
+      edu:'—', history:[{ c:data.company || 'Perusahaan sebelumnya', t:'—', p:'—', b:'Riwayat kerja belum dilengkapi.' }],
+      scores:{ technical:60, communication:60, problemSolving:60, culture:60 } };
+    Store.state.candidates.unshift(c);
+    Store.log('add', 'Kandidat baru dibuat: '+c.name+' · '+c.role);
+    Store.persist(); Render.board();
+    Toast.show(c.name+' ditambahkan ke tahap Applied ('+c.id+').', { type:'ok', title:'Kandidat dibuat' });
+    return c;
+  },
+  archive(id){
+    const c = Store.find(id); if (!c) return;
+    const before = JSON.parse(JSON.stringify(c));
+    Store.state.candidates = Store.state.candidates.filter(x => x.id !== id);
+    Store.log('del', 'Profil '+before.name+' diarsipkan dari pipeline');
+    Store.persist(); Render.board(); Render.positions();
+    Toast.show('Profil '+before.name+' diarsipkan.', { type:'bad', title:'Dihapus', action:'Urungkan',
+      onAction: () => { Store.state.candidates.unshift(before); Store.persist(); Render.all(); Toast.show('Profil dipulihkan.', { type:'ok', title:'Undo berhasil' }); } });
+  }
+};
+
+/* ── 10. Candidate modal ─────────────────────────────────────── */
+const Candidate = {
+  el:null, c:null,
+  open(id){
+    const c = Store.find(id); if (!c) return;
+    this.c = c;
+    clearTimeout(this._t);
+    const root = document.getElementById('modalRoot');
+    root.classList.remove('hidden');
+    root.className = 'fixed inset-0 z-[90] flex items-stretch sm:items-center justify-center sm:p-5';
+    root.innerHTML =
+      '<div data-back class="absolute inset-0 bg-shell/60 backdrop-blur-[3px] opacity-0 transition-opacity duration-200"></div>'+
+      '<div id="candPanel" class="pop-in relative w-full max-w-[1080px] h-full sm:h-auto sm:max-h-[92vh] bg-surf sm:rounded-[20px] shadow-modal border border-line/70 flex flex-col overflow-hidden">'+
+        this.head(c) + this.body(c) + this.foot(c) +
+      '</div>';
+    this.paint(c);
+    icons();
+    requestAnimationFrame(() => { const b = root.querySelector('[data-back]'); if (b) b.style.opacity = 1; this.buildRadar(); });
+    root.querySelector('[data-back]').onclick = () => this.close();
+    root.querySelector('[data-x]').onclick = () => this.close();
+    this.wire();
+  },
+  close(){
+    Charts.radarDestroy();
+    const root = document.getElementById('modalRoot');
+    const p = document.getElementById('candPanel');
+    if (p){ p.style.transition = 'opacity .18s, transform .18s'; p.style.opacity = 0; p.style.transform = 'translateY(8px) scale(.99)'; }
+    clearTimeout(this._t);
+    this._t = setTimeout(() => { root.classList.add('hidden'); root.innerHTML=''; }, 170);
+    Store.state.activeId = null;
+  },
+  head(c){
+    return '<header class="relative p-4 sm:p-5 border-b border-line/80 shrink-0 bg-white">'+
+      '<div class="absolute inset-0 opacity-[.5] bg-grid pointer-events-none"></div>'+
+      '<div class="relative flex items-start gap-3">'+
+        '<span class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl grid place-items-center text-[16px] font-bold text-white shrink-0 shadow-lift" style="background:linear-gradient(140deg,hsl('+hueOf(c.name)+' 42% 44%),hsl('+((hueOf(c.name)+38)%360)+' 46% 30%))">'+esc(initials(c.name))+'</span>'+
+        '<div class="min-w-0 flex-1">'+
+          '<div class="flex items-center gap-2 flex-wrap">'+
+            '<h2 class="font-display text-[22px] sm:text-[26px] font-bold tracking-tight leading-none">'+esc(c.name)+'</h2>'+
+            (c.flagged?'<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-rosex/10 text-rosex inline-flex items-center gap-1"><i data-lucide="flag" class="w-3 h-3"></i>Prioritas</span>':'')+
+          '</div>'+
+          '<p class="text-[13px] text-ink-soft mt-1.5">'+esc(c.role)+' · <span style="color:'+divColor(c.division)+'" class="font-semibold">'+esc(c.division)+'</span> · <span class="font-mono text-[11.5px] text-ink-mute">'+c.id+'</span></p>'+
+          '<div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11.5px] text-ink-mute">'+
+            '<span class="inline-flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i>'+c.days+' hari di tahap ini</span>'+
+            '<span class="inline-flex items-center gap-1"><i data-lucide="briefcase" class="w-3.5 h-3.5"></i>'+c.exp+' tahun pengalaman</span>'+
+            '<span class="inline-flex items-center gap-1"><i data-lucide="wallet" class="w-3.5 h-3.5"></i>Rp '+c.salary+'jt / bulan</span>'+
+            '<span class="inline-flex items-center gap-1"><i data-lucide="at-sign" class="w-3.5 h-3.5"></i>'+esc(c.source)+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<button data-x class="w-9 h-9 grid place-items-center rounded-xl border border-line hover:bg-canvas transition-colors shrink-0"><i data-lucide="x" class="w-[18px] h-[18px]"></i></button>'+
+      '</div></header>';
+  },
+  body(c){
+    return '<div class="flex-1 overflow-y-auto thin-scroll grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">'+
+      /* left: CV */
+      '<section class="p-4 sm:p-5 border-b lg:border-b-0 lg:border-r border-line/80 bg-canvas/40">'+
+        '<div class="flex items-center justify-between mb-3">'+
+          '<h3 class="font-display text-[15px] font-bold tracking-tight inline-flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-teal"></i>Pratinjau CV</h3>'+
+          '<button data-act="download" class="text-[11.5px] font-bold text-ink-mute hover:text-teal inline-flex items-center gap-1.5 transition-colors"><i data-lucide="download" class="w-3.5 h-3.5"></i>Unduh PDF</button>'+
+        '</div>'+
+        '<div class="bg-white border border-line rounded-xl overflow-hidden shadow-card">'+
+          '<div class="p-4 border-b border-line/70 flex items-start gap-3">'+
+            '<div class="w-12 h-14 rounded-md bg-canvas border border-line shrink-0 relative overflow-hidden">'+
+              '<span class="absolute inset-x-1.5 top-2 space-y-1 block">'+Array.from({length:5}).map(()=>'<span class="block h-[3px] rounded-full bg-ink/12"></span>').join('')+'</span>'+
+              '<span class="absolute bottom-1.5 left-1.5 right-4 h-[3px] rounded-full bg-teal/50 block"></span>'+
+            '</div>'+
+            '<div class="min-w-0"><p class="font-mono text-[11px] text-ink-mute">'+esc(c.name.split(' ')[0].toLowerCase())+'-cv-2026.pdf</p>'+
+              '<p class="text-[12.5px] font-semibold mt-1 leading-snug">'+esc(c.summary)+'</p>'+
+              '<p class="text-[11px] text-ink-mute mt-1.5">'+esc(c.edu)+'</p></div>'+
+          '</div>'+
+          '<div class="p-4 space-y-3">'+
+            '<p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute">Riwayat kerja</p>'+
+            (c.history||[]).map(h =>
+              '<div class="relative pl-4 before:absolute before:left-0 before:top-1.5 before:w-[7px] before:h-[7px] before:rounded-full before:bg-teal before:ring-4 before:ring-teal/10">'+
+                '<p class="text-[12.5px] font-bold leading-tight">'+esc(h.t)+' · <span class="font-semibold text-ink-soft">'+esc(h.c)+'</span></p>'+
+                '<p class="text-[11px] font-mono text-ink-mute mt-0.5">'+esc(h.p)+'</p>'+
+                '<p class="text-[12px] text-ink-soft mt-1 leading-relaxed">'+esc(h.b)+'</p></div>').join('')+
+            '<div class="pt-2"><p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute mb-2">Keahlian</p>'+
+              '<div class="flex flex-wrap gap-1.5">'+(c.skills||[]).map(s => '<span class="text-[11px] font-semibold px-2 py-1 rounded-lg bg-canvas border border-line text-ink-soft">'+esc(s)+'</span>').join('')+'</div></div>'+
+            '<div class="pt-1"><p class="text-[10px] font-mono uppercase tracking-[.18em] text-ink-mute mb-2">Kecocokan otomatis per keahlian</p>'+
+              (c.skills||[]).slice(0,4).map((s,i) => { const v = Math.max(38, Math.min(98, c.match - i*7 + (hueOf(s) % 17)));
+                return '<div class="flex items-center gap-2.5 mb-1.5"><span class="text-[11.5px] font-semibold w-[104px] shrink-0 truncate">'+esc(s)+'</span>'+
+                '<span class="flex-1 h-1.5 rounded-full bg-canvas overflow-hidden"><span class="block h-full rounded-full bar-fill bg-teal" style="width:'+v+'%"></span></span>'+
+                '<span class="text-[10.5px] font-mono text-ink-mute w-8 text-right">'+v+'</span></div>'; }).join('') +
+            '</div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="grid grid-cols-2 gap-2.5 mt-3">'+
+          [['AI match', c.match+'%'],['Composite', composite(c)+'/100'],['Tahap', stageOf(c.stage).name],['Sumber', c.source]].map(x =>
+            '<div class="rounded-xl bg-white border border-line/80 p-2.5"><p class="text-[9.5px] font-mono uppercase tracking-wider text-ink-mute">'+x[0]+'</p><p class="text-[13px] font-bold mt-1 truncate">'+esc(x[1])+'</p></div>').join('')+
+        '</div>'+
+      '</section>'+
+      /* right: evaluation */
+      '<section class="p-4 sm:p-5 space-y-5">'+
+        '<div>'+
+          '<h3 class="font-display text-[15px] font-bold tracking-tight mb-2.5 inline-flex items-center gap-2"><i data-lucide="git-branch" class="w-4 h-4 text-teal"></i>Pindah tahap</h3>'+
+          '<div class="flex items-center gap-1 p-1 rounded-xl bg-canvas border border-line/70 overflow-x-auto no-bar" id="stagePills"></div>'+
+        '</div>'+
+        '<div>'+
+          '<div class="flex items-center justify-between mb-2.5">'+
+            '<h3 class="font-display text-[15px] font-bold tracking-tight inline-flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-amberx"></i>Skor evaluasi panel</h3>'+
+            '<span id="compBadge" class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-lg" style="background:'+stageOf(c.stage).tint+';color:'+stageOf(c.stage).accent+'">'+composite(c)+' / 100</span>'+
+          '</div>'+
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">'+
+            '<div class="space-y-3" id="sliders"></div>'+
+            '<div class="rounded-xl border border-line/80 bg-white p-2.5 shadow-card"><div class="h-[176px]"><canvas id="chRadar"></canvas></div>'+
+              '<p class="text-[10px] font-mono uppercase tracking-wider text-ink-mute text-center mt-1.5">bobot teknis 40% · komunikasi 25%</p></div>'+
+          '</div>'+
+        '</div>'+
+        '<div>'+
+          '<div class="flex items-center justify-between mb-2">'+
+            '<h3 class="font-display text-[15px] font-bold tracking-tight inline-flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4 text-[#1F6F9B]"></i>Catatan interviewer <span class="text-[11px] font-mono text-ink-mute" id="noteCount"></span></h3>'+
+          '</div>'+
+          '<div class="rounded-xl border border-line/80 bg-white p-3 shadow-card">'+
+            '<textarea id="noteText" rows="2" placeholder="Tuliskan temuan wawancara, contoh: kuat di system design, perlu pendalaman aksesibilitas…" class="w-full text-[12.5px] resize-none focus:outline-none placeholder:text-ink-mute/70"></textarea>'+
+            '<div class="flex items-center gap-2 mt-2 pt-2 border-t border-line/70">'+
+              '<span class="text-[10.5px] font-mono uppercase tracking-wider text-ink-mute shrink-0">Rating</span>'+
+              '<input id="noteRate" type="range" min="1" max="100" value="'+composite(c)+'" class="flex-1" style="--acc:#0E7C6B" />'+
+              '<span id="noteRateVal" class="w-9 text-right text-[12px] font-mono font-bold shrink-0">'+composite(c)+'</span>'+
+              '<button id="noteAdd" class="h-8 px-2.5 rounded-lg bg-ink text-white text-[12px] font-bold hover:bg-ink/90 active:scale-95 transition-all shrink-0 inline-flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Simpan</button>'+
+            '</div>'+
+          '</div>'+
+          '<div id="notes" class="mt-3 space-y-2"></div>'+
+        '</div>'+
+      '</section>'+
+    '</div>';
+  },
+  foot(c){
+    return '<footer class="shrink-0 p-3 sm:px-5 sm:py-3.5 border-t border-line/80 bg-white flex items-center gap-2 flex-wrap">'+
+      '<button data-act="flag" class="h-10 px-3 rounded-xl border border-line text-[12.5px] font-bold text-ink-soft hover:bg-canvas inline-flex items-center gap-1.5 transition-colors"><i data-lucide="flag" class="w-4 h-4"></i><span class="hidden sm:inline">'+(c.flagged?'Lepas prioritas':'Tandai prioritas')+'</span></button>'+
+      '<button data-act="schedule" class="h-10 px-3 rounded-xl border border-line text-[12.5px] font-bold text-ink-soft hover:bg-canvas inline-flex items-center gap-1.5 transition-colors"><i data-lucide="calendar-clock" class="w-4 h-4"></i><span class="hidden sm:inline">Jadwalkan sesi</span></button>'+
+      '<div class="flex-1"></div>'+
+      '<button data-act="reject" class="h-10 px-3.5 rounded-xl border border-rosex/35 text-rosex text-[12.5px] font-bold hover:bg-rosex/8 inline-flex items-center gap-1.5 transition-colors"><i data-lucide="user-x" class="w-4 h-4"></i>Tolak</button>'+
+      '<button data-act="offer" class="h-10 px-4 rounded-xl bg-teal text-white text-[12.5px] font-bold hover:bg-teal/90 active:scale-[.98] inline-flex items-center gap-1.5 shadow-card hover:shadow-lift transition-all"><i data-lucide="send" class="w-4 h-4"></i>Kirim offer</button>'+
+      '<button data-act="archive" title="Arsipkan profil" class="w-10 h-10 grid place-items-center rounded-xl border border-line text-ink-mute hover:text-rosex hover:border-rosex/40 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>'+
+    '</footer>';
+  },
+  paint(c){
+    const pills = document.getElementById('stagePills');
+    if (!pills) return;
+    pills.innerHTML = STAGES.map(s => {
+      const on = s.key === c.stage;
+      return '<button data-stage-to="'+s.key+'" class="shrink-0 h-8 px-2.5 rounded-lg text-[11.5px] font-bold inline-flex items-center gap-1.5 transition-all '+(on?'text-white shadow-card':'text-ink-mute hover:text-ink')+'" style="'+(on?'background:'+s.accent:'')+'">'+
+        (on?'<i data-lucide="'+s.icon+'" class="w-3.5 h-3.5"></i>':'')+s.name+'</button>';
+    }).join('');
+    pills.querySelectorAll('[data-stage-to]').forEach(b => b.onclick = () => {
+      if (b.dataset.stageTo === c.stage) return;
+      Pipeline.moveTo(c.id, b.dataset.stageTo, { via:'modal' });
+      this.paint(c); this.buildRadar();
+    });
+    /* sliders */
+    const sl = document.getElementById('sliders');
+    sl.innerHTML = CRITERIA.map(k => {
+      const v = c.scores[k.k] ?? 60;
+      return '<label class="block" data-slider="'+k.k+'">'+
+        '<span class="flex items-center justify-between text-[12px] font-semibold text-ink-soft">'+k.label+
+          '<span class="text-[10px] font-mono text-ink-mute ml-1">×'+Math.round(k.w*100)+'%</span>'+
+          '<b class="ml-2 text-[13px] font-mono text-ink">'+v+'</b></span>'+
+        '<input type="range" min="1" max="100" value="'+v+'" data-crit="'+k.k+'" style="--acc:'+stageOf(c.stage).accent+'" /></label>';
+    }).join('');
+    sl.querySelectorAll('input[type=range]').forEach(inp => {
+      const sync = () => inp.style.setProperty('--p', inp.value+'%');
+      sync();
+      inp.addEventListener('input', () => {
+        sync();
+        const key = inp.dataset.crit;
+        Pipeline.setScore(c.id, key, Number(inp.value));
+        inp.closest('[data-slider]').querySelector('b').textContent = inp.value;
+        const badge = document.getElementById('compBadge');
+        if (badge) badge.textContent = composite(c) + ' / 100';
+        Charts.radarUpdate(c);
+      });
+      inp.addEventListener('change', () => Pipeline.saveScores(c.id));
+    });
+    this.renderNotes(c);
+    icons();
+  },
+  renderNotes(c){
+    const box = document.getElementById('notes'); if (!box) return;
+    const ns = c.notes || [];
+    document.getElementById('noteCount').textContent = ns.length ? '('+ns.length+')' : '';
+    box.innerHTML = ns.length ? ns.map(n =>
+      '<div class="fade-up flex gap-2.5 p-2.5 rounded-xl border border-line/80 bg-canvas/40 hover:bg-canvas transition-colors">'+
+        '<span class="w-7 h-7 rounded-lg grid place-items-center text-[10px] font-bold text-white shrink-0" style="background:'+stageOf(c.stage).accent+'">'+esc(n.initials||'?')+'</span>'+
+        '<div class="min-w-0 flex-1">'+
+          '<div class="flex items-center gap-2"><p class="text-[12px] font-bold">'+esc(n.who)+'</p>'+
+          '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md '+(n.rating>=80?'bg-teal/10 text-teal':(n.rating>=65?'bg-amberx/12 text-amberx':'bg-rosex/10 text-rosex'))+'">'+n.rating+'/100</span>'+
+          '<span class="text-[10px] font-mono text-ink-mute ml-auto">'+relTime(n.at)+'</span></div>'+
+          '<p class="text-[12px] text-ink-soft mt-1 leading-relaxed">'+esc(n.text)+'</p>'+
+        '</div>'+
+        '<button data-del-note="'+n.id+'" class="w-7 h-7 grid place-items-center rounded-lg text-ink-mute hover:text-rosex hover:bg-white shrink-0 transition-colors"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>'+
+      '</div>').join('')
+      : '<div class="rounded-xl border border-dashed border-line p-4 text-center"><p class="text-[12px] text-ink-mute">Belum ada catatan. Hasil wawancara akan muncul di sini.</p></div>';
+    box.querySelectorAll('[data-del-note]').forEach(b => b.onclick = () => Pipeline.delNote(c.id, b.dataset.delNote));
+    const ta = document.getElementById('noteText'), rate = document.getElementById('noteRate'), rv = document.getElementById('noteRateVal');
+    if (rate){ rate.style.setProperty('--p', rate.value+'%'); rate.oninput = () => { rate.style.setProperty('--p', rate.value+'%'); rv.textContent = rate.value; }; }
+    document.getElementById('noteAdd').onclick = () => {
+      const txt = ta.value.trim();
+      if (!txt){ ta.focus(); ta.style.transition='box-shadow .2s'; ta.style.boxShadow='0 0 0 3px rgba(178,58,72,.22)'; setTimeout(()=>ta.style.boxShadow='',700); Toast.show('Tuliskan catatan sebelum menyimpan.', { type:'warn', title:'Catatan kosong' }); return; }
+      Pipeline.addNote(c.id, txt, rate.value);
+      ta.value = '';
+    };
+    /* footer actions */
+    const panel = document.getElementById('candPanel');
+    panel.querySelectorAll('[data-act]').forEach(b => {
+      const a = b.dataset.act;
+      b.onclick = () => {
+        if (a === 'flag') Pipeline.toggleFlag(c.id);
+        if (a === 'download') Toast.show('Menyiapkan '+c.name+'.pdf (1,2 MB) untuk unduhan.', { type:'info', title:'Ekspor CV' });
+        if (a === 'schedule') Toast.show('Kalender panel teknis '+c.name.split(' ')[0]+' dikirim ke 3 interviewer.', { type:'ok', title:'Sesi dijadwalkan' });
+        if (a === 'archive') Confirm.open({ title:'Arsipkan profil '+c.name+'?', body:'Profil akan dikeluarkan dari board. Tindakan ini bisa dibatalkan lewat notifikasi Undo.', confirmText:'Arsipkan', danger:true,
+          onConfirm: () => { this.close(); Pipeline.archive(c.id); } });
+        if (a === 'offer') Confirm.open({ title:'Kirim offer untuk '+c.name+'?', body:'Offer Rp'+c.salary+'jt/bulan akan dikirim via e-mail + portal kandidat, dan kandidat berpindah ke tahap Offered.', confirmText:'Kirim offer',
+          onConfirm: () => { Candidate.close(); Pipeline.moveTo(c.id,'offered',{via:'offer'}); } });
+        if (a === 'reject') Confirm.open({ title:'Tolak '+c.name+'?', body:'Kandidat dipindahkan ke kolom Rejected dan alasan akan dicatat pada log aktivitas.', confirmText:'Tolak kandidat', danger:true,
+          onConfirm: () => Pipeline.moveTo(c.id,'rejected',0,{via:'reject'}) });
+      };
+    });
+    icons();
+  },
+  wire(){},
+  buildRadar(){
+    const cv = document.getElementById('chRadar'); if (!cv || !window.Chart) return;
+    const c = this.c; const st = stageOf(c.stage);
+    if (Charts.reg.radar) Charts.reg.radar.destroy();
+    Charts.reg.radar = new Chart(cv, {
+      type:'radar',
+      data:{ labels:['Teknis','Komunikasi','Problem','Culture'],
+        datasets:[
+          { label:'Kandidat', data:CRITERIA.map(k=>c.scores[k.k]??60), backgroundColor:st.accent+'26', borderColor:st.accent, pointBackgroundColor:st.accent, borderWidth:2, pointRadius:3 },
+          { label:'Baris req', data:[80,75,78,72], backgroundColor:'rgba(90,107,132,.06)', borderColor:'rgba(90,107,132,.55)', borderWidth:1.5, borderDash:[4,4], pointRadius:0 },
+        ]},
+      options:{ responsive:true, maintainAspectRatio:false, animation:{ duration:500 },
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, font:{ family:'IBM Plex Mono', size:10 }, color:'#6C7D92' } } },
+        scales:{ r:{ min:0, max:100, ticks:{ display:false, stepSize:25 }, grid:{ color:'rgba(12,21,34,.08)' }, angleLines:{ color:'rgba(12,21,34,.08)' },
+          pointLabels:{ font:{ family:'Plus Jakarta Sans', size:11, weight:'700' }, color:'#33455C' } } } }
+    });
+  },
+  openNew(stageKey){
+    const root = document.getElementById('modalRoot');
+    root.classList.remove('hidden');
+    root.className = 'fixed inset-0 z-[90] flex items-end sm:items-center justify-center sm:p-5';
+    root.innerHTML =
+      '<div data-back class="absolute inset-0 bg-shell/60 backdrop-blur-[3px] opacity-0 transition-opacity duration-200"></div>'+
+      '<form id="newForm" class="pop-in relative w-full max-w-[560px] bg-surf sm:rounded-[20px] shadow-modal border border-line/70 overflow-hidden">'+
+        '<div class="p-4 sm:p-5 border-b border-line/80 flex items-start gap-3">'+
+          '<span class="w-10 h-10 rounded-xl bg-ink text-white grid place-items-center shrink-0"><i data-lucide="user-plus" class="w-5 h-5"></i></span>'+
+          '<div class="flex-1 min-w-0"><h2 class="font-display text-[19px] font-bold tracking-tight leading-none">Kandidat baru</h2>'+
+          '<p class="text-[12px] text-ink-mute mt-1">Akan masuk ke tahap <b class="text-ink">'+esc(stageOf(stageKey||'applied').name)+'</b> dan tersimpan di localStorage.</p></div>'+
+          '<button type="button" data-x class="w-9 h-9 grid place-items-center rounded-xl border border-line hover:bg-canvas transition-colors"><i data-lucide="x" class="w-[18px] h-[18px]"></i></button>'+
+        '</div>'+
+        '<div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">'+
+          '<label class="sm:col-span-2"><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Nama lengkap</span>'+
+            '<input required name="name" placeholder="cth. Bima Santosa" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] focus:outline-none focus:border-teal focus:ring-4 focus:ring-teal/12 transition-shadow" /></label>'+
+          '<label class="sm:col-span-2"><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Posisi yang dilamar</span>'+
+            '<input required name="role" placeholder="cth. Senior Backend Engineer" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] focus:outline-none focus:border-teal" /></label>'+
+          '<label><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Divisi</span>'+
+            '<select name="division" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] bg-white focus:outline-none focus:border-teal">'+DIVISIONS.slice(1).map(d=>'<option>'+d.name+'</option>').join('')+'</select></label>'+
+          '<label><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Sumber</span>'+
+            '<select name="source" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] bg-white focus:outline-none focus:border-teal">'+['LinkedIn','Referral','JobStreet','Glints','Behance'].map(s=>'<option>'+s+'</option>').join('')+'</select></label>'+
+          '<label><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Pengalaman (tahun)</span>'+
+            '<input name="exp" type="number" min="0" max="25" value="4" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] focus:outline-none focus:border-teal" /></label>'+
+          '<label><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Ekspektasi gaji (jt/bln)</span>'+
+            '<input name="salary" type="number" min="5" max="120" value="25" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] focus:outline-none focus:border-teal" /></label>'+
+          '<label class="sm:col-span-2"><span class="text-[10.5px] font-mono uppercase tracking-widest text-ink-mute">Keahlian (pisahkan dengan koma)</span>'+
+            '<input name="skills" placeholder="React, Node.js, AWS" class="mt-1 w-full h-10 px-3 rounded-xl border border-line text-[13px] focus:outline-none focus:border-teal" /></label>'+
+        '</div>'+
+        '<div class="p-4 sm:px-5 sm:py-4 border-t border-line/80 flex gap-2 justify-end bg-canvas/50">'+
+          '<button type="button" data-x class="h-10 px-4 rounded-xl border border-line bg-white text-[13px] font-bold text-ink-soft hover:bg-canvas transition-colors">Batal</button>'+
+          '<button type="submit" class="h-10 px-4 rounded-xl bg-ink text-white text-[13px] font-bold hover:bg-ink/90 active:scale-[.98] transition-all">Simpan kandidat</button>'+
+        '</div>'+
+      '</form>';
+    icons();
+    requestAnimationFrame(() => { const b = root.querySelector('[data-back]'); if (b) b.style.opacity = 1; });
+    const close = () => { root.classList.add('hidden'); root.innerHTML=''; };
+    root.querySelectorAll('[data-x],[data-back]').forEach(b => b.onclick = close);
+    root.querySelector('#newForm').onsubmit = e => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const c = Pipeline.create({
+        name:f.get('name').trim(), role:f.get('role').trim(), division:f.get('division'),
+        source:f.get('source'), exp:Number(f.get('exp'))||0, salary:Number(f.get('salary'))||20,
+        skills:String(f.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean).slice(0,5),
+        company:''
+      });
+      if (stageKey && stageKey !== 'applied') { c.stage = stageKey; Store.persist(); Render.board(); }
+      close();
+      setTimeout(() => UI.openCandidate(c.id), 260);
+    };
+  }
+};
+
+/* stage-level gentle guidance after key moves */
+Confirm.afterStage = function(c, stage){
+  if (stage === 'offered') Toast.show('Approval HRBP otomatis diminta untuk offer '+c.name+'.', { type:'info', title:'Alur persetujuan dimulai' });
+  if (stage === 'rejected') Toast.show('Surat penolakan sopan disiapkan di draf e-mail.', { type:'warn', title:'Follow-up tersedia' });
+};
+
+/* ── 11. Charts (analytics) with cleanup ──────────────────────── */
+const Charts = {
+  reg:{},
+  radarDestroy(){ if (this.reg.radar){ this.reg.radar.destroy(); this.reg.radar = null; } },
+  radarUpdate(c){
+    const ch = this.reg.radar; if (!ch) return;
+    ch.data.datasets[0].data = CRITERIA.map(k => c.scores[k.k] ?? 60);
+    const st = stageOf(c.stage);
+    ch.data.datasets[0].borderColor = st.accent;
+    ch.data.datasets[0].backgroundColor = st.accent + '26';
+    ch.data.datasets[0].pointBackgroundColor = st.accent;
+    ch.update();
+  },
+  destroy(){ Object.keys(this.reg).forEach(k => { if (k!=='radar' && this.reg[k]){ this.reg[k].destroy(); this.reg[k] = null; } }); },
+  build(){
+    if (!window.Chart) return;
+    this.destroy();
+    const cs = Store.state.candidates;
+    const grid = { color:'rgba(255,255,255,.08)' };
+    const font = { family:'Plus Jakarta Sans', size:11 };
+
+    const dCv = document.getElementById('chDoughnut');
+    if (dCv) this.reg.doughnut = new Chart(dCv, {
+      type:'doughnut',
+      data:{ labels:STAGES.map(s=>s.name), datasets:[{ data:STAGES.map(s=>cs.filter(c=>c.stage===s.key).length),
+        backgroundColor:STAGES.map(s=>s.accent), borderColor:'#fff', borderWidth:3, hoverOffset:10 }] },
+      options:{ responsive:true, maintainAspectRatio:false, cutout:'62%',
+        plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label: ctx => ' '+ctx.parsed+' kandidat ('+Math.round(ctx.parsed/cs.length*100)+'%)' } } } }
+    });
+
+    const divCv = document.getElementById('chDivision');
+    if (divCv) this.reg.division = new Chart(divCv, {
+      type:'bar',
+      data:{ labels:DIVISIONS.slice(1).map(d=>d.key), datasets:CRITERIA.slice(0,2).map((k,i)=>({
+        label:k.label, data:DIVISIONS.slice(1).map(d => { const l = cs.filter(c=>c.division===d.key); return l.length? Math.round(l.reduce((a,c)=>a+(c.scores[k.k]||60),0)/l.length):0; }),
+        backgroundColor:i? 'rgba(240,200,128,.85)':'rgba(94,209,190,.85)', borderRadius:6, barPercentage:.7 }) ) },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, color:'rgba(255,255,255,.6)', font:{ family:'IBM Plex Mono', size:10 } } } },
+        scales:{ x:{ grid:{ display:false }, ticks:{ color:'rgba(255,255,255,.55)', font } }, y:{ min:40, max:100, grid, ticks:{ color:'rgba(255,255,255,.4)', font } } } }
+    });
+
+    const tCv = document.getElementById('chTrend');
+    if (tCv){
+      const ctx = tCv.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,0,200); g.addColorStop(0,'rgba(14,124,107,.28)'); g.addColorStop(1,'rgba(14,124,107,0)');
+      this.reg.trend = new Chart(tCv, {
+        type:'line',
+        data:{ labels:['P-7','P-6','P-5','P-4','P-3','P-2','P-1','Pekan ini'],
+          datasets:[{ data:[12,18,15,24,31,27,38,44], borderColor:'#0E7C6B', backgroundColor:g, fill:true, tension:.38, borderWidth:2.5,
+            pointRadius:3, pointBackgroundColor:'#fff', pointBorderColor:'#0E7C6B', pointBorderWidth:2, pointHoverRadius:6 }] },
+        options:{ responsive:true, maintainAspectRatio:false,
+          plugins:{ legend:{ display:false } },
+          scales:{ x:{ grid:{ display:false }, ticks:{ color:'#6C7D92', font } }, y:{ grid, border:{ display:false }, ticks:{ color:'#6C7D92', font } } } }
+      });
+    }
+
+    /* funnel + skills (CSS, animated) */
+    const total = cs.length || 1;
+    let acc = total;
+    document.getElementById('funnelBars').innerHTML = STAGES.filter(s=>s.key!=='rejected').map((s,i,arr) => {
+      const n = cs.filter(c=>c.stage===s.key).length;
+      const pct = Math.round(n/total*100);
+      return '<div><div class="flex items-baseline justify-between text-[12px]"><span class="font-semibold">'+s.name+'</span>'+
+        '<span class="font-mono text-[11px] text-ink-mute">'+n+' · '+pct+'%</span></div>'+
+        '<div class="h-2 rounded-full bg-canvas mt-1.5 overflow-hidden"><div class="h-full rounded-full bar-fill" style="width:'+pct+'%;background:'+s.accent+';transition-delay:'+(i*90)+'ms"></div></div></div>';
+    }).join('') + (() => {
+      const rj = cs.filter(c=>c.stage==='rejected').length;
+      const pr = Math.round((1 - rj/total)*100);
+      document.getElementById('anPass').textContent = pr + '%';
+      document.getElementById('anDrop').textContent = Math.round(cs.filter(c=>c.stage==='screening'||c.stage==='applied').length/total*100) + '%';
+      return '';
+    })();
+
+    const counts = {};
+    cs.forEach(c => (c.skills||[]).forEach(s => counts[s] = (counts[s]||0)+1));
+    const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const mx = Math.max(1, ...top.map(t=>t[1]));
+    document.getElementById('skillBars').innerHTML = top.map(([s,n],i) =>
+      '<div class="flex items-center gap-2.5"><span class="text-[12px] font-semibold w-[104px] shrink-0 truncate">'+esc(s)+'</span>'+
+      '<span class="flex-1 h-2 rounded-full bg-canvas overflow-hidden"><span class="block h-full rounded-full bar-fill" style="width:'+Math.round(n/mx*100)+'%;background:linear-gradient(90deg,#0E7C6B,#1F6F9B);transition-delay:'+(i*70)+'ms"></span></span>'+
+      '<span class="text-[11px] font-mono text-ink-mute w-4 text-right">'+n+'</span></div>').join('');
+  }
+};
+
+/* ── 12. Wiring ──────────────────────────────────────────────── */
+const openNav  = () => { const s=document.getElementById('sidebar'); s.classList.remove('-translate-x-full','lg:translate-x-0'); document.getElementById('navScrim').classList.remove('opacity-0','pointer-events-none'); };
+const closeNav = () => { const s=document.getElementById('sidebar'); if (window.innerWidth < 1024) s.classList.add('-translate-x-full'); s.classList.add('lg:translate-x-0'); document.getElementById('navScrim').classList.add('opacity-0','pointer-events-none'); };
+const openSignal  = () => { document.getElementById('signal').classList.remove('translate-x-full'); const sc=document.getElementById('signalScrim'); sc.classList.remove('opacity-0','pointer-events-none'); };
+const closeSignal = () => { document.getElementById('signal').classList.add('translate-x-full'); const sc=document.getElementById('signalScrim'); sc.classList.add('opacity-0','pointer-events-none'); };
+
+document.getElementById('navOpen').onclick  = openNav;
+document.getElementById('navClose').onclick = closeNav;
+document.getElementById('navScrim').onclick = closeNav;
+document.getElementById('signalBtn').onclick = () => document.getElementById('signal').classList.contains('translate-x-full') ? openSignal() : closeSignal();
+document.getElementById('signalScrim').onclick = closeSignal;
+document.getElementById('clearLog').onclick = () => { Store.state.activity = []; Store.persist(); Render.signal(); Toast.show('Log aktivitas dibersihkan.', { type:'warn', title:'Log dibersihkan' }); };
+document.querySelectorAll('[data-view-btn]').forEach(b => b.onclick = () => UI.setView(b.dataset.viewBtn));
+
+/* filters */
+document.getElementById('divChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-div]'); if (!b) return;
+  Store.state.filters.division = b.dataset.div; Store.persist(); Render.board();
+});
+document.getElementById('railDivisions').addEventListener('click', e => {
+  const b = e.target.closest('[data-div]'); if (!b) return;
+  const cur = Store.state.filters.division;
+  Store.state.filters.division = cur === b.dataset.div ? 'all' : b.dataset.div;
+  Store.persist(); UI.setView('pipeline'); Render.board();
+});
+const setQ = v => { Store.state.filters.q = v; Render.board(); };
+document.getElementById('search').addEventListener('input', e => { document.getElementById('searchM').value = e.target.value; setQ(e.target.value); });
+document.getElementById('searchM').addEventListener('input', e => { document.getElementById('search').value = e.target.value; setQ(e.target.value); });
+document.getElementById('sortSel').addEventListener('change', e => { Store.state.filters.sort = e.target.value; Render.board(); });
+document.getElementById('flagToggle').addEventListener('click', e => {
+  Store.state.filters.flaggedOnly = !Store.state.filters.flaggedOnly;
+  e.currentTarget.classList.toggle('bg-rosex', Store.state.filters.flaggedOnly);
+  e.currentTarget.classList.toggle('text-white', Store.state.filters.flaggedOnly);
+  e.currentTarget.classList.toggle('border-rosex', Store.state.filters.flaggedOnly);
+  Render.board();
+});
+document.getElementById('clearFilters').addEventListener('click', () => {
+  Store.state.filters = { division:'all', q:'', sort:'manual', flaggedOnly:false };
+  document.getElementById('search').value=''; document.getElementById('searchM').value='';
+  document.getElementById('sortSel').value='manual';
+  const ft = document.getElementById('flagToggle'); ft.classList.remove('bg-rosex','text-white','border-rosex');
+  Store.persist(); Render.board();
+  Toast.show('Filter direset — seluruh pipeline ditampilkan.', { type:'info', title:'Filter dibersihkan' });
+});
+document.getElementById('addCand').onclick = () => Candidate.openNew('applied');
+document.getElementById('resetDemo').onclick = () => Confirm.open({
+  title:'Reset data demo?', body:'Seluruh perubahan tahap, skor, dan catatan akan dikembalikan ke 18 kandidat bawaan. localStorage dibersihkan.',
+  confirmText:'Reset sekarang', danger:true,
+  onConfirm: () => { Store.reset(); Render.all(); Toast.show('18 kandidat bawaan dimuat ulang.', { type:'warn', title:'Data demo direset' }); }
+});
+
+/* keyboard */
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); (document.getElementById('search').offsetParent ? document.getElementById('search') : document.getElementById('searchM')).focus(); }
+  if (e.key === 'Escape'){ if (!document.getElementById('confirmRoot').classList.contains('hidden')) Confirm.close(); else if (!document.getElementById('modalRoot').classList.contains('hidden')) Candidate.close(); else closeSignal(); }
+  if (Store.state.view === 'pipeline' && !e.target.matches('input,textarea,select') && (e.key === 'ArrowRight' || e.key === 'ArrowLeft') && Store.state.activeId){
+    const c = Store.find(Store.state.activeId); const i = STAGES.findIndex(s=>s.key===c.stage) + (e.key==='ArrowRight'?1:-1);
+    if (STAGES[i]) Pipeline.moveTo(c.id, STAGES[i].key, { via:'keyboard' });
+  }
+});
+
+/* sync pulse */
+function pulseSync(){
+  const bar = document.getElementById('syncBar'); if (!bar) return;
+  bar.style.transition='none'; bar.style.height='3px'; bar.style.transform='translateX(-100%)';
+  requestAnimationFrame(() => { bar.style.transition='transform .8s cubic-bezier(.3,.8,.3,1)'; bar.style.transform='translateX(320%)'; setTimeout(()=>{ bar.style.height='0'; },820); });
+}
+setInterval(() => { if (!document.hidden) { pulseSync(); Render.signal(); } }, 28000);
+
+/* ── 13. Boot ────────────────────────────────────────────────── */
+(function boot(){
+  Store.load();
+  Store.state.filters.sort && (document.getElementById('sortSel').value = Store.state.filters.sort);
+  if (Store.state.filters.flaggedOnly) document.getElementById('flagToggle').classList.add('bg-rosex','text-white','border-rosex');
+  Render.all();
+  UI.setView('pipeline');
+  icons();
+  const msgs = ['Menyambungkan ATS gateway…','Memuat 18 profil kandidat…','Menyelaraskan board & SLA…','Siap.'];
+  const bar = document.getElementById('bootBar'), msg = document.getElementById('bootMsg');
+  msgs.forEach((m,i) => setTimeout(() => { if (msg) msg.textContent = m; if (bar) bar.style.width = ((i+1)/msgs.length*100)+'%'; }, i*220));
+  setTimeout(() => {
+    const b = document.getElementById('boot');
+    b.style.opacity = '0'; b.style.pointerEvents = 'none';
+    setTimeout(()=>b.remove(), 520);
+    pulseSync();
+    Toast.show('Board pipeline siap. Ubah tahap dengan drag & drop — semua perubahan tersimpan otomatis.', { type:'ok', title:'NovaNext HR·OS dimuat', ms:5200 });
+  }, 980);
+})();
+</script>
+</body>
+</html>

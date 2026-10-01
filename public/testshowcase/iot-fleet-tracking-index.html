@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+<title>NovaTrack IoT · Fleet Tracking &amp; Warehouse Dashboard</title>
+<meta name="description" content="Demo prototype dashboard IoT untuk pelacakan armada real-time dan monitoring inventaris gudang. Built by NovaNext." />
+
+<!-- Dependencies -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+        colors: {
+          ink: { 950:'#05080f', 900:'#080d18', 850:'#0b1220', 800:'#0f172a', 700:'#16203a', 600:'#1e2a4a' },
+          neon: { cyan:'#22d3ee', lime:'#a3e635', rose:'#fb7185', amber:'#fbbf24', violet:'#a78bfa' }
+        },
+        boxShadow: {
+          glow: '0 0 0 1px rgba(34,211,238,.25), 0 12px 40px -12px rgba(34,211,238,.45)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body { background:#05080f; font-family:'Inter',system-ui,sans-serif; overflow-x:hidden; }
+  body::before{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(900px 500px at 12% -10%, rgba(34,211,238,.13), transparent 60%),
+      radial-gradient(700px 420px at 88% 0%, rgba(167,139,250,.12), transparent 60%),
+      radial-gradient(800px 500px at 50% 110%, rgba(16,185,129,.08), transparent 60%);
+  }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:#080d18; }
+  ::-webkit-scrollbar-thumb{ background:#1e2a4a; border-radius:99px; }
+  ::-webkit-scrollbar-thumb:hover{ background:#2c3c66; }
+
+  .glass{ background:linear-gradient(160deg, rgba(15,23,42,.86), rgba(8,13,24,.92)); backdrop-filter: blur(14px); border:1px solid rgba(148,163,184,.13); }
+  .card-hover{ transition: transform .28s cubic-bezier(.2,.8,.2,1), border-color .28s, box-shadow .28s; }
+  .card-hover:hover{ transform: translateY(-3px); border-color: rgba(34,211,238,.45); box-shadow:0 18px 40px -20px rgba(34,211,238,.55); }
+
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none} }
+  @keyframes slideIn{ from{opacity:0; transform:translateX(40px) scale(.96)} to{opacity:1; transform:none} }
+  @keyframes popIn{ from{opacity:0; transform:scale(.92) translateY(10px)} to{opacity:1; transform:none} }
+  @keyframes pulseRing{ 0%{ box-shadow:0 0 0 0 rgba(34,211,238,.55) } 70%{ box-shadow:0 0 0 12px rgba(34,211,238,0) } 100%{ box-shadow:0 0 0 0 rgba(34,211,238,0) } }
+  @keyframes sweep{ from{ transform:translateX(-100%) } to{ transform:translateX(320%) } }
+  @keyframes blink{ 0%,100%{opacity:1} 50%{opacity:.25} }
+  @keyframes spinSlow{ to{ transform:rotate(360deg) } }
+  @keyframes floatY{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-5px) } }
+
+  .anim-fade{ animation: fadeUp .45s cubic-bezier(.2,.8,.2,1) both; }
+  .anim-slide{ animation: slideIn .38s cubic-bezier(.2,.8,.2,1) both; }
+  .anim-pop{ animation: popIn .3s cubic-bezier(.2,.8,.2,1) both; }
+  .blink{ animation: blink 1.6s ease-in-out infinite; }
+
+  /* Leaflet */
+  #map{ width:100%; height:100%; background:#05070d; z-index:0; }
+  .leaflet-container{ font-family:'Inter',sans-serif; background:#05070d; }
+  .leaflet-control-attribution{ background:rgba(5,8,15,.75)!important; color:#475569!important; font-size:9px!important; }
+  .leaflet-control-attribution a{ color:#64748b!important; }
+  .leaflet-bar, .leaflet-bar a{ background:#0f172a!important; color:#94a3b8!important; border-color:#1e2a4a!important; }
+  .leaflet-bar a:hover{ color:#22d3ee!important; }
+  .leaflet-popup-content-wrapper{ background:#0b1220; color:#e2e8f0; border:1px solid rgba(34,211,238,.3); border-radius:14px; box-shadow:0 20px 50px -20px rgba(0,0,0,.9); }
+  .leaflet-popup-tip{ background:#0b1220; border:1px solid rgba(34,211,238,.3); }
+  .leaflet-popup-content{ margin:12px 14px; font-size:12px; }
+  .leaflet-popup-close-button{ color:#64748b!important; }
+
+  .veh-marker{ position:relative; width:38px; height:38px; }
+  .veh-pulse{ position:absolute; inset:-6px; border-radius:999px; opacity:.55; }
+  .veh-core{
+    position:absolute; inset:4px; border-radius:11px; display:grid; place-items:center;
+    border:1.5px solid rgba(255,255,255,.35); box-shadow:0 6px 18px -6px rgba(0,0,0,.9);
+    transition: background .4s;
+  }
+  .veh-core svg{ width:16px; height:16px; transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  .veh-tag{
+    position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:.4px;
+    background:rgba(5,8,15,.92); border:1px solid rgba(148,163,184,.25); color:#cbd5e1;
+    padding:1px 5px; border-radius:5px; white-space:nowrap;
+  }
+  .st-moving .veh-core{ background:linear-gradient(150deg,#0891b2,#22d3ee); }
+  .st-moving .veh-pulse{ background:radial-gradient(circle, rgba(34,211,238,.55), transparent 70%); animation:pulseRing 2s infinite; }
+  .st-idle .veh-core{ background:linear-gradient(150deg,#b45309,#fbbf24); }
+  .st-idle .veh-pulse{ background:radial-gradient(circle, rgba(251,191,36,.45), transparent 70%); }
+  .st-maintenance .veh-core{ background:linear-gradient(150deg,#be123c,#fb7185); }
+  .st-maintenance .veh-pulse{ background:radial-gradient(circle, rgba(251,113,133,.5), transparent 70%); animation:pulseRing 1.3s infinite; }
+  .veh-marker.sel .veh-core{ border-color:#fff; box-shadow:0 0 0 3px rgba(255,255,255,.35), 0 8px 20px -6px rgba(0,0,0,.9); }
+  .route-line{ filter: drop-shadow(0 0 6px rgba(34,211,238,.55)); }
+
+  .bar-fill{ transition: width .8s cubic-bezier(.2,.8,.2,1), height .8s cubic-bezier(.2,.8,.2,1), background .4s; }
+  .zone-fill{ background-size:100% 200%; animation: zoneShift 4s ease infinite; }
+  @keyframes zoneShift{ 0%,100%{ background-position:50% 0% } 50%{ background-position:50% 100% } }
+  .sweep-line::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(34,211,238,.18), transparent); animation:sweep 3.4s linear infinite; }
+  .view{ display:none; }
+  .view.active{ display:block; animation: fadeUp .45s cubic-bezier(.2,.8,.2,1) both; }
+  .tab-active{ color:#22d3ee; background:linear-gradient(160deg, rgba(34,211,238,.16), rgba(34,211,238,.04)); border-color:rgba(34,211,238,.4); }
+  .rail-item.active{ color:#22d3ee; background:rgba(34,211,238,.14); }
+  .noise{ background-image:linear-gradient(rgba(148,163,184,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.05) 1px, transparent 1px); background-size:26px 26px; }
+  .row-in{ animation: fadeUp .4s both; }
+  @media (max-width: 640px){ .veh-marker{ transform:scale(.92) } }
+</style>
+</head>
+
+<body class="text-slate-300 antialiased">
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="sticky top-0 z-[900] glass border-b border-slate-800/70">
+  <div class="max-w-[1700px] mx-auto px-3 sm:px-5 h-16 flex items-center gap-3">
+    <button id="btnDrawer" class="lg:hidden p-2 -ml-1 rounded-xl border border-slate-700/70 hover:border-cyan-500/60 hover:text-cyan-300 transition">
+      <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+
+    <div class="flex items-center gap-2.5 shrink-0">
+      <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 via-sky-500 to-violet-500 grid place-items-center shadow-glow">
+        <i data-lucide="satellite-dish" class="w-5 h-5 text-ink-950"></i>
+        <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-lime-400 border-2 border-ink-900 blink"></span>
+      </div>
+      <div class="leading-tight">
+        <h1 class="font-display font-extrabold text-[15px] sm:text-base tracking-tight text-white">Nova<span class="text-cyan-400">Track</span> <span class="text-slate-500 font-semibold text-[11px] hidden sm:inline">IoT Suite</span></h1>
+        <p class="text-[10px] text-slate-500 font-mono hidden sm:block">FLEET OPS · CONTROL CENTER v2.4</p>
+      </div>
+    </div>
+
+    <!-- Desktop tabs -->
+    <nav class="hidden lg:flex items-center gap-1 ml-4" id="tabBar">
+      <button data-tab="map" class="tab-btn px-3.5 py-2 rounded-xl text-[13px] font-semibold border border-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition flex items-center gap-2"><i data-lucide="map" class="w-4 h-4"></i>Live Map</button>
+      <button data-tab="fleet" class="tab-btn px-3.5 py-2 rounded-xl text-[13px] font-semibold border border-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition flex items-center gap-2"><i data-lucide="truck" class="w-4 h-4"></i>Armada</button>
+      <button data-tab="warehouse" class="tab-btn px-3.5 py-2 rounded-xl text-[13px] font-semibold border border-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition flex items-center gap-2"><i data-lucide="warehouse" class="w-4 h-4"></i>Gudang</button>
+      <button data-tab="incidents" class="tab-btn px-3.5 py-2 rounded-xl text-[13px] font-semibold border border-transparent text-slate-400 hover:text-slate-100 hover:bg-slate-800/60 transition flex items-center gap-2"><i data-lucide="siren" class="w-4 h-4"></i>Insiden <span id="tabIncBadge" class="ml-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-bold">0</span></button>
+    </nav>
+
+    <div class="flex-1"></div>
+
+    <div class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-slate-700/60 bg-ink-850/70">
+      <span class="w-1.5 h-1.5 rounded-full bg-lime-400 blink"></span>
+      <span class="font-mono text-[11px] text-slate-400" id="clock">--:--:--</span>
+    </div>
+
+    <div class="hidden sm:flex items-center gap-1.5 pl-2.5 border-l border-slate-700/60">
+      <span class="w-6 h-6 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 grid place-items-center text-[10px] font-bold text-ink-950">NN</span>
+      <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 leading-tight">Demo Prototype<br><span class="text-cyan-400">by NovaNext</span></span>
+    </div>
+    <div class="sm:hidden text-[9px] font-bold uppercase text-cyan-400 border border-cyan-500/40 rounded-lg px-1.5 py-1">NovaNext</div>
+  </div>
+  <div class="h-[2px] bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent"></div>
+</header>
+
+<!-- ══════════ DRAWER ══════════ -->
+<div id="drawerOverlay" class="fixed inset-0 z-[990] bg-ink-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+<aside id="drawer" class="fixed z-[995] top-0 left-0 h-full w-[264px] glass border-r border-slate-800 -translate-x-full transition-transform duration-300 lg:hidden p-4 overflow-y-auto">
+  <div class="flex items-center justify-between mb-5">
+    <span class="font-display font-bold text-white">Navigasi</span>
+    <button id="btnCloseDrawer" class="p-1.5 rounded-lg hover:bg-slate-800"><i data-lucide="x" class="w-4 h-4"></i></button>
+  </div>
+  <div id="drawerNav" class="space-y-1.5">
+    <button data-tab="map" class="tab-btn rail-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800/70 transition"><i data-lucide="map" class="w-4 h-4"></i>Live Map</button>
+    <button data-tab="fleet" class="tab-btn rail-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800/70 transition"><i data-lucide="truck" class="w-4 h-4"></i>Armada</button>
+    <button data-tab="warehouse" class="tab-btn rail-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800/70 transition"><i data-lucide="warehouse" class="w-4 h-4"></i>Gudang</button>
+    <button data-tab="incidents" class="tab-btn rail-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800/70 transition"><i data-lucide="siren" class="w-4 h-4"></i>Insiden</button>
+  </div>
+  <div class="mt-6 pt-4 border-t border-slate-800 space-y-2">
+    <p class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Simulasi Telemetri</p>
+    <div class="flex gap-1.5" id="speedGroup">
+      <button data-speed="1" class="spd flex-1 py-1.5 rounded-lg text-xs font-bold border border-slate-700 text-slate-400">1x</button>
+      <button data-speed="2" class="spd flex-1 py-1.5 rounded-lg text-xs font-bold border border-slate-700 text-slate-400">2x</button>
+      <button data-speed="4" class="spd flex-1 py-1.5 rounded-lg text-xs font-bold border border-slate-700 text-slate-400">4x</button>
+    </div>
+    <button id="btnPauseDrawer" class="w-full mt-1 py-2 rounded-xl text-xs font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/40">Pause Simulasi</button>
+    <button id="btnResetDrawer" class="w-full py-2 rounded-xl text-xs font-bold bg-rose-500/10 text-rose-300 border border-rose-500/30">Reset Data Demo</button>
+  </div>
+  <p class="mt-6 text-[10px] text-slate-600 leading-relaxed">Demo Prototype by NovaNext · Data dummy tersimpan di localStorage browser.</p>
+</aside>
+
+<!-- ══════════ KPI STRIP ══════════ -->
+<section class="relative z-10 max-w-[1700px] mx-auto px-3 sm:px-5 pt-4">
+  <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3">
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade" style="animation-delay:.02s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Armada Aktif</span><i data-lucide="truck" class="w-3.5 h-3.5 text-cyan-400"></i></div>
+      <p class="mt-1 font-display text-2xl font-extrabold text-white"><span id="kpiFleet">0</span><span class="text-sm text-slate-500 font-semibold" id="kpiFleetTotal">/0</span></p>
+      <p class="text-[10px] text-lime-400 font-mono mt-0.5" id="kpiFleetSub">—</p>
+    </div>
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade" style="animation-delay:.06s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Rata Kecepatan</span><i data-lucide="gauge" class="w-3.5 h-3.5 text-sky-400"></i></div>
+      <p class="mt-1 font-display text-2xl font-extrabold text-white"><span id="kpiSpeed">0</span><span class="text-sm text-slate-500 font-semibold"> km/h</span></p>
+      <p class="text-[10px] text-slate-500 font-mono mt-0.5">fleet average</p>
+    </div>
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade" style="animation-delay:.1s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Bahan Bakar</span><i data-lucide="fuel" class="w-3.5 h-3.5 text-amber-400"></i></div>
+      <p class="mt-1 font-display text-2xl font-extrabold text-white"><span id="kpiFuel">0</span><span class="text-sm text-slate-500 font-semibold">%</span></p>
+      <div class="mt-1.5 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div id="kpiFuelBar" class="h-full bar-fill rounded-full bg-gradient-to-r from-amber-500 to-lime-400" style="width:0%"></div></div>
+    </div>
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade" style="animation-delay:.14s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Insiden Terbuka</span><i data-lucide="siren" class="w-3.5 h-3.5 text-rose-400"></i></div>
+      <p class="mt-1 font-display text-2xl font-extrabold text-white" id="kpiIncidents">0</p>
+      <p class="text-[10px] text-slate-500 font-mono mt-0.5" id="kpiIncSub">—</p>
+    </div>
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade" style="animation-delay:.18s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Okupansi Gudang</span><i data-lucide="boxes" class="w-3.5 h-3.5 text-violet-400"></i></div>
+      <p class="mt-1 font-display text-2xl font-extrabold text-white"><span id="kpiOcc">0</span><span class="text-sm text-slate-500 font-semibold">%</span></p>
+      <div class="mt-1.5 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div id="kpiOccBar" class="h-full bar-fill rounded-full bg-gradient-to-r from-violet-500 to-cyan-400" style="width:0%"></div></div>
+    </div>
+    <div class="glass rounded-2xl p-3.5 card-hover anim-fade relative overflow-hidden" style="animation-delay:.22s">
+      <div class="flex items-center justify-between"><span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Status Jaringan</span><i data-lucide="radio-tower" class="w-3.5 h-3.5 text-lime-400"></i></div>
+      <p class="mt-1 font-display text-lg font-extrabold text-lime-400 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-lime-400 blink"></span><span id="netStatus">MQTT LIVE</span></p>
+      <p class="text-[10px] text-slate-500 font-mono mt-0.5"><span id="pktRate">0</span> pkt/min</p>
+      <div class="sweep-line absolute inset-x-0 bottom-0 h-[2px] overflow-hidden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="relative z-10 max-w-[1700px] mx-auto px-3 sm:px-5 py-4 pb-24">
+
+  <!-- ── VIEW: MAP ── -->
+  <section class="view active" data-view="map">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_372px] gap-4">
+      <!-- MAP -->
+      <div class="glass rounded-3xl overflow-hidden relative anim-fade">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800/70 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <i data-lucide="map-pinned" class="w-4 h-4 text-cyan-400"></i>
+            <h2 class="font-display font-bold text-white text-sm">Geofence Armada · Surabaya Corridor</h2>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="btnPause" class="p-2 rounded-xl border border-slate-700 hover:border-cyan-500/60 hover:text-cyan-300 transition" title="Pause / Play"><i data-lucide="pause" class="w-4 h-4"></i></button>
+            <div class="flex rounded-xl border border-slate-700 overflow-hidden" id="speedGroup2">
+              <button data-speed="1" class="spd px-2.5 py-1.5 text-[11px] font-bold text-slate-400 hover:bg-slate-800">1x</button>
+              <button data-speed="2" class="spd px-2.5 py-1.5 text-[11px] font-bold text-slate-400 hover:bg-slate-800 border-x border-slate-700">2x</button>
+              <button data-speed="4" class="spd px-2.5 py-1.5 text-[11px] font-bold text-slate-400 hover:bg-slate-800">4x</button>
+            </div>
+            <button id="btnExpand" class="hidden md:flex p-2 rounded-xl border border-slate-700 hover:border-cyan-500/60 hover:text-cyan-300 transition" title="Fokus peta"><i data-lucide="maximize-2" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+        <div class="relative h-[52vh] sm:h-[62vh] lg:h-[calc(100vh-300px)] min-h-[360px]">
+          <div id="map"></div>
+          <!-- Legend -->
+          <div class="absolute left-3 bottom-3 z-[400] glass rounded-xl px-3 py-2 space-y-1.5 text-[10px] font-semibold">
+            <p class="text-slate-500 uppercase tracking-widest text-[9px]">Legend</p>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-cyan-400"></span>Moving</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-amber-400"></span>Idle</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-rose-400"></span>Maintenance</div>
+          </div>
+          <div class="absolute right-3 top-3 z-[400] glass rounded-xl px-3 py-2 font-mono text-[10px] text-slate-400">
+            <span class="text-cyan-400">◈</span> MQTT broker · 12 devices · <span id="latLon">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: LIVE STATUS -->
+      <aside class="space-y-4 anim-fade" style="animation-delay:.08s" id="rightPanel">
+        <div class="glass rounded-3xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-display font-bold text-white text-sm flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 blink"></span>Telemetri Terpilih</h3>
+            <span class="font-mono text-[10px] text-slate-500" id="lastTick">t-0s</span>
+          </div>
+          <div id="telemetryCard"></div>
+        </div>
+
+        <div class="glass rounded-3xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-display font-bold text-white text-sm">Riwayat Kecepatan</h3>
+            <span class="font-mono text-[10px] text-cyan-400">30 sampel</span>
+          </div>
+          <div id="sparkBox" class="h-[70px]"></div>
+        </div>
+
+        <div class="glass rounded-3xl overflow-hidden flex flex-col">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800/70">
+            <h3 class="font-display font-bold text-white text-sm flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-lime-400"></i>Live Status Log</h3>
+            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-lime-500/15 text-lime-300 font-bold" id="feedCount">0</span>
+          </div>
+          <div id="liveFeed" class="h-[280px] lg:h-[320px] overflow-y-auto p-2.5 space-y-1.5"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── VIEW: FLEET ── -->
+  <section class="view" data-view="fleet">
+    <div class="glass rounded-3xl p-4 mb-4 anim-fade">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="relative flex-1 min-w-[190px]">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+          <input id="fleetSearch" type="text" placeholder="Cari ID armada, pengemudi, atau plat..." class="w-full bg-ink-850/80 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/70 focus:ring-2 focus:ring-cyan-500/20 transition" />
+        </div>
+        <div class="flex gap-1.5" id="statusFilter">
+          <button data-st="all" class="flt px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Semua</button>
+          <button data-st="Moving" class="flt px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Moving</button>
+          <button data-st="Idle" class="flt px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Idle</button>
+          <button data-st="Maintenance" class="flt px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Maintenance</button>
+        </div>
+        <button id="btnAddVehicle" class="ml-auto flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-sky-600 text-ink-950 hover:brightness-110 active:scale-95 transition shadow-glow">
+          <i data-lucide="plus" class="w-4 h-4"></i> Tambah Armada
+        </button>
+      </div>
+    </div>
+    <div id="fleetGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5"></div>
+  </section>
+
+  <!-- ── VIEW: WAREHOUSE ── -->
+  <section class="view" data-view="warehouse">
+    <div class="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-4">
+      <!-- Barometers -->
+      <div class="space-y-4">
+        <div class="glass rounded-3xl p-4 anim-fade">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-display font-bold text-white text-sm flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-violet-400"></i>Barometer Kapasitas</h3>
+            <button id="btnRecount" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-700 text-slate-400 hover:text-cyan-300 hover:border-cyan-500/50 transition">Sinkron</button>
+          </div>
+          <div id="zoneBars" class="flex items-end justify-between gap-3 h-[230px] px-1"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="glass rounded-2xl p-3.5 anim-fade" style="animation-delay:.06s">
+            <div class="flex items-center justify-between"><span class="text-[10px] uppercase text-slate-500 font-bold tracking-wider">Suhu Rata²</span><i data-lucide="thermometer" class="w-3.5 h-3.5 text-rose-400"></i></div>
+            <p class="font-display text-xl font-extrabold text-white mt-1"><span id="whTemp">0</span>°C</p>
+          </div>
+          <div class="glass rounded-2xl p-3.5 anim-fade" style="animation-delay:.1s">
+            <div class="flex items-center justify-between"><span class="text-[10px] uppercase text-slate-500 font-bold tracking-wider">Kelembapan</span><i data-lucide="droplets" class="w-3.5 h-3.5 text-sky-400"></i></div>
+            <p class="font-display text-xl font-extrabold text-white mt-1"><span id="whHum">0</span>%</p>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4 anim-fade" style="animation-delay:.14s">
+          <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2">Sensor Pintu Dock</p>
+          <div id="dockList" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- Inventory -->
+      <div class="glass rounded-3xl overflow-hidden anim-fade" style="animation-delay:.08s">
+        <div class="p-4 border-b border-slate-800/70 flex flex-wrap items-center gap-2.5">
+          <div>
+            <h3 class="font-display font-bold text-white text-sm">Inventaris Stok Pallet</h3>
+            <p class="text-[10px] text-slate-500 font-mono">RFID scan · update otomatis dari gate sensor</p>
+          </div>
+          <div class="flex-1"></div>
+          <div class="relative min-w-[170px] flex-1 sm:flex-none">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            <input id="palletSearch" type="text" placeholder="Cari SKU / nama..." class="w-full sm:w-56 bg-ink-850/80 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-sm placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/70 transition" />
+          </div>
+          <select id="zoneFilter" class="bg-ink-850/80 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-cyan-500/70"></select>
+          <button id="btnAddPallet" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white hover:brightness-110 active:scale-95 transition"><i data-lucide="package-plus" class="w-4 h-4"></i>Pallet</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left min-w-[720px]">
+            <thead class="bg-ink-850/60 text-[10px] uppercase tracking-wider text-slate-500">
+              <tr>
+                <th class="px-4 py-2.5 font-bold">Pallet / SKU</th>
+                <th class="px-4 py-2.5 font-bold">Zona</th>
+                <th class="px-4 py-2.5 font-bold">Kapasitas</th>
+                <th class="px-4 py-2.5 font-bold">Stok</th>
+                <th class="px-4 py-2.5 font-bold">Status</th>
+                <th class="px-4 py-2.5 font-bold text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="palletBody" class="divide-y divide-slate-800/70 text-sm"></tbody>
+          </table>
+        </div>
+        <div class="px-4 py-3 border-t border-slate-800/70 flex items-center justify-between text-[11px] text-slate-500">
+          <span><span id="palletShown">0</span> pallet ditampilkan</span>
+          <span class="font-mono">Sinkron terakhir: <span id="palletSync">baru saja</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VIEW: INCIDENTS ── -->
+  <section class="view" data-view="incidents">
+    <div class="glass rounded-3xl p-4 mb-4 anim-fade flex flex-wrap items-center gap-2.5">
+      <div class="flex gap-1.5" id="sevFilter">
+        <button data-sev="all" class="sv px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Semua</button>
+        <button data-sev="critical" class="sv px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Critical</button>
+        <button data-sev="warning" class="sv px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Warning</button>
+        <button data-sev="info" class="sv px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Info</button>
+        <button data-sev="open" class="sv px-3 py-2 rounded-xl text-xs font-bold border border-slate-700 text-slate-400 hover:text-white transition">Belum Ditangani</button>
+      </div>
+      <div class="flex-1"></div>
+      <button id="btnAckAll" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-lime-500/40 bg-lime-500/10 text-lime-300 hover:bg-lime-500/20 transition"><i data-lucide="check-check" class="w-4 h-4"></i>Tandai Semua Selesai</button>
+      <button id="btnClearInc" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-rose-500/40 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-4 h-4"></i>Bersihkan Log</button>
+    </div>
+    <div id="incList" class="space-y-2.5"></div>
+  </section>
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="relative z-10 border-t border-slate-800/70 bg-ink-950/80">
+  <div class="max-w-[1700px] mx-auto px-5 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+    <p class="font-mono">NovaTrack IoT Suite · <span class="text-cyan-400">Demo Prototype by NovaNext</span></p>
+    <p>Leaflet.js · Tailwind CSS · Vanilla JS · localStorage persistence</p>
+  </div>
+</footer>
+
+<!-- ══════════ TOASTS ══════════ -->
+<div id="toasts" class="fixed z-[1200] top-20 right-3 left-3 sm:left-auto sm:right-5 space-y-2 pointer-events-none"></div>
+
+<!-- ══════════ CONFIRM MODAL ══════════ -->
+<div id="modal" class="fixed inset-0 z-[1100] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink-950/80 backdrop-blur-sm" data-close></div>
+  <div class="relative glass rounded-3xl w-full max-w-sm p-5 anim-pop border-cyan-500/25">
+    <div class="flex items-start gap-3">
+      <div id="modalIcon" class="w-11 h-11 shrink-0 rounded-2xl grid place-items-center bg-cyan-500/15 text-cyan-300"><i data-lucide="alert-circle" class="w-5 h-5"></i></div>
+      <div class="min-w-0">
+        <h3 id="modalTitle" class="font-display font-bold text-white text-base">Konfirmasi</h3>
+        <p id="modalMsg" class="text-[13px] text-slate-400 mt-1 leading-relaxed">Apakah Anda yakin?</p>
+      </div>
+    </div>
+    <div id="modalExtra" class="mt-4"></div>
+    <div class="mt-5 flex gap-2">
+      <button id="modalCancel" class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition">Batal</button>
+      <button id="modalOk" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-500 to-sky-600 text-ink-950 hover:brightness-110 transition">Ya, Lanjut</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADD VEHICLE MODAL ══════════ -->
+<div id="vehModal" class="fixed inset-0 z-[1100] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink-950/80 backdrop-blur-sm" data-close></div>
+  <form id="vehForm" class="relative glass rounded-3xl w-full max-w-md p-5 anim-pop">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display font-bold text-white text-base flex items-center gap-2"><i data-lucide="truck" class="w-4 h-4 text-cyan-400"></i>Registrasi Armada Baru</h3>
+      <button type="button" data-close class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <label class="block col-span-2"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">ID Armada</span>
+        <input name="id" required placeholder="B-9021" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-cyan-500/70" /></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Pengemudi</span>
+        <input name="driver" required placeholder="Budi Santoso" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-cyan-500/70" /></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Plat Nomor</span>
+        <input name="plate" required placeholder="L 9021 XY" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-cyan-500/70" /></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Tipe Unit</span>
+        <select name="type" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-cyan-500/70">
+          <option>Reefer Truck</option><option>Wingbox</option><option>CDD</option><option>Trailer 40ft</option>
+        </select></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Rute</span>
+        <select name="routeKey" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-cyan-500/70">
+          <option value="r1">Rute 1 · Pelabuhan → Gudang A</option>
+          <option value="r2">Rute 2 · Gudang A → Industri</option>
+          <option value="r3">Rute 3 · Ring Road Timur</option>
+          <option value="r4">Rute 4 · Kota → Bandara</option>
+        </select></label>
+    </div>
+    <div class="mt-5 flex gap-2">
+      <button type="button" data-close class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition">Batal</button>
+      <button type="submit" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-cyan-500 to-sky-600 text-ink-950 hover:brightness-110 transition">Daftarkan</button>
+    </div>
+  </form>
+</div>
+
+<!-- ══════════ ADD PALLET MODAL ══════════ -->
+<div id="palletModal" class="fixed inset-0 z-[1100] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink-950/80 backdrop-blur-sm" data-close></div>
+  <form id="palletForm" class="relative glass rounded-3xl w-full max-w-md p-5 anim-pop">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display font-bold text-white text-base flex items-center gap-2"><i data-lucide="package-plus" class="w-4 h-4 text-violet-400"></i>Tambah Pallet</h3>
+      <button type="button" data-close class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Kode Pallet</span>
+        <input name="code" required placeholder="PLT-2041" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-violet-500/70" /></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">SKU</span>
+        <input name="sku" required placeholder="SKU-8891" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-violet-500/70" /></label>
+      <label class="block col-span-2"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Nama Barang</span>
+        <input name="name" required placeholder="Semen Portland 50kg" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-violet-500/70" /></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Zona</span>
+        <select name="zone" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-violet-500/70">
+          <option>A</option><option>B</option><option>C</option><option>D</option>
+        </select></label>
+      <label class="block"><span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Jumlah Unit</span>
+        <input name="qty" type="number" min="1" value="100" class="mt-1 w-full bg-ink-850 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-violet-500/70" /></label>
+    </div>
+    <div class="mt-5 flex gap-2">
+      <button type="button" data-close class="flex-1 py-2.5 rounded-xl text-sm font-bold border border-slate-700 text-slate-300 hover:bg-slate-800 transition">Batal</button>
+      <button type="submit" class="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white hover:brightness-110 transition">Simpan</button>
+    </div>
+  </form>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   NovaTrack IoT · Fleet Tracking & Warehouse Dashboard
+   Demo Prototype by NovaNext
+   Modules: Store · Sim · MapView · UI
+   ═══════════════════════════════════════════════════════════════ */
+
+const LS_KEY = 'novanext_iot_fleet_v1';
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const rnd = (a, b) => a + Math.random() * (b - a);
+const ri  = (a, b) => Math.floor(rnd(a, b + 1));
+const pick = arr => arr[ri(0, arr.length - 1)];
+const pad = n => String(n).padStart(2, '0');
+const fmtT = d => `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ───────── ROUTES (Surabaya corridor) ───────── */
+const ROUTES = {
+  r1: [[-7.2088,112.7338],[-7.2260,112.7455],[-7.2410,112.7520],[-7.2565,112.7600],[-7.2705,112.7735],[-7.2830,112.7905],[-7.2955,112.8060]],
+  r2: [[-7.2955,112.8060],[-7.2870,112.7920],[-7.2740,112.7790],[-7.2610,112.7650],[-7.2480,112.7515],[-7.2330,112.7410],[-7.2185,112.7350]],
+  r3: [[-7.3305,112.7885],[-7.3180,112.7975],[-7.3010,112.7860],[-7.2870,112.7700],[-7.2745,112.7530],[-7.2620,112.7390]],
+  r4: [[-7.2380,112.7510],[-7.2455,112.7260],[-7.2620,112.7040],[-7.2790,112.6890],[-7.2935,112.6750],[-7.2860,112.6550]]
+};
+const ROUTE_LABEL = { r1:'Pelabuhan → Gudang A', r2:'Gudang A → Industri', r3:'Ring Road Timur', r4:'Kota → Bandara' };
+
+/* ───────── SEED DATA ───────── */
+function seedVehicles() {
+  const base = [
+    { id:'B-1234', driver:'Agus Prasetyo', plate:'L 9123 AB', type:'Reefer Truck', routeKey:'r1', load:640, cap:1000 },
+    { id:'B-2271', driver:'Siti Nurhaliza', plate:'L 8455 CD', type:'Wingbox',      routeKey:'r2', load:410, cap:900  },
+    { id:'B-3310', driver:'Rizky Alfarizi', plate:'L 9210 EF', type:'CDD',          routeKey:'r3', load:220, cap:600  },
+    { id:'B-4188', driver:'Dewi Anggraini', plate:'L 9033 GH', type:'Trailer 40ft', routeKey:'r4', load:880, cap:1200 },
+    { id:'B-5042', driver:'Bagus Wicaksono',plate:'L 7712 IJ', type:'Reefer Truck', routeKey:'r1', load:530, cap:1000 },
+    { id:'B-6619', driver:'Nabila Rahma',   plate:'L 6640 KL', type:'Wingbox',      routeKey:'r3', load:690, cap:900  }
+  ];
+  return base.map((b, i) => {
+    const route = ROUTES[b.routeKey];
+    return {
+      ...b, routeIdx: ri(0, route.length - 2), progress: Math.random(),
+      speed: ri(0, 62), fuel: ri(28, 96), temp: +rnd(2.4, 7.8).toFixed(1), pressure: ri(29, 38),
+      engine: i === 2 ? 'Maintenance' : 'Moving', maintenance: i === 2,
+      odom: ri(48210, 231500), hist: Array.from({ length: 30 }, () => ri(5, 60)),
+      events: 0, eta: ri(6, 48), offline: false
+    };
+  });
+}
+function seedZones() {
+  return [
+    { id:'A', name:'Zona A · Dry Goods',   cap:1200, used:940,  temp:24.1, hum:58, color:'from-cyan-500 to-sky-400' },
+    { id:'B', name:'Zona B · Cold Chain',  cap:800,  used:612,  temp:4.2,  hum:71, color:'from-violet-500 to-fuchsia-400' },
+    { id:'C', name:'Zona C · Bahan Kimia', cap:600,  used:241,  temp:19.8, hum:44, color:'from-amber-500 to-orange-400' },
+    { id:'D', name:'Zona D · Outbound',    cap:1500, used:1290, temp:26.4, hum:63, color:'from-lime-500 to-emerald-400' }
+  ];
+}
+function seedPallets() {
+  const raw = [
+    ['PLT-1001','SKU-4410','Semen Portland 50kg','A',980,1200],
+    ['PLT-1002','SKU-4411','Baja Ringan 6m','A',420,600],
+    ['PLT-2041','SKU-8891','Vaksin Bio Frozen','B',310,400],
+    ['PLT-2042','SKU-8892','Es Krim Bulk 20L','B',88,200],
+    ['PLT-3320','SKU-1203','Deterjen Industri','C',140,260],
+    ['PLT-3321','SKU-1204','Pelarut Kimia 200L','C',52,120],
+    ['PLT-4401','SKU-7781','Kardus Elektronik','D',1120,1400],
+    ['PLT-4402','SKU-7782','Sparepart Otomotif','D',300,500],
+    ['PLT-4403','SKU-7783','Pallet Kayu Bekas','D',64,400]
+  ];
+  return raw.map(([code, sku, name, zone, qty, cap]) => ({ code, sku, name, zone, qty, cap, updated: Date.now() - ri(60000, 5e6) }));
+}
+function seedIncidents() {
+  return [
+    { id:'INC-'+Date.now(), ts: Date.now() - 120000, sev:'critical', src:'B-1234', msg:'Suhu armada B-1234 di atas ambang batas (8.6°C)', acked:false },
+    { id:'INC-'+(Date.now()+1), ts: Date.now() - 340000, sev:'warning', src:'B-5042', msg:'Level bahan bakar armada B-5042 di bawah 25%', acked:false },
+    { id:'INC-'+(Date.now()+2), ts: Date.now() - 610000, sev:'info', src:'GATE-02', msg:'Scan pallet PLT-4401 berhasil di Zona D', acked:true }
+  ];
+}
+
+/* ═══════════ STORE ═══════════ */
+const Store = {
+  d: null,
+  defaults() {
+    return { vehicles: seedVehicles(), zones: seedZones(), pallets: seedPallets(), incidents: seedIncidents(), settings: { paused: false, mult: 1, tick: 0 } };
+  },
+  load() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (p && Array.isArray(p.vehicles) && p.vehicles.length) {
+          p.vehicles.forEach(v => { if (!Array.isArray(v.hist)) v.hist = []; });
+          this.d = Object.assign(this.defaults(), p);
+          return;
+        }
+      }
+    } catch (e) { console.warn('localStorage parse gagal', e); }
+    this.d = this.defaults();
+    this.save();
+  },
+  save() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(this.d)); } catch (e) {}
+  },
+  reset() { localStorage.removeItem(LS_KEY); this.d = this.defaults(); this.save(); }
+};
+
+/* ═══════════ UI (toast · modal · anim) ═══════════ */
+const UI = {
+  icons() { if (window.lucide) lucide.createIcons(); },
+  toast(msg, type = 'info', title = '') {
+    const cfg = {
+      success: { ic:'check-circle-2', bg:'from-lime-500 to-emerald-500', ring:'border-lime-500/40', text:'text-lime-300' },
+      error:   { ic:'alert-triangle', bg:'from-rose-500 to-red-500',     ring:'border-rose-500/40',  text:'text-rose-300' },
+      warning: { ic:'alert-circle',   bg:'from-amber-500 to-orange-500', ring:'border-amber-500/40', text:'text-amber-300' },
+      info:    { ic:'info',           bg:'from-cyan-500 to-sky-500',     ring:'border-cyan-500/40',  text:'text-cyan-300' }
+    }[type] || {};
+    const el = document.createElement('div');
+    el.className = `pointer-events-auto glass border ${cfg.ring} rounded-2xl p-3 flex items-start gap-3 shadow-2xl anim-slide`;
+    el.innerHTML = `
+      <div class="w-8 h-8 shrink-0 rounded-xl bg-gradient-to-br ${cfg.bg} grid place-items-center text-ink-950"><i data-lucide="${cfg.ic}" class="w-4 h-4"></i></div>
+      <div class="min-w-0 flex-1">
+        ${title ? `<p class="text-[13px] font-bold text-white">${esc(title)}</p>` : ''}
+        <p class="text-[12px] ${title ? 'text-slate-400' : 'text-slate-200'} leading-snug break-words">${esc(msg)}</p>
+      </div>
+      <button class="text-slate-500 hover:text-white transition shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>`;
+    $('#toasts').appendChild(el);
+    this.icons();
+    const kill = () => { el.style.transition = 'all .3s'; el.style.opacity = 0; el.style.transform = 'translateX(40px)'; setTimeout(() => el.remove(), 320); };
+    el.querySelector('button').onclick = kill;
+    setTimeout(kill, 3600);
+  },
+  _closeCb: null,
+  modal({ title, msg, okText = 'Ya, Lanjut', tone = 'cyan', icon = 'alert-circle', extra = '' }) {
+    const toneMap = {
+      cyan:  'bg-cyan-500/15 text-cyan-300',
+      rose:  'bg-rose-500/15 text-rose-300',
+      amber: 'bg-amber-500/15 text-amber-300',
+      violet:'bg-violet-500/15 text-violet-300',
+      lime:  'bg-lime-500/15 text-lime-300'
+    };
+    $('#modalTitle').textContent = title;
+    $('#modalMsg').innerHTML = msg;
+    $('#modalIcon').className = `w-11 h-11 shrink-0 rounded-2xl grid place-items-center ${toneMap[tone] || toneMap.cyan}`;
+    $('#modalIcon').innerHTML = `<i data-lucide="${icon}" class="w-5 h-5"></i>`;
+    $('#modalOk').textContent = okText;
+    $('#modalExtra').innerHTML = extra;
+    $('#modal').classList.remove('hidden');
+    $('#modal').classList.add('flex');
+    this.icons();
+    return new Promise(res => { this._closeCb = res; });
+  },
+  closeModal(v = false) {
+    const m = $('#modal'); if (m.classList.contains('hidden')) return;
+    m.classList.add('hidden'); m.classList.remove('flex');
+    if (this._closeCb) { this._closeCb(v); this._closeCb = null; }
+  },
+  openPanel(id) { const p = $(id); p.classList.remove('hidden'); p.classList.add('flex'); this.icons(); },
+  closePanel(id) { const p = $(id); p.classList.add('hidden'); p.classList.remove('flex'); },
+  count(el, to, dec = 0, suffix = '') {
+    const from = parseFloat((el.dataset.v || 0)); el.dataset.v = to;
+    const t0 = performance.now(), dur = 620;
+    const step = t => {
+      const k = clamp((t - t0) / dur, 0, 1), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = (from + (to - from) * e).toFixed(dec) + suffix;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+};
+
+/* ═══════════ STATE ═══════════ */
+const State = {
+  tab: 'map',
+  selected: 'B-1234',
+  filter: { status:'all', search:'', sev:'all', zone:'all', pSearch:'' },
+  expanded: false,
+  dock: [{ id:'DOCK-01', open:true }, { id:'DOCK-02', open:false }, { id:'DOCK-03', open:true }, { id:'DOCK-04', open:false }]
+};
+
+/* ═══════════ SIM ENGINE ═══════════ */
+const Sim = {
+  timer: null, pkt: 0,
+  start() {
+    clearInterval(this.timer);
+    this.timer = setInterval(() => this.tick(), 2000);
+  },
+  tick() {
+    const d = Store.d;
+    if (d.settings.paused) return;
+    const mult = d.settings.mult;
+    d.settings.tick++;
+
+    d.vehicles.forEach(v => {
+      const route = ROUTES[v.routeKey] || ROUTES.r1;
+      if (v.maintenance) {
+        v.speed = Math.max(0, v.speed - ri(6, 14));
+        if (v.speed < 3) v.speed = 0;
+      } else {
+        const target = v.offline ? 0 : rnd(28, 74);
+        v.speed = clamp(v.speed + (target - v.speed) * 0.4 + rnd(-7, 7), 0, 96);
+      }
+      if (v.speed < 4) v.speed = 0;
+
+      // movement along polyline
+      const a = route[v.routeIdx], b = route[(v.routeIdx + 1) % route.length];
+      const distKm = dist(a, b) || 0.6;
+      v.progress += (v.speed * (2 / 3600) * mult) / distKm;
+      if (v.progress >= 1) {
+        v.progress -= 1;
+        v.routeIdx = (v.routeIdx + 1) % route.length;
+        v.eta = ri(4, 52);
+        if (Math.random() < .5) pushIncident('info', v.id, `Armada ${v.id} melewati waypoint ${v.routeIdx + 1} (${ROUTE_LABEL[v.routeKey]})`);
+      }
+
+      // fuel
+      v.fuel = clamp(v.fuel - (v.speed * 0.0035 + 0.012) * mult, 0, 100);
+      // temperature (reefer)
+      if (v.type.includes('Reefer')) {
+        v.temp = clamp(+(v.temp + rnd(-0.25, 0.3)).toFixed(1), 1.2, 12);
+        if (v.temp > 8 && Math.random() < .3) pushIncident('critical', v.id, `Suhu armada ${v.id} di atas ambang batas (${v.temp}°C)`);
+      } else {
+        v.temp = clamp(+(v.temp + rnd(-0.2, 0.2)).toFixed(1), 22, 34);
+      }
+      v.pressure = clamp(v.pressure + rnd(-0.6, 0.6), 22, 40);
+      v.engine = v.maintenance ? 'Maintenance' : (v.speed < 4 ? 'Idle' : 'Moving');
+      v.hist.push(Math.round(v.speed)); if (v.hist.length > 30) v.hist.shift();
+      if (v.fuel < 20 && Math.random() < .18) pushIncident('warning', v.id, `Level bahan bakar armada ${v.id} kritis (${Math.round(v.fuel)}%)`);
+      if (v.pressure < 26 && Math.random() < .12) pushIncident('warning', v.id, `Tekanan ban armada ${v.id} di bawah standar (${Math.round(v.pressure)} PSI)`);
+    });
+
+    // zones drift
+    d.zones.forEach(z => {
+      z.temp = +(z.temp + rnd(-0.14, 0.14)).toFixed(1);
+      z.hum = clamp(Math.round(z.hum + rnd(-0.7, 0.7)), 30, 90);
+      if (z.id === 'B' && z.temp > 6 && Math.random() < .12) pushIncident('critical', 'ZONA-B', `Suhu cold room Zona B naik ke ${z.temp}°C`);
+    });
+
+    // random gate scan → stock mutation
+    if (Math.random() < .32) this.mutateStock();
+    if (Math.random() < .1) pushIncident('info', 'GATE-0' + ri(1, 4), pick([
+      'Sensor dock mendeteksi kedatangan unit', 'Geofence entry event tercatat', 'Handshake MQTT berhasil diperbarui', 'Weight sensor kalibrasi OK'
+    ]));
+
+    this.pkt += d.vehicles.length * ri(2, 5);
+    d.settings.tick % 3 === 0 && Store.save();
+    Render.all();
+  },
+  mutateStock() {
+    const d = Store.d, p = pick(d.pallets);
+    if (!p) return;
+    const delta = pick([-ri(5, 40), ri(5, 45)]);
+    p.qty = clamp(p.qty + delta, 0, p.cap);
+    p.updated = Date.now();
+    const z = d.zones.find(z => z.id === p.zone);
+    if (z) z.used = clamp(z.used + delta * 0.9, 0, z.cap);
+    if (delta > 0) pushIncident('info', 'GATE-0' + ri(1, 4), `Inbound ${delta} unit ${p.name} → Zona ${p.zone}`);
+    else pushIncident('warning', 'GATE-0' + ri(1, 4), `Outbound ${Math.abs(delta)} unit ${p.name} dari Zona ${p.zone}`);
+  }
+};
+
+function dist(a, b) {
+  const R = 6371, dLat = (b[0] - a[0]) * Math.PI / 180, dLon = (b[1] - a[1]) * Math.PI / 180;
+  const la1 = a[0] * Math.PI / 180, la2 = b[0] * Math.PI / 180;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+function posOf(v) {
+  const route = ROUTES[v.routeKey] || ROUTES.r1;
+  const a = route[v.routeIdx], b = route[(v.routeIdx + 1) % route.length];
+  return [a[0] + (b[0] - a[0]) * v.progress, a[1] + (b[1] - a[1]) * v.progress];
+}
+
+/* ═══════════ INCIDENTS ═══════════ */
+function pushIncident(sev, src, msg) {
+  const d = Store.d;
+  if (d.incidents.some(i => i.msg === msg && Date.now() - i.ts < 25000)) return;
+  d.incidents.unshift({ id: 'INC-' + Date.now() + '-' + ri(100, 999), ts: Date.now(), sev, src, msg, acked: false });
+  if (d.incidents.length > 60) d.incidents.length = 60;
+  if (sev === 'critical') UI.toast(msg, 'error', 'Insiden Kritis');
+  else if (sev === 'warning' && Math.random() < .6) UI.toast(msg, 'warning', 'Peringatan Sistem');
+  feed(sev, msg);
+}
+const feedBuf = [];
+function feed(sev, msg) {
+  feedBuf.unshift({ sev, msg, ts: Date.now() });
+  if (feedBuf.length > 40) feedBuf.pop();
+  feedVer++;
+  renderFeed();
+}
+function relTime(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 8) return 'baru saja';
+  if (s < 60) return s + 's lalu';
+  if (s < 3600) return Math.floor(s / 60) + 'm lalu';
+  return Math.floor(s / 3600) + 'j lalu';
+}
+
+/* ═══════════ MAP VIEW ═══════════ */
+const MapView = {
+  map: null, markers: {}, routeLines: [],
+  init() {
+    this.map = L.map('map', { zoomControl: true, attributionControl: true, preferCanvas: true }).setView([-7.268, 112.752], 12);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd', maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(this.map);
+
+    Object.values(ROUTES).forEach((r, i) => {
+      L.polyline(r, { color: i % 2 ? '#a78bfa' : '#22d3ee', weight: 2, opacity: .35, dashArray: '6 8', className: 'route-line' }).addTo(this.map);
+    });
+
+    Store.d.vehicles.forEach(v => this.addMarker(v));
+    setTimeout(() => this.map.invalidateSize(), 260);
+    window.addEventListener('resize', () => this.map.invalidateSize());
+  },
+  addMarker(v) {
+    if (this.markers[v.id]) return;
+    const m = L.marker(posOf(v), {
+      icon: L.divIcon({ className: '', html: this.html(v), iconSize: [38, 38], iconAnchor: [19, 19] })
+    }).addTo(this.map);
+    m.on('click', () => { State.selected = v.id; Render.telemetry(); Render.fleet(); Render.markers(); MapView.focus(v.id, 14); UI.toast(`Armada ${v.id} dipilih`, 'info', 'Telemetri'); });
+    this.markers[v.id] = m;
+    this.popup(v.id);
+  },
+  html(v) {
+    const st = (v.maintenance ? 'Maintenance' : (v.speed < 4 ? 'Idle' : 'Moving')).toLowerCase();
+    return `<div class="veh-marker st-${st}" id="mk-${v.id}">
+      <div class="veh-pulse"></div>
+      <div class="veh-core">${TRUCK_SVG}</div>
+      <div class="veh-tag">${esc(v.id)}</div></div>`;
+  },
+  popup(id) {
+    const v = Store.d.vehicles.find(x => x.id === id); if (!v) return;
+    const p = posOf(v);
+    this.markers[id]?.bindPopup(`<b class="font-mono text-cyan-300">${esc(v.id)}</b> · ${esc(v.type)}<br>
+      <span class="text-slate-400">Pengemudi:</span> ${esc(v.driver)}<br>
+      <span class="text-slate-400">Plat:</span> <span class="font-mono">${esc(v.plate)}</span><br>
+      <span class="text-slate-400">Speed:</span> ${Math.round(v.speed)} km/h · <span class="text-slate-400">Fuel:</span> ${Math.round(v.fuel)}%<br>
+      <span class="text-slate-400">Mesin:</span> <b>${esc(v.engine)}</b><br>
+      <span class="text-slate-400">Rute:</span> ${ROUTE_LABEL[v.routeKey] || '-'}<br>
+      <span class="font-mono text-[10px] text-slate-500">${p[0].toFixed(4)}, ${p[1].toFixed(4)}</span>`, { closeButton: true });
+  },
+  update() {
+    const ids = new Set(Store.d.vehicles.map(v => v.id));
+    Object.keys(this.markers).forEach(id => { if (!ids.has(id)) { this.map.removeLayer(this.markers[id]); delete this.markers[id]; } });
+    Store.d.vehicles.forEach(v => {
+      if (!this.markers[v.id]) { this.addMarker(v); return; }
+      const st = (v.maintenance ? 'Maintenance' : (v.speed < 4 ? 'Idle' : 'Moving')).toLowerCase();
+      const node = $('#mk-' + v.id);
+      if (node) {
+        node.className = `veh-marker st-${st}` + (State.selected === v.id ? ' sel' : '');
+        node.querySelector('.veh-core svg').style.transform = `rotate(${Math.round(v.speed * 1.6)}deg)`;
+      }
+      this.markers[v.id].setLatLng(posOf(v));
+      this.popup(v.id);
+    });
+  },
+  focus(id, z = 14) {
+    const v = Store.d.vehicles.find(x => x.id === id); if (!v) return;
+    this.map.flyTo(posOf(v), z, { duration: .9 });
+    setTimeout(() => this.markers[id]?.openPopup(), 950);
+  }
+};
+const TRUCK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`;
+
+/* ═══════════ RENDER ═══════════ */
+const Render = {
+  all() { this.kpi(); this.telemetry(); this.fleet(); this.markers(); this.zones(); this.pallets(); this.incidents(); this.feed(); },
+
+  kpi() {
+    const d = Store.d, active = d.vehicles.filter(v => !v.maintenance).length;
+    const avgSpeed = d.vehicles.reduce((a, v) => a + v.speed, 0) / (d.vehicles.length || 1);
+    const avgFuel = d.vehicles.reduce((a, v) => a + v.fuel, 0) / (d.vehicles.length || 1);
+    const open = d.incidents.filter(i => !i.acked).length;
+    const capT = d.zones.reduce((a, z) => a + z.cap, 0), usedT = d.zones.reduce((a, z) => a + z.used, 0);
+    UI.count($('#kpiFleet'), d.vehicles.length);
+    $('#kpiFleetTotal').textContent = '/' + d.vehicles.length;
+    $('#kpiFleetSub').textContent = `${d.vehicles.filter(v => v.engine === 'Moving').length} moving · ${d.vehicles.filter(v => v.engine === 'Idle').length} idle`;
+    UI.count($('#kpiSpeed'), avgSpeed, 0);
+    UI.count($('#kpiFuel'), avgFuel, 0);
+    $('#kpiFuelBar').style.width = avgFuel + '%';
+    UI.count($('#kpiIncidents'), open);
+    $('#kpiIncSub').textContent = `${d.incidents.filter(i => i.sev === 'critical' && !i.acked).length} critical · ${d.incidents.length} total`;
+    UI.count($('#kpiOcc'), (usedT / capT) * 100, 1);
+    $('#kpiOccBar').style.width = clamp((usedT / capT) * 100, 0, 100) + '%';
+    UI.count($('#pktRate'), Sim.pkt);
+    $('#tabIncBadge').textContent = open;
+    $('#tabIncBadge').style.display = open ? '' : 'none';
+    $('#lastTick').textContent = 't-' + (Store.d.settings.tick % 60) + 's';
+    $('#netStatus').textContent = Store.d.settings.paused ? 'PAUSED' : 'MQTT LIVE';
+  },
+
+  gauge(speed) {
+    const max = 100, r = 34, c = 2 * Math.PI * r, val = clamp(speed / max, 0, 1);
+    const col = speed < 5 ? '#fbbf24' : speed > 75 ? '#fb7185' : '#22d3ee';
+    return `<div class="relative w-[92px] h-[92px] shrink-0">
+      <svg viewBox="0 0 84 84" class="w-full h-full -rotate-90">
+        <circle cx="42" cy="42" r="${r}" fill="none" stroke="#1e2a4a" stroke-width="7"/>
+        <circle cx="42" cy="42" r="${r}" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round"
+          stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - val)}" style="transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1), stroke .4s"/>
+      </svg>
+      <div class="absolute inset-0 grid place-items-center text-center">
+        <div><p class="font-display text-xl font-extrabold text-white leading-none">${Math.round(speed)}</p><p class="text-[9px] text-slate-500 font-mono">KM/H</p></div>
+      </div></div>`;
+  },
+
+  telemetry() {
+    const v = Store.d.vehicles.find(x => x.id === State.selected) || Store.d.vehicles[0];
+    if (!v) { $('#telemetryCard').innerHTML = `<p class="text-sm text-slate-500">Belum ada armada terdaftar.</p>`; return; }
+    State.selected = v.id;
+    const st = v.engine, stCol = st === 'Moving' ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40'
+      : st === 'Idle' ? 'bg-amber-500/15 text-amber-300 border-amber-500/40' : 'bg-rose-500/15 text-rose-300 border-rose-500/40';
+    const routeLen = (ROUTES[v.routeKey] || ROUTES.r1).length;
+    const fuelCol = v.fuel < 20 ? 'from-rose-500 to-red-400' : v.fuel < 45 ? 'from-amber-500 to-orange-400' : 'from-lime-500 to-emerald-400';
+    $('#telemetryCard').innerHTML = `
+      <div class="flex items-start gap-3">
+        ${this.gauge(v.speed)}
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="font-display font-extrabold text-white text-lg font-mono">${esc(v.id)}</p>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${stCol}">${esc(st)}</span>
+          </div>
+          <p class="text-[12px] text-slate-400 truncate">${esc(v.driver)} · <span class="font-mono">${esc(v.plate)}</span></p>
+          <p class="text-[11px] text-slate-500 mt-0.5">${esc(v.type)} · ${ROUTE_LABEL[v.routeKey]}</p>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+            <div class="h-full bar-fill rounded-full bg-gradient-to-r from-cyan-500 to-violet-500" style="width:${((v.routeIdx + 1) / routeLen) * 100}%"></div>
+          </div>
+          <p class="text-[10px] text-slate-500 font-mono mt-1">Rute ${v.routeIdx + 1}/${routeLen} · ETA ${v.eta} mnt</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 mt-3.5">
+        <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-slate-500 font-bold flex items-center gap-1"><i data-lucide="fuel" class="w-3 h-3"></i>Bahan Bakar</p>
+          <p class="font-display font-extrabold text-white text-base mt-0.5">${Math.round(v.fuel)}%</p>
+          <div class="mt-1 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div class="h-full bar-fill rounded-full bg-gradient-to-r ${fuelCol}" style="width:${v.fuel}%"></div></div>
+        </div>
+        <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-slate-500 font-bold flex items-center gap-1"><i data-lucide="thermometer" class="w-3 h-3"></i>Suhu Kargo</p>
+          <p class="font-display font-extrabold text-white text-base mt-0.5 ${v.temp > 8 ? 'text-rose-400' : ''}">${v.temp}°C</p>
+          <p class="text-[10px] text-slate-500 font-mono mt-1">${v.type.includes('Reefer') ? 'Ambang 8.0°C' : 'Ambient'}</p>
+        </div>
+        <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-slate-500 font-bold flex items-center gap-1"><i data-lucide="gauge-circle" class="w-3 h-3"></i>Tekanan Ban</p>
+          <p class="font-display font-extrabold text-white text-base mt-0.5">${Math.round(v.pressure)} <span class="text-[10px] text-slate-500">PSI</span></p>
+          <p class="text-[10px] text-slate-500 font-mono mt-1">min 28 PSI</p>
+        </div>
+        <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-slate-500 font-bold flex items-center gap-1"><i data-lucide="package" class="w-3 h-3"></i>Beban Muatan</p>
+          <p class="font-display font-extrabold text-white text-base mt-0.5">${v.load}<span class="text-[10px] text-slate-500">/${v.cap} kg</span></p>
+          <div class="mt-1 h-1.5 rounded-full bg-slate-800 overflow-hidden"><div class="h-full bar-fill rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-400" style="width:${(v.load / v.cap) * 100}%"></div></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-1.5 mt-3">
+        <button data-act="refuel" class="flex items-center justify-center gap-1 py-2 rounded-xl text-[11px] font-bold bg-amber-500/12 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition"><i data-lucide="fuel" class="w-3.5 h-3.5"></i>Isi Ulang</button>
+        <button data-act="maint" class="flex items-center justify-center gap-1 py-2 rounded-xl text-[11px] font-bold ${v.maintenance ? 'bg-lime-500/12 text-lime-300 border border-lime-500/30' : 'bg-slate-700/40 text-slate-300 border border-slate-700'} hover:brightness-125 transition"><i data-lucide="wrench" class="w-3.5 h-3.5"></i>${v.maintenance ? 'Selesai' : 'Maintenance'}</button>
+        <button data-act="focus" class="flex items-center justify-center gap-1 py-2 rounded-xl text-[11px] font-bold bg-cyan-500/12 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/20 transition"><i data-lucide="locate-fixed" class="w-3.5 h-3.5"></i>Fokus</button>
+      </div>`;
+    UI.icons();
+    $$('#telemetryCard [data-act]').forEach(b => b.onclick = () => Actions.vehicle(v.id, b.dataset.act));
+    this.spark(v.hist);
+    const p = posOf(v);
+    $('#latLon').textContent = `${p[0].toFixed(4)}, ${p[1].toFixed(4)}`;
+  },
+
+  spark(data) {
+    const w = 300, h = 62, max = 100;
+    const pts = data.map((v, i) => [i / (data.length - 1) * w, h - (v / max) * (h - 6) - 3]);
+    const line = pts.map(p => p.map(n => +n.toFixed(1)).join(',')).join(' ');
+    $('#sparkBox').innerHTML = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" class="w-full h-full">
+      <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#22d3ee" stop-opacity=".45"/><stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/></linearGradient></defs>
+      <polyline points="0,${h} ${line} ${w},${h}" fill="url(#sg)" stroke="none"/>
+      <polyline points="${line}" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+        style="filter:drop-shadow(0 0 5px rgba(34,211,238,.7))"/></svg>`;
+  },
+
+  fleet() {
+    const { status, search } = State.filter;
+    const list = Store.d.vehicles.filter(v => {
+      const st = v.maintenance ? 'Maintenance' : (v.speed < 4 ? 'Idle' : 'Moving');
+      if (status !== 'all' && st !== status) return false;
+      if (search) { const q = search.toLowerCase(); if (!(v.id + v.driver + v.plate + v.type).toLowerCase().includes(q)) return false; }
+      return true;
+    });
+    $('#fleetGrid').innerHTML = list.length ? list.map((v, i) => {
+      const st = v.engine, col = st === 'Moving' ? 'text-cyan-300 bg-cyan-500/12 border-cyan-500/35'
+        : st === 'Idle' ? 'text-amber-300 bg-amber-500/12 border-amber-500/35' : 'text-rose-300 bg-rose-500/12 border-rose-500/35';
+      return `<article class="glass rounded-2xl p-4 card-hover anim-fade relative overflow-hidden" style="animation-delay:${i * .04}s">
+        <div class="flex items-start justify-between gap-2">
+          <div class="min-w-0">
+            <p class="font-mono font-extrabold text-white text-base">${esc(v.id)}</p>
+            <p class="text-[11px] text-slate-500 truncate">${esc(v.type)} · <span class="font-mono">${esc(v.plate)}</span></p>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${col} shrink-0">${esc(st)}</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2 flex items-center gap-1.5 truncate"><i data-lucide="user-round" class="w-3 h-3 text-slate-500"></i>${esc(v.driver)}</p>
+        <div class="grid grid-cols-3 gap-2 mt-3">
+          <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2 text-center">
+            <p class="font-display font-bold text-white">${Math.round(v.speed)}</p><p class="text-[9px] text-slate-500 font-mono">KM/H</p></div>
+          <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2 text-center">
+            <p class="font-display font-bold ${v.fuel < 20 ? 'text-rose-400' : 'text-white'}">${Math.round(v.fuel)}%</p><p class="text-[9px] text-slate-500 font-mono">FUEL</p></div>
+          <div class="rounded-xl bg-ink-850/70 border border-slate-800 p-2 text-center">
+            <p class="font-display font-bold ${v.temp > 8 ? 'text-rose-400' : 'text-white'}">${v.temp}°</p><p class="text-[9px] text-slate-500 font-mono">TEMP</p></div>
+        </div>
+        <div class="mt-2.5 h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-full bar-fill rounded-full bg-gradient-to-r ${v.fuel < 20 ? 'from-rose-500 to-red-400' : 'from-lime-500 to-emerald-400'}" style="width:${v.fuel}%"></div>
+        </div>
+        <div class="flex gap-1.5 mt-3">
+          <button data-act="focus" class="flex-1 py-1.5 rounded-lg text-[11px] font-bold bg-cyan-500/12 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/20 transition">Lacak</button>
+          <button data-act="refuel" class="flex-1 py-1.5 rounded-lg text-[11px] font-bold bg-amber-500/12 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition">Refuel</button>
+          <button data-act="del" class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/30 hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+        </div></article>`;
+    }).join('') : `<div class="col-span-full glass rounded-2xl p-10 text-center text-slate-500 text-sm">Tidak ada armada yang cocok dengan filter.</div>`;
+    UI.icons();
+    $$('#fleetGrid [data-act]').forEach(b => b.onclick = () => Actions.vehicle(b.closest('article').querySelector('.font-mono').textContent.trim(), b.dataset.act));
+  },
+
+  markers() { MapView.update(); },
+
+  zones() {
+    const d = Store.d;
+    $('#zoneBars').innerHTML = d.zones.map((z, i) => {
+      const pct = clamp((z.used / z.cap) * 100, 0, 100);
+      const col = pct > 88 ? 'from-rose-500 to-red-400' : pct > 70 ? 'from-amber-500 to-orange-400' : z.color;
+      return `<div class="flex-1 flex flex-col items-center gap-2 anim-fade" style="animation-delay:${i * .05}s">
+        <p class="text-[11px] font-display font-bold text-white">${Math.round(pct)}%</p>
+        <div class="w-full flex-1 rounded-t-2xl rounded-b-lg bg-ink-800/80 border border-slate-700/70 relative overflow-hidden">
+          <div class="absolute inset-x-0 bottom-0 bar-fill zone-fill bg-gradient-to-t ${col}" style="height:${pct}%"></div>
+          <div class="absolute inset-0 noise opacity-40"></div>
+          ${pct > 88 ? '<div class="absolute top-2 inset-x-0 text-center text-[9px] font-bold text-rose-300 blink">FULL</div>' : ''}
+        </div>
+        <div class="text-center">
+          <p class="text-[11px] font-bold text-slate-300">Zona ${z.id}</p>
+          <p class="text-[9px] text-slate-500 font-mono">${Math.round(z.used)}/${z.cap}</p>
+          <p class="text-[9px] ${z.temp > 6 && z.id === 'B' ? 'text-rose-400' : 'text-slate-500'} font-mono">${z.temp}°C</p>
+        </div></div>`;
+    }).join('');
+    const avgT = d.zones.reduce((a, z) => a + z.temp, 0) / d.zones.length;
+    const avgH = d.zones.reduce((a, z) => a + z.hum, 0) / d.zones.length;
+    UI.count($('#whTemp'), avgT, 1); UI.count($('#whHum'), avgH, 0);
+    $('#dockList').innerHTML = State.dock.map((k, i) => `<div class="flex items-center justify-between rounded-xl bg-ink-850/70 border border-slate-800 px-3 py-2">
+      <span class="font-mono text-[11px] text-slate-300">${k.id}</span>
+      <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${k.open ? 'bg-lime-500/15 text-lime-300' : 'bg-slate-700/50 text-slate-400'}">${k.open ? 'TERBUKA' : 'TERKUNCI'}</span>
+      <button data-dock="${i}" class="text-[10px] font-bold text-cyan-400 hover:text-cyan-200 transition">toggle</button></div>`).join('');
+    $$('#dockList [data-dock]').forEach(b => b.onclick = () => {
+      const k = State.dock[+b.dataset.dock]; k.open = !k.open;
+      UI.toast(`${k.id} ${k.open ? 'dibuka' : 'dikunci'} oleh operator`, k.open ? 'success' : 'info', 'Dock Sensor');
+      this.zones();
+    });
+  },
+
+  pallets() {
+    const d = Store.d, { zone, pSearch } = State.filter;
+    const list = d.pallets.filter(p => (zone === 'all' || p.zone === zone) &&
+      (!pSearch || (p.code + p.sku + p.name).toLowerCase().includes(pSearch.toLowerCase())));
+    const sel = $('#zoneFilter');
+    if (sel.options.length !== d.zones.length + 1) {
+      sel.innerHTML = `<option value="all">Semua Zona</option>` + d.zones.map(z => `<option value="${z.id}">Zona ${z.id}</option>`).join('');
+      sel.value = zone;
+    }
+    $('#palletBody').innerHTML = list.length ? list.map((p, i) => {
+      const pct = (p.qty / p.cap) * 100;
+      const st = pct <= 10 ? ['KRITIS', 'bg-rose-500/15 text-rose-300 border-rose-500/35']
+        : pct <= 30 ? ['MENIPIS', 'bg-amber-500/15 text-amber-300 border-amber-500/35']
+        : ['AMAN', 'bg-lime-500/15 text-lime-300 border-lime-500/35'];
+      return `<tr class="hover:bg-slate-800/40 transition row-in" style="animation-delay:${Math.min(i * .03, .4)}s">
+        <td class="px-4 py-2.5">
+          <p class="font-mono font-bold text-white text-[13px]">${esc(p.code)}</p>
+          <p class="text-[11px] text-slate-400">${esc(p.name)}</p>
+          <p class="text-[10px] text-slate-600 font-mono">${esc(p.sku)} · ${relTime(p.updated)}</p>
+        </td>
+        <td class="px-4 py-2.5"><span class="text-[11px] font-bold px-2 py-1 rounded-lg bg-slate-700/40 text-slate-300">Zona ${esc(p.zone)}</span></td>
+        <td class="px-4 py-2.5 w-[150px]">
+          <div class="h-1.5 rounded-full bg-slate-800 overflow-hidden"><div class="h-full bar-fill rounded-full bg-gradient-to-r ${pct <= 10 ? 'from-rose-500 to-red-400' : pct <= 30 ? 'from-amber-500 to-orange-400' : 'from-cyan-500 to-violet-500'}" style="width:${clamp(pct, 0, 100)}%"></div></div>
+          <p class="text-[10px] text-slate-500 font-mono mt-1">${p.qty} / ${p.cap} unit</p>
+        </td>
+        <td class="px-4 py-2.5">
+          <div class="flex items-center gap-1">
+            <button data-adj="-10" data-code="${esc(p.code)}" class="w-7 h-7 rounded-lg bg-slate-700/50 hover:bg-rose-500/25 hover:text-rose-300 transition font-bold">−</button>
+            <span class="w-12 text-center font-display font-bold text-white">${p.qty}</span>
+            <button data-adj="10" data-code="${esc(p.code)}" class="w-7 h-7 rounded-lg bg-slate-700/50 hover:bg-lime-500/25 hover:text-lime-300 transition font-bold">+</button>
+          </div>
+        </td>
+        <td class="px-4 py-2.5"><span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${st[1]}">${st[0]}</span></td>
+        <td class="px-4 py-2.5 text-right">
+          <button data-del="${esc(p.code)}" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-300 hover:bg-rose-500/10 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </td></tr>`;
+    }).join('') : `<tr><td colspan="6" class="px-4 py-10 text-center text-slate-500 text-sm">Tidak ada pallet ditemukan.</td></tr>`;
+    $('#palletShown').textContent = list.length;
+    UI.icons();
+    $$('#palletBody [data-adj]').forEach(b => b.onclick = () => Actions.palletAdjust(b.dataset.code, +b.dataset.adj));
+    $$('#palletBody [data-del]').forEach(b => b.onclick = () => Actions.palletDelete(b.dataset.del));
+  },
+
+  incidents() {
+    const { sev } = State.filter;
+    const list = Store.d.incidents.filter(i => {
+      if (sev === 'open') return !i.acked;
+      if (sev === 'all') return true;
+      return i.sev === sev;
+    });
+    // skip full rebuild when the list content is unchanged (only refresh relative times)
+    const sig = sev + '|' + list.map(i => i.id + (i.acked ? 'a' : '')).join(',');
+    if (sig === this._incSig) {
+      $$('#incList [data-ts]').forEach(s => { const t = +s.dataset.ts; s.textContent = `${fmtT(new Date(t))} · ${relTime(t)}`; });
+      return;
+    }
+    this._incSig = sig;
+    const tone = { critical:['rose','alert-octagon','KRITIS'], warning:['amber','alert-triangle','WARNING'], info:['sky','info','INFO'] };
+    $('#incList').innerHTML = list.length ? list.map((inc, i) => {
+      const t = tone[inc.sev];
+      return `<div class="glass rounded-2xl p-3.5 flex items-start gap-3 anim-fade ${inc.acked ? 'opacity-55' : ''}" style="animation-delay:${Math.min(i * .03, .4)}s">
+        <div class="w-9 h-9 shrink-0 rounded-xl grid place-items-center bg-${t[0]}-500/15 text-${t[0]}-300 border border-${t[0]}-500/30"><i data-lucide="${t[1]}" class="w-4 h-4"></i></div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-[9px] font-extrabold tracking-wider px-1.5 py-0.5 rounded bg-${t[0]}-500/20 text-${t[0]}-300">${t[2]}</span>
+            <span class="font-mono text-[10px] text-slate-500">${esc(inc.src)}</span>
+            <span data-ts="${inc.ts}" class="font-mono text-[10px] text-slate-600">${fmtT(new Date(inc.ts))} · ${relTime(inc.ts)}</span>
+            ${inc.acked ? '<span class="text-[9px] font-bold text-lime-400">✔ SELESAI</span>' : ''}
+          </div>
+          <p class="text-[13px] text-slate-200 mt-1 leading-snug">${esc(inc.msg)}</p>
+        </div>
+        <div class="flex flex-col gap-1.5 shrink-0">
+          ${inc.acked ? '' : `<button data-ack="${inc.id}" class="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-lime-500/12 text-lime-300 border border-lime-500/30 hover:bg-lime-500/20 transition">Tangani</button>`}
+          <button data-goto="${esc(inc.src)}" class="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-cyan-500/12 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/20 transition">Lacak</button>
+        </div></div>`;
+    }).join('') : `<div class="glass rounded-2xl p-12 text-center"><i data-lucide="shield-check" class="w-10 h-10 mx-auto text-lime-400"></i><p class="mt-3 text-sm text-slate-400">Tidak ada insiden pada filter ini.</p></div>`;
+    UI.icons();
+    $$('#incList [data-ack]').forEach(b => b.onclick = () => Actions.ack(b.dataset.ack));
+    $$('#incList [data-goto]').forEach(b => b.onclick = () => Actions.gotoSrc(b.dataset.goto));
+  },
+
+  feed() {
+    if (!feedBuf.length) {
+      feedBuf.push(...Store.d.incidents.slice(0, 8).map(i => ({ sev: i.sev, msg: i.msg, ts: i.ts })));
+    }
+    renderFeed();
+  }
+};
+
+let feedVer = 0, feedRendered = -1;
+function renderFeed() {
+  const el = $('#liveFeed'); if (!el) return;
+  // update relative timestamps only when nothing new arrived (prevents flicker)
+  if (feedRendered === feedVer) {
+    $$('#liveFeed [data-ts]').forEach(s => { const t = +s.dataset.ts; s.textContent = `${fmtT(new Date(t))} · ${relTime(t)}`; });
+    return;
+  }
+  const tone = { critical:'border-rose-500/35 bg-rose-500/[.07]', warning:'border-amber-500/35 bg-amber-500/[.07]', info:'border-slate-700/70 bg-ink-850/60' };
+  const dot = { critical:'bg-rose-400', warning:'bg-amber-400', info:'bg-cyan-400' };
+  $('#feedCount').textContent = feedBuf.length;
+  el.innerHTML = feedBuf.map((f, i) => `<div class="rounded-xl border ${tone[f.sev]} p-2.5 flex gap-2 anim-slide" style="animation-delay:${Math.min(i * .03, .3)}s">
+    <span class="w-1.5 h-1.5 rounded-full ${dot[f.sev]} mt-1.5 shrink-0 ${f.sev === 'critical' ? 'blink' : ''}"></span>
+    <div class="min-w-0"><p class="text-[12px] text-slate-200 leading-snug">${esc(f.msg)}</p>
+    <p data-ts="${f.ts}" class="text-[9px] font-mono text-slate-500 mt-0.5">${fmtT(new Date(f.ts))} · ${relTime(f.ts)}</p></div></div>`).join('');
+  feedRendered = feedVer;
+}
+
+/* ═══════════ ACTIONS (CRUD) ═══════════ */
+const Actions = {
+  async vehicle(id, act) {
+    const d = Store.d, v = d.vehicles.find(x => x.id === id); if (!v) return;
+    if (act === 'focus') {
+      setTab('map'); MapView.focus(id, 14); UI.toast(`Peta memfokuskan armada ${id}`, 'info', 'GPS Lock');
+    }
+    if (act === 'refuel') {
+      const ok = await UI.modal({ title:'Isi Ulang Bahan Bakar', tone:'amber', icon:'fuel', okText:'Konfirmasi Isi',
+        msg:`Armada <b class="font-mono">${esc(id)}</b> akan diisi ulang di SPBU mitra terdekat (estimasi 12 menit).` });
+      if (!ok) return;
+      v.fuel = 100; Store.save(); Render.all();
+      UI.toast(`Bahan bakar armada ${id} diisi penuh (100%)`, 'success', 'Refuel Selesai');
+      pushIncident('info', id, `Armada ${id} selesai pengisian bahan bakar`);
+    }
+    if (act === 'maint') {
+      const next = !v.maintenance;
+      const ok = await UI.modal({ title: next ? 'Set Maintenance' : 'Selesaikan Maintenance', tone: next ? 'rose' : 'lime', icon:'wrench', okText: next ? 'Jadwalkan' : 'Aktifkan',
+        msg: next ? `Armada <b class="font-mono">${esc(id)}</b> akan ditarik dari rotasi dan masuk bengkel.` : `Armada <b class="font-mono">${esc(id)}</b> akan kembali aktif beroperasi.` });
+      if (!ok) return;
+      v.maintenance = next; v.speed = next ? 0 : ri(20, 45); Store.save(); Render.all();
+      UI.toast(`Armada ${id} ${next ? 'masuk mode maintenance' : 'kembali beroperasi'}`, next ? 'warning' : 'success', 'Status Armada');
+      pushIncident(next ? 'warning' : 'info', id, next ? `Armada ${id} dijadwalkan maintenance` : `Armada ${id} selesai maintenance & aktif`);
+    }
+    if (act === 'del') {
+      const ok = await UI.modal({ title:'Hapus Armada', tone:'rose', icon:'trash-2', okText:'Hapus Permanen',
+        msg:`Data armada <b class="font-mono">${esc(id)}</b> beserta telemetri historisnya akan dihapus dari demo ini.` });
+      if (!ok) return;
+      Store.d.vehicles = Store.d.vehicles.filter(x => x.id !== id);
+      if (MapView.markers[id]) { MapView.map.removeLayer(MapView.markers[id]); delete MapView.markers[id]; }
+      if (State.selected === id) State.selected = Store.d.vehicles[0]?.id || null;
+      Store.save(); Render.all();
+      UI.toast(`Armada ${id} dihapus`, 'error', 'Data Dihapus');
+    }
+  },
+  async palletAdjust(code, delta) {
+    const p = Store.d.pallets.find(x => x.code === code); if (!p) return;
+    const next = clamp(p.qty + delta, 0, p.cap);
+    if (next === p.qty) { UI.toast(`Stok ${code} sudah pada batas ${p.cap} unit`, 'warning'); return; }
+    p.qty = next; p.updated = Date.now();
+    const z = Store.d.zones.find(z => z.id === p.zone); if (z) z.used = clamp(z.used + delta * 0.9, 0, z.cap);
+    Store.save(); Render.all();
+    UI.toast(`${code} ${delta > 0 ? '+' : ''}${delta} unit → ${p.qty} unit`, delta > 0 ? 'success' : 'info', 'Mutasi Stok');
+  },
+  async palletDelete(code) {
+    const ok = await UI.modal({ title:'Hapus Pallet', tone:'rose', icon:'trash-2', okText:'Hapus',
+      msg:`Pallet <b class="font-mono">${esc(code)}</b> akan dihapus dari inventaris gudang.` });
+    if (!ok) return;
+    Store.d.pallets = Store.d.pallets.filter(p => p.code !== code);
+    Store.save(); Render.all();
+    UI.toast(`Pallet ${code} dihapus dari inventaris`, 'error', 'Inventaris');
+  },
+  async ack(id) {
+    const inc = Store.d.incidents.find(i => i.id === id); if (!inc) return;
+    const ok = await UI.modal({ title:'Tangani Insiden', tone:'lime', icon:'check-circle-2', okText:'Tandai Selesai',
+      msg:`Tandai insiden <span class="font-mono text-[11px]">${esc(inc.src)}</span> sebagai terselesaikan?<br><span class="text-slate-500 text-[11px]">${esc(inc.msg)}</span>` });
+    if (!ok) return;
+    inc.acked = true; Store.save(); Render.all();
+    UI.toast('Insiden ditandai selesai & diarsipkan', 'success', 'Ticket Closed');
+  },
+  async ackAll() {
+    const open = Store.d.incidents.filter(i => !i.acked).length;
+    if (!open) { UI.toast('Tidak ada insiden terbuka', 'info'); return; }
+    const ok = await UI.modal({ title:'Tutup Semua Insiden', tone:'lime', icon:'check-check', okText:`Tutup ${open} Insiden`,
+      msg:`Seluruh <b>${open}</b> insiden terbuka akan ditandai selesai.` });
+    if (!ok) return;
+    Store.d.incidents.forEach(i => i.acked = true); Store.save(); Render.all();
+    UI.toast(`${open} insiden ditandai selesai`, 'success', 'Bulk Action');
+  },
+  async clearInc() {
+    const ok = await UI.modal({ title:'Bersihkan Log Insiden', tone:'rose', icon:'trash-2', okText:'Bersihkan',
+      msg:`Seluruh <b>${Store.d.incidents.length}</b> entri log akan dihapus permanen dari penyimpanan lokal.` });
+    if (!ok) return;
+    Store.d.incidents = []; feedBuf.length = 0; Store.save(); Render.all();
+    UI.toast('Log insiden dibersihkan', 'error', 'Log Cleared');
+  },
+  gotoSrc(src) {
+    const v = Store.d.vehicles.find(x => x.id === src);
+    if (v) { setTab('map'); MapView.focus(v.id, 14); UI.toast(`Melacak armada ${src}`, 'info'); }
+    else { setTab('warehouse'); UI.toast(`${src} adalah sensor statis · dialihkan ke panel gudang`, 'info', 'Navigasi'); }
+  },
+  async reset() {
+    const ok = await UI.modal({ title:'Reset Data Demo', tone:'rose', icon:'rotate-ccw', okText:'Reset Sekarang',
+      msg:'Seluruh armada, inventaris, dan log akan dikembalikan ke kondisi awal (localStorage dibersihkan).' });
+    if (!ok) return;
+    Store.reset(); feedBuf.length = 0;
+    State.selected = Store.d.vehicles[0].id;
+    State.filter = { status:'all', search:'', sev:'all', zone:'all', pSearch:'' };
+    const s = $('#fleetSearch'); if (s) s.value = '';
+    const ps = $('#palletSearch'); if (ps) ps.value = '';
+    // rebuild markers without re-initialising the Leaflet map instance
+    Object.keys(MapView.markers).forEach(id => { MapView.map.removeLayer(MapView.markers[id]); delete MapView.markers[id]; });
+    $('#zoneFilter').innerHTML = '<option value="all">Semua Zona</option>';
+    MapView.map.setView([-7.268, 112.752], 12);
+    Store.d.vehicles.forEach(v => MapView.addMarker(v));
+    Render.all();
+    UI.toast('Data demo berhasil di-reset ke kondisi awal', 'success', 'Reset Berhasil');
+  }
+};
+
+/* ═══════════ TABS & EVENTS ═══════════ */
+function setTab(tab) {
+  State.tab = tab;
+  $$('.view').forEach(s => s.classList.toggle('active', s.dataset.view === tab));
+  $$('.tab-btn').forEach(b => b.classList.toggle('tab-active', b.dataset.tab === tab));
+  $$('.rail-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  closeDrawer();
+  if (tab === 'map') setTimeout(() => MapView.map.invalidateSize(), 80);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function openDrawer() { $('#drawer').classList.remove('-translate-x-full'); const o = $('#drawerOverlay'); o.classList.remove('opacity-0', 'pointer-events-none'); }
+function closeDrawer() { $('#drawer').classList.add('-translate-x-full'); const o = $('#drawerOverlay'); o.classList.add('opacity-0', 'pointer-events-none'); }
+
+function bind() {
+  $$('.tab-btn').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  $('#btnDrawer').onclick = openDrawer;
+  $('#btnCloseDrawer').onclick = closeDrawer;
+  $('#drawerOverlay').onclick = closeDrawer;
+
+  $$('[data-close]').forEach(b => b.onclick = () => { UI.closeModal(false); UI.closePanel('#vehModal'); UI.closePanel('#palletModal'); });
+  $('#modalCancel').onclick = () => UI.closeModal(false);
+  $('#modalOk').onclick = () => UI.closeModal(true);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { UI.closeModal(false); UI.closePanel('#vehModal'); UI.closePanel('#palletModal'); closeDrawer(); }
+    if (e.key === ' ' && e.target === document.body) { e.preventDefault(); $('#btnPause').click(); }
+  });
+
+  // sim controls
+  $('#btnPause').onclick = () => {
+    Store.d.settings.paused = !Store.d.settings.paused;
+    $('#netStatus').textContent = Store.d.settings.paused ? 'PAUSED' : 'MQTT LIVE';
+    $('#btnPause').innerHTML = `<i data-lucide="${Store.d.settings.paused ? 'play' : 'pause'}" class="w-4 h-4"></i>`;
+    UI.icons(); Store.save();
+    UI.toast(Store.d.settings.paused ? 'Simulasi telemetri dijeda' : 'Simulasi telemetri dilanjutkan', Store.d.settings.paused ? 'warning' : 'success', 'Simulation Engine');
+  };
+  $('#btnPauseDrawer').onclick = () => $('#btnPause').click();
+  const applySpeed = m => {
+    Store.d.settings.mult = m;
+    $$('.spd').forEach(b => {
+      const on = +b.dataset.speed === m;
+      b.classList.toggle('bg-cyan-500/20', on); b.classList.toggle('text-cyan-300', on);
+      b.classList.toggle('border-cyan-500/50', on); b.classList.toggle('text-slate-400', !on);
+    });
+    Store.save();
+  };
+  $$('.spd').forEach(b => b.onclick = () => { applySpeed(+b.dataset.speed); UI.toast(`Kecepatan simulasi diubah ke ${b.dataset.speed}x`, 'info', 'Simulation'); });
+  applySpeed(Store.d.settings.mult);
+  $('#btnPause').innerHTML = `<i data-lucide="${Store.d.settings.paused ? 'play' : 'pause'}" class="w-4 h-4"></i>`;
+
+  $('#btnResetDrawer').onclick = () => Actions.reset();
+  UI.icons();
+  $('#btnExpand').onclick = () => {
+    State.expanded = !State.expanded;
+    $('#rightPanel').classList.toggle('lg:hidden', State.expanded);
+    $('#btnExpand').innerHTML = `<i data-lucide="${State.expanded ? 'minimize-2' : 'maximize-2'}" class="w-4 h-4"></i>`;
+    UI.icons(); setTimeout(() => MapView.map.invalidateSize(), 120);
+    UI.toast(State.expanded ? 'Panel telemetri disembunyikan' : 'Panel telemetri ditampilkan', 'info', 'Layout');
+  };
+
+  // filters
+  $('#fleetSearch').oninput = e => { State.filter.search = e.target.value; Render.fleet(); };
+  $$('#statusFilter .flt').forEach(b => b.onclick = () => {
+    State.filter.status = b.dataset.st;
+    $$('#statusFilter .flt').forEach(x => { const on = x === b; x.classList.toggle('tab-active', on); x.classList.toggle('text-slate-400', !on); });
+    Render.fleet();
+  });
+  $('#statusFilter .flt').classList.add('tab-active');
+  $$('#sevFilter .sv').forEach(b => b.onclick = () => {
+    State.filter.sev = b.dataset.sev;
+    $$('#sevFilter .sv').forEach(x => { const on = x === b; x.classList.toggle('tab-active', on); x.classList.toggle('text-slate-400', !on); });
+    Render.incidents();
+  });
+  $('#sevFilter .sv').classList.add('tab-active');
+  $('#palletSearch').oninput = e => { State.filter.pSearch = e.target.value; Render.pallets(); };
+  $('#zoneFilter').onchange = e => { State.filter.zone = e.target.value; Render.pallets(); };
+  $('#btnRecount').onclick = () => {
+    const d = Store.d;
+    d.zones.forEach(z => z.used = Math.round(d.pallets.filter(p => p.zone === z.id).reduce((a, p) => a + p.qty, 0) * 0.9));
+    Store.save(); Render.all(); UI.toast('Kapasitas zona disinkronkan dengan data pallet', 'success', 'Recount');
+  };
+  $('#btnAckAll').onclick = () => Actions.ackAll();
+  $('#btnClearInc').onclick = () => Actions.clearInc();
+
+  // forms
+  $('#btnAddVehicle').onclick = () => UI.openPanel('#vehModal');
+  $('#vehForm').onsubmit = e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const id = (f.get('id') || '').trim().toUpperCase();
+    if (Store.d.vehicles.some(v => v.id === id)) { UI.toast(`ID armada ${id} sudah terdaftar`, 'error', 'Duplikat'); return; }
+    const routeKey = f.get('routeKey');
+    Store.d.vehicles.push({
+      id, driver: f.get('driver').trim(), plate: f.get('plate').trim().toUpperCase(), type: f.get('type'),
+      routeKey, routeIdx: 0, progress: 0, speed: 0, fuel: ri(70, 100), temp: +(rnd(2.5, 6).toFixed(1)),
+      pressure: ri(30, 36), engine:'Idle', maintenance:false, odom: ri(1000, 9000),
+      hist: Array(30).fill(0), events:0, eta: ri(8, 40), load: ri(150, 600), cap: 1000
+    });
+    MapView.addMarker(Store.d.vehicles.at(-1));
+    State.selected = id;
+    Store.save(); Render.all(); UI.closePanel('#vehModal'); e.target.reset();
+    UI.toast(`Armada ${id} terdaftar & mulai memancarkan telemetri`, 'success', 'Registrasi Berhasil');
+    pushIncident('info', id, `Armada ${id} terdaftar pada rute ${ROUTE_LABEL[routeKey]}`);
+    setTab('map'); MapView.focus(id, 13);
+  };
+
+  $('#btnAddPallet').onclick = () => UI.openPanel('#palletModal');
+  $('#palletForm').onsubmit = e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const code = (f.get('code') || '').trim().toUpperCase();
+    if (Store.d.pallets.some(p => p.code === code)) { UI.toast(`Pallet ${code} sudah ada di sistem`, 'error', 'Duplikat'); return; }
+    const qty = clamp(parseInt(f.get('qty') || 100, 10), 1, 100000);
+    Store.d.pallets.unshift({ code, sku: f.get('sku').trim().toUpperCase(), name: f.get('name').trim(), zone: f.get('zone'), qty, cap: 1400, updated: Date.now() });
+    const z = Store.d.zones.find(z => z.id === f.get('zone')); if (z) z.used = clamp(z.used + qty * 0.9, 0, z.cap);
+    Store.save(); Render.all(); UI.closePanel('#palletModal'); e.target.reset();
+    UI.toast(`Pallet ${code} ditambahkan ke Zona ${f.get('zone')}`, 'success', 'Inventaris');
+    pushIncident('info', 'GATE-01', `Pallet baru ${code} diregistrasi di Zona ${f.get('zone')}`);
+  };
+}
+
+/* ═══════════ BOOT ═══════════ */
+(function boot() {
+  Store.load();
+  if (!Store.d.vehicles.some(v => v.id === State.selected)) State.selected = Store.d.vehicles[0]?.id;
+  MapView.init();
+  bind();
+  setTab('map');
+  Render.all();
+  Sim.start();
+  setInterval(() => { $('#clock').textContent = fmtT(new Date()); renderFeed(); }, 1000);
+  setTimeout(() => UI.toast('Terhubung ke MQTT broker · 6 armada streaming live', 'success', 'NovaTrack IoT Online'), 900);
+  setTimeout(() => UI.toast('Klik pin armada di peta untuk melihat telemetri detail', 'info', 'Tip'), 2600);
+})();
+</script>
+</body>
+</html>
