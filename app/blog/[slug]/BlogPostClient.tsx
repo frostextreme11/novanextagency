@@ -118,7 +118,7 @@ export default function BlogPostClient({ post, children }: BlogPostClientProps) 
                             <span className="text-slate-400 text-sm">Bagikan artikel ini:</span>
                             <div className="flex gap-2">
                                 <a
-                                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://novanext.id/blog/${post.slug}`)}`}
+                                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.novanext.it.com/blog/${post.slug}`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-9 h-9 rounded-full bg-white/5 hover:bg-primary/20 flex items-center justify-center transition-all"
@@ -127,7 +127,7 @@ export default function BlogPostClient({ post, children }: BlogPostClientProps) 
                                     <span className="text-slate-400 hover:text-primary text-sm font-bold">𝕏</span>
                                 </a>
                                 <a
-                                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://novanext.id/blog/${post.slug}`)}`}
+                                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.novanext.it.com/blog/${post.slug}`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-9 h-9 rounded-full bg-white/5 hover:bg-primary/20 flex items-center justify-center transition-all"
@@ -136,7 +136,7 @@ export default function BlogPostClient({ post, children }: BlogPostClientProps) 
                                     <span className="text-slate-400 hover:text-primary text-sm font-bold">f</span>
                                 </a>
                                 <a
-                                    href={`https://wa.me/?text=${encodeURIComponent(post.title + " - https://novanext.id/blog/" + post.slug)}`}
+                                    href={`https://wa.me/?text=${encodeURIComponent(post.title + " - https://www.novanext.it.com/blog/" + post.slug)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-9 h-9 rounded-full bg-white/5 hover:bg-primary/20 flex items-center justify-center transition-all"

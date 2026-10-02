@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ["/api/", "/_next/"],
             },
         ],
-        sitemap: "https://novanext.id/sitemap.xml",
+        sitemap: "https://www.novanext.it.com/sitemap.xml",
     };
 }

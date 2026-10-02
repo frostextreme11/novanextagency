@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://novanext.id"),
+  metadataBase: new URL("https://www.novanext.it.com"),
   title: "Jasa Pembuatan Website & Aplikasi Mobile Premium - NovaNext IT Agency",
   description: "Jasa bikin website keren murah, buat website, bikin aplikasi mobile brand sendiri, dan sistem kasir POS untuk UMKM dan Corporate. Konsultasi Gratis!",
   keywords: ["Bikin website keren murah", "buat website", "bikin aplikasi mobile brand sendiri", "bikin website brand sendiri", "jasa bikin website", "jasa bikin aplikasi mobile", "jasa bikin aplikasi android"],

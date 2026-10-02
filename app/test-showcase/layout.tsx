@@ -18,7 +18,7 @@ export const metadata: Metadata = {
         title: "Live Interactive Test Showcase - NovaNext Agency",
         description:
             "Uji coba langsung 20+ demo sistem interaktif dan prototipe aplikasi nyata buatan NovaNext langsung di browser Anda.",
-        url: "https://novanext.id/test-showcase",
+        url: "https://www.novanext.it.com/test-showcase",
         siteName: "NovaNext IT Agency",
         locale: "id_ID",
         type: "website"

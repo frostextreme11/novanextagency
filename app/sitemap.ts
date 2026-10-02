@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 
 // ponytail: single auto-updating sitemap for static pages, blog posts, and all live test showcases.
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = "https://novanext.id";
+    const baseUrl = "https://www.novanext.it.com";
 
     // Static core pages
     const staticPages: MetadataRoute.Sitemap = [

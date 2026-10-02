@@ -11,7 +11,7 @@ export const metadata: Metadata = {
         description:
             "Baca artikel terbaru seputar tips pembuatan website, digital marketing, SEO, dan teknologi.",
         type: "website",
-        url: "https://novanext.id/blog",
+        url: "https://www.novanext.it.com/blog",
     },
 };
 

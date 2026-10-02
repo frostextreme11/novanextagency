@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/lib/blog";
 
 export async function GET() {
-    const baseUrl = "https://novanext.id";
+    const baseUrl = "https://www.novanext.it.com";
     const posts = getAllPosts();
 
     const rssItems = posts
@@ -13,7 +13,7 @@ export async function GET() {
       <link>${baseUrl}/blog/${post.slug}</link>
       <guid isPermaLink="true">${baseUrl}/blog/${post.slug}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-      <author>hello@novanext.id (${post.author})</author>
+      <author>hello@novanext.it.com (${post.author})</author>
       ${post.tags.map((tag) => `<category>${tag}</category>`).join("\n      ")}
     </item>`
         )

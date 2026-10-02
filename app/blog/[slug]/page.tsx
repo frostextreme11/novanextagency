@@ -37,7 +37,7 @@ export async function generateMetadata({
             publishedTime: post.date,
             authors: [post.author],
             tags: post.tags,
-            url: `https://novanext.id/blog/${slug}`,
+            url: `https://www.novanext.it.com/blog/${slug}`,
             images: post.image
                 ? [
                     {
@@ -78,24 +78,24 @@ export default async function BlogPostPage({
         author: {
             "@type": "Organization",
             name: post.author,
-            url: "https://novanext.id",
+            url: "https://www.novanext.it.com",
         },
         publisher: {
             "@type": "Organization",
             name: "NovaNext IT Agency",
-            url: "https://novanext.id",
+            url: "https://www.novanext.it.com",
             logo: {
                 "@type": "ImageObject",
-                url: "https://novanext.id/logo/nn_logo.png",
+                url: "https://www.novanext.it.com/logo/nn_logo.png",
             },
         },
         datePublished: post.date,
         dateModified: post.date,
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://novanext.id/blog/${slug}`,
+            "@id": `https://www.novanext.it.com/blog/${slug}`,
         },
-        image: post.image || "https://novanext.id/logo/nn_logo.png",
+        image: post.image || "https://www.novanext.it.com/logo/nn_logo.png",
         keywords: post.tags.join(", "),
     };
 
