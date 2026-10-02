@@ -1,7 +1,10 @@
 import { getPostBySlug, getAllSlugs } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import BlogPostClient from "./BlogPostClient";
+import { mdxComponents } from "./mdxComponents";
 
 // Generate static pages for all blog posts
 export async function generateStaticParams() {
@@ -102,7 +105,17 @@ export default async function BlogPostPage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <BlogPostClient post={post} />
+            <BlogPostClient post={post}>
+                <MDXRemote
+                    source={post.content}
+                    components={mdxComponents}
+                    options={{
+                        mdxOptions: {
+                            remarkPlugins: [remarkGfm],
+                        },
+                    }}
+                />
+            </BlogPostClient>
         </>
     );
 }
