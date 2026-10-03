@@ -13,7 +13,8 @@ export type ShowcaseCategory =
     | "AI & Workflow"
     | "Arsitektur & Interior"
     | "Company Profile"
-    | "Creative Agency";
+    | "Creative Agency"
+    | "Bengkel & Otomotif";
 
 export interface TestShowcaseItem {
     id: string;
@@ -338,12 +339,29 @@ export const TEST_SHOWCASES: TestShowcaseItem[] = [
             "Kirimkan permintaan survey lokasi gratis dengan form estimasi proyek."
         ],
         highlights: ["Kalkulator Estimasi RAB", "Portofolio Bangun/Renovasi", "Tahapan Kerja Transparan", "Permintaan Survey Lokasi"]
+    },
+    {
+        id: "pos-bengkel-motor",
+        title: "NovaMotor POS — Kasir & Bengkel Motor",
+        category: "Bengkel & Otomotif",
+        file: "pos-bengkel-motor-index.html",
+        badge: "Service & Parts",
+        version: "v1.0",
+        description: "Sistem Point of Sale dan manajemen bengkel motor terpadu: penjualan sparepart & oli, antrean work order servis, penugasan mekanik, dan cetak struk thermal.",
+        testGuide: [
+            "Pilih katalog barang (Oli, Sparepart, Ban, Kelistrikan) atau paket jasa (Tune Up, CVT, Ganti Oli) ke keranjang.",
+            "Pilih pelanggan atau masukkan data plat motor (contoh: Vario 125, NMAX, Beat) untuk membuat Work Order.",
+            "Tugaskan mekanik penanggung jawab dan simulasikan alur status servis motor.",
+            "Klik tombol Bayar (Tunai, QRIS, Transfer) dan cetak struk nota servis / thermal receipt."
+        ],
+        highlights: ["Kasir Sparepart & Jasa", "Work Order & Mekanik", "Data Plat Motor", "Cetak Struk Thermal", "Stok Sparepart"]
     }
 ];
 
 export const CATEGORIES = [
     "Semua",
     "Kasir & Resto",
+    "Bengkel & Otomotif",
     "E-Commerce",
     "Healthcare",
     "Rental & Transportasi",
