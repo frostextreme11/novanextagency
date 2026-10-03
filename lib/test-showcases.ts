@@ -355,6 +355,22 @@ export const TEST_SHOWCASES: TestShowcaseItem[] = [
             "Klik tombol Bayar (Tunai, QRIS, Transfer) dan cetak struk nota servis / thermal receipt."
         ],
         highlights: ["Kasir Sparepart & Jasa", "Work Order & Mekanik", "Data Plat Motor", "Cetak Struk Thermal", "Stok Sparepart"]
+    },
+    {
+        id: "motopos-bengkel-motor",
+        title: "MOTOPOS — POS Bengkel & Service Motor",
+        category: "Bengkel & Otomotif",
+        file: "pos-bengkel-motor-1-index.html",
+        badge: "Thermal 80mm & WO",
+        version: "v2.0",
+        description: "Sistem POS bengkel motor edisi industrial: kasir cepat, antrean work order servis, kartu pelanggan & histori plat motor, stok sparepart, dan simulasi print struk termal 80mm.",
+        testGuide: [
+            "Pilih item sparepart atau paket servis di grid kasir, atur kuantitas dan diskon transaksi.",
+            "Buka tab Work Order Servis untuk membuat tiket servis baru lengkap dengan nomor plat motor dan keluhan pelanggan.",
+            "Uji coba tab Manajemen Inventori untuk memeriksa level stok minimum dan estimasi profit margin.",
+            "Selesaikan transaksi kasir dan klik 'Cetak Struk' untuk melihat animasi keluar kertas struk termal 80mm."
+        ],
+        highlights: ["Struk Termal 80mm", "Tiket Work Order Servis", "Katalog Sparepart & Jasa", "Histori Plat Motor", "Laporan Penjualan"]
     }
 ];
 

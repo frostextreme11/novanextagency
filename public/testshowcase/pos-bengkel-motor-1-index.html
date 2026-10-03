@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOTOPOS — Sistem POS Bengkel & Service Motor</title>
+<meta name="description" content="MOTOPOS — sistem point of sale bengkel & service motor: kasir, work order servis, inventori sparepart, pelanggan, laporan, dan cetak struk termal 80mm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#141210',
+          asphalt: '#1B1815',
+          coal: '#262119',
+          paper: '#F6F2EC',
+          sand: '#EDE6DC',
+          ember: { DEFAULT: '#E2542C', 600: '#C7421F', 300: '#F6A98C' },
+          moss: '#1F7A5A',
+          honey: '#F2A20C',
+          stone: '#6B625B'
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background-color: #F6F2EC; color: #141210; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: #EDE6DC; }
+  ::-webkit-scrollbar-thumb { background: #C4B8AC; border-radius: 9px; }
+  ::-webkit-scrollbar-thumb:hover { background: #E2542C; }
+
+  .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .label-stencil { text-transform: uppercase; letter-spacing: .18em; font-size: 10px; font-weight: 700; }
+  .hazard {
+    background-image: repeating-linear-gradient(135deg, #E2542C 0 10px, transparent 10px 20px);
+    opacity: .9;
+  }
+  .paper-grid {
+    background-image: linear-gradient(#00000008 1px, transparent 1px), linear-gradient(90deg, #00000008 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .tear-bottom {
+    height: 11px;
+    background-image: linear-gradient(45deg, #fff 50%, transparent 50%), linear-gradient(-45deg, #fff 50%, transparent 50%);
+    background-size: 14px 14px;
+    background-repeat: repeat-x;
+    background-position: bottom;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,.14));
+  }
+  .tear-top {
+    height: 11px;
+    background-image: linear-gradient(135deg, #fff 50%, transparent 50%), linear-gradient(-135deg, #fff 50%, transparent 50%);
+    background-size: 14px 14px;
+    background-repeat: repeat-x;
+    background-position: top;
+    filter: drop-shadow(0 -6px 6px rgba(0,0,0,.14));
+  }
+  .dashline { border-top: 1px dashed #14121044; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+  @keyframes paperOut {
+    0% { opacity: 0; transform: translateY(-26px) scaleY(.86); clip-path: inset(0 0 100% 0); }
+    60% { opacity: 1; clip-path: inset(0 0 0 0); }
+    100% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+  }
+  @keyframes popIn { 0% { opacity: 0; transform: scale(.94); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes growBar { from { height: 0; } }
+  @keyframes nudge { 0%,100% { transform: scale(1); } 40% { transform: scale(1.18); } }
+
+  .anim-fade-up { animation: fadeUp .38s cubic-bezier(.2,.8,.3,1) both; }
+  .anim-slide { animation: slideIn .28s cubic-bezier(.2,.8,.3,1) both; }
+  .anim-paper { animation: paperOut .68s cubic-bezier(.16,.9,.24,1) both; }
+  .anim-pop { animation: popIn .22s cubic-bezier(.2,.8,.3,1) both; }
+  .anim-bar { animation: growBar .8s cubic-bezier(.2,.8,.3,1) both; transform-origin: bottom; }
+  .anim-nudge { animation: nudge .42s ease; }
+
+  .view-enter { animation: fadeUp .32s cubic-bezier(.2,.8,.3,1) both; }
+
+  .hover-lift { transition: transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease, border-color .18s ease, background-color .18s ease; }
+  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -14px rgba(20,18,16,.38); }
+
+  .btn-press { transition: transform .12s ease, background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+  .btn-press:active { transform: translateY(1px) scale(.985); }
+
+  .nav-item { position: relative; }
+  .nav-item::after {
+    content: ''; position: absolute; left: 8px; right: 8px; bottom: 6px; height: 2px;
+    background: #E2542C; transform: scaleX(0); transform-origin: left; transition: transform .2s ease;
+  }
+  .nav-item.active::after { transform: scaleX(1); }
+
+  .focus-ring:focus-visible { outline: 2px solid #E2542C; outline-offset: 2px; }
+
+  input, select, textarea { outline: none; }
+  .field { transition: border-color .16s ease, box-shadow .16s ease, background-color .16s ease; }
+  .field:focus { border-color: #E2542C; box-shadow: 0 0 0 3px rgba(226,84,44,.16); }
+
+  .stok-bar > span { display: block; height: 100%; border-radius: 999px; transition: width .5s cubic-bezier(.2,.8,.3,1); }
+
+  .row-hover { transition: background-color .15s ease; }
+  .row-hover:hover { background: #fff; }
+
+  @media print {
+    body * { visibility: hidden !important; }
+    #printArea, #printArea * { visibility: visible !important; }
+    #printArea { position: absolute !important; left: 0; top: 0; width: 76mm; box-shadow: none !important; background: #fff !important; }
+    .no-print { display: none !important; }
+    @page { size: 80mm auto; margin: 5mm; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ============ SIDEBAR (desktop) ============ -->
+<aside class="hidden lg:flex fixed left-0 top-0 bottom-0 w-[84px] bg-asphalt flex-col items-center py-5 z-40 border-r border-black/40">
+  <a href="#" class="focus-ring w-11 h-11 rounded-xl bg-ember grid place-items-center mb-1 shadow-lg shadow-ember/25" aria-label="Beranda MOTOPOS">
+    <svg viewBox="0 0 40 40" class="w-7 h-7" aria-hidden="true">
+      <path d="M20 3.5 33.5 11v18L20 36.5 6.5 29V11L20 3.5Z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M13.5 26.5V15.2l6.5 7.1 6.5-7.1v11.3" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+  <div class="text-[8px] font-mono text-white/35 tracking-[.22em] mb-4">POS</div>
+
+  <nav id="sideNav" class="flex flex-col gap-1 w-full px-2"></nav>
+
+  <div class="mt-auto w-full px-2 space-y-1">
+    <button id="btnResetDemo" class="focus-ring w-full h-11 rounded-xl grid place-items-center text-white/40 hover:text-ember hover:bg-white/5 btn-press" title="Reset data demo">
+      <i data-lucide="rotate-ccw" class="w-[19px] h-[19px]"></i>
+    </button>
+    <div class="h-11 rounded-xl grid place-items-center">
+      <span class="w-9 h-9 rounded-full bg-ember/20 border border-ember/40 text-ember text-[11px] font-bold grid place-items-center">RN</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ============ HEADER ============ -->
+<div class="lg:pl-[84px]">
+  <header class="sticky top-0 z-30 bg-paper/92 backdrop-blur-md border-b border-ink/10">
+    <div class="h-1.5 hazard opacity-70"></div>
+    <div class="px-4 sm:px-6 lg:px-8 h-[68px] flex items-center gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="lg:hidden w-9 h-9 rounded-lg bg-asphalt grid place-items-center shrink-0">
+          <svg viewBox="0 0 40 40" class="w-6 h-6" aria-hidden="true">
+            <path d="M20 3.5 33.5 11v18L20 36.5 6.5 29V11L20 3.5Z" fill="none" stroke="#E2542C" stroke-width="2.6" stroke-linejoin="round"/>
+            <path d="M13.5 26.5V15.2l6.5 7.1 6.5-7.1v11.3" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="font-extrabold tracking-tight leading-none text-[17px] sm:text-[19px] truncate">
+            MOTOPOS <span class="text-stone font-semibold text-[13px] sm:text-[15px]">· Bengkel &amp; Service Motor</span>
+          </h1>
+          <div class="flex items-center gap-2 mt-1">
+            <span class="label-stencil inline-flex items-center gap-1.5 bg-ember text-white px-2 py-[3px] rounded-full">
+              <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Demo Prototype by NovaNext
+            </span>
+            <span class="hidden sm:inline text-[11px] font-mono text-stone">SHIFT PAGI · 08:00–17:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ml-auto flex items-center gap-2">
+        <div class="hidden xl:flex items-center gap-2 bg-white border border-ink/12 rounded-xl px-3 h-11 w-[260px] focus-within:border-ember transition-colors">
+          <i data-lucide="search" class="w-4 h-4 text-stone"></i>
+          <input id="globalSearch" type="text" placeholder="Cari produk / nopol…" class="w-full text-[13px] bg-transparent placeholder:text-stone/70">
+          <kbd class="text-[10px] font-mono text-stone border border-ink/12 rounded px-1.5 py-0.5">/</kbd>
+        </div>
+        <div class="hidden md:flex flex-col items-end leading-tight px-2">
+          <span id="clock" class="font-mono text-[15px] font-bold tnum">--:--:--</span>
+          <span id="today" class="text-[10px] text-stone uppercase tracking-wider">—</span>
+        </div>
+        <button id="btnCart" class="focus-ring btn-press relative h-11 px-3 sm:px-4 rounded-xl bg-asphalt text-white flex items-center gap-2 hover:bg-ink">
+          <i data-lucide="shopping-cart" class="w-[18px] h-[18px]"></i>
+          <span class="hidden sm:inline text-[13px] font-semibold">Keranjang</span>
+          <span id="cartBadge" class="min-w-[22px] h-[22px] px-1 rounded-full bg-ember text-white text-[11px] font-bold grid place-items-center tnum">0</span>
+        </button>
+        <div class="hidden lg:flex items-center gap-2.5 pl-2 border-l border-ink/12">
+          <div class="text-right leading-tight">
+            <div class="text-[12px] font-bold">Rian Nugroho</div>
+            <div class="text-[10px] text-stone uppercase tracking-wider">Kasir · Shift 1</div>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-asphalt text-white grid place-items-center text-[12px] font-bold">RN</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <main id="mainWrap" class="pb-24 lg:pb-10 transition-[padding] duration-300">
+
+    <!-- ---------- DASHBOARD ---------- -->
+    <section id="view-dashboard" class="view">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="relative rounded-[22px] overflow-hidden bg-asphalt text-white">
+          <img src="https://images.pexels.com/photos/11890959/pexels-photo-11890959.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200"
+               alt="Mekanik sedang memperbaiki mesin motor di bengkel" class="absolute inset-0 w-full h-full object-cover opacity-45">
+          <div class="absolute inset-0 bg-gradient-to-r from-asphalt via-asphalt/92 to-asphalt/30"></div>
+          <div class="relative p-6 sm:p-8 lg:p-10">
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember-300">
+              <span class="w-6 h-[2px] bg-ember"></span> Ringkasan Operasional Hari Ini
+            </div>
+            <h2 class="mt-3 text-[26px] sm:text-[38px] lg:text-[44px] font-extrabold leading-[1.05] tracking-tight max-w-[18ch]">
+              Selamat pagi, Rian. <span class="text-ember">9 unit</span> menunggu di lantai bengkel.
+            </h2>
+            <p class="mt-3 text-white/72 max-w-[52ch] text-[13px] sm:text-[15px] leading-relaxed">
+              Shift pagi berjalan 08:00–17:00. Kasir aktif, printer termal 80mm terhubung, dan 4 item sparepart berada di bawah batas stok minimum.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2.5">
+              <button data-goto="pos" class="focus-ring btn-press bg-ember hover:bg-ember-600 text-white px-5 h-12 rounded-xl font-bold text-[13px] flex items-center gap-2">
+                <i data-lucide="scan-barcode" class="w-[18px] h-[18px]"></i> Buka Kasir (POS)
+              </button>
+              <button id="heroNewWO" class="focus-ring btn-press bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 h-12 rounded-xl font-bold text-[13px] flex items-center gap-2">
+                <i data-lucide="clipboard-plus" class="w-[18px] h-[18px]"></i> Buat Work Order
+              </button>
+              <button id="heroPrint" class="focus-ring btn-press bg-transparent hover:bg-white/10 border border-white/20 text-white px-5 h-12 rounded-xl font-bold text-[13px] flex items-center gap-2">
+                <i data-lucide="printer" class="w-[18px] h-[18px]"></i> Test Printer
+              </button>
+            </div>
+          </div>
+          <div class="relative grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/10 border-t border-white/10 bg-black/25">
+            <div class="p-4 sm:p-5">
+              <div class="label-stencil text-white/50">Omzet Hari Ini</div>
+              <div class="mt-1 font-mono font-bold text-[19px] sm:text-[24px] tnum text-ember-300" data-count="4860000" data-prefix="Rp">Rp 0</div>
+            </div>
+            <div class="p-4 sm:p-5">
+              <div class="label-stencil text-white/50">Transaksi</div>
+              <div class="mt-1 font-mono font-bold text-[19px] sm:text-[24px] tnum" data-count="27">0</div>
+            </div>
+            <div class="p-4 sm:p-5">
+              <div class="label-stencil text-white/50">Unit Servis</div>
+              <div class="mt-1 font-mono font-bold text-[19px] sm:text-[24px] tnum" data-count="9">0</div>
+            </div>
+            <div class="p-4 sm:p-5">
+              <div class="label-stencil text-white/50">Stok Kritis</div>
+              <div class="mt-1 font-mono font-bold text-[19px] sm:text-[24px] tnum text-honey" data-count="4">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 xl:grid-cols-[1.35fr_1fr] gap-5">
+        <!-- grafik -->
+        <div class="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <h3 class="text-[15px] font-extrabold tracking-tight">Penjualan 7 Hari Terakhir</h3>
+              <p class="text-[11px] text-stone mt-0.5">Gabungan kasir &amp; jasa servis · dalam ribuan rupiah</p>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-moss bg-moss/10 px-2.5 py-1 rounded-full">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +12,4% vs pekan lalu
+              </span>
+            </div>
+          </div>
+          <div id="chartBars" class="mt-7 h-[190px] flex items-stretch gap-2 sm:gap-3"></div>
+          <div id="chartLabels" class="mt-2.5 flex gap-2 sm:gap-3 text-[10px] font-mono text-stone"></div>
+        </div>
+
+        <!-- antrian servis -->
+        <div class="bg-white rounded-2xl border border-ink/10 overflow-hidden">
+          <div class="p-5 pb-3 flex items-center gap-3">
+            <div>
+              <h3 class="text-[15px] font-extrabold tracking-tight">Antrian Servis Aktif</h3>
+              <p class="text-[11px] text-stone mt-0.5">Lantai bengkel · 4 mekanik bertugas</p>
+            </div>
+            <button data-goto="servis" class="focus-ring ml-auto text-[11px] font-bold text-ember hover:underline btn-press">Lihat semua</button>
+          </div>
+          <div id="dashQueue" class="divide-y divide-ink/8"></div>
+        </div>
+      </div>
+
+      <div class="px-4 sm:px-6 lg:px-8 mt-5 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-5">
+        <div class="bg-asphalt text-white rounded-2xl overflow-hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-[200px_1fr]">
+            <div class="relative h-[150px] sm:h-auto">
+              <img src="https://images.pexels.com/photos/4116171/pexels-photo-4116171.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Meja kerja bengkel dengan oli dan perkakas" class="absolute inset-0 w-full h-full object-cover">
+              <div class="absolute inset-0 bg-asphalt/45"></div>
+            </div>
+            <div class="p-5">
+              <h3 class="text-[15px] font-extrabold tracking-tight">Peringatan Stok Minimum</h3>
+              <p class="text-[11px] text-white/55 mt-0.5 mb-3">Restock otomatis tercatat di mutasi inventori.</p>
+              <div id="dashStock" class="space-y-2.5"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-ink/10 p-5 sm:p-6">
+          <h3 class="text-[15px] font-extrabold tracking-tight">Komposisi Pendapatan Shift</h3>
+          <p class="text-[11px] text-stone mt-0.5">Berdasarkan metode pembayaran transaksi kasir</p>
+          <div class="mt-5 flex flex-col sm:flex-row items-center gap-6">
+            <div class="relative w-[168px] h-[168px] shrink-0">
+              <div id="donut" class="w-full h-full rounded-full" style="background: conic-gradient(#E2542C 0 46%, #1F7A5A 46% 74%, #F2A20C 74% 90%, #1B1815 90% 100%);"></div>
+              <div class="absolute inset-[26px] rounded-full bg-white grid place-items-center">
+                <div class="text-center">
+                  <div class="font-mono font-bold text-[19px] tnum leading-none">Rp 4,86<span class="text-[12px]">jt</span></div>
+                  <div class="text-[9px] text-stone uppercase tracking-[.16em] mt-1">Total Shift</div>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1 w-full space-y-2.5">
+              <div class="flex items-center gap-2.5"><span class="w-2.5 h-2.5 rounded-sm bg-ember"></span><span class="text-[12px] font-semibold flex-1">Tunai</span><span class="font-mono text-[12px] tnum text-stone">46%</span></div>
+              <div class="flex items-center gap-2.5"><span class="w-2.5 h-2.5 rounded-sm bg-moss"></span><span class="text-[12px] font-semibold flex-1">QRIS</span><span class="font-mono text-[12px] tnum text-stone">28%</span></div>
+              <div class="flex items-center gap-2.5"><span class="w-2.5 h-2.5 rounded-sm bg-honey"></span><span class="text-[12px] font-semibold flex-1">Kartu Debit</span><span class="font-mono text-[12px] tnum text-stone">16%</span></div>
+              <div class="flex items-center gap-2.5"><span class="w-2.5 h-2.5 rounded-sm bg-asphalt"></span><span class="text-[12px] font-semibold flex-1">Transfer</span><span class="font-mono text-[12px] tnum text-stone">10%</span></div>
+              <button data-goto="laporan" class="focus-ring btn-press mt-2 w-full h-10 rounded-xl bg-sand hover:bg-ember hover:text-white text-[12px] font-bold flex items-center justify-center gap-2">
+                <i data-lucide="file-bar-chart-2" class="w-4 h-4"></i> Buka Laporan Lengkap
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- POS ---------- -->
+    <section id="view-pos" class="view hidden">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember"><span class="w-6 h-[2px] bg-ember"></span> Terminal Kasir</div>
+            <h2 class="mt-2 text-[26px] sm:text-[34px] font-extrabold tracking-tight leading-none">Point of Sale</h2>
+            <p class="text-stone text-[12px] mt-1.5">Pilih produk atau jasa servis, atur qty, lalu bayar &amp; cetak struk termal.</p>
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            <div class="flex items-center gap-2 bg-white border border-ink/12 rounded-xl px-3 h-11 w-[220px] sm:w-[280px] focus-within:border-ember transition-colors">
+              <i data-lucide="search" class="w-4 h-4 text-stone"></i>
+              <input id="posSearch" type="text" placeholder="Cari nama / SKU…" class="w-full text-[13px] bg-transparent placeholder:text-stone/70">
+            </div>
+            <button id="btnHold" class="focus-ring btn-press h-11 px-4 rounded-xl border border-ink/12 bg-white hover:border-ember hover:text-ember text-[12px] font-bold flex items-center gap-2">
+              <i data-lucide="pause-circle" class="w-4 h-4"></i><span class="hidden sm:inline">Tahan Transaksi</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="posCats" class="mt-5 flex flex-wrap gap-2"></div>
+
+        <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-3">
+          <div class="col-span-2 sm:col-span-3 2xl:col-span-4">
+            <div class="flex items-center gap-3">
+              <h3 class="label-stencil text-stone">Daftar Item</h3>
+              <div class="flex-1 h-[1px] bg-ink/10"></div>
+              <span id="posCount" class="font-mono text-[11px] text-stone tnum">0 item</span>
+            </div>
+          </div>
+          <div id="posGrid" class="col-span-2 sm:col-span-3 2xl:col-span-4 grid grid-cols-2 sm:grid-cols-3 2xl:grid-cols-4 gap-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SERVIS ---------- -->
+    <section id="view-servis" class="view hidden">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="relative rounded-[22px] overflow-hidden">
+          <img src="https://images.pexels.com/photos/11536993/pexels-photo-11536993.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="Mekanik memperbaiki motor Yamaha di bengkel" class="w-full h-[190px] sm:h-[230px] object-cover">
+          <div class="absolute inset-0 bg-gradient-to-r from-asphalt/95 via-asphalt/70 to-transparent"></div>
+          <div class="absolute inset-0 p-6 sm:p-8 flex flex-col justify-center">
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember-300"><span class="w-6 h-[2px] bg-ember"></span> Work Order Management</div>
+            <h2 class="mt-2 text-[24px] sm:text-[34px] font-extrabold text-white tracking-tight leading-none">Lantai Bengkel</h2>
+            <p class="text-white/70 text-[12px] sm:text-[13px] mt-2 max-w-[46ch]">Lacak setiap unit dari antrian sampai diambil pelanggan — lengkap dengan mekanik, estimasi biaya, dan status pengerjaan.</p>
+            <div class="mt-4">
+              <button id="btnNewWO" class="focus-ring btn-press bg-ember hover:bg-ember-600 text-white px-5 h-11 rounded-xl font-bold text-[12px] flex items-center gap-2">
+                <i data-lucide="plus" class="w-[17px] h-[17px]"></i> Work Order Baru
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center gap-2">
+          <div id="woFilters" class="flex flex-wrap gap-2"></div>
+          <div class="ml-auto flex items-center gap-2 font-mono text-[11px] text-stone">
+            <span class="w-2 h-2 rounded-full bg-ember animate-pulse"></span>
+            <span id="woCount">0 unit</span>
+          </div>
+        </div>
+
+        <div class="mt-4 bg-white rounded-2xl border border-ink/10 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[860px]">
+              <thead>
+                <tr class="bg-sand/70 text-[10px] uppercase tracking-[.14em] text-stone">
+                  <th class="py-3 px-4 font-bold">No. WO</th>
+                  <th class="py-3 px-4 font-bold">Kendaraan</th>
+                  <th class="py-3 px-4 font-bold">Keluhan / Permintaan</th>
+                  <th class="py-3 px-4 font-bold">Mekanik</th>
+                  <th class="py-3 px-4 font-bold text-right">Estimasi</th>
+                  <th class="py-3 px-4 font-bold">Status</th>
+                  <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="woTable" class="divide-y divide-ink/8"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- INVENTORI ---------- -->
+    <section id="view-inventori" class="view hidden">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember"><span class="w-6 h-[2px] bg-ember"></span> Gudang Sparepart</div>
+            <h2 class="mt-2 text-[26px] sm:text-[34px] font-extrabold tracking-tight leading-none">Inventori &amp; Stok</h2>
+            <p class="text-stone text-[12px] mt-1.5">Pantau level stok, lakukan restock, dan lihat status kritis secara langsung.</p>
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            <div class="flex items-center gap-2 bg-white border border-ink/12 rounded-xl px-3 h-11 w-[210px] sm:w-[260px] focus-within:border-ember transition-colors">
+              <i data-lucide="search" class="w-4 h-4 text-stone"></i>
+              <input id="invSearch" type="text" placeholder="Cari sparepart…" class="w-full text-[13px] bg-transparent placeholder:text-stone/70">
+            </div>
+            <button id="btnStockOpname" class="focus-ring btn-press h-11 px-4 rounded-xl bg-asphalt text-white hover:bg-ink text-[12px] font-bold flex items-center gap-2">
+              <i data-lucide="clipboard-check" class="w-4 h-4"></i><span class="hidden sm:inline">Stok Opname</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="bg-white rounded-2xl border border-ink/10 p-4"><div class="label-stencil text-stone">Total SKU</div><div class="font-mono text-[22px] font-bold tnum mt-1">16</div></div>
+          <div class="bg-white rounded-2xl border border-ink/10 p-4"><div class="label-stencil text-stone">Nilai Persediaan</div><div class="font-mono text-[22px] font-bold tnum mt-1">Rp 41,2<span class="text-[12px]">jt</span></div></div>
+          <div class="bg-white rounded-2xl border border-ember/30 bg-ember/5 p-4"><div class="label-stencil text-ember-600">Di Bawah Minimum</div><div class="font-mono text-[22px] font-bold tnum mt-1 text-ember-600" id="invCritical">0</div></div>
+          <div class="bg-white rounded-2xl border border-ink/10 p-4"><div class="label-stencil text-stone">Restock Bulan Ini</div><div class="font-mono text-[22px] font-bold tnum mt-1">18</div></div>
+        </div>
+
+        <div class="mt-4 bg-white rounded-2xl border border-ink/10 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[820px]">
+              <thead>
+                <tr class="bg-sand/70 text-[10px] uppercase tracking-[.14em] text-stone">
+                  <th class="py-3 px-4 font-bold">SKU</th>
+                  <th class="py-3 px-4 font-bold">Nama Item</th>
+                  <th class="py-3 px-4 font-bold">Kategori</th>
+                  <th class="py-3 px-4 font-bold">Level Stok</th>
+                  <th class="py-3 px-4 font-bold text-right">Harga Jual</th>
+                  <th class="py-3 px-4 font-bold">Status</th>
+                  <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="invTable" class="divide-y divide-ink/8"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- PELANGGAN ---------- -->
+    <section id="view-pelanggan" class="view hidden">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember"><span class="w-6 h-[2px] bg-ember"></span> Database Pelanggan</div>
+            <h2 class="mt-2 text-[26px] sm:text-[34px] font-extrabold tracking-tight leading-none">Pelanggan Setia</h2>
+            <p class="text-stone text-[12px] mt-1.5">Poin loyalitas, unit kendaraan, dan riwayat kunjungan dalam satu tampilan.</p>
+          </div>
+          <button id="btnNewCust" class="focus-ring btn-press ml-auto h-11 px-4 rounded-xl bg-ember text-white hover:bg-ember-600 text-[12px] font-bold flex items-center gap-2">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Pelanggan
+          </button>
+        </div>
+        <div id="custGrid" class="mt-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- ---------- LAPORAN ---------- -->
+    <section id="view-laporan" class="view hidden">
+      <div class="px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="flex flex-wrap items-end gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-[11px] label-stencil text-ember"><span class="w-6 h-[2px] bg-ember"></span> Rekapitulasi</div>
+            <h2 class="mt-2 text-[26px] sm:text-[34px] font-extrabold tracking-tight leading-none">Laporan &amp; Kasir</h2>
+            <p class="text-stone text-[12px] mt-1.5">Riwayat transaksi tersimpan di localStorage — cetak ulang struk kapan saja.</p>
+          </div>
+          <button id="btnCloseShift" class="focus-ring btn-press ml-auto h-11 px-4 rounded-xl bg-asphalt text-white hover:bg-ink text-[12px] font-bold flex items-center gap-2">
+            <i data-lucide="lock" class="w-4 h-4"></i> Tutup Shift &amp; Cetak Z-Report
+          </button>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="bg-asphalt text-white rounded-2xl p-5"><div class="label-stencil text-white/50">Total Penjualan</div><div class="font-mono text-[24px] font-bold tnum mt-1.5" id="lapTotal">Rp 0</div><div class="text-[11px] text-white/50 mt-1">Shift pagi · hari ini</div></div>
+          <div class="bg-white rounded-2xl border border-ink/10 p-5"><div class="label-stencil text-stone">Jumlah Transaksi</div><div class="font-mono text-[24px] font-bold tnum mt-1.5" id="lapTrx">0</div><div class="text-[11px] text-stone mt-1">Termasuk jasa servis</div></div>
+          <div class="bg-white rounded-2xl border border-ink/10 p-5"><div class="label-stencil text-stone">Rata-rata / Struk</div><div class="font-mono text-[24px] font-bold tnum mt-1.5" id="lapAvg">Rp 0</div><div class="text-[11px] text-stone mt-1">Nilai transaksi rata-rata</div></div>
+          <div class="bg-white rounded-2xl border border-ink/10 p-5"><div class="label-stencil text-stone">Pendapatan Jasa</div><div class="font-mono text-[24px] font-bold tnum mt-1.5 text-moss">Rp 1,72<span class="text-[12px]">jt</span></div><div class="text-[11px] text-stone mt-1">6 work order selesai</div></div>
+        </div>
+
+        <div class="mt-4 bg-white rounded-2xl border border-ink/10 overflow-hidden">
+          <div class="p-5 flex items-center gap-3">
+            <div>
+              <h3 class="text-[15px] font-extrabold tracking-tight">Riwayat Transaksi</h3>
+              <p class="text-[11px] text-stone mt-0.5">Klik "Struk" untuk melihat dan mencetak ulang</p>
+            </div>
+            <span class="ml-auto font-mono text-[11px] text-stone tnum" id="lapCount">0 struk</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left min-w-[720px]">
+              <thead>
+                <tr class="bg-sand/70 text-[10px] uppercase tracking-[.14em] text-stone">
+                  <th class="py-3 px-4 font-bold">No. Struk</th>
+                  <th class="py-3 px-4 font-bold">Waktu</th>
+                  <th class="py-3 px-4 font-bold">Pelanggan</th>
+                  <th class="py-3 px-4 font-bold">Item</th>
+                  <th class="py-3 px-4 font-bold">Metode</th>
+                  <th class="py-3 px-4 font-bold text-right">Total</th>
+                  <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="lapTable" class="divide-y divide-ink/8"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="px-4 sm:px-6 lg:px-8 mt-10 pb-6">
+      <div class="rounded-2xl bg-asphalt text-white/70 p-6 flex flex-wrap items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-ember grid place-items-center">
+            <svg viewBox="0 0 40 40" class="w-6 h-6"><path d="M20 3.5 33.5 11v18L20 36.5 6.5 29V11L20 3.5Z" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/><path d="M13.5 26.5V15.2l6.5 7.1 6.5-7.1v11.3" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="text-white font-bold text-[13px] leading-tight">MOTOPOS · Sistem POS Bengkel</div>
+            <div class="text-[11px] leading-tight">Jl. Raya Ciputat Raya No. 88, Tangerang Selatan · (021) 7455 8890</div>
+          </div>
+        </div>
+        <div class="ml-auto flex flex-wrap items-center gap-2 text-[10px] font-mono">
+          <span class="px-2.5 py-1 rounded-full border border-white/15">Printer: TM-T82 80mm · Ready</span>
+          <span class="px-2.5 py-1 rounded-full border border-white/15">localStorage: aktif</span>
+          <span class="px-2.5 py-1 rounded-full bg-ember text-white border border-ember">Demo Prototype by NovaNext</span>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- ============ BOTTOM NAV (mobile) ============ -->
+<nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-asphalt border-t border-black/40 pb-[env(safe-area-inset-bottom)]">
+  <div id="mobileNav" class="grid grid-cols-6"></div>
+</nav>
+
+<!-- ============ CART DRAWER ============ -->
+<div id="cartBackdrop" class="fixed inset-0 bg-ink/45 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
+<aside id="cartDrawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[412px] bg-paper z-50 translate-x-full transition-transform duration-300 ease-[cubic-bezier(.2,.8,.3,1)] flex flex-col shadow-[-20px_0_60px_-20px_rgba(20,18,16,.45)]">
+  <div class="h-1.5 hazard"></div>
+  <div class="px-5 py-4 flex items-center gap-3 border-b border-ink/10">
+    <div>
+      <h3 class="text-[15px] font-extrabold tracking-tight">Keranjang Transaksi</h3>
+      <p class="text-[11px] text-stone mt-0.5" id="cartSubtitle">0 item · Kasir Rian</p>
+    </div>
+    <button id="cartClose" class="focus-ring btn-press ml-auto w-9 h-9 rounded-lg border border-ink/12 grid place-items-center hover:bg-white">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  <div class="px-5 py-3 border-b border-ink/10 bg-white/60">
+    <div class="flex items-center gap-2">
+      <i data-lucide="user-round" class="w-4 h-4 text-stone"></i>
+      <select id="cartCustomer" class="field flex-1 bg-white border border-ink/12 rounded-lg h-9 px-2 text-[12px] font-semibold"></select>
+    </div>
+  </div>
+
+  <div id="cartItems" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+
+  <div class="border-t border-ink/10 bg-white px-5 py-4 space-y-3">
+    <div class="flex gap-2">
+      <input id="discInput" type="number" min="0" max="100" value="0" class="field w-[86px] h-10 rounded-lg border border-ink/12 px-3 font-mono text-[13px] tnum">
+      <button id="btnDisc" class="focus-ring btn-press flex-1 h-10 rounded-lg border border-ink/12 hover:border-ember hover:text-ember text-[12px] font-bold flex items-center justify-center gap-2">
+        <i data-lucide="badge-percent" class="w-4 h-4"></i> Terapkan Diskon %
+      </button>
+      <button id="btnClearCart" class="focus-ring btn-press w-10 h-10 rounded-lg border border-ink/12 hover:border-ember hover:text-ember grid place-items-center" title="Kosongkan keranjang">
+        <i data-lucide="trash-2" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="space-y-1.5 text-[12px]">
+      <div class="flex justify-between"><span class="text-stone">Subtotal</span><span class="font-mono tnum" id="sumSub">Rp 0</span></div>
+      <div class="flex justify-between"><span class="text-stone">Diskon</span><span class="font-mono tnum text-ember" id="sumDisc">- Rp 0</span></div>
+      <div class="flex justify-between"><span class="text-stone">PPN 11%</span><span class="font-mono tnum" id="sumTax">Rp 0</span></div>
+      <div class="flex justify-between items-end pt-2 mt-1 border-t border-dashed border-ink/20">
+        <span class="label-stencil text-ink">Total Bayar</span>
+        <span class="font-mono text-[21px] font-bold tnum leading-none" id="sumTotal">Rp 0</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="label-stencil text-stone mb-1.5">Metode Pembayaran</div>
+      <div id="payMethods" class="grid grid-cols-4 gap-1.5"></div>
+    </div>
+
+    <div id="cashWrap">
+      <div class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-mono text-stone">Rp</span>
+          <input id="cashInput" type="number" min="0" step="1000" placeholder="0" class="field w-full h-11 rounded-lg border border-ink/12 pl-9 pr-3 font-mono text-[15px] font-bold tnum">
+        </div>
+        <div class="text-right">
+          <div class="label-stencil text-stone leading-none">Kembali</div>
+          <div class="font-mono text-[15px] font-bold tnum leading-tight" id="cashChange">Rp 0</div>
+        </div>
+      </div>
+      <div class="flex gap-1.5 mt-2">
+        <button data-cash="exact" class="focus-ring btn-press flex-1 h-8 rounded-lg bg-sand hover:bg-ember hover:text-white text-[11px] font-bold">Uang Pas</button>
+        <button data-cash="50000" class="focus-ring btn-press flex-1 h-8 rounded-lg bg-sand hover:bg-ember hover:text-white text-[11px] font-bold font-mono">50rb</button>
+        <button data-cash="100000" class="focus-ring btn-press flex-1 h-8 rounded-lg bg-sand hover:bg-ember hover:text-white text-[11px] font-bold font-mono">100rb</button>
+        <button data-cash="200000" class="focus-ring btn-press flex-1 h-8 rounded-lg bg-sand hover:bg-ember hover:text-white text-[11px] font-bold font-mono">200rb</button>
+      </div>
+    </div>
+
+    <button id="btnCheckout" class="focus-ring btn-press w-full h-[52px] rounded-xl bg-ember text-white font-bold text-[14px] flex items-center justify-center gap-2 hover:bg-ember-600 shadow-lg shadow-ember/25">
+      <i data-lucide="printer" class="w-[18px] h-[18px]"></i> Bayar &amp; Cetak Struk
+    </button>
+  </div>
+</aside>
+
+<!-- ============ TOASTS ============ -->
+<div id="toastWrap" class="fixed top-[86px] right-4 z-[70] space-y-2 w-[300px] sm:w-[340px]"></div>
+
+<!-- ============ MODAL ============ -->
+<div id="modalWrap" class="fixed inset-0 z-[80] hidden">
+  <div id="modalBackdrop" class="absolute inset-0 bg-ink/55 backdrop-blur-[3px] opacity-0 transition-opacity duration-250"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 sm:p-6 flex items-start sm:items-center justify-center">
+    <div id="modalPanel" class="relative w-full max-w-[520px] bg-white rounded-2xl shadow-2xl opacity-0 translate-y-4 scale-[.97] transition-all duration-250 overflow-hidden">
+      <div class="h-1.5 hazard"></div>
+      <div id="modalContent" class="p-6"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RECEIPT MODAL ============ -->
+<div id="receiptWrap" class="fixed inset-0 z-[85] hidden">
+  <div id="receiptBackdrop" class="absolute inset-0 bg-ink/70 backdrop-blur-[3px] opacity-0 transition-opacity duration-300"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 sm:p-6">
+    <div class="min-h-full flex flex-col items-center justify-center gap-4 py-6">
+      <div class="w-full max-w-[380px] flex items-center gap-2 no-print anim-fade-up">
+        <div class="flex items-center gap-2 text-white/80 text-[11px] label-stencil">
+          <span class="w-2 h-2 rounded-full bg-moss animate-pulse"></span> Printer Termal 80mm · Terhubung
+        </div>
+        <button id="receiptClose" class="focus-ring btn-press ml-auto w-9 h-9 rounded-lg bg-white/10 border border-white/20 text-white grid place-items-center hover:bg-white/20">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="w-full max-w-[380px] anim-paper">
+        <div class="tear-top"></div>
+        <div id="printArea" class="bg-white px-6 py-5 font-mono text-[11px] leading-[1.65] text-ink shadow-[0_24px_60px_-18px_rgba(0,0,0,.6)]"></div>
+        <div class="tear-bottom"></div>
+      </div>
+
+      <div class="w-full max-w-[380px] grid grid-cols-2 gap-2 no-print anim-fade-up">
+        <button id="receiptPrint" class="focus-ring btn-press h-12 rounded-xl bg-ember text-white font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-ember-600">
+          <i data-lucide="printer" class="w-[18px] h-[18px]"></i> Cetak Struk
+        </button>
+        <button id="receiptNew" class="focus-ring btn-press h-12 rounded-xl bg-white/10 border border-white/25 text-white font-bold text-[13px] flex items-center justify-center gap-2 hover:bg-white/20">
+          <i data-lucide="plus" class="w-[18px] h-[18px]"></i> Transaksi Baru
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   MOTOPOS — State Engine + Mock Data + Interaktivitas
+   ========================================================= */
+const KEY = 'motopos_v1';
+const rupiah = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+const CATEGORIES = ['Semua', 'Oli & Pelumas', 'Sparepart', 'Ban', 'Aksesori', 'Jasa Servis'];
+const CAT_ICON = {
+  'Oli & Pelumas': 'droplet', 'Sparepart': 'cog', 'Ban': 'circle-dot',
+  'Aksesori': 'shield', 'Jasa Servis': 'wrench', 'Semua': 'layout-grid'
+};
+const PAY_METHODS = [
+  { id: 'Tunai', icon: 'banknote' },
+  { id: 'QRIS', icon: 'qr-code' },
+  { id: 'Debit', icon: 'credit-card' },
+  { id: 'Transfer', icon: 'landmark' }
+];
+const WO_STATUS = ['Antrian', 'Dikerjakan', 'Siap Diambil', 'Selesai'];
+const STATUS_STYLE = {
+  'Antrian': 'bg-honey/15 text-honey border-honey/30',
+  'Dikerjakan': 'bg-ember/12 text-ember-600 border-ember/30',
+  'Siap Diambil': 'bg-moss/12 text-moss border-moss/30',
+  'Selesai': 'bg-asphalt/10 text-asphalt border-asphalt/20'
+};
+
+const SEED = {
+  products: [
+    { id: 'P01', sku: 'OLI-1040', nama: 'Oli Mesin Matic 10W-40 (1L)', kategori: 'Oli & Pelumas', harga: 48000, stok: 64, min: 12, ikon: 'droplet', img: 'https://images.pexels.com/photos/27704018/pexels-photo-27704018.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200' },
+    { id: 'P02', sku: 'OLI-GRD012', nama: 'Oli Gardan Matik (0,12L)', kategori: 'Oli & Pelumas', harga: 22000, stok: 38, min: 10, ikon: 'cog' },
+    { id: 'P03', sku: 'OLI-SYN30', nama: 'Oli Sintetik Full 10W-30 (1L)', kategori: 'Oli & Pelumas', harga: 92000, stok: 21, min: 10, ikon: 'droplet' },
+    { id: 'P04', sku: 'BSI-CPR9', nama: 'Busi Iridium CPR9EAIX-9', kategori: 'Sparepart', harga: 85000, stok: 27, min: 8, ikon: 'zap' },
+    { id: 'P05', sku: 'KRM-DEP-V', nama: 'Kampas Rem Depan Vario/Beat', kategori: 'Sparepart', harga: 95000, stok: 6, min: 8, ikon: 'disc-3' },
+    { id: 'P06', sku: 'FLU-V160', nama: 'Filter Udara Vario 160', kategori: 'Sparepart', harga: 68000, stok: 14, min: 6, ikon: 'filter' },
+    { id: 'P07', sku: 'CVT-RLS', nama: 'Roller CVT + Slider Set', kategori: 'Sparepart', harga: 145000, stok: 4, min: 8, ikon: 'settings-2' },
+    { id: 'P08', sku: 'AKI-GTZ5', nama: 'Aki Kering GTZ5S', kategori: 'Sparepart', harga: 285000, stok: 9, min: 5, ikon: 'battery-charging' },
+    { id: 'P09', sku: 'BAN-9080', nama: 'Ban Depan 90/80-14 Tubeless', kategori: 'Ban', harga: 385000, stok: 5, min: 4, ikon: 'circle-dot' },
+    { id: 'P10', sku: 'BAN-1008', nama: 'Ban Belakang 100/80-14 Tubeless', kategori: 'Ban', harga: 465000, stok: 3, min: 4, ikon: 'circle-dot' },
+    { id: 'P11', sku: 'CVT-KGS', nama: 'Kampas Ganda CVT', kategori: 'Sparepart', harga: 210000, stok: 7, min: 5, ikon: 'cog' },
+    { id: 'P12', sku: 'AKS-HLM', nama: 'Helm Half Face SNI (M)', kategori: 'Aksesori', harga: 320000, stok: 11, min: 4, ikon: 'shield' },
+    { id: 'P13', sku: 'AKS-JRS', nama: 'Jas Hujan Setelan Premium', kategori: 'Aksesori', harga: 145000, stok: 0, min: 4, ikon: 'cloud-rain' },
+    { id: 'P14', sku: 'AKS-LED', nama: 'Lampu LED H4 6000K', kategori: 'Aksesori', harga: 120000, stok: 16, min: 6, ikon: 'lightbulb' },
+    { id: 'P15', sku: 'AKS-CLN', nama: 'Chain Lube + Cleaner Set', kategori: 'Aksesori', harga: 88000, stok: 19, min: 6, ikon: 'sparkles' },
+    { id: 'P16', sku: 'OLI-INJ', nama: 'Pembersih Injektor & Throttle', kategori: 'Oli & Pelumas', harga: 55000, stok: 12, min: 6, ikon: 'flask-conical' },
+    { id: 'J01', sku: 'JSA-OIL', nama: 'Jasa Ganti Oli Rutin', kategori: 'Jasa Servis', harga: 45000, stok: null, min: 0, ikon: 'wrench' },
+    { id: 'J02', sku: 'JSA-RNG', nama: 'Servis Ringan (8 Poin)', kategori: 'Jasa Servis', harga: 120000, stok: null, min: 0, ikon: 'wrench' },
+    { id: 'J03', sku: 'JSA-BRT', nama: 'Servis Berat + Tune Up', kategori: 'Jasa Servis', harga: 350000, stok: null, min: 0, ikon: 'wrench' },
+    { id: 'J04', sku: 'JSA-BAN', nama: 'Jasa Ganti Ban (2 Unit)', kategori: 'Jasa Servis', harga: 60000, stok: null, min: 0, ikon: 'wrench' },
+    { id: 'J05', sku: 'JSA-CVT', nama: 'Servis CVT Lengkap', kategori: 'Jasa Servis', harga: 175000, stok: null, min: 0, ikon: 'wrench' },
+    { id: 'J06', sku: 'JSA-REM', nama: 'Jasa Ganti Kampas Rem', kategori: 'Jasa Servis', harga: 80000, stok: null, min: 0, ikon: 'wrench' }
+  ],
+  customers: [
+    { id: 'C01', nama: 'Budi Santoso', telp: '0812-8877-4411', motor: 'Honda Vario 160 · B 1234 KZX', poin: 1240, kunjungan: 18, terakhir: '12 Feb 2026' },
+    { id: 'C02', nama: 'Siti Rahayu', telp: '0821-3344-9087', motor: 'Yamaha NMAX · B 2771 UZQ', poin: 860, kunjungan: 12, terakhir: '11 Feb 2026' },
+    { id: 'C03', nama: 'Andi Pratama', telp: '0813-5566-1204', motor: 'Honda PCX 160 · D 1102 AHS', poin: 2150, kunjungan: 27, terakhir: '10 Feb 2026' },
+    { id: 'C04', nama: 'Dewi Lestari', telp: '0857-9911-3388', motor: 'Suzuki Satria F150 · F 8890 KK', poin: 430, kunjungan: 6, terakhir: '08 Feb 2026' },
+    { id: 'C05', nama: 'Rizky Ramadhan', telp: '0878-2200-6611', motor: 'Kawasaki W175 · B 3390 TRX', poin: 1780, kunjungan: 21, terakhir: '07 Feb 2026' },
+    { id: 'C06', nama: 'Hendra Gunawan', telp: '0811-4477-2255', motor: 'Honda Beat 2023 · B 6612 QLA', poin: 290, kunjungan: 4, terakhir: '05 Feb 2026' }
+  ],
+  workOrders: [
+    { id: 'WO-2601', nopol: 'B 1234 KZX', motor: 'Honda Vario 160 2022', keluhan: 'Rem depan bunyi & tarikan berat', mekanik: 'Rudi Hartono', estimasi: 285000, status: 'Dikerjakan', masuk: '08:15', pelanggan: 'Budi Santoso' },
+    { id: 'WO-2602', nopol: 'B 2771 UZQ', motor: 'Yamaha NMAX 2021', keluhan: 'Servis CVT + ganti roller', mekanik: 'Agus Salim', estimasi: 415000, status: 'Antrian', masuk: '08:40', pelanggan: 'Siti Rahayu' },
+    { id: 'WO-2603', nopol: 'D 1102 AHS', motor: 'Honda PCX 160 2023', keluhan: 'Ganti oli mesin + filter udara', mekanik: 'Bagus Prakoso', estimasi: 168000, status: 'Siap Diambil', masuk: '07:55', pelanggan: 'Andi Pratama' },
+    { id: 'WO-2604', nopol: 'F 8890 KK', motor: 'Suzuki Satria F150 2019', keluhan: 'Tune up karburator, langsam tidak stabil', mekanik: 'Rudi Hartono', estimasi: 350000, status: 'Antrian', masuk: '09:10', pelanggan: 'Dewi Lestari' },
+    { id: 'WO-2605', nopol: 'B 3390 TRX', motor: 'Kawasaki W175 2020', keluhan: 'Ganti ban belakang + balancing', mekanik: 'Yoga Saputra', estimasi: 525000, status: 'Dikerjakan', masuk: '09:25', pelanggan: 'Rizky Ramadhan' },
+    { id: 'WO-2606', nopol: 'B 6612 QLA', motor: 'Honda Beat 2023', keluhan: 'Aki soak, lampu redup', mekanik: 'Agus Salim', estimasi: 285000, status: 'Selesai', masuk: '07:30', pelanggan: 'Hendra Gunawan' }
+  ],
+  transactions: [
+    { id: 'TRX-260212-024', waktu: '10:42', pelanggan: 'Budi Santoso', metode: 'Tunai', items: 3, total: 263500 },
+    { id: 'TRX-260212-023', waktu: '10:15', pelanggan: 'Umum', metode: 'QRIS', items: 2, total: 142000 },
+    { id: 'TRX-260212-022', waktu: '09:48', pelanggan: 'Andi Pratama', metode: 'Debit', items: 5, total: 712000 },
+    { id: 'TRX-260212-021', waktu: '09:12', pelanggan: 'Siti Rahayu', metode: 'QRIS', items: 1, total: 175000 },
+    { id: 'TRX-260212-020', waktu: '08:36', pelanggan: 'Rizky Ramadhan', metode: 'Transfer', items: 4, total: 948000 }
+  ],
+  sales7: [
+    { d: 'Sen', v: 3820 }, { d: 'Sel', v: 4210 }, { d: 'Rab', v: 3480 },
+    { d: 'Kam', v: 5120 }, { d: 'Jum', v: 4690 }, { d: 'Sab', v: 6240 }, { d: 'Min', v: 4860 }
+  ],
+  cart: [],
+  meta: { discPct: 0, method: 'Tunai', customer: 'Umum', tax: 0.11 }
+};
+
+const App = {
+  state: {
+    view: 'dashboard',
+    cart: [],
+    meta: { ...SEED.meta },
+    products: [], customers: [], workOrders: [], transactions: [], sales7: [],
+    ui: { posCat: 'Semua', posSearch: '', invSearch: '', woFilter: 'Semua', cartOpen: false }
+  },
+
+  init() {
+    this.load();
+    this.renderNav();
+    this.renderAll();
+    this.bind();
+    this.startClock();
+    this.animateCounters();
+    setTimeout(() => lucide.createIcons(), 40);
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        this.state.products = d.products || structuredClone(SEED.products);
+        this.state.customers = d.customers || structuredClone(SEED.customers);
+        this.state.workOrders = d.workOrders || structuredClone(SEED.workOrders);
+        this.state.transactions = d.transactions || structuredClone(SEED.transactions);
+        this.state.cart = d.cart || [];
+        this.state.meta = { ...SEED.meta, ...(d.meta || {}) };
+        this.state.sales7 = SEED.sales7;
+        return;
+      }
+    } catch (e) { console.warn('Gagal memuat data tersimpan', e); }
+    this.state.products = structuredClone(SEED.products);
+    this.state.customers = structuredClone(SEED.customers);
+    this.state.workOrders = structuredClone(SEED.workOrders);
+    this.state.transactions = structuredClone(SEED.transactions);
+    this.state.sales7 = SEED.sales7;
+    this.save();
+  },
+
+  save() {
+    const s = this.state;
+    localStorage.setItem(KEY, JSON.stringify({
+      products: s.products, customers: s.customers, workOrders: s.workOrders,
+      transactions: s.transactions, cart: s.cart, meta: s.meta
+    }));
+  },
+
+  /* ---------- NAVIGASI ---------- */
+  renderNav() {
+    const items = [
+      { id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
+      { id: 'pos', label: 'Kasir', icon: 'scan-barcode' },
+      { id: 'servis', label: 'Servis', icon: 'wrench' },
+      { id: 'inventori', label: 'Inventori', icon: 'package' },
+      { id: 'pelanggan', label: 'Pelanggan', icon: 'users' },
+      { id: 'laporan', label: 'Laporan', icon: 'file-bar-chart-2' }
+    ];
+    $('#sideNav').innerHTML = items.map(i => `
+      <button data-nav="${i.id}" class="nav-item focus-ring btn-press group h-[58px] rounded-xl flex flex-col items-center justify-center gap-1 text-white/45 hover:text-white hover:bg-white/6 ${this.state.view === i.id ? 'active bg-white/8 text-white' : ''}">
+        <i data-lucide="${i.icon}" class="w-[19px] h-[19px]"></i>
+        <span class="text-[8.5px] font-semibold tracking-wide">${i.label}</span>
+      </button>`).join('');
+
+    $('#mobileNav').innerHTML = items.map(i => `
+      <button data-nav="${i.id}" class="focus-ring btn-press py-2.5 flex flex-col items-center gap-1 ${this.state.view === i.id ? 'text-ember' : 'text-white/45'}">
+        <i data-lucide="${i.icon}" class="w-[18px] h-[18px]"></i>
+        <span class="text-[8.5px] font-semibold">${i.label}</span>
+      </button>`).join('');
+    lucide.createIcons();
+  },
+
+  goto(view) {
+    this.state.view = view;
+    $$('.view').forEach(v => v.classList.add('hidden'));
+    const el = $('#view-' + view);
+    if (el) { el.classList.remove('hidden'); el.classList.remove('view-enter'); void el.offsetWidth; el.classList.add('view-enter'); }
+    this.renderNav();
+    if (view === 'pos' && window.innerWidth >= 1024) { this.openCart(); } else { this.closeCart(); }
+    if (view === 'dashboard') this.animateCounters();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    lucide.createIcons();
+  },
+
+  /* ---------- RENDER ALL ---------- */
+  renderAll() {
+    this.renderDashQueue();
+    this.renderDashStock();
+    this.renderChart();
+    this.renderPos();
+    this.renderWO();
+    this.renderInv();
+    this.renderCust();
+    this.renderLap();
+    this.renderCart();
+  },
+
+  /* ---------- DASHBOARD ---------- */
+  renderDashQueue() {
+    const rows = this.state.workOrders.filter(w => w.status !== 'Selesai').slice(0, 5);
+    $('#dashQueue').innerHTML = rows.map((w, i) => `
+      <div class="row-hover px-5 py-3 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg ${i % 2 ? 'bg-sand' : 'bg-ember/12'} grid place-items-center shrink-0">
+          <i data-lucide="bike" class="w-[16px] h-[16px] ${i % 2 ? 'text-stone' : 'text-ember'}"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-[11px] font-bold bg-asphalt text-white px-1.5 py-[2px] rounded">${w.nopol}</span>
+            <span class="text-[11px] text-stone truncate">${w.motor}</span>
+          </div>
+          <div class="text-[11px] text-stone/90 truncate mt-0.5">${w.keluhan}</div>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-[10px] font-semibold px-2 py-[3px] rounded-full border ${STATUS_STYLE[w.status]}">${w.status}</div>
+          <div class="font-mono text-[11px] tnum text-stone mt-1">${rupiah(w.estimasi)}</div>
+        </div>
+      </div>`).join('') || `<div class="p-8 text-center text-stone text-[12px]">Tidak ada antrian aktif.</div>`;
+    lucide.createIcons();
+  },
+
+  renderDashStock() {
+    const low = this.state.products.filter(p => p.stok !== null && p.stok <= p.min);
+    $('#dashStock').innerHTML = low.map(p => `
+      <div class="flex items-center gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="text-[11.5px] font-semibold truncate">${p.nama}</div>
+          <div class="mt-1 h-[5px] rounded-full bg-white/12 overflow-hidden">
+            <div class="h-full rounded-full ${p.stok === 0 ? 'bg-honey' : 'bg-ember'}" style="width:${Math.min(100, Math.round((p.stok / Math.max(p.min, 1)) * 100))}%"></div>
+          </div>
+        </div>
+        <div class="font-mono text-[11px] tnum text-white/70 shrink-0">${p.stok} / ${p.min}</div>
+      </div>`).join('') || `<div class="text-[12px] text-white/60">Semua stok aman.</div>`;
+  },
+
+  renderChart() {
+    const max = Math.max(...this.state.sales7.map(s => s.v));
+    $('#chartBars').innerHTML = this.state.sales7.map((s, i) => `
+      <div class="flex-1 h-full flex flex-col justify-end items-center group">
+        <div class="text-[9px] font-mono text-stone mb-1.5 opacity-0 group-hover:opacity-100 transition-opacity">${(s.v / 1000).toFixed(1)}jt</div>
+        <div class="w-full rounded-t-lg anim-bar transition-all duration-300 ${i === 6 ? 'bg-ember' : 'bg-asphalt/85 group-hover:bg-ember'}"
+             style="height:${Math.round((s.v / max) * 86)}%; animation-delay:${i * 70}ms"></div>
+      </div>`).join('');
+    $('#chartLabels').innerHTML = this.state.sales7.map(s =>
+      `<div class="flex-1 text-center">${s.d}</div>`).join('');
+  },
+
+  animateCounters() {
+    $$('[data-count]').forEach(el => {
+      const target = parseFloat(el.dataset.count);
+      const prefix = el.dataset.prefix ? el.dataset.prefix + ' ' : '';
+      const dur = 1000, start = performance.now();
+      const step = now => {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.round(target * eased).toLocaleString('id-ID');
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  },
+
+  /* ---------- POS ---------- */
+  renderPos() {
+    $('#posCats').innerHTML = CATEGORIES.map(c => {
+      const active = this.state.ui.posCat === c;
+      return `<button data-cat="${c}" class="focus-ring btn-press h-10 px-4 rounded-xl border text-[12px] font-bold flex items-center gap-2 ${active ? 'bg-asphalt text-white border-asphalt' : 'bg-white border-ink/12 hover:border-ember hover:text-ember'}">
+        <i data-lucide="${CAT_ICON[c]}" class="w-[15px] h-[15px]"></i>${c}</button>`;
+    }).join('');
+
+    const q = this.state.ui.posSearch.toLowerCase();
+    const list = this.state.products.filter(p =>
+      (this.state.ui.posCat === 'Semua' || p.kategori === this.state.ui.posCat) &&
+      (p.nama.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q))
+    );
+    $('#posCount').textContent = list.length + ' item';
+
+    $('#posGrid').innerHTML = list.map(p => {
+      const inCart = (this.state.cart.find(c => c.id === p.id) || {}).qty || 0;
+      const isJasa = p.stok === null;
+      const out = !isJasa && p.stok <= 0;
+      return `
+      <button data-add="${p.id}" ${out ? 'disabled' : ''}
+        class="focus-ring btn-press hover-lift text-left rounded-2xl border border-ink/10 bg-white overflow-hidden ${out ? 'opacity-55 cursor-not-allowed' : 'hover:border-ember/50'}">
+        ${p.img
+          ? `<div class="relative h-[92px] overflow-hidden"><img src="${p.img}" alt="${p.nama}" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-ink/55 to-transparent"></div><span class="absolute bottom-2 left-2 text-[9px] font-mono bg-white/90 px-1.5 py-[2px] rounded">${p.sku}</span></div>`
+          : `<div class="relative h-[92px] grid place-items-center ${isJasa ? 'bg-asphalt' : 'bg-sand'}">
+               <i data-lucide="${p.ikon}" class="w-8 h-8 ${isJasa ? 'text-ember' : 'text-stone/70'}"></i>
+               <span class="absolute bottom-2 left-2 text-[9px] font-mono ${isJasa ? 'text-white/60' : 'text-stone/80'}">${p.sku}</span>
+             </div>`}
+        <div class="p-3">
+          <div class="text-[11.5px] font-bold leading-snug line-clamp-2 min-h-[32px]">${p.nama}</div>
+          <div class="flex items-center gap-1.5 mt-1.5">
+            <span class="text-[9px] label-stencil text-stone">${p.kategori}</span>
+          </div>
+          <div class="flex items-end gap-2 mt-2">
+            <div class="font-mono text-[14px] font-bold tnum leading-none">${rupiah(p.harga)}</div>
+            <div class="ml-auto text-[9.5px] font-mono tnum px-1.5 py-[2px] rounded ${out ? 'bg-ember/15 text-ember-600' : isJasa ? 'bg-moss/12 text-moss' : 'bg-sand text-stone'}">
+              ${isJasa ? 'JASA' : out ? 'HABIS' : 'Stok ' + p.stok}
+            </div>
+          </div>
+          ${inCart ? `<div class="mt-2 h-[3px] rounded-full bg-ember"></div>` : ''}
+        </div>
+      </button>`;
+    }).join('') || `<div class="col-span-full py-16 text-center">
+        <i data-lucide="package-search" class="w-10 h-10 text-stone/50 mx-auto"></i>
+        <div class="mt-3 text-[13px] font-bold">Item tidak ditemukan</div>
+        <div class="text-[11px] text-stone mt-1">Coba kata kunci lain atau pilih kategori "Semua".</div>
+      </div>`;
+    lucide.createIcons();
+  },
+
+  addToCart(id) {
+    const p = this.state.products.find(x => x.id === id);
+    if (!p) return;
+    const line = this.state.cart.find(c => c.id === id);
+    const current = line ? line.qty : 0;
+    if (p.stok !== null && current + 1 > p.stok) {
+      this.toast('Stok "' + p.nama + '" tidak mencukupi.', 'warning');
+      return;
+    }
+    if (line) line.qty++;
+    else this.state.cart.push({ id, nama: p.nama, harga: p.harga, qty: 1, kategori: p.kategori, sku: p.sku });
+    this.save();
+    this.renderCart();
+    this.renderPos();
+    const badge = $('#cartBadge');
+    badge.classList.remove('anim-nudge'); void badge.offsetWidth; badge.classList.add('anim-nudge');
+    this.toast(p.nama + ' ditambahkan ke keranjang. <button data-open-cart class="underline text-ember font-bold ml-1">Lihat keranjang</button>', 'success');
+    const ocs = document.querySelectorAll('#toastWrap [data-open-cart]');
+    const oc = ocs[ocs.length - 1];
+    if (oc) oc.addEventListener('click', () => { this.openCart(); const t = oc.closest('.anim-slide'); if (t) t.remove(); });
+  },
+
+  changeQty(id, delta) {
+    const line = this.state.cart.find(c => c.id === id);
+    if (!line) return;
+    const p = this.state.products.find(x => x.id === id);
+    if (delta > 0 && p && p.stok !== null && line.qty + 1 > p.stok) {
+      this.toast('Melebihi stok tersedia (' + p.stok + ').', 'warning');
+      return;
+    }
+    line.qty += delta;
+    if (line.qty <= 0) this.state.cart = this.state.cart.filter(c => c.id !== id);
+    this.save();
+    this.renderCart();
+    this.renderPos();
+  },
+
+  removeLine(id) {
+    const line = this.state.cart.find(c => c.id === id);
+    this.state.cart = this.state.cart.filter(c => c.id !== id);
+    this.save(); this.renderCart(); this.renderPos();
+    this.toast((line ? line.nama : 'Item') + ' dihapus dari keranjang.', 'info');
+  },
+
+  totals() {
+    const sub = this.state.cart.reduce((a, c) => a + c.harga * c.qty, 0);
+    const disc = sub * (this.state.meta.discPct / 100);
+    const tax = (sub - disc) * this.state.meta.tax;
+    return { sub, disc, tax, total: sub - disc + tax };
+  },
+
+  renderCart() {
+    const t = this.totals();
+    const count = this.state.cart.reduce((a, c) => a + c.qty, 0);
+    $('#cartBadge').textContent = count;
+    $('#cartSubtitle').textContent = count + ' item · Kasir Rian';
+    $('#sumSub').textContent = rupiah(t.sub);
+    $('#sumDisc').textContent = '- ' + rupiah(t.disc);
+    $('#sumTax').textContent = rupiah(t.tax);
+    $('#sumTotal').textContent = rupiah(t.total);
+
+    $('#cartItems').innerHTML = this.state.cart.map(c => `
+      <div class="anim-fade-up rounded-xl border border-ink/10 bg-white p-3">
+        <div class="flex items-start gap-2">
+          <div class="flex-1 min-w-0">
+            <div class="text-[12px] font-bold leading-snug truncate">${c.nama}</div>
+            <div class="text-[10px] font-mono text-stone mt-0.5">${c.sku} · ${rupiah(c.harga)}</div>
+          </div>
+          <button data-del="${c.id}" class="focus-ring btn-press w-7 h-7 rounded-lg hover:bg-ember/10 hover:text-ember grid place-items-center shrink-0">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+        <div class="flex items-center gap-2 mt-2.5">
+          <div class="flex items-center border border-ink/12 rounded-lg overflow-hidden">
+            <button data-qty="${c.id}" data-delta="-1" class="focus-ring btn-press w-8 h-8 grid place-items-center hover:bg-sand"><i data-lucide="minus" class="w-3.5 h-3.5"></i></button>
+            <span class="w-9 text-center font-mono text-[12px] font-bold tnum">${c.qty}</span>
+            <button data-qty="${c.id}" data-delta="1" class="focus-ring btn-press w-8 h-8 grid place-items-center hover:bg-sand"><i data-lucide="plus" class="w-3.5 h-3.5"></i></button>
+          </div>
+          <div class="ml-auto font-mono text-[13px] font-bold tnum">${rupiah(c.harga * c.qty)}</div>
+        </div>
+      </div>`).join('') || `
+      <div class="h-full flex flex-col items-center justify-center text-center py-14">
+        <div class="w-16 h-16 rounded-2xl bg-sand grid place-items-center">
+          <i data-lucide="shopping-basket" class="w-7 h-7 text-stone/60"></i>
+        </div>
+        <div class="mt-4 text-[13px] font-bold">Keranjang masih kosong</div>
+        <div class="text-[11px] text-stone mt-1 max-w-[26ch] leading-relaxed">Pilih produk atau jasa servis dari daftar item untuk mulai transaksi.</div>
+        <button data-goto="pos" class="focus-ring btn-press mt-4 h-10 px-4 rounded-xl bg-asphalt text-white text-[12px] font-bold flex items-center gap-2">
+          <i data-lucide="scan-barcode" class="w-4 h-4"></i> Mulai Transaksi
+        </button>
+      </div>`;
+
+    $('#payMethods').innerHTML = PAY_METHODS.map(m => `
+      <button data-pay="${m.id}" class="focus-ring btn-press h-[52px] rounded-xl border flex flex-col items-center justify-center gap-1 ${this.state.meta.method === m.id ? 'bg-asphalt text-white border-asphalt' : 'bg-white border-ink/12 hover:border-ember'}">
+        <i data-lucide="${m.icon}" class="w-[17px] h-[17px]"></i>
+        <span class="text-[9px] font-semibold">${m.id}</span>
+      </button>`).join('');
+
+    const isCash = this.state.meta.method === 'Tunai';
+    $('#cashWrap').classList.toggle('opacity-45', !isCash);
+    $('#cashWrap').classList.toggle('pointer-events-none', !isCash);
+    const cash = parseFloat($('#cashInput').value || 0);
+    $('#cashChange').textContent = isCash ? rupiah(Math.max(0, cash - t.total)) : rupiah(0);
+
+    $('#cartCustomer').innerHTML = ['Umum', ...this.state.customers.map(c => c.nama)]
+      .map(n => `<option ${this.state.meta.customer === n ? 'selected' : ''}>${n}</option>`).join('');
+
+    lucide.createIcons();
+  },
+
+  openCart() {
+    this.state.ui.cartOpen = true;
+    $('#cartDrawer').classList.remove('translate-x-full');
+    $('#cartBackdrop').classList.remove('opacity-0', 'pointer-events-none');
+    if (this.state.view === 'pos') $('#mainWrap').classList.add('xl:pr-[412px]');
+    document.body.style.overflow = window.innerWidth < 640 ? 'hidden' : '';
+  },
+  closeCart() {
+    this.state.ui.cartOpen = false;
+    $('#cartDrawer').classList.add('translate-x-full');
+    $('#cartBackdrop').classList.add('opacity-0', 'pointer-events-none');
+    $('#mainWrap').classList.remove('xl:pr-[412px]');
+    document.body.style.overflow = '';
+  },
+
+  checkout() {
+    if (!this.state.cart.length) {
+      this.toast('Keranjang masih kosong.', 'warning');
+      return;
+    }
+    const t = this.totals();
+    const isCash = this.state.meta.method === 'Tunai';
+    const cash = parseFloat($('#cashInput').value || 0);
+    if (isCash && cash < t.total) {
+      this.toast('Uang tunai kurang dari total bayar.', 'warning');
+      $('#cashInput').focus();
+      return;
+    }
+    this.confirm({
+      title: 'Konfirmasi Pembayaran',
+      icon: 'badge-check',
+      body: `Total <b>${rupiah(t.total)}</b> dengan metode <b>${this.state.meta.method}</b> untuk pelanggan <b>${this.state.meta.customer}</b>. Struk akan dicetak ke printer termal 80mm.`,
+      confirmText: 'Ya, Bayar & Cetak',
+      onConfirm: () => this.completePayment(t, cash)
+    });
+  },
+
+  completePayment(t, cash) {
+    const now = new Date();
+    const id = 'TRX-' + String(now.getFullYear()).slice(2) + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + String(this.state.transactions.length + 25).padStart(3, '0');
+    const tx = {
+      id,
+      waktu: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+      pelanggan: this.state.meta.customer,
+      metode: this.state.meta.method,
+      items: this.state.cart.reduce((a, c) => a + c.qty, 0),
+      total: t.total,
+      lines: structuredClone(this.state.cart),
+      discPct: this.state.meta.discPct,
+      tax: t.tax, sub: t.sub, disc: t.disc,
+      cash: this.state.meta.method === 'Tunai' ? cash : t.total
+    };
+    this.state.cart.forEach(c => {
+      const p = this.state.products.find(x => x.id === c.id);
+      if (p && p.stok !== null) p.stok = Math.max(0, p.stok - c.qty);
+    });
+    this.state.transactions.unshift(tx);
+    this.state.cart = [];
+    this.state.meta.discPct = 0;
+    $('#discInput').value = 0;
+    $('#cashInput').value = '';
+    this.save();
+    this.renderAll();
+    this.showReceipt(tx);
+    this.toast('Transaksi ' + id + ' berhasil. Struk siap dicetak.', 'success');
+  },
+
+  /* ---------- STRUK TERMAL ---------- */
+  receiptHTML(tx) {
+    const line = (l, r, bold) => `<div class="flex justify-between gap-2 ${bold ? 'font-bold' : ''}"><span>${l}</span><span class="tnum whitespace-nowrap">${r}</span></div>`;
+    const items = (tx.lines || []).map(c =>
+      `<div class="mt-1">
+        <div>${c.nama}</div>
+        <div class="flex justify-between gap-2 text-[10.5px]"><span>${c.qty} x ${rupiah(c.harga)}</span><span class="tnum">${rupiah(c.harga * c.qty)}</span></div>
+      </div>`).join('') ||
+      `<div class="mt-1 flex justify-between gap-2"><span>${tx.items} item (arsip)</span><span class="tnum">${rupiah(tx.total)}</span></div>`;
+
+    return `
+      <div class="text-center">
+        <div class="text-[15px] font-bold tracking-[.18em]">MOTOPOS</div>
+        <div class="text-[10px] uppercase tracking-[.12em]">Bengkel &amp; Service Motor</div>
+        <div class="text-[10px] mt-1 leading-snug">Jl. Raya Ciputat Raya No. 88<br>Tangerang Selatan · (021) 7455 8890</div>
+      </div>
+      <div class="dashline my-2.5"></div>
+      <div class="text-[10.5px]">
+        ${line('No. Struk', tx.id)}
+        ${line('Tanggal', new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }))}
+        ${line('Jam', tx.waktu)}
+        ${line('Kasir', 'Rian N.')}
+        ${line('Pelanggan', tx.pelanggan)}
+      </div>
+      <div class="dashline my-2.5"></div>
+      <div class="text-[10.5px]">${items}</div>
+      <div class="dashline my-2.5"></div>
+      <div class="text-[10.5px]">
+        ${line('Subtotal', rupiah(tx.sub ?? tx.total))}
+        ${tx.discPct ? line('Diskon (' + tx.discPct + '%)', '- ' + rupiah(tx.disc)) : ''}
+        ${line('PPN 11%', rupiah(tx.tax ?? 0))}
+        <div class="dashline my-1.5"></div>
+        ${line('TOTAL', rupiah(tx.total), true)}
+        <div class="mt-1">${line('Metode', tx.metode)}</div>
+        ${tx.metode === 'Tunai' ? line('Tunai', rupiah(tx.cash)) + line('Kembali', rupiah(Math.max(0, tx.cash - tx.total))) : ''}
+      </div>
+      <div class="dashline my-2.5"></div>
+      <div class="text-center text-[10px] leading-relaxed">
+        <div>Garansi jasa servis 14 hari / 1.000 km.</div>
+        <div>Barang yang sudah dibeli tidak dapat ditukar.</div>
+        <div class="mt-2 font-bold tracking-[.14em]">TERIMA KASIH</div>
+        <div>Sampai jumpa kembali 🏍</div>
+        <div class="mt-2 text-[9px] tracking-[.16em]">*** DEMO PROTOTYPE BY NOVANEXT ***</div>
+      </div>
+      <div class="mt-3 flex justify-center">
+        <div class="flex gap-[2px] items-end h-8">
+          ${Array.from({ length: 34 }).map((_, i) => `<span class="bg-ink" style="width:${i % 3 === 0 ? 3 : i % 2 === 0 ? 2 : 1}px;height:${i % 4 === 0 ? 100 : 72}%"></span>`).join('')}
+        </div>
+      </div>`;
+  },
+
+  showReceipt(tx) {
+    $('#printArea').innerHTML = this.receiptHTML(tx);
+    const wrap = $('#receiptWrap');
+    wrap.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      $('#receiptBackdrop').classList.remove('opacity-0');
+      const paper = wrap.querySelector('.anim-paper');
+      paper.classList.remove('anim-paper'); void paper.offsetWidth; paper.classList.add('anim-paper');
+    });
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+  },
+
+  closeReceipt() {
+    $('#receiptBackdrop').classList.add('opacity-0');
+    setTimeout(() => {
+      $('#receiptWrap').classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 220);
+  },
+
+  /* ---------- WORK ORDER ---------- */
+  renderWO() {
+    const f = this.state.ui.woFilter;
+    const list = this.state.workOrders.filter(w => f === 'Semua' || w.status === f);
+    $('#woCount').textContent = list.length + ' unit';
+    $('#woFilters').innerHTML = ['Semua', ...WO_STATUS].map(s => {
+      const n = s === 'Semua' ? this.state.workOrders.length : this.state.workOrders.filter(w => w.status === s).length;
+      return `<button data-wof="${s}" class="focus-ring btn-press h-9 px-3.5 rounded-full border text-[11px] font-bold flex items-center gap-2 ${f === s ? 'bg-ember text-white border-ember' : 'bg-white border-ink/12 hover:border-ember hover:text-ember'}">
+        ${s}<span class="font-mono tnum text-[10px] ${f === s ? 'text-white/75' : 'text-stone'}">${n}</span></button>`;
+    }).join('');
+
+    $('#woTable').innerHTML = list.map(w => {
+      const next = WO_STATUS[Math.min(WO_STATUS.indexOf(w.status) + 1, WO_STATUS.length - 1)];
+      return `
+      <tr class="row-hover">
+        <td class="py-3 px-4">
+          <div class="font-mono text-[11px] font-bold bg-asphalt text-white px-2 py-1 rounded inline-block">${w.id}</div>
+          <div class="text-[10px] text-stone mt-1">Masuk ${w.masuk}</div>
+        </td>
+        <td class="py-3 px-4">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-[11px] font-bold border border-ink/20 px-1.5 py-[2px] rounded">${w.nopol}</span>
+          </div>
+          <div class="text-[11px] text-stone mt-1">${w.motor}</div>
+          <div class="text-[10px] text-stone/80">${w.pelanggan}</div>
+        </td>
+        <td class="py-3 px-4 text-[11.5px] max-w-[240px]">${w.keluhan}</td>
+        <td class="py-3 px-4">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-full bg-sand grid place-items-center text-[10px] font-bold">${w.mekanik.split(' ').map(x => x[0]).join('').slice(0, 2)}</span>
+            <span class="text-[11px] font-semibold">${w.mekanik}</span>
+          </div>
+        </td>
+        <td class="py-3 px-4 text-right font-mono text-[12px] font-bold tnum">${rupiah(w.estimasi)}</td>
+        <td class="py-3 px-4"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full border ${STATUS_STYLE[w.status]}">${w.status}</span></td>
+        <td class="py-3 px-4">
+          <div class="flex items-center justify-end gap-1.5">
+            <button data-wo-adv="${w.id}" ${w.status === 'Selesai' ? 'disabled' : ''}
+              class="focus-ring btn-press h-8 px-3 rounded-lg text-[10.5px] font-bold flex items-center gap-1.5 ${w.status === 'Selesai' ? 'bg-sand text-stone cursor-default' : 'bg-asphalt text-white hover:bg-ember'}">
+              ${w.status === 'Selesai' ? 'Selesai' : next} <i data-lucide="${w.status === 'Selesai' ? 'check' : 'arrow-right'}" class="w-3.5 h-3.5"></i>
+            </button>
+            <button data-wo-inv="${w.id}" class="focus-ring btn-press h-8 px-2.5 rounded-lg border border-ink/12 hover:border-ember hover:text-ember text-[10.5px] font-bold flex items-center gap-1.5">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Invoice
+            </button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="7" class="py-14 text-center text-stone text-[12px]">Tidak ada work order pada filter ini.</td></tr>`;
+    lucide.createIcons();
+  },
+
+  advanceWO(id) {
+    const w = this.state.workOrders.find(x => x.id === id);
+    if (!w || w.status === 'Selesai') return;
+    const next = WO_STATUS[Math.min(WO_STATUS.indexOf(w.status) + 1, WO_STATUS.length - 1)];
+    this.confirm({
+      title: 'Ubah Status Work Order',
+      icon: 'refresh-cw',
+      body: `Unit <b>${w.nopol}</b> (${w.motor}) akan dipindahkan dari <b>${w.status}</b> ke <b>${next}</b>.`,
+      confirmText: 'Ya, Ubah Status',
+      onConfirm: () => {
+        w.status = next;
+        this.save(); this.renderWO(); this.renderDashQueue();
+        this.toast('Status ' + w.id + ' kini: ' + next + '.', 'success');
+      }
+    });
+  },
+
+  newWOForm() {
+    this.modal(`
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-xl bg-ember/12 text-ember grid place-items-center shrink-0"><i data-lucide="clipboard-plus" class="w-5 h-5"></i></div>
+        <div>
+          <h3 class="text-[17px] font-extrabold tracking-tight">Work Order Baru</h3>
+          <p class="text-[11.5px] text-stone mt-0.5">Catat unit masuk ke lantai bengkel.</p>
+        </div>
+      </div>
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div><label class="label-stencil text-stone">Nomor Polisi</label><input id="woNopol" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 font-mono text-[13px] font-bold" placeholder="B 1234 KZX"></div>
+        <div><label class="label-stencil text-stone">Model Kendaraan</label><input id="woMotor" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]" placeholder="Honda Vario 160 2022"></div>
+        <div class="sm:col-span-2"><label class="label-stencil text-stone">Keluhan / Permintaan</label><input id="woKeluhan" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]" placeholder="Rem depan bunyi, ganti oli"></div>
+        <div><label class="label-stencil text-stone">Pelanggan</label>
+          <select id="woCust" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]">
+            ${this.state.customers.map(c => `<option>${c.nama}</option>`).join('')}<option>Umum</option>
+          </select></div>
+        <div><label class="label-stencil text-stone">Mekanik</label>
+          <select id="woMekanik" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]">
+            <option>Rudi Hartono</option><option>Agus Salim</option><option>Bagus Prakoso</option><option>Yoga Saputra</option>
+          </select></div>
+        <div class="sm:col-span-2"><label class="label-stencil text-stone">Estimasi Biaya</label>
+          <input id="woEstimasi" type="number" min="0" step="1000" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 font-mono text-[13px] tnum" placeholder="250000"></div>
+      </div>
+      <div class="mt-6 flex gap-2">
+        <button data-close-modal class="focus-ring btn-press flex-1 h-11 rounded-xl border border-ink/12 text-[12.5px] font-bold hover:bg-sand">Batal</button>
+        <button id="woSave" class="focus-ring btn-press flex-1 h-11 rounded-xl bg-ember text-white text-[12.5px] font-bold hover:bg-ember-600 flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> Simpan Work Order</button>
+      </div>`,
+      () => {
+        const nopol = $('#woNopol').value.trim().toUpperCase();
+        const motor = $('#woMotor').value.trim();
+        const keluhan = $('#woKeluhan').value.trim();
+        if (!nopol || !motor || !keluhan) { this.toast('Lengkapi nopol, kendaraan, dan keluhan.', 'warning'); return false; }
+        const now = new Date();
+        const id = 'WO-' + (2600 + this.state.workOrders.length + 1);
+        this.state.workOrders.unshift({
+          id, nopol, motor, keluhan,
+          mekanik: $('#woMekanik').value,
+          estimasi: parseFloat($('#woEstimasi').value || 0),
+          status: 'Antrian',
+          masuk: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+          pelanggan: $('#woCust').value
+        });
+        this.save(); this.renderWO(); this.renderDashQueue();
+        this.toast('Work order ' + id + ' berhasil dibuat.', 'success');
+        return true;
+      });
+  },
+
+  /* ---------- INVENTORI ---------- */
+  renderInv() {
+    const q = this.state.ui.invSearch.toLowerCase();
+    const list = this.state.products.filter(p => p.stok !== null &&
+      (p.nama.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q)));
+    $('#invCritical').textContent = this.state.products.filter(p => p.stok !== null && p.stok <= p.min).length;
+
+    $('#invTable').innerHTML = list.map(p => {
+      const pct = Math.min(100, Math.round((p.stok / Math.max(p.min * 3, 1)) * 100));
+      const status = p.stok === 0 ? 'Habis' : p.stok <= p.min ? 'Kritis' : 'Aman';
+      const style = status === 'Aman' ? 'bg-moss/12 text-moss border-moss/25'
+        : status === 'Kritis' ? 'bg-honey/18 text-honey border-honey/35'
+        : 'bg-ember/15 text-ember-600 border-ember/30';
+      const barColor = status === 'Aman' ? 'bg-moss' : status === 'Kritis' ? 'bg-honey' : 'bg-ember';
+      return `
+      <tr class="row-hover">
+        <td class="py-3 px-4 font-mono text-[11px] font-bold text-stone">${p.sku}</td>
+        <td class="py-3 px-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-sand grid place-items-center shrink-0"><i data-lucide="${p.ikon}" class="w-4 h-4 text-stone"></i></div>
+            <div><div class="text-[12px] font-bold">${p.nama}</div><div class="text-[10px] text-stone">Min. stok ${p.min} unit</div></div>
+          </div>
+        </td>
+        <td class="py-3 px-4 text-[11px] text-stone">${p.kategori}</td>
+        <td class="py-3 px-4 w-[190px]">
+          <div class="flex items-center gap-2">
+            <div class="stok-bar flex-1 h-[6px] rounded-full bg-sand overflow-hidden">
+              <span class="${barColor}" style="width:${pct}%"></span>
+            </div>
+            <span class="font-mono text-[11px] font-bold tnum w-8 text-right">${p.stok}</span>
+          </div>
+        </td>
+        <td class="py-3 px-4 text-right font-mono text-[12px] font-bold tnum">${rupiah(p.harga)}</td>
+        <td class="py-3 px-4"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full border ${style}">${status}</span></td>
+        <td class="py-3 px-4 text-right">
+          <button data-restock="${p.id}" class="focus-ring btn-press h-8 px-3 rounded-lg bg-asphalt text-white text-[10.5px] font-bold hover:bg-ember inline-flex items-center gap-1.5">
+            <i data-lucide="package-plus" class="w-3.5 h-3.5"></i> Restock</button>
+        </td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="7" class="py-14 text-center text-stone text-[12px]">Item tidak ditemukan.</td></tr>`;
+    lucide.createIcons();
+  },
+
+  restock(id) {
+    const p = this.state.products.find(x => x.id === id);
+    if (!p) return;
+    this.modal(`
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-xl bg-moss/12 text-moss grid place-items-center shrink-0"><i data-lucide="package-plus" class="w-5 h-5"></i></div>
+        <div>
+          <h3 class="text-[17px] font-extrabold tracking-tight">Restock Item</h3>
+          <p class="text-[11.5px] text-stone mt-0.5">${p.nama} · ${p.sku}</p>
+        </div>
+      </div>
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div class="rounded-xl bg-sand p-3">
+          <div class="label-stencil text-stone">Stok Saat Ini</div>
+          <div class="font-mono text-[20px] font-bold tnum mt-1">${p.stok} unit</div>
+        </div>
+        <div class="rounded-xl bg-moss/10 p-3">
+          <div class="label-stencil text-moss">Setelah Restock</div>
+          <div class="font-mono text-[20px] font-bold tnum mt-1" id="restockPreview">${p.stok} unit</div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="label-stencil text-stone">Jumlah Tambahan</label>
+        <div class="flex items-center gap-2 mt-1.5">
+          <button data-restep="-5" class="focus-ring btn-press w-11 h-11 rounded-xl border border-ink/12 hover:border-ember hover:text-ember font-bold">-5</button>
+          <input id="restockQty" type="number" min="1" value="12" class="field flex-1 h-11 rounded-xl border border-ink/12 px-3 font-mono text-[15px] font-bold tnum text-center">
+          <button data-restep="5" class="focus-ring btn-press w-11 h-11 rounded-xl border border-ink/12 hover:border-ember hover:text-ember font-bold">+5</button>
+        </div>
+      </div>
+      <div class="mt-6 flex gap-2">
+        <button data-close-modal class="focus-ring btn-press flex-1 h-11 rounded-xl border border-ink/12 text-[12.5px] font-bold hover:bg-sand">Batal</button>
+        <button id="restockSave" class="focus-ring btn-press flex-1 h-11 rounded-xl bg-moss text-white text-[12.5px] font-bold hover:brightness-110 flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> Simpan Restock</button>
+      </div>`,
+      () => {
+        const qty = parseInt($('#restockQty').value || 0, 10);
+        if (qty <= 0) { this.toast('Jumlah restock harus lebih dari 0.', 'warning'); return false; }
+        p.stok += qty;
+        this.save(); this.renderInv(); this.renderDashStock(); this.renderPos();
+        this.toast('Restock ' + qty + ' unit "' + p.nama + '" berhasil.', 'success');
+        return true;
+      });
+
+    const input = $('#restockQty');
+    const preview = $('#restockPreview');
+    const sync = () => preview.textContent = (p.stok + parseInt(input.value || 0, 10)) + ' unit';
+    input.addEventListener('input', sync);
+    $$('[data-restep]').forEach(b => b.addEventListener('click', () => {
+      input.value = Math.max(1, parseInt(input.value || 0, 10) + parseInt(b.dataset.restep, 10));
+      sync();
+    }));
+  },
+
+  /* ---------- PELANGGAN ---------- */
+  renderCust() {
+    $('#custGrid').innerHTML = this.state.customers.map((c, i) => `
+      <button data-cust="${c.id}" class="focus-ring btn-press hover-lift text-left bg-white rounded-2xl border border-ink/10 p-5 hover:border-ember/50">
+        <div class="flex items-start gap-3">
+          <div class="w-12 h-12 rounded-xl grid place-items-center text-white font-bold text-[14px] shrink-0 ${i % 3 === 0 ? 'bg-ember' : i % 3 === 1 ? 'bg-asphalt' : 'bg-moss'}">
+            ${c.nama.split(' ').map(x => x[0]).join('').slice(0, 2)}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="text-[14px] font-extrabold tracking-tight truncate">${c.nama}</div>
+            <div class="text-[11px] text-stone font-mono">${c.telp}</div>
+          </div>
+          <span class="text-[9px] label-stencil px-2 py-1 rounded-full bg-sand text-stone shrink-0">Member</span>
+        </div>
+        <div class="mt-4 rounded-xl bg-sand/70 px-3 py-2.5">
+          <div class="flex items-center gap-2">
+            <i data-lucide="bike" class="w-4 h-4 text-stone"></i>
+            <span class="text-[11px] font-semibold truncate">${c.motor}</span>
+          </div>
+        </div>
+        <div class="mt-4 grid grid-cols-3 gap-2">
+          <div><div class="label-stencil text-stone">Poin</div><div class="font-mono text-[15px] font-bold tnum text-ember">${c.poin.toLocaleString('id-ID')}</div></div>
+          <div><div class="label-stencil text-stone">Kunjungan</div><div class="font-mono text-[15px] font-bold tnum">${c.kunjungan}x</div></div>
+          <div><div class="label-stencil text-stone">Terakhir</div><div class="font-mono text-[11px] font-bold tnum mt-1">${c.terakhir}</div></div>
+        </div>
+      </button>`).join('');
+    lucide.createIcons();
+  },
+
+  custDetail(id) {
+    const c = this.state.customers.find(x => x.id === id);
+    if (!c) return;
+    const hist = [
+      { t: 'Servis Ringan + Ganti Oli', d: c.terakhir, a: 285000 },
+      { t: 'Ganti Kampas Rem Depan', d: '22 Jan 2026', a: 175000 },
+      { t: 'Servis CVT Lengkap', d: '08 Des 2025', a: 415000 }
+    ];
+    this.modal(`
+      <div class="flex items-start gap-3">
+        <div class="w-12 h-12 rounded-xl bg-ember text-white grid place-items-center font-bold">${c.nama.split(' ').map(x => x[0]).join('').slice(0, 2)}</div>
+        <div class="flex-1">
+          <h3 class="text-[17px] font-extrabold tracking-tight">${c.nama}</h3>
+          <p class="text-[11.5px] text-stone font-mono mt-0.5">${c.telp} · ${c.motor}</p>
+        </div>
+        <button data-close-modal class="focus-ring btn-press w-9 h-9 rounded-lg border border-ink/12 grid place-items-center"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="mt-5 grid grid-cols-3 gap-2">
+        <div class="rounded-xl bg-sand p-3"><div class="label-stencil text-stone">Poin</div><div class="font-mono text-[18px] font-bold tnum mt-1 text-ember">${c.poin.toLocaleString('id-ID')}</div></div>
+        <div class="rounded-xl bg-sand p-3"><div class="label-stencil text-stone">Kunjungan</div><div class="font-mono text-[18px] font-bold tnum mt-1">${c.kunjungan}x</div></div>
+        <div class="rounded-xl bg-sand p-3"><div class="label-stencil text-stone">Total Belanja</div><div class="font-mono text-[15px] font-bold tnum mt-1.5">${rupiah(c.kunjungan * 218000)}</div></div>
+      </div>
+      <div class="mt-5">
+        <div class="label-stencil text-stone">Riwayat Kunjungan</div>
+        <div class="mt-2 divide-y divide-ink/10 border border-ink/10 rounded-xl overflow-hidden">
+          ${hist.map(h => `
+            <div class="flex items-center gap-3 px-3.5 py-3 bg-white">
+              <div class="w-8 h-8 rounded-lg bg-sand grid place-items-center"><i data-lucide="wrench" class="w-4 h-4 text-stone"></i></div>
+              <div class="flex-1"><div class="text-[11.5px] font-bold">${h.t}</div><div class="text-[10px] text-stone">${h.d}</div></div>
+              <div class="font-mono text-[12px] font-bold tnum">${rupiah(h.a)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="mt-5 flex gap-2">
+        <button data-close-modal class="focus-ring btn-press flex-1 h-11 rounded-xl border border-ink/12 text-[12.5px] font-bold hover:bg-sand">Tutup</button>
+        <button id="custToPOS" class="focus-ring btn-press flex-1 h-11 rounded-xl bg-ember text-white text-[12.5px] font-bold hover:bg-ember-600 flex items-center justify-center gap-2">
+          <i data-lucide="shopping-cart" class="w-4 h-4"></i> Buat Transaksi</button>
+      </div>`, null);
+
+    $('#custToPOS').addEventListener('click', () => {
+      this.state.meta.customer = c.nama;
+      this.save(); this.closeModal(); this.goto('pos'); this.renderCart();
+      this.toast('Pelanggan aktif: ' + c.nama, 'info');
+    });
+    lucide.createIcons();
+  },
+
+  newCustForm() {
+    this.modal(`
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-xl bg-ember/12 text-ember grid place-items-center shrink-0"><i data-lucide="user-plus" class="w-5 h-5"></i></div>
+        <div><h3 class="text-[17px] font-extrabold tracking-tight">Tambah Pelanggan</h3>
+        <p class="text-[11.5px] text-stone mt-0.5">Data tersimpan pada localStorage browser.</p></div>
+      </div>
+      <div class="mt-5 space-y-3">
+        <div><label class="label-stencil text-stone">Nama Lengkap</label><input id="cNama" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]" placeholder="Contoh: Surya Darma"></div>
+        <div><label class="label-stencil text-stone">Nomor HP</label><input id="cTelp" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 font-mono text-[13px]" placeholder="0812-0000-0000"></div>
+        <div><label class="label-stencil text-stone">Kendaraan</label><input id="cMotor" class="field w-full h-11 mt-1.5 rounded-xl border border-ink/12 px-3 text-[13px]" placeholder="Honda Scoopy · B 1111 AAA"></div>
+      </div>
+      <div class="mt-6 flex gap-2">
+        <button data-close-modal class="focus-ring btn-press flex-1 h-11 rounded-xl border border-ink/12 text-[12.5px] font-bold hover:bg-sand">Batal</button>
+        <button id="cSave" class="focus-ring btn-press flex-1 h-11 rounded-xl bg-ember text-white text-[12.5px] font-bold hover:bg-ember-600 flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> Simpan Pelanggan</button>
+      </div>`,
+      () => {
+        const nama = $('#cNama').value.trim();
+        const telp = $('#cTelp').value.trim();
+        const motor = $('#cMotor').value.trim();
+        if (!nama || !telp || !motor) { this.toast('Semua kolom wajib diisi.', 'warning'); return false; }
+        this.state.customers.unshift({
+          id: 'C' + String(this.state.customers.length + 1).padStart(2, '0'),
+          nama, telp, motor, poin: 0, kunjungan: 1,
+          terakhir: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+        });
+        this.save(); this.renderCust(); this.renderCart();
+        this.toast('Pelanggan "' + nama + '" berhasil ditambahkan.', 'success');
+        return true;
+      });
+  },
+
+  /* ---------- LAPORAN ---------- */
+  renderLap() {
+    const t = this.state.transactions;
+    const total = t.reduce((a, x) => a + x.total, 0);
+    $('#lapTotal').textContent = rupiah(total);
+    $('#lapTrx').textContent = t.length;
+    $('#lapAvg').textContent = rupiah(t.length ? total / t.length : 0);
+    $('#lapCount').textContent = t.length + ' struk';
+    $('#lapTable').innerHTML = t.map(x => `
+      <tr class="row-hover">
+        <td class="py-3 px-4 font-mono text-[11px] font-bold">${x.id}</td>
+        <td class="py-3 px-4 font-mono text-[11px] text-stone tnum">${x.waktu}</td>
+        <td class="py-3 px-4 text-[11.5px] font-semibold">${x.pelanggan}</td>
+        <td class="py-3 px-4 text-[11px] text-stone">${x.items} item</td>
+        <td class="py-3 px-4">
+          <span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-sand border border-ink/12">${x.metode}</span>
+        </td>
+        <td class="py-3 px-4 text-right font-mono text-[12px] font-bold tnum">${rupiah(x.total)}</td>
+        <td class="py-3 px-4 text-right">
+          <button data-receipt="${x.id}" class="focus-ring btn-press h-8 px-3 rounded-lg border border-ink/12 hover:border-ember hover:text-ember text-[10.5px] font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i> Struk</button>
+        </td>
+      </tr>`).join('');
+    lucide.createIcons();
+  },
+
+  /* ---------- MODAL & TOAST ---------- */
+  modal(html, onConfirm) {
+    $('#modalContent').innerHTML = html;
+    const wrap = $('#modalWrap');
+    wrap.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      $('#modalBackdrop').classList.remove('opacity-0');
+      const p = $('#modalPanel');
+      p.classList.remove('opacity-0', 'translate-y-4', 'scale-[.97]');
+    });
+    document.body.style.overflow = 'hidden';
+    lucide.createIcons();
+
+    $$('[data-close-modal]').forEach(b => b.addEventListener('click', () => this.closeModal()));
+    const saveBtn = $('#woSave') || $('#restockSave') || $('#cSave');
+    if (saveBtn && onConfirm) saveBtn.addEventListener('click', () => {
+      const ok = onConfirm();
+      if (ok !== false) this.closeModal();
+    });
+    const first = $('#modalContent input');
+    if (first) setTimeout(() => first.focus(), 120);
+  },
+
+  closeModal() {
+    $('#modalBackdrop').classList.add('opacity-0');
+    const p = $('#modalPanel');
+    p.classList.add('opacity-0', 'translate-y-4', 'scale-[.97]');
+    setTimeout(() => {
+      $('#modalWrap').classList.add('hidden');
+      if (!$('#receiptWrap').classList.contains('hidden')) return;
+      document.body.style.overflow = '';
+    }, 220);
+  },
+
+  confirm({ title, icon = 'help-circle', body, confirmText = 'Ya, Lanjutkan', onConfirm }) {
+    this.modal(`
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-xl bg-ember/12 text-ember grid place-items-center shrink-0"><i data-lucide="${icon}" class="w-5 h-5"></i></div>
+        <div class="flex-1">
+          <h3 class="text-[17px] font-extrabold tracking-tight">${title}</h3>
+          <p class="text-[12px] text-stone mt-1.5 leading-relaxed">${body}</p>
+        </div>
+      </div>
+      <div class="mt-6 flex gap-2">
+        <button data-close-modal class="focus-ring btn-press flex-1 h-11 rounded-xl border border-ink/12 text-[12.5px] font-bold hover:bg-sand">Batal</button>
+        <button id="confirmYes" class="focus-ring btn-press flex-1 h-11 rounded-xl bg-ember text-white text-[12.5px] font-bold hover:bg-ember-600 flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> ${confirmText}</button>
+      </div>`, null);
+    $('#confirmYes').addEventListener('click', () => {
+      this.closeModal();
+      if (onConfirm) setTimeout(onConfirm, 180);
+    });
+  },
+
+  toast(msg, type = 'success') {
+    const cfg = {
+      success: { icon: 'check-circle-2', bar: 'bg-moss', text: 'text-moss' },
+      warning: { icon: 'alert-triangle', bar: 'bg-honey', text: 'text-honey' },
+      error: { icon: 'x-circle', bar: 'bg-ember', text: 'text-ember' },
+      info: { icon: 'info', bar: 'bg-asphalt', text: 'text-asphalt' }
+    }[type] || {};
+    const el = document.createElement('div');
+    el.className = 'anim-slide bg-white rounded-xl shadow-[0_18px_40px_-16px_rgba(20,18,16,.4)] border border-ink/10 overflow-hidden flex';
+    el.innerHTML = `
+      <div class="w-1.5 ${cfg.bar}"></div>
+      <div class="flex-1 p-3.5 flex items-start gap-2.5">
+        <i data-lucide="${cfg.icon}" class="w-[18px] h-[18px] ${cfg.text} shrink-0 mt-[1px]"></i>
+        <div class="text-[11.5px] leading-relaxed font-semibold flex-1">${msg}</div>
+        <button data-toast-close class="focus-ring text-stone hover:text-ink shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+      </div>`;
+    $('#toastWrap').appendChild(el);
+    lucide.createIcons();
+    const kill = () => { el.style.transition = 'all .28s ease'; el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; setTimeout(() => el.remove(), 280); };
+    const closeBtn = el.querySelector('[data-toast-close]');
+    if (closeBtn) closeBtn.addEventListener('click', kill);
+    setTimeout(kill, 3600);
+  },
+
+  /* ---------- CLOCK ---------- */
+  startClock() {
+    const tick = () => {
+      const now = new Date();
+      $('#clock').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      $('#today').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric' });
+    };
+    tick();
+    setInterval(tick, 1000);
+  },
+
+  /* ---------- EVENTS ---------- */
+  bind() {
+    document.addEventListener('click', e => {
+      const nav = e.target.closest('[data-nav]');
+      if (nav) return this.goto(nav.dataset.nav);
+
+      const go = e.target.closest('[data-goto]');
+      if (go) return this.goto(go.dataset.goto);
+
+      const cat = e.target.closest('[data-cat]');
+      if (cat) { this.state.ui.posCat = cat.dataset.cat; return this.renderPos(); }
+
+      const add = e.target.closest('[data-add]');
+      if (add && !add.disabled) return this.addToCart(add.dataset.add);
+
+      const qty = e.target.closest('[data-qty]');
+      if (qty) return this.changeQty(qty.dataset.qty, parseInt(qty.dataset.delta, 10));
+
+      const del = e.target.closest('[data-del]');
+      if (del) return this.removeLine(del.dataset.del);
+
+      const pay = e.target.closest('[data-pay]');
+      if (pay) { this.state.meta.method = pay.dataset.pay; this.save(); return this.renderCart(); }
+
+      const wof = e.target.closest('[data-wof]');
+      if (wof) { this.state.ui.woFilter = wof.dataset.wof; return this.renderWO(); }
+
+      const adv = e.target.closest('[data-wo-adv]');
+      if (adv && !adv.disabled) return this.advanceWO(adv.dataset.woAdv);
+
+      const inv = e.target.closest('[data-wo-inv]');
+      if (inv) {
+        const w = this.state.workOrders.find(x => x.id === inv.dataset.woInv);
+        return this.toast('Invoice ' + w.id + ' (' + rupiah(w.estimasi) + ') dikirim ke printer termal.', 'success');
+      }
+
+      const restock = e.target.closest('[data-restock]');
+      if (restock) return this.restock(restock.dataset.restock);
+
+      const cust = e.target.closest('[data-cust]');
+      if (cust) return this.custDetail(cust.dataset.cust);
+
+      const cash = e.target.closest('[data-cash]');
+      if (cash) {
+        const t = this.totals();
+        $('#cashInput').value = cash.dataset.cash === 'exact' ? Math.ceil(t.total) : cash.dataset.cash;
+        return this.renderCart();
+      }
+
+      const receipt = e.target.closest('[data-receipt]');
+      if (receipt) {
+        const tx = this.state.transactions.find(x => x.id === receipt.dataset.receipt);
+        if (tx) return this.showReceipt(tx);
+      }
+    });
+
+    $('#btnCart').addEventListener('click', () => this.state.ui.cartOpen ? this.closeCart() : this.openCart());
+    $('#cartClose').addEventListener('click', () => this.closeCart());
+    $('#cartBackdrop').addEventListener('click', () => this.closeCart());
+    $('#btnCheckout').addEventListener('click', () => this.checkout());
+    $('#btnClearCart').addEventListener('click', () => {
+      if (!this.state.cart.length) return this.toast('Keranjang sudah kosong.', 'info');
+      this.confirm({
+        title: 'Kosongkan Keranjang', icon: 'trash-2',
+        body: 'Seluruh item di keranjang akan dihapus. Tindakan ini tidak dapat dibatalkan.',
+        confirmText: 'Ya, Kosongkan',
+        onConfirm: () => {
+          this.state.cart = []; this.save(); this.renderCart(); this.renderPos();
+          this.toast('Keranjang dikosongkan.', 'info');
+        }
+      });
+    });
+
+    $('#btnDisc').addEventListener('click', () => {
+      const v = Math.min(100, Math.max(0, parseFloat($('#discInput').value || 0)));
+      this.state.meta.discPct = v;
+      this.save(); this.renderCart();
+      this.toast(v ? 'Diskon ' + v + '% diterapkan.' : 'Diskon dihapus.', v ? 'success' : 'info');
+    });
+
+    $('#cashInput').addEventListener('input', () => this.renderCart());
+    $('#cartCustomer').addEventListener('change', e => {
+      this.state.meta.customer = e.target.value;
+      this.save();
+      this.toast('Pelanggan aktif: ' + e.target.value, 'info');
+    });
+
+    $('#posSearch').addEventListener('input', e => { this.state.ui.posSearch = e.target.value; this.renderPos(); });
+    $('#invSearch').addEventListener('input', e => { this.state.ui.invSearch = e.target.value; this.renderInv(); });
+    $('#globalSearch').addEventListener('input', e => {
+      this.state.ui.posSearch = e.target.value;
+      $('#posSearch').value = e.target.value;
+      if (e.target.value && this.state.view !== 'pos') this.goto('pos');
+      this.renderPos();
+    });
+
+    $('#btnNewWO').addEventListener('click', () => this.newWOForm());
+    $('#heroNewWO').addEventListener('click', () => { this.goto('servis'); this.newWOForm(); });
+    $('#btnNewCust').addEventListener('click', () => this.newCustForm());
+    $('#btnHold').addEventListener('click', () => this.toast('Transaksi ditahan. Keranjang tetap tersimpan di localStorage.', 'info'));
+    $('#btnStockOpname').addEventListener('click', () => {
+      this.confirm({
+        title: 'Stok Opname', icon: 'clipboard-check',
+        body: 'Sistem akan menyinkronkan jumlah stok fisik dengan data sistem dan mencatatnya sebagai mutasi inventori.',
+        confirmText: 'Jalankan Opname',
+        onConfirm: () => this.toast('Stok opname selesai. 16 SKU diverifikasi, 4 item perlu restock.', 'success')
+      });
+    });
+    $('#btnCloseShift').addEventListener('click', () => {
+      const total = this.state.transactions.reduce((a, x) => a + x.total, 0);
+      this.confirm({
+        title: 'Tutup Shift & Cetak Z-Report', icon: 'lock',
+        body: `Total penjualan shift ini <b>${rupiah(total)}</b> dari <b>${this.state.transactions.length}</b> transaksi. Z-Report akan dicetak ke printer termal.`,
+        confirmText: 'Tutup Shift',
+        onConfirm: () => this.toast('Shift ditutup. Z-Report tercetak ke printer 80mm.', 'success')
+      });
+    });
+    $('#heroPrint').addEventListener('click', () => {
+      this.showReceipt({
+        id: 'TEST-PRINT-001', waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        pelanggan: 'Tester', metode: 'Tunai', items: 1, total: 0,
+        lines: [{ nama: 'Test Print Printer Termal', qty: 1, harga: 0, sku: 'TEST' }],
+        sub: 0, disc: 0, tax: 0, cash: 0
+      });
+    });
+
+    $('#receiptClose').addEventListener('click', () => this.closeReceipt());
+    $('#receiptBackdrop').addEventListener('click', () => this.closeReceipt());
+    $('#receiptPrint').addEventListener('click', () => window.print());
+    $('#receiptNew').addEventListener('click', () => {
+      this.closeReceipt();
+      this.goto('pos');
+      this.toast('Siap untuk transaksi baru.', 'info');
+    });
+
+    $('#btnResetDemo').addEventListener('click', () => {
+      this.confirm({
+        title: 'Reset Data Demo', icon: 'rotate-ccw',
+        body: 'Seluruh data (produk, keranjang, work order, transaksi) akan dikembalikan ke kondisi awal demo.',
+        confirmText: 'Ya, Reset',
+        onConfirm: () => {
+          localStorage.removeItem(KEY);
+          this.load(); this.renderAll();
+          this.toast('Data demo berhasil direset.', 'success');
+        }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (!$('#receiptWrap').classList.contains('hidden')) this.closeReceipt();
+        else if (!$('#modalWrap').classList.contains('hidden')) this.closeModal();
+        else if (this.state.ui.cartOpen) this.closeCart();
+      }
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const s = $('#globalSearch').offsetParent ? $('#globalSearch') : $('#posSearch');
+        s.focus();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 640) document.body.style.overflow = '';
+    });
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
